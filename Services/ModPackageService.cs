@@ -53,26 +53,47 @@ public class ModPackageService
             return false;
         }
 
-        var configPath = Path.Combine(directoryPath, "config.json");
-        return File.Exists(configPath);
+        var entries = Directory.EnumerateFileSystemEntries(directoryPath).ToList();
+        if (entries.Count == 0)
+        {
+            return false;
+        }
+
+        var modJsonPath = Path.Combine(directoryPath, "mod.json");
+        if (!File.Exists(modJsonPath))
+        {
+            return true;
+        }
+
+        return TryValidateModJson(directoryPath, out _);
     }
 
     public static bool TryValidateConfigJson(string packagePath, out string? error)
     {
+        return TryValidateModJson(packagePath, out error);
+    }
+
+    public static bool TryValidateModJson(string packagePath, out string? error)
+    {
         error = null;
-        var configPath = Path.Combine(packagePath, "config.json");
-        if (!File.Exists(configPath))
+        var modJsonPath = Path.Combine(packagePath, "mod.json");
+        if (!File.Exists(modJsonPath))
         {
-            error = "Missing config.json";
-            return false;
+            return true;
         }
 
         try
         {
-            using var document = JsonDocument.Parse(File.ReadAllText(configPath));
+            using var document = JsonDocument.Parse(File.ReadAllText(modJsonPath));
             if (document.RootElement.ValueKind != JsonValueKind.Object)
             {
-                error = "config.json must contain a JSON object.";
+                error = "mod.json must contain a JSON object.";
+                return false;
+            }
+
+            if (document.RootElement.EnumerateObject().Any())
+            {
+                error = "mod.json must be an empty JSON object {}.";
                 return false;
             }
 
@@ -87,21 +108,22 @@ public class ModPackageService
 
     public static ModManifest? TryReadManifest(string basePath)
     {
-        var manifestPath = Path.Combine(basePath, "config.json");
+        var manifestPath = Path.Combine(basePath, "mod.json");
         if (!File.Exists(manifestPath))
         {
-            return null;
+            return new ModManifest();
         }
 
         try
         {
             var json = File.ReadAllText(manifestPath);
-            var manifest = JsonSerializer.Deserialize<ModManifest>(json, new JsonSerializerOptions
+            using var document = JsonDocument.Parse(json);
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
             {
-                PropertyNameCaseInsensitive = true
-            });
+                return null;
+            }
 
-            return manifest;
+            return new ModManifest();
         }
         catch
         {
@@ -124,7 +146,7 @@ public class ModPackageService
                 continue;
             }
 
-            var hasError = !TryValidateConfigJson(directory, out var configError);
+            var hasError = !TryValidateModJson(directory, out var configError);
             var payloadPath = GetPayloadDirectory(directory);
             var packageInfo = new ModPackageInfo
             {
@@ -151,7 +173,9 @@ public class ModPackageService
         }
 
         var candidateDirectories = Directory.GetDirectories(packageRoot)
-            .Where(dir => !string.Equals(Path.GetFileName(dir), "modloader", StringComparison.OrdinalIgnoreCase))
+            .Where(dir => !string.Equals(Path.GetFileName(dir), "modloader", StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(Path.GetFileName(dir), "screen", StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(Path.GetFileName(dir), "preview", StringComparison.OrdinalIgnoreCase))
             .OrderBy(dir => dir, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -178,7 +202,7 @@ public class ModPackageService
         }
 
         var filesAtRoot = Directory.GetFiles(packageRoot)
-            .Where(path => !string.Equals(Path.GetFileName(path), "config.json", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !string.Equals(Path.GetFileName(path), "mod.json", StringComparison.OrdinalIgnoreCase))
             .ToList();
 
         if (filesAtRoot.Count > 0)

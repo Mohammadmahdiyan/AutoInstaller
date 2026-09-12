@@ -284,7 +284,14 @@ public partial class MainForm : Form
                 return;
             }
 
-            _selectedModName = ResolveModDisplayName(selected);
+            if (!Directory.EnumerateFileSystemEntries(selected).Any())
+            {
+                MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _selectedModName = ResolveDirectoryName(selected);
+            _selectedModPayloadPath = selected;
             folderText.Text = selected;
             selectedName.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
         };
@@ -439,39 +446,33 @@ public partial class MainForm : Form
             return;
         }
 
-        var selectedPath = _settings.ModSourceFolder;
-        if (string.IsNullOrWhiteSpace(selectedPath) || !Directory.Exists(selectedPath))
+        if (string.IsNullOrWhiteSpace(_selectedModName) || string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
         {
-            var root = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"));
-            if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
+            MessageBox.Show(_localizationService.GetString("SelectModFirst", "Please select a valid mod folder first."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (!Directory.Exists(_selectedModPayloadPath) || Directory.EnumerateFileSystemEntries(_selectedModPayloadPath).Any() == false)
+        {
+            MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var modJsonPath = Path.Combine(_selectedModPayloadPath, "mod.json");
+        if (File.Exists(modJsonPath))
+        {
+            try
             {
-                MessageBox.Show(_localizationService.GetString("InvalidModLibraryFolder", "This folder is not a valid mods library folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(modJsonPath));
+                if (jsonDoc.RootElement.ValueKind != System.Text.Json.JsonValueKind.Object || jsonDoc.RootElement.EnumerateObject().Any())
+                {
+                    MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
-
-            selectedPath = root;
-            _selectedModSourcePath = root;
-            _settings.ModSourceFolder = root;
-            _settingsService.Save(_settings);
-        }
-
-        var discovered = ModPackageService.DiscoverModPackages(selectedPath);
-        if (discovered.Count == 0)
-        {
-            MessageBox.Show(_localizationService.GetString("NoModPackagesInLibrary", "No mod packages found in this library yet."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        var package = discovered.FirstOrDefault(item => string.Equals(item.DisplayName, _selectedModName, StringComparison.OrdinalIgnoreCase)) ?? discovered.First();
-        _selectedModName = package.DisplayName;
-        _selectedReadmePath = FindReadmeFile(package.PackageRootPath);
-        _selectedImageFiles = FindImageFiles(package.PackageRootPath);
-        _selectedModPayloadPath = package.PayloadPath;
-
-        if (string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
-        {
-            MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected mod package does not contain a valid payload folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
+            catch (Exception)
+            {
+                MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
@@ -492,9 +493,12 @@ public partial class MainForm : Form
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+        _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+        _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+
         GoToStep(WizardStep.Step4);
         await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir);
-        ModLoaderService.RecordInstallation(_selectedModName, package.PackageRootPath, targetDir);
+        ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
         GoToStep(WizardStep.Step5);
         _selectedReadmePath = FindReadmeFile(targetDir);
 
@@ -547,7 +551,7 @@ public partial class MainForm : Form
         return System.Text.RegularExpressions.Regex.Replace(gameFolder.Trim(), "[\\/]+", "/") + "|" + executable;
     }
 
-    private static string ResolveModDisplayName(string selectedPath)
+    private static string ResolveDirectoryName(string selectedPath)
     {
         var cleanName = Path.GetFileName(selectedPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         return ModPackageService.NormalizeDisplayName(cleanName ?? "Mod");
@@ -967,15 +971,30 @@ public partial class MainForm : Form
 
     private void LanguageComboBox_SelectedIndexChanged(object sender, EventArgs e)
     {
-        var selected = LanguageComboBox.Text;
-        _settings.Language = selected;
+        if (LanguageComboBox.SelectedItem == null)
+        {
+            return;
+        }
+
+        var selectedValue = LanguageComboBox.SelectedItem.ToString();
+        if (string.IsNullOrWhiteSpace(selectedValue))
+        {
+            return;
+        }
+
+        _settings.Language = selectedValue switch
+        {
+            "فارسی" => "Persian",
+            _ => "English"
+        };
+
         _settingsService.Save(_settings);
         ApplyCurrentLanguage();
+        ApplyRtlForLanguage(_localizationService.ParseLanguage(_settings.Language));
         ConfigureUi();
-        LoadSettingsIntoUi();
+        ApplyCurrentTheme();
         RefreshModList();
         RefreshModLibrary();
-        ApplyCurrentTheme();
         Invalidate();
     }
 
@@ -989,10 +1008,15 @@ public partial class MainForm : Form
 
         if (LanguageComboBox != null)
         {
-            LanguageComboBox.SelectedItem = _settings.Language;
+            LanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
         }
 
         ApplyCurrentTheme();
+    }
+
+    private static string GetLanguageDisplayName(string language)
+    {
+        return string.Equals(language, "Persian", StringComparison.OrdinalIgnoreCase) ? "فارسی" : "English";
     }
 
     private void ApplyCurrentLanguage()
@@ -1001,6 +1025,7 @@ public partial class MainForm : Form
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
         ApplyRtlForLanguage(_localizationService.ParseLanguage(_settings.Language));
+        ApplyDirectionalState(this, _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian);
     }
 
     private void ApplyCurrentTheme()
@@ -1012,5 +1037,15 @@ public partial class MainForm : Form
     {
         RightToLeft = language == SupportedLanguage.Persian ? RightToLeft.Yes : RightToLeft.No;
         RightToLeftLayout = language == SupportedLanguage.Persian;
+    }
+
+    private static void ApplyDirectionalState(Control control, bool isRtl)
+    {
+        control.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+
+        foreach (Control child in control.Controls)
+        {
+            ApplyDirectionalState(child, isRtl);
+        }
     }
 }
