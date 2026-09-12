@@ -11,7 +11,8 @@ public class GameService
             return false;
         }
 
-        return File.Exists(Path.Combine(gamePath, "gta_sa.exe"));
+        var supportedExecutables = new[] { "gta_sa.exe", "GTA 5 FARSI.exe" };
+        return supportedExecutables.Any(executable => File.Exists(Path.Combine(gamePath, executable)));
     }
 
     public static string GetModLoaderFolder(string gamePath)

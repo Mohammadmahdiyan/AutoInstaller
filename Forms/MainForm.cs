@@ -14,6 +14,13 @@ public partial class MainForm : Form
     private readonly LocalizationService _localizationService = new();
     private readonly Dictionary<WizardStep, Panel> _wizardPanels = new();
     private readonly System.Windows.Forms.Timer _completionTimer = new();
+    private Panel _wizardHost = null!;
+    private Panel _sidebarPanel = null!;
+    private Button _sidebarPreviousButton = null!;
+    private Button _sidebarNextButton = null!;
+    private ComboBox _sidebarLanguageComboBox = null!;
+    private ComboBox _sidebarThemeComboBox = null!;
+    private Button _sidebarReadmeButton = null!;
     private AppSettings _settings;
     private readonly string _appName = "Mod Manager";
     private string _selectedGamePath = string.Empty;
@@ -44,12 +51,12 @@ public partial class MainForm : Form
         ApplyCurrentLanguage();
         ApplyCurrentTheme();
         ConfigureUi();
-        EnsureValidatedApplicationSetup();
-        LoadSettingsIntoUi();
+        InitializeSidebar();
         InitializeWizard();
         AdvanceToValidStep();
         RefreshModLibrary();
         RefreshModList();
+        UpdateSidebarState();
     }
 
     private void ConfigureUi()
@@ -57,8 +64,8 @@ public partial class MainForm : Form
         Text = _appName;
         StartPosition = FormStartPosition.CenterScreen;
         AutoScaleMode = AutoScaleMode.Dpi;
-        BackColor = Color.FromArgb(245, 247, 250);
-        MinimumSize = new Size(1080, 760);
+        MinimumSize = new Size(1100, 760);
+        Font = new Font("Segoe UI", 9F, FontStyle.Regular);
 
         if (MainPanel != null)
         {
@@ -131,6 +138,82 @@ public partial class MainForm : Form
         }
     }
 
+    private void InitializeSidebar()
+    {
+        if (MainPanel == null)
+        {
+            return;
+        }
+
+        if (HeaderPanel != null)
+        {
+            HeaderPanel.Visible = false;
+        }
+
+        _sidebarPanel = new Panel
+        {
+            Dock = DockStyle.Left,
+            Width = 260,
+            Padding = new Padding(16),
+            BorderStyle = BorderStyle.None,
+            BackColor = Color.Transparent
+        };
+
+        var stack = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 7,
+            AutoSize = false,
+            Padding = new Padding(0),
+            Margin = new Padding(0),
+            BackColor = Color.Transparent
+        };
+
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+        _sidebarPreviousButton = new Button { Text = _localizationService.GetString("Previous", "Previous"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarNextButton = new Button { Text = _localizationService.GetString("Next", "Next"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarLanguageComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarThemeComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarReadmeButton = new Button { Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10), Visible = false };
+
+        _sidebarLanguageComboBox.Items.AddRange(new object[] { "English", "فارسی" });
+        _sidebarThemeComboBox.Items.AddRange(new object[] { "System", "Light Blue", "Light Purple", "Light Green", "Light Orange", "Dark Blue", "Dark Purple", "Dark Green", "Dark Red" });
+
+        _sidebarPreviousButton.Click += (_, _) => HandleSidebarPrevious();
+        _sidebarNextButton.Click += (_, _) => HandleSidebarNext();
+        _sidebarReadmeButton.Click += (_, _) =>
+        {
+            if (!string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath))
+            {
+                ShowReadmeDialog(_selectedReadmePath);
+            }
+        };
+        _sidebarLanguageComboBox.SelectedIndexChanged += LanguageComboBox_SelectedIndexChanged;
+        _sidebarThemeComboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
+
+        stack.Controls.Add(_sidebarPreviousButton, 0, 0);
+        stack.Controls.Add(_sidebarNextButton, 0, 1);
+        stack.Controls.Add(new Label { Text = _localizationService.GetString("Language", "Language"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 2);
+        stack.Controls.Add(_sidebarLanguageComboBox, 0, 3);
+        stack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
+        stack.Controls.Add(_sidebarThemeComboBox, 0, 5);
+        stack.Controls.Add(_sidebarReadmeButton, 0, 6);
+
+        _sidebarPanel.Controls.Add(stack);
+        MainPanel.Controls.Add(_sidebarPanel);
+        _sidebarPanel.BringToFront();
+
+        ApplySidebarDirection();
+    }
+
     private void InitializeWizard()
     {
         if (MainPanel == null)
@@ -138,7 +221,7 @@ public partial class MainForm : Form
             return;
         }
 
-        var wizardHost = new Panel
+        _wizardHost = new Panel
         {
             Dock = DockStyle.Fill,
             Padding = new Padding(18),
@@ -146,8 +229,8 @@ public partial class MainForm : Form
             Visible = true
         };
 
-        MainPanel.Controls.Add(wizardHost);
-        wizardHost.BringToFront();
+        MainPanel.Controls.Add(_wizardHost);
+        _wizardHost.BringToFront();
 
         foreach (var panel in new[] { GamePanel, ModLibraryPanel, ModLoaderPanel })
         {
@@ -168,7 +251,7 @@ public partial class MainForm : Form
         {
             step.Dock = DockStyle.Fill;
             step.Visible = false;
-            wizardHost.Controls.Add(step);
+            _wizardHost.Controls.Add(step);
         }
 
         _completionTimer.Interval = 1000;
@@ -202,7 +285,6 @@ public partial class MainForm : Form
         var description = new Label { Text = _localizationService.GetString("GameFolderRequired", "Choose your GTA San Andreas folder."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
         var pathText = new TextBox { Width = 560, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
         var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
-        var next = new Button { Text = _localizationService.GetString("Continue", "Continue"), Width = 170, Height = 40, Enabled = false };
 
         browse.Click += (_, _) =>
         {
@@ -219,25 +301,14 @@ public partial class MainForm : Form
             _settings.GameProfileId = BuildProfileId(selected, _settings.GameExecutableName);
             _settingsService.Save(_settings);
             pathText.Text = selected;
-            next.Enabled = true;
-            GameService.EnsureModLoaderFolder(selected);
-        };
-
-        next.Click += (_, _) =>
-        {
-            if (!GameService.IsValidGameFolder(_selectedGamePath))
-            {
-                return;
-            }
-
             LoadSettingsIntoUi();
-            GoToStep(WizardStep.Step2);
+            UpdateSidebarState();
+            GameService.EnsureModLoaderFolder(selected);
         };
 
         var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
         flow.Controls.Add(pathText);
         flow.Controls.Add(browse);
-        flow.Controls.Add(next);
 
         panel.Controls.Add(title);
         panel.Controls.Add(description);
@@ -253,16 +324,11 @@ public partial class MainForm : Form
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
         var title = new Label { Text = _localizationService.GetString("Step2Profile", "Game profile"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
         var summary = new Label { Name = "ProfileSummary", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
-        var continueButton = new Button { Text = _localizationService.GetString("Continue", "Continue"), Width = 170, Height = 40 };
-
-        continueButton.Click += (_, _) => GoToStep(WizardStep.Step3);
 
         panel.Controls.Add(title);
         panel.Controls.Add(summary);
-        panel.Controls.Add(continueButton);
         title.Location = new Point(18, 18);
         summary.Location = new Point(18, 58);
-        continueButton.Location = new Point(18, 140);
         return panel;
     }
 
@@ -367,7 +433,6 @@ public partial class MainForm : Form
         var countdown = new Label { Name = "CountdownLabel", AutoSize = true, Font = new Font("Segoe UI", 10F) };
         var openButton = new Button { Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
         var runButton = new Button { Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
-        var readmeButton = new Button { Text = _localizationService.GetString("ReadMe", "Read Me"), Width = 150, Height = 42, Visible = !string.IsNullOrWhiteSpace(_selectedReadmePath) };
         var gallery = new FlowLayoutPanel { Width = 680, Height = 180, AutoScroll = true, WrapContents = true };
 
         openButton.Click += (_, _) =>
@@ -379,12 +444,10 @@ public partial class MainForm : Form
         };
 
         runButton.Click += (_, _) => GameService.LaunchGame(_selectedGamePath);
-        readmeButton.Click += (_, _) => ShowReadmeDialog(_selectedReadmePath);
 
         var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
         flow.Controls.Add(openButton);
         flow.Controls.Add(runButton);
-        flow.Controls.Add(readmeButton);
 
         panel.Controls.Add(title);
         panel.Controls.Add(description);
@@ -407,6 +470,8 @@ public partial class MainForm : Form
             item.Value.Visible = item.Key == step;
         }
 
+        UpdateSidebarState();
+
         if (step == WizardStep.Step6)
         {
             _completionSecondsLeft = 6;
@@ -424,18 +489,33 @@ public partial class MainForm : Form
         }
     }
 
+    private void NavigateToStep(WizardStep step)
+    {
+        GoToStep(step);
+    }
+
+    private WizardStep DetermineFirstRequiredStep()
+    {
+        var cachedFolder = _settings.GamePath ?? string.Empty;
+        if (!GameService.IsValidGameFolder(cachedFolder))
+        {
+            return WizardStep.Step1;
+        }
+
+        var executable = _settings.GameExecutableName ?? "gta_sa.exe";
+        var expectedProfile = BuildProfileId(cachedFolder, executable);
+        var gameProfileValid = !string.IsNullOrWhiteSpace(_settings.GameProfileId) &&
+            string.Equals(_settings.GameProfileId, expectedProfile, StringComparison.OrdinalIgnoreCase) &&
+            File.Exists(Path.Combine(cachedFolder, executable));
+
+        return gameProfileValid ? WizardStep.Step3 : WizardStep.Step2;
+    }
+
     private void AdvanceToValidStep()
     {
         _selectedGamePath = _settings.GamePath ?? string.Empty;
-        if (GameService.IsValidGameFolder(_selectedGamePath))
-        {
-            _selectedModSourcePath = _settings.ModSourceFolder ?? string.Empty;
-            _selectedGamePath = _settings.GamePath ?? string.Empty;
-            GoToStep(WizardStep.Step2);
-            return;
-        }
-
-        GoToStep(WizardStep.Step1);
+        var firstRequiredStep = DetermineFirstRequiredStep();
+        NavigateToStep(firstRequiredStep);
     }
 
     private async Task InstallSelectedModAsync()
@@ -557,6 +637,21 @@ public partial class MainForm : Form
         return ModPackageService.NormalizeDisplayName(cleanName ?? "Mod");
     }
 
+    private static bool IsReadmeFileName(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return false;
+        }
+
+        var normalized = Path.GetFileNameWithoutExtension(fileName)
+            .Replace(" ", string.Empty)
+            .Replace("_", string.Empty)
+            .Replace("-", string.Empty);
+
+        return normalized.Equals("readme", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static string FindReadmeFile(string root)
     {
         if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
@@ -567,9 +662,7 @@ public partial class MainForm : Form
         foreach (var file in Directory.GetFiles(root, "*", SearchOption.AllDirectories))
         {
             var name = Path.GetFileName(file);
-            if (name.StartsWith("README", StringComparison.OrdinalIgnoreCase) ||
-                name.StartsWith("Read Me", StringComparison.OrdinalIgnoreCase) ||
-                name.StartsWith("readme", StringComparison.OrdinalIgnoreCase))
+            if (IsReadmeFileName(name))
             {
                 return file;
             }
@@ -956,27 +1049,30 @@ public partial class MainForm : Form
         GoToStep(WizardStep.Step2);
     }
 
-    private void ThemeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+    private void ThemeComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (ThemeComboBox.SelectedItem == null)
+        var selectedComboBox = sender as ComboBox ?? ThemeComboBox;
+        if (selectedComboBox == null || selectedComboBox.SelectedItem == null)
         {
             return;
         }
 
-        var selected = ThemeComboBox.SelectedItem.ToString();
+        var selected = selectedComboBox.SelectedItem.ToString();
         _settings.Theme = ThemeManager.ParseTheme(selected).ToString();
         _settingsService.Save(_settings);
         ApplyCurrentTheme();
+        ApplySidebarDirection();
     }
 
-    private void LanguageComboBox_SelectedIndexChanged(object sender, EventArgs e)
+    private void LanguageComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (LanguageComboBox.SelectedItem == null)
+        var selectedComboBox = sender as ComboBox ?? LanguageComboBox;
+        if (selectedComboBox == null || selectedComboBox.SelectedItem == null)
         {
             return;
         }
 
-        var selectedValue = LanguageComboBox.SelectedItem.ToString();
+        var selectedValue = selectedComboBox.SelectedItem.ToString();
         if (string.IsNullOrWhiteSpace(selectedValue))
         {
             return;
@@ -990,9 +1086,10 @@ public partial class MainForm : Form
 
         _settingsService.Save(_settings);
         ApplyCurrentLanguage();
-        ApplyRtlForLanguage(_localizationService.ParseLanguage(_settings.Language));
-        ConfigureUi();
+        ApplyLocalization();
         ApplyCurrentTheme();
+        ApplySidebarDirection();
+        UpdateSidebarState();
         RefreshModList();
         RefreshModLibrary();
         Invalidate();
@@ -1011,7 +1108,19 @@ public partial class MainForm : Form
             LanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
         }
 
+        if (_sidebarThemeComboBox != null)
+        {
+            _sidebarThemeComboBox.SelectedItem = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+        }
+
+        if (_sidebarLanguageComboBox != null)
+        {
+            _sidebarLanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
+        }
+
         ApplyCurrentTheme();
+        ApplyLocalization();
+        UpdateSidebarState();
     }
 
     private static string GetLanguageDisplayName(string language)
@@ -1028,6 +1137,33 @@ public partial class MainForm : Form
         ApplyDirectionalState(this, _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian);
     }
 
+    private void RebuildWizardPanels()
+    {
+        if (_wizardHost == null)
+        {
+            return;
+        }
+
+        _wizardPanels.Clear();
+        _wizardHost.Controls.Clear();
+
+        _wizardPanels[WizardStep.Step1] = CreateWizardStep1();
+        _wizardPanels[WizardStep.Step2] = CreateWizardStep2();
+        _wizardPanels[WizardStep.Step3] = CreateWizardStep3();
+        _wizardPanels[WizardStep.Step4] = CreateWizardStep4();
+        _wizardPanels[WizardStep.Step5] = CreateWizardStep5();
+        _wizardPanels[WizardStep.Step6] = CreateWizardStep6();
+
+        foreach (var panel in _wizardPanels.Values)
+        {
+            panel.Dock = DockStyle.Fill;
+            panel.Visible = false;
+            _wizardHost.Controls.Add(panel);
+        }
+
+        GoToStep(_currentStep);
+    }
+
     private void ApplyCurrentTheme()
     {
         ThemeManager.ApplyTheme(this, ThemeManager.ParseTheme(_settings.Theme));
@@ -1037,6 +1173,7 @@ public partial class MainForm : Form
     {
         RightToLeft = language == SupportedLanguage.Persian ? RightToLeft.Yes : RightToLeft.No;
         RightToLeftLayout = language == SupportedLanguage.Persian;
+        ApplySidebarDirection();
     }
 
     private static void ApplyDirectionalState(Control control, bool isRtl)
@@ -1046,6 +1183,186 @@ public partial class MainForm : Form
         foreach (Control child in control.Controls)
         {
             ApplyDirectionalState(child, isRtl);
+        }
+    }
+
+    private void ApplySidebarDirection()
+    {
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        if (_sidebarPanel != null)
+        {
+            _sidebarPanel.Dock = isRtl ? DockStyle.Right : DockStyle.Left;
+        }
+
+        if (MainPanel != null)
+        {
+            MainPanel.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+        }
+    }
+
+    private void ApplyLocalization()
+    {
+        if (GameStatusLabel != null) GameStatusLabel.Text = _localizationService.GetString("GameStatus", "Game Status");
+        if (GamePathLabel != null) GamePathLabel.Text = _localizationService.GetString("GamePath", "Game Path");
+        if (GameFolderNotConfiguredLabel != null) GameFolderNotConfiguredLabel.Text = _localizationService.GetString("GameFolderNotConfigured", "Game folder not configured");
+        if (ModLibraryTitleLabel != null) ModLibraryTitleLabel.Text = _localizationService.GetString("ModLibraryTitle", "Mod Library");
+        if (ModLibraryPathLabel != null) ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Mods Folder");
+        if (ModLibraryChangeButton != null) ModLibraryChangeButton.Text = _localizationService.GetString("Change", "Change");
+        if (ModLibraryOpenButton != null) ModLibraryOpenButton.Text = _localizationService.GetString("OpenFolder", "Open Folder");
+        if (OpenGameFolderButton != null) OpenGameFolderButton.Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder");
+        if (RunGameButton != null) RunGameButton.Text = _localizationService.GetString("RunGame", "Run Game");
+        if (InstallModButton != null) InstallModButton.Text = _localizationService.GetString("InstallMod", "Install Mod");
+        if (ModLoaderTitleLabel != null) ModLoaderTitleLabel.Text = _localizationService.GetString("ModLoaderMods", "ModLoader Mods");
+        if (ThemeLabel != null) ThemeLabel.Text = _localizationService.GetString("Theme", "Theme");
+        if (LanguageLabel != null) LanguageLabel.Text = _localizationService.GetString("Language", "Language");
+
+        if (_sidebarPreviousButton != null) _sidebarPreviousButton.Text = _localizationService.GetString("Previous", "Previous");
+        if (_sidebarNextButton != null) _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+        if (_sidebarReadmeButton != null) _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+
+        if (_sidebarLanguageComboBox != null)
+        {
+            _sidebarLanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
+        }
+
+        if (LanguageComboBox != null)
+        {
+            LanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
+        }
+
+        foreach (var panel in _wizardPanels.Values)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if (control is Label label && label.Name == "ProfileSummary")
+                {
+                    label.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+                }
+                else if (control is Button button && button.Name == "NextActionButton")
+                {
+                    button.Text = _localizationService.GetString("Next", "Next");
+                }
+                else if (control is Button button2 && button2.Name == "InstallActionButton")
+                {
+                    button2.Text = _localizationService.GetString("InstallMod", "Install Mod");
+                }
+                else if (control is Button button3 && button3.Name == "ContinueButton")
+                {
+                    button3.Text = _localizationService.GetString("Continue", "Continue");
+                }
+            }
+        }
+
+        UpdateSidebarState();
+    }
+
+    private void UpdateSidebarState()
+    {
+        if (_sidebarPreviousButton == null || _sidebarNextButton == null || _sidebarReadmeButton == null)
+        {
+            return;
+        }
+
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        if (MainPanel != null)
+        {
+            MainPanel.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+        }
+
+        _sidebarPreviousButton.Enabled = false;
+        _sidebarNextButton.Enabled = false;
+        _sidebarReadmeButton.Visible = _currentStep is WizardStep.Step4 or WizardStep.Step6;
+        _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+        _sidebarReadmeButton.Enabled = !string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath);
+
+        switch (_currentStep)
+        {
+            case WizardStep.Step1:
+                _sidebarPreviousButton.Enabled = false;
+                _sidebarNextButton.Enabled = GameService.IsValidGameFolder(_selectedGamePath);
+                _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+                break;
+            case WizardStep.Step2:
+                _sidebarPreviousButton.Enabled = true;
+                _sidebarNextButton.Enabled = true;
+                _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+                break;
+            case WizardStep.Step3:
+                _sidebarPreviousButton.Enabled = true;
+                _sidebarNextButton.Enabled = !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath);
+                _sidebarNextButton.Text = _localizationService.GetString("InstallMod", "Install Mod");
+                break;
+            case WizardStep.Step4:
+                _sidebarPreviousButton.Enabled = false;
+                _sidebarNextButton.Enabled = false;
+                _sidebarNextButton.Text = _localizationService.GetString("Installing", "Installing");
+                break;
+            case WizardStep.Step5:
+                _sidebarPreviousButton.Enabled = true;
+                _sidebarNextButton.Enabled = true;
+                _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+                break;
+            case WizardStep.Step6:
+                _sidebarPreviousButton.Enabled = true;
+                _sidebarNextButton.Enabled = false;
+                _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+                break;
+        }
+
+        _sidebarPreviousButton.ForeColor = _sidebarPreviousButton.Enabled ? Color.White : Color.FromArgb(148, 163, 184);
+        _sidebarNextButton.ForeColor = _sidebarNextButton.Enabled ? Color.White : Color.FromArgb(148, 163, 184);
+        _sidebarReadmeButton.ForeColor = _sidebarReadmeButton.Enabled ? Color.White : Color.FromArgb(148, 163, 184);
+    }
+
+    private void HandleSidebarPrevious()
+    {
+        if (_currentStep == WizardStep.Step2)
+        {
+            NavigateToStep(WizardStep.Step1);
+            return;
+        }
+
+        if (_currentStep == WizardStep.Step3)
+        {
+            NavigateToStep(WizardStep.Step2);
+            return;
+        }
+
+        if (_currentStep == WizardStep.Step5)
+        {
+            NavigateToStep(WizardStep.Step4);
+            return;
+        }
+
+        if (_currentStep == WizardStep.Step6)
+        {
+            NavigateToStep(WizardStep.Step5);
+            return;
+        }
+    }
+
+    private void HandleSidebarNext()
+    {
+        switch (_currentStep)
+        {
+            case WizardStep.Step1:
+                if (GameService.IsValidGameFolder(_selectedGamePath))
+                {
+                    NavigateToStep(WizardStep.Step2);
+                }
+                break;
+            case WizardStep.Step2:
+                NavigateToStep(WizardStep.Step3);
+                break;
+            case WizardStep.Step3:
+                if (!string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
+                {
+                    _ = InstallSelectedModAsync();
+                }
+                break;
+            case WizardStep.Step5:
+                NavigateToStep(WizardStep.Step6);
+                break;
         }
     }
 }
