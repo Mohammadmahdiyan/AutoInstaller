@@ -25,6 +25,10 @@ public class AppSettings
 
     public string? ModSourceFolder { get; set; }
 
+    public string? GameExecutableName { get; set; }
+
+    public string? GameProfileId { get; set; }
+
     public string Language { get; set; } = nameof(AppLanguage.English);
 
     public string Theme { get; set; } = nameof(AppTheme.System);

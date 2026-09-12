@@ -22,7 +22,6 @@ public static class ThemeManager
 {
     private static readonly Dictionary<AppTheme, ThemePalette> PaletteMap = new()
     {
-        [AppTheme.System] = CreateSystemPalette(),
         [AppTheme.LightBlue] = new ThemePalette
         {
             Background = Color.FromArgb(239, 246, 255),
@@ -190,7 +189,7 @@ public static class ThemeManager
     {
         if (theme == AppTheme.System)
         {
-            theme = IsWindowsDarkMode() ? AppTheme.DarkBlue : AppTheme.LightBlue;
+            return IsWindowsDarkMode() ? PaletteMap[AppTheme.DarkBlue] : PaletteMap[AppTheme.LightBlue];
         }
 
         return PaletteMap.TryGetValue(theme, out var palette) ? palette : PaletteMap[AppTheme.LightBlue];
@@ -248,11 +247,6 @@ public static class ThemeManager
         {
             ApplyThemeToControl(child, palette);
         }
-    }
-
-    private static ThemePalette CreateSystemPalette()
-    {
-        return IsWindowsDarkMode() ? PaletteMap[AppTheme.DarkBlue] : PaletteMap[AppTheme.LightBlue];
     }
 
     private static bool IsWindowsDarkMode()
