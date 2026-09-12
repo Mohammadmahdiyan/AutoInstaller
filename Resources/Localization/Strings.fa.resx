@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c34e2b89e34</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c34e2b89e34</value>
+  </resheader>
+  <data name="GameStatus" xml:space="preserve"><value>وضعیت بازی</value></data>
+  <data name="GamePath" xml:space="preserve"><value>مسیر بازی</value></data>
+  <data name="GameFolderNotConfigured" xml:space="preserve"><value>پوشه بازی پیکربندی نشده است</value></data>
+  <data name="OpenGameFolder" xml:space="preserve"><value>باز کردن پوشه بازی</value></data>
+  <data name="RunGame" xml:space="preserve"><value>اجرای بازی</value></data>
+  <data name="InstallMod" xml:space="preserve"><value>نصب مود</value></data>
+  <data name="ModLoaderMods" xml:space="preserve"><value>مودهای ModLoader</value></data>
+  <data name="Configured" xml:space="preserve"><value>پیکربندی شد</value></data>
+  <data name="NotConfigured" xml:space="preserve"><value>پیکربندی نشده</value></data>
+  <data name="NoModsInstalled" xml:space="preserve"><value>هنوز هیچ مود ModLoader نصب نشده است.</value></data>
+  <data name="ViewReadme" xml:space="preserve"><value>نمایش README</value></data>
+  <data name="GameFolderNotConfiguredMessage" xml:space="preserve"><value>لطفاً ابتدا یک پوشه معتبر برای GTA San Andreas انتخاب کنید.</value></data>
+  <data name="SelectMod" xml:space="preserve"><value>یک پوشه یا آرشیو مود انتخاب کنید</value></data>
+  <data name="ExtractionFailed" xml:space="preserve"><value>آرشیو مود را نمی‌توان استخراج کرد.</value></data>
+  <data name="DuplicateModPrompt" xml:space="preserve"><value>مدی با نام '{0}' از قبل وجود دارد. جایگزین شود؟</value></data>
+  <data name="Installing" xml:space="preserve"><value>در حال نصب</value></data>
+  <data name="InstallationCompleted" xml:space="preserve"><value>نصب با موفقیت انجام شد.</value></data>
+  <data name="InstallationFailed" xml:space="preserve"><value>نصب مود انجام نشد.</value></data>
+  <data name="ModSourceInvalid" xml:space="preserve"><value>مود انتخاب‌شده قابل خواندن نبود.</value></data>
+  <data name="SelectGameFolder" xml:space="preserve"><value>پوشه GTA San Andreas را انتخاب کنید</value></data>
+  <data name="InvalidGameFolder" xml:space="preserve"><value>این پوشه شامل gta_sa.exe نمی‌شود.</value></data>
+  <data name="GameLaunchFailed" xml:space="preserve"><value>اجرای بازی انجام نشد.</value></data>
+  <data name="InstallingTitle" xml:space="preserve"><value>در حال نصب</value></data>
+  <data name="Theme" xml:space="preserve"><value>تم</value></data>
+  <data name="Language" xml:space="preserve"><value>زبان</value></data>
+  <data name="Browse" xml:space="preserve"><value>انتخاب</value></data>
+</root>
