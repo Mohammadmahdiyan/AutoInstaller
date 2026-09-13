@@ -48,12 +48,17 @@ public partial class MainForm : Form
     {
         InitializeComponent();
         _settings = _settingsService.Load();
+        SyncCachedGameDataFromFilesystem();
+
+        var startupStep = DetermineFirstRequiredStep();
+        _currentStep = startupStep;
+
         ApplyCurrentLanguage();
         ApplyCurrentTheme();
         ConfigureUi();
         InitializeSidebar();
         InitializeWizard();
-        AdvanceToValidStep();
+        GoToStep(_currentStep);
         RefreshModLibrary();
         RefreshModList();
         UpdateSidebarState();
@@ -339,7 +344,6 @@ public partial class MainForm : Form
         var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold) };
         var folderText = new TextBox { Width = 520, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
         var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
-        var install = new Button { Text = _localizationService.GetString("InstallMod", "Install Mod"), Width = 180, Height = 42 };
         var selectedName = new Label { AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
 
         browse.Click += (_, _) =>
@@ -347,12 +351,22 @@ public partial class MainForm : Form
             var selected = PromptForFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"));
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
+                _selectedModName = string.Empty;
+                _selectedModPayloadPath = string.Empty;
+                folderText.Text = string.Empty;
+                selectedName.Text = string.Empty;
+                UpdateSidebarState();
                 return;
             }
 
             if (!Directory.EnumerateFileSystemEntries(selected).Any())
             {
+                _selectedModName = string.Empty;
+                _selectedModPayloadPath = string.Empty;
+                folderText.Text = string.Empty;
+                selectedName.Text = string.Empty;
                 MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                UpdateSidebarState();
                 return;
             }
 
@@ -360,14 +374,12 @@ public partial class MainForm : Form
             _selectedModPayloadPath = selected;
             folderText.Text = selected;
             selectedName.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+            UpdateSidebarState();
         };
-
-        install.Click += async (_, _) => await InstallSelectedModAsync();
 
         var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
         flow.Controls.Add(folderText);
         flow.Controls.Add(browse);
-        flow.Controls.Add(install);
 
         panel.Controls.Add(title);
         panel.Controls.Add(folderLabel);
@@ -494,28 +506,106 @@ public partial class MainForm : Form
         GoToStep(step);
     }
 
-    private WizardStep DetermineFirstRequiredStep()
+    private static string? DetectInstalledExecutable(string gameFolder)
+    {
+        if (string.IsNullOrWhiteSpace(gameFolder) || !Directory.Exists(gameFolder))
+        {
+            return null;
+        }
+
+        foreach (var executable in new[] { "gta_sa.exe", "GTA 5 FARSI.exe" })
+        {
+            if (File.Exists(Path.Combine(gameFolder, executable)))
+            {
+                return executable;
+            }
+        }
+
+        return null;
+    }
+
+    private void SyncCachedGameDataFromFilesystem()
     {
         var cachedFolder = _settings.GamePath ?? string.Empty;
-        if (!GameService.IsValidGameFolder(cachedFolder))
+        if (string.IsNullOrWhiteSpace(cachedFolder) || !Directory.Exists(cachedFolder))
+        {
+            return;
+        }
+
+        var detectedExecutable = DetectInstalledExecutable(cachedFolder);
+        if (string.IsNullOrWhiteSpace(detectedExecutable))
+        {
+            return;
+        }
+
+        var expectedProfile = BuildProfileId(cachedFolder, detectedExecutable);
+        var needsSave = !string.Equals(_settings.GameExecutableName, detectedExecutable, StringComparison.OrdinalIgnoreCase)
+            || !string.Equals(_settings.GameProfileId, expectedProfile, StringComparison.OrdinalIgnoreCase);
+
+        if (needsSave)
+        {
+            _settings.GameExecutableName = detectedExecutable;
+            _settings.GameProfileId = expectedProfile;
+            _settingsService.Save(_settings);
+        }
+    }
+
+    private bool IsCachedGameFolderValid()
+    {
+        var cachedFolder = _settings.GamePath ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(cachedFolder) || !Directory.Exists(cachedFolder))
+        {
+            return false;
+        }
+
+        return DetectInstalledExecutable(cachedFolder) is not null;
+    }
+
+    private bool IsCachedGameProfileValid()
+    {
+        if (!IsCachedGameFolderValid())
+        {
+            return false;
+        }
+
+        var cachedFolder = _settings.GamePath ?? string.Empty;
+        var cachedExecutable = !string.IsNullOrWhiteSpace(_settings.GameExecutableName)
+            && File.Exists(Path.Combine(cachedFolder, _settings.GameExecutableName))
+            ? _settings.GameExecutableName
+            : DetectInstalledExecutable(cachedFolder);
+
+        if (string.IsNullOrWhiteSpace(cachedExecutable))
+        {
+            return false;
+        }
+
+        var expectedProfile = BuildProfileId(cachedFolder, cachedExecutable);
+        var profileMatches = !string.IsNullOrWhiteSpace(_settings.GameProfileId) &&
+            string.Equals(_settings.GameProfileId, expectedProfile, StringComparison.OrdinalIgnoreCase);
+
+        return profileMatches && File.Exists(Path.Combine(cachedFolder, cachedExecutable));
+    }
+
+    private WizardStep DetermineFirstRequiredStep()
+    {
+        if (!IsCachedGameFolderValid())
         {
             return WizardStep.Step1;
         }
 
-        var executable = _settings.GameExecutableName ?? "gta_sa.exe";
-        var expectedProfile = BuildProfileId(cachedFolder, executable);
-        var gameProfileValid = !string.IsNullOrWhiteSpace(_settings.GameProfileId) &&
-            string.Equals(_settings.GameProfileId, expectedProfile, StringComparison.OrdinalIgnoreCase) &&
-            File.Exists(Path.Combine(cachedFolder, executable));
+        if (!IsCachedGameProfileValid())
+        {
+            return WizardStep.Step2;
+        }
 
-        return gameProfileValid ? WizardStep.Step3 : WizardStep.Step2;
+        return WizardStep.Step3;
     }
 
     private void AdvanceToValidStep()
     {
         _selectedGamePath = _settings.GamePath ?? string.Empty;
-        var firstRequiredStep = DetermineFirstRequiredStep();
-        NavigateToStep(firstRequiredStep);
+        _currentStep = DetermineFirstRequiredStep();
+        NavigateToStep(_currentStep);
     }
 
     private async Task InstallSelectedModAsync()
@@ -1098,6 +1188,13 @@ public partial class MainForm : Form
     protected override void OnShown(EventArgs e)
     {
         base.OnShown(e);
+
+        var startupStep = DetermineFirstRequiredStep();
+        if (_currentStep != startupStep)
+        {
+            _currentStep = startupStep;
+        }
+
         if (ThemeComboBox != null)
         {
             ThemeComboBox.SelectedItem = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
@@ -1121,6 +1218,7 @@ public partial class MainForm : Form
         ApplyCurrentTheme();
         ApplyLocalization();
         UpdateSidebarState();
+        GoToStep(_currentStep);
     }
 
     private static string GetLanguageDisplayName(string language)
