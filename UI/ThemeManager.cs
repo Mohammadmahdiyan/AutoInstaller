@@ -1,4 +1,5 @@
 using GtaSaModManager.Models;
+using Microsoft.Win32;
 using System.Drawing.Drawing2D;
 
 namespace GtaSaModManager.UI;
@@ -6,17 +7,24 @@ namespace GtaSaModManager.UI;
 public sealed class ThemePalette
 {
     public Color Background { get; init; }
+    public Color BackgroundGradientEnd { get; init; }
+
     public Color Surface { get; init; }
     public Color SurfaceSecondary { get; init; }
     public Color Card { get; init; }
+
+    public Color Sidebar { get; init; }
+    public Color SidebarGradientEnd { get; init; }
 
     public Color TextPrimary { get; init; }
     public Color TextSecondary { get; init; }
 
     public Color Accent { get; init; }
     public Color AccentHover { get; init; }
+    public Color AccentSoft { get; init; }
 
     public Color Border { get; init; }
+    public Color BorderSoft { get; init; }
 
     public Color Success { get; init; }
     public Color Warning { get; init; }
@@ -29,98 +37,133 @@ public static class ThemeManager
     {
         [AppTheme.LightBlue] = new ThemePalette
         {
-            Background = Color.FromArgb(241, 245, 249),
+            Background = Color.FromArgb(239, 244, 252),
+            BackgroundGradientEnd = Color.FromArgb(250, 252, 255),
+
             Surface = Color.FromArgb(255, 255, 255),
-            SurfaceSecondary = Color.FromArgb(248, 250, 252),
+            SurfaceSecondary = Color.FromArgb(247, 249, 253),
             Card = Color.FromArgb(255, 255, 255),
 
-            TextPrimary = Color.FromArgb(15, 23, 42),
-            TextSecondary = Color.FromArgb(71, 85, 105),
+            Sidebar = Color.FromArgb(238, 243, 252),
+            SidebarGradientEnd = Color.FromArgb(247, 249, 255),
 
-            Accent = Color.FromArgb(37, 99, 235),
-            AccentHover = Color.FromArgb(59, 130, 246),
+            TextPrimary = Color.FromArgb(20, 28, 45),
+            TextSecondary = Color.FromArgb(91, 103, 124),
 
-            Border = Color.FromArgb(203, 213, 225),
+            Accent = Color.FromArgb(59, 91, 219),
+            AccentHover = Color.FromArgb(91, 116, 235),
+            AccentSoft = Color.FromArgb(224, 231, 255),
 
-            Success = Color.FromArgb(16, 185, 129),
-            Warning = Color.FromArgb(245, 158, 11),
-            Error = Color.FromArgb(239, 68, 68)
+            Border = Color.FromArgb(214, 221, 235),
+            BorderSoft = Color.FromArgb(229, 233, 242),
+
+            Success = Color.FromArgb(22, 163, 74),
+            Warning = Color.FromArgb(217, 119, 6),
+            Error = Color.FromArgb(220, 38, 38)
         },
 
         [AppTheme.LightPurple] = new ThemePalette
         {
-            Background = Color.FromArgb(245, 243, 255),
+            Background = Color.FromArgb(243, 241, 251),
+            BackgroundGradientEnd = Color.FromArgb(251, 250, 255),
+
             Surface = Color.FromArgb(255, 255, 255),
-            SurfaceSecondary = Color.FromArgb(250, 248, 255),
+            SurfaceSecondary = Color.FromArgb(249, 247, 253),
             Card = Color.FromArgb(255, 255, 255),
 
-            TextPrimary = Color.FromArgb(30, 27, 75),
-            TextSecondary = Color.FromArgb(88, 88, 122),
+            Sidebar = Color.FromArgb(242, 239, 250),
+            SidebarGradientEnd = Color.FromArgb(249, 247, 255),
 
-            Accent = Color.FromArgb(124, 58, 237),
-            AccentHover = Color.FromArgb(168, 85, 247),
+            TextPrimary = Color.FromArgb(31, 26, 52),
+            TextSecondary = Color.FromArgb(101, 94, 124),
 
-            Border = Color.FromArgb(221, 214, 254),
+            Accent = Color.FromArgb(109, 67, 213),
+            AccentHover = Color.FromArgb(139, 92, 232),
+            AccentSoft = Color.FromArgb(237, 233, 254),
 
-            Success = Color.FromArgb(52, 211, 153),
-            Warning = Color.FromArgb(251, 191, 36),
-            Error = Color.FromArgb(248, 113, 113)
+            Border = Color.FromArgb(221, 215, 235),
+            BorderSoft = Color.FromArgb(234, 230, 244),
+
+            Success = Color.FromArgb(22, 163, 74),
+            Warning = Color.FromArgb(217, 119, 6),
+            Error = Color.FromArgb(220, 38, 38)
         },
 
         [AppTheme.LightGreen] = new ThemePalette
         {
-            Background = Color.FromArgb(240, 253, 244),
+            Background = Color.FromArgb(239, 247, 243),
+            BackgroundGradientEnd = Color.FromArgb(250, 253, 251),
+
             Surface = Color.FromArgb(255, 255, 255),
-            SurfaceSecondary = Color.FromArgb(248, 252, 249),
+            SurfaceSecondary = Color.FromArgb(247, 251, 249),
             Card = Color.FromArgb(255, 255, 255),
 
-            TextPrimary = Color.FromArgb(20, 83, 45),
-            TextSecondary = Color.FromArgb(52, 88, 61),
+            Sidebar = Color.FromArgb(237, 246, 241),
+            SidebarGradientEnd = Color.FromArgb(248, 252, 250),
 
-            Accent = Color.FromArgb(22, 163, 74),
-            AccentHover = Color.FromArgb(34, 197, 94),
+            TextPrimary = Color.FromArgb(20, 45, 32),
+            TextSecondary = Color.FromArgb(77, 105, 90),
 
-            Border = Color.FromArgb(187, 247, 208),
+            Accent = Color.FromArgb(22, 142, 76),
+            AccentHover = Color.FromArgb(43, 174, 98),
+            AccentSoft = Color.FromArgb(220, 252, 231),
+
+            Border = Color.FromArgb(205, 225, 214),
+            BorderSoft = Color.FromArgb(226, 239, 231),
 
             Success = Color.FromArgb(22, 163, 74),
-            Warning = Color.FromArgb(234, 179, 8),
-            Error = Color.FromArgb(239, 68, 68)
+            Warning = Color.FromArgb(202, 138, 4),
+            Error = Color.FromArgb(220, 38, 38)
         },
 
         [AppTheme.LightOrange] = new ThemePalette
         {
-            Background = Color.FromArgb(255, 247, 237),
+            Background = Color.FromArgb(251, 245, 238),
+            BackgroundGradientEnd = Color.FromArgb(255, 252, 248),
+
             Surface = Color.FromArgb(255, 255, 255),
-            SurfaceSecondary = Color.FromArgb(255, 251, 245),
+            SurfaceSecondary = Color.FromArgb(252, 249, 245),
             Card = Color.FromArgb(255, 255, 255),
 
-            TextPrimary = Color.FromArgb(67, 39, 11),
-            TextSecondary = Color.FromArgb(122, 90, 62),
+            Sidebar = Color.FromArgb(250, 243, 235),
+            SidebarGradientEnd = Color.FromArgb(255, 250, 245),
 
-            Accent = Color.FromArgb(234, 88, 12),
-            AccentHover = Color.FromArgb(249, 115, 22),
+            TextPrimary = Color.FromArgb(55, 35, 20),
+            TextSecondary = Color.FromArgb(111, 88, 69),
 
-            Border = Color.FromArgb(253, 186, 116),
+            Accent = Color.FromArgb(214, 89, 20),
+            AccentHover = Color.FromArgb(239, 113, 39),
+            AccentSoft = Color.FromArgb(255, 237, 213),
+
+            Border = Color.FromArgb(235, 215, 195),
+            BorderSoft = Color.FromArgb(244, 230, 216),
 
             Success = Color.FromArgb(22, 163, 74),
-            Warning = Color.FromArgb(234, 88, 12),
-            Error = Color.FromArgb(239, 68, 68)
+            Warning = Color.FromArgb(217, 119, 6),
+            Error = Color.FromArgb(220, 38, 38)
         },
 
         [AppTheme.DarkBlue] = new ThemePalette
         {
-            Background = Color.FromArgb(9, 15, 29),
-            Surface = Color.FromArgb(15, 23, 42),
-            SurfaceSecondary = Color.FromArgb(24, 33, 52),
-            Card = Color.FromArgb(17, 25, 44),
+            Background = Color.FromArgb(8, 13, 25),
+            BackgroundGradientEnd = Color.FromArgb(16, 23, 42),
 
-            TextPrimary = Color.FromArgb(226, 232, 240),
+            Surface = Color.FromArgb(17, 24, 39),
+            SurfaceSecondary = Color.FromArgb(23, 32, 52),
+            Card = Color.FromArgb(20, 28, 46),
+
+            Sidebar = Color.FromArgb(10, 16, 31),
+            SidebarGradientEnd = Color.FromArgb(20, 27, 48),
+
+            TextPrimary = Color.FromArgb(239, 244, 255),
             TextSecondary = Color.FromArgb(148, 163, 184),
 
-            Accent = Color.FromArgb(37, 99, 235),
-            AccentHover = Color.FromArgb(59, 130, 246),
+            Accent = Color.FromArgb(70, 95, 220),
+            AccentHover = Color.FromArgb(100, 122, 239),
+            AccentSoft = Color.FromArgb(36, 48, 94),
 
-            Border = Color.FromArgb(51, 65, 85),
+            Border = Color.FromArgb(47, 61, 87),
+            BorderSoft = Color.FromArgb(35, 46, 68),
 
             Success = Color.FromArgb(52, 211, 153),
             Warning = Color.FromArgb(245, 158, 11),
@@ -129,18 +172,25 @@ public static class ThemeManager
 
         [AppTheme.DarkPurple] = new ThemePalette
         {
-            Background = Color.FromArgb(18, 12, 28),
-            Surface = Color.FromArgb(31, 21, 45),
-            SurfaceSecondary = Color.FromArgb(42, 31, 59),
-            Card = Color.FromArgb(34, 23, 48),
+            Background = Color.FromArgb(15, 11, 24),
+            BackgroundGradientEnd = Color.FromArgb(27, 19, 43),
 
-            TextPrimary = Color.FromArgb(245, 232, 255),
-            TextSecondary = Color.FromArgb(196, 181, 253),
+            Surface = Color.FromArgb(24, 18, 38),
+            SurfaceSecondary = Color.FromArgb(34, 25, 52),
+            Card = Color.FromArgb(29, 22, 46),
 
-            Accent = Color.FromArgb(126, 34, 206),
-            AccentHover = Color.FromArgb(168, 85, 247),
+            Sidebar = Color.FromArgb(18, 12, 29),
+            SidebarGradientEnd = Color.FromArgb(35, 22, 54),
 
-            Border = Color.FromArgb(91, 71, 120),
+            TextPrimary = Color.FromArgb(247, 243, 255),
+            TextSecondary = Color.FromArgb(181, 170, 204),
+
+            Accent = Color.FromArgb(121, 72, 215),
+            AccentHover = Color.FromArgb(154, 103, 237),
+            AccentSoft = Color.FromArgb(62, 40, 96),
+
+            Border = Color.FromArgb(73, 53, 98),
+            BorderSoft = Color.FromArgb(51, 39, 69),
 
             Success = Color.FromArgb(52, 211, 153),
             Warning = Color.FromArgb(251, 191, 36),
@@ -149,18 +199,25 @@ public static class ThemeManager
 
         [AppTheme.DarkGreen] = new ThemePalette
         {
-            Background = Color.FromArgb(10, 19, 17),
-            Surface = Color.FromArgb(13, 32, 23),
-            SurfaceSecondary = Color.FromArgb(24, 44, 35),
-            Card = Color.FromArgb(15, 35, 25),
+            Background = Color.FromArgb(8, 18, 14),
+            BackgroundGradientEnd = Color.FromArgb(14, 31, 23),
 
-            TextPrimary = Color.FromArgb(220, 252, 231),
-            TextSecondary = Color.FromArgb(134, 239, 172),
+            Surface = Color.FromArgb(13, 27, 21),
+            SurfaceSecondary = Color.FromArgb(21, 39, 31),
+            Card = Color.FromArgb(16, 32, 25),
 
-            Accent = Color.FromArgb(22, 163, 74),
-            AccentHover = Color.FromArgb(34, 197, 94),
+            Sidebar = Color.FromArgb(9, 20, 15),
+            SidebarGradientEnd = Color.FromArgb(17, 38, 28),
 
-            Border = Color.FromArgb(34, 84, 57),
+            TextPrimary = Color.FromArgb(235, 252, 242),
+            TextSecondary = Color.FromArgb(143, 181, 158),
+
+            Accent = Color.FromArgb(22, 142, 76),
+            AccentHover = Color.FromArgb(43, 181, 101),
+            AccentSoft = Color.FromArgb(26, 70, 48),
+
+            Border = Color.FromArgb(37, 76, 56),
+            BorderSoft = Color.FromArgb(28, 54, 42),
 
             Success = Color.FromArgb(74, 222, 128),
             Warning = Color.FromArgb(234, 179, 8),
@@ -169,18 +226,25 @@ public static class ThemeManager
 
         [AppTheme.DarkRed] = new ThemePalette
         {
-            Background = Color.FromArgb(24, 10, 12),
-            Surface = Color.FromArgb(39, 18, 22),
-            SurfaceSecondary = Color.FromArgb(53, 25, 30),
-            Card = Color.FromArgb(43, 20, 25),
+            Background = Color.FromArgb(21, 10, 13),
+            BackgroundGradientEnd = Color.FromArgb(38, 17, 22),
 
-            TextPrimary = Color.FromArgb(254, 226, 226),
-            TextSecondary = Color.FromArgb(252, 165, 165),
+            Surface = Color.FromArgb(31, 16, 20),
+            SurfaceSecondary = Color.FromArgb(44, 23, 28),
+            Card = Color.FromArgb(37, 19, 24),
 
-            Accent = Color.FromArgb(185, 28, 28),
-            AccentHover = Color.FromArgb(220, 38, 38),
+            Sidebar = Color.FromArgb(23, 10, 14),
+            SidebarGradientEnd = Color.FromArgb(43, 18, 24),
 
-            Border = Color.FromArgb(94, 31, 35),
+            TextPrimary = Color.FromArgb(255, 240, 240),
+            TextSecondary = Color.FromArgb(194, 145, 151),
+
+            Accent = Color.FromArgb(190, 43, 48),
+            AccentHover = Color.FromArgb(222, 67, 70),
+            AccentSoft = Color.FromArgb(91, 36, 41),
+
+            Border = Color.FromArgb(94, 42, 48),
+            BorderSoft = Color.FromArgb(61, 29, 34),
 
             Success = Color.FromArgb(52, 211, 153),
             Warning = Color.FromArgb(245, 158, 11),
@@ -188,24 +252,27 @@ public static class ThemeManager
         }
     };
 
-    private sealed class ButtonVisualState
+    private sealed class ButtonState
     {
         public bool Hovered { get; set; }
         public bool Pressed { get; set; }
         public ThemePalette? Palette { get; set; }
     }
 
-    private static readonly Dictionary<Button, ButtonVisualState> ButtonStates = new();
+    private static readonly Dictionary<Button, ButtonState> ButtonStates = new();
 
     public static AppTheme ParseTheme(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return AppTheme.System;
 
-        var normalized = value.Replace(" ", string.Empty);
-
-        if (Enum.TryParse<AppTheme>(normalized, true, out var theme))
+        if (Enum.TryParse<AppTheme>(
+                value.Replace(" ", string.Empty),
+                true,
+                out var theme))
+        {
             return theme;
+        }
 
         return AppTheme.System;
     }
@@ -230,18 +297,6 @@ public static class ThemeManager
         };
     }
 
-    public static void ApplyTheme(Form form, AppTheme theme)
-    {
-        var palette = ResolvePalette(theme);
-
-        ApplyThemeToControl(form, palette);
-
-        form.BackColor = palette.Background;
-        form.ForeColor = palette.TextPrimary;
-
-        form.Invalidate(true);
-    }
-
     public static ThemePalette ResolvePalette(AppTheme theme)
     {
         if (theme == AppTheme.System)
@@ -251,74 +306,491 @@ public static class ThemeManager
                 : PaletteMap[AppTheme.LightBlue];
         }
 
-        return PaletteMap.TryGetValue(theme, out var palette)
+        return PaletteMap.TryGetValue(
+            theme,
+            out var palette)
             ? palette
             : PaletteMap[AppTheme.LightBlue];
     }
 
+    public static void ApplyTheme(
+        Form form,
+        AppTheme theme)
+    {
+        var palette = ResolvePalette(theme);
+
+        ApplyThemeToControl(
+            form,
+            palette,
+            isRoot: true);
+
+        form.Invalidate(true);
+    }
+
     private static void ApplyThemeToControl(
         Control control,
-        ThemePalette palette)
+        ThemePalette palette,
+        bool isRoot = false)
     {
-        control.BackColor =
-            control is Form
-                ? palette.Background
-                : palette.Surface;
+        // ------------------------------------------------------------
+        // FORM / ROOT BACKGROUND
+        // ------------------------------------------------------------
 
-        control.ForeColor = palette.TextPrimary;
+        if (isRoot || control is Form)
+        {
+            control.BackColor = palette.Background;
+            control.ForeColor = palette.TextPrimary;
+
+            EnsureGradientBackground(control, palette);
+        }
+
+        // ------------------------------------------------------------
+        // BUTTON
+        // ------------------------------------------------------------
 
         if (control is Button button)
         {
-            ApplyModernButton(button, palette);
+            ApplyModernButton(
+                button,
+                palette);
         }
+
+        // ------------------------------------------------------------
+        // LABEL
+        // ------------------------------------------------------------
+
         else if (control is Label label)
         {
             label.BackColor = Color.Transparent;
-            label.ForeColor = palette.TextPrimary;
+
+            if (label.Tag?.ToString() == "SecondaryText")
+                label.ForeColor = palette.TextSecondary;
+            else
+                label.ForeColor = palette.TextPrimary;
         }
+
+        // ------------------------------------------------------------
+        // TEXTBOX
+        // ------------------------------------------------------------
+
         else if (control is TextBox textBox)
         {
-            textBox.BackColor = palette.SurfaceSecondary;
-            textBox.ForeColor = palette.TextPrimary;
-            textBox.BorderStyle = BorderStyle.FixedSingle;
+            textBox.BackColor =
+                palette.SurfaceSecondary;
+
+            textBox.ForeColor =
+                palette.TextPrimary;
+
+            textBox.BorderStyle =
+                BorderStyle.FixedSingle;
         }
+
+        // ------------------------------------------------------------
+        // COMBOBOX
+        // ------------------------------------------------------------
+
         else if (control is ComboBox comboBox)
         {
-            comboBox.BackColor = palette.SurfaceSecondary;
-            comboBox.ForeColor = palette.TextPrimary;
-            comboBox.FlatStyle = FlatStyle.Flat;
+            comboBox.BackColor =
+                palette.SurfaceSecondary;
+
+            comboBox.ForeColor =
+                palette.TextPrimary;
+
+            comboBox.FlatStyle =
+                FlatStyle.Flat;
         }
+
+        // ------------------------------------------------------------
+        // LISTBOX
+        // ------------------------------------------------------------
+
         else if (control is ListBox listBox)
         {
-            listBox.BackColor = palette.SurfaceSecondary;
-            listBox.ForeColor = palette.TextPrimary;
-            listBox.BorderStyle = BorderStyle.FixedSingle;
+            listBox.BackColor =
+                palette.SurfaceSecondary;
+
+            listBox.ForeColor =
+                palette.TextPrimary;
+
+            listBox.BorderStyle =
+                BorderStyle.FixedSingle;
         }
-        else if (control is FlowLayoutPanel flowLayoutPanel)
-        {
-            flowLayoutPanel.BackColor = palette.Background;
-            flowLayoutPanel.ForeColor = palette.TextPrimary;
-        }
+
+        // ------------------------------------------------------------
+        // PANELS
+        // ------------------------------------------------------------
+
         else if (control is Panel panel)
         {
-            panel.BackColor = palette.Surface;
-            panel.ForeColor = palette.TextPrimary;
+            ApplyPanelAppearance(
+                panel,
+                palette);
+        }
+
+        // ------------------------------------------------------------
+        // FLOW PANELS
+        // ------------------------------------------------------------
+
+        else if (control is FlowLayoutPanel flow)
+        {
+            ApplyPanelAppearance(
+                flow,
+                palette);
+        }
+
+        // ------------------------------------------------------------
+        // TABLE PANELS
+        // ------------------------------------------------------------
+
+        else if (control is TableLayoutPanel table)
+        {
+            ApplyPanelAppearance(
+                table,
+                palette);
+        }
+
+        // ------------------------------------------------------------
+        // GROUPBOX
+        // ------------------------------------------------------------
+
+        else if (control is GroupBox groupBox)
+        {
+            groupBox.BackColor =
+                palette.Surface;
+
+            groupBox.ForeColor =
+                palette.TextPrimary;
         }
 
         foreach (Control child in control.Controls)
         {
-            ApplyThemeToControl(child, palette);
+            ApplyThemeToControl(
+                child,
+                palette);
         }
+    }
+
+    private static void EnsureGradientBackground(
+        Control control,
+        ThemePalette palette)
+    {
+        if (control.Tag?.ToString() == "NoGradient")
+            return;
+
+        control.Paint -= RootGradientPaint;
+        control.Paint += RootGradientPaint;
+
+        control.Tag =
+            control.Tag == null
+                ? "ThemeGradientRoot"
+                : control.Tag;
+    }
+
+    private static void RootGradientPaint(
+        object? sender,
+        PaintEventArgs e)
+    {
+        if (sender is not Control control)
+            return;
+
+        var palette =
+            FindPaletteForControl(control);
+
+        if (palette == null)
+            return;
+
+        var rect =
+            control.ClientRectangle;
+
+        if (rect.Width <= 0 || rect.Height <= 0)
+            return;
+
+        e.Graphics.SmoothingMode =
+            SmoothingMode.AntiAlias;
+
+        using var brush =
+            new LinearGradientBrush(
+                rect,
+                palette.Background,
+                palette.BackgroundGradientEnd,
+                LinearGradientMode.ForwardDiagonal);
+
+        e.Graphics.FillRectangle(
+            brush,
+            rect);
+
+        // Very soft atmospheric light.
+        using var glowBrush =
+            new LinearGradientBrush(
+                rect,
+                Color.FromArgb(
+                    IsDarkPalette(palette) ? 18 : 12,
+                    palette.Accent),
+                Color.FromArgb(
+                    0,
+                    palette.Accent),
+                LinearGradientMode.Vertical);
+
+        e.Graphics.FillRectangle(
+            glowBrush,
+            new Rectangle(
+                0,
+                0,
+                rect.Width,
+                Math.Max(
+                    1,
+                    rect.Height / 2)));
+    }
+
+    private static ThemePalette? FindPaletteForControl(
+        Control control)
+    {
+        foreach (var pair in PaletteMap)
+        {
+            if (pair.Value.Background == control.BackColor)
+                return pair.Value;
+        }
+
+        // Fallback for System / dynamically rendered controls.
+        return PaletteMap[AppTheme.LightBlue];
+    }
+
+    private static void ApplyPanelAppearance(
+        Control panel,
+        ThemePalette palette)
+    {
+        string? tag =
+            panel.Tag?.ToString();
+
+        if (tag == "Sidebar")
+        {
+            panel.BackColor =
+                palette.Sidebar;
+
+            panel.Paint -= SidebarPaint;
+            panel.Paint += SidebarPaint;
+
+            panel.Tag =
+                new ThemeTag(
+                    "Sidebar",
+                    palette);
+
+            return;
+        }
+
+        if (tag == "Card")
+        {
+            panel.BackColor =
+                palette.Card;
+
+            panel.Paint -= CardPaint;
+            panel.Paint += CardPaint;
+
+            panel.Tag =
+                new ThemeTag(
+                    "Card",
+                    palette);
+
+            return;
+        }
+
+        panel.BackColor =
+            palette.Surface;
+
+        panel.ForeColor =
+            palette.TextPrimary;
+    }
+
+    private sealed record ThemeTag(
+        string Type,
+        ThemePalette Palette);
+
+    private static void SidebarPaint(
+        object? sender,
+        PaintEventArgs e)
+    {
+        if (sender is not Control control)
+            return;
+
+        if (control.Tag is not ThemeTag tag)
+            return;
+
+        var palette = tag.Palette;
+
+        var rect =
+            control.ClientRectangle;
+
+        if (rect.Width <= 0 ||
+            rect.Height <= 0)
+            return;
+
+        e.Graphics.SmoothingMode =
+            SmoothingMode.AntiAlias;
+
+        // Main Sidebar Gradient.
+        using var gradient =
+            new LinearGradientBrush(
+                rect,
+                palette.Sidebar,
+                palette.SidebarGradientEnd,
+                LinearGradientMode.Vertical);
+
+        e.Graphics.FillRectangle(
+            gradient,
+            rect);
+
+        // Accent atmospheric glow.
+        var glowRect =
+            new Rectangle(
+                0,
+                0,
+                rect.Width,
+                Math.Max(
+                    1,
+                    rect.Height / 2));
+
+        using var glow =
+            new LinearGradientBrush(
+                glowRect,
+                Color.FromArgb(
+                    IsDarkPalette(palette)
+                        ? 24
+                        : 16,
+                    palette.Accent),
+                Color.FromArgb(
+                    0,
+                    palette.Accent),
+                LinearGradientMode.Vertical);
+
+        e.Graphics.FillRectangle(
+            glow,
+            glowRect);
+
+        // Right edge separation.
+        using var borderPen =
+            new Pen(
+                palette.BorderSoft,
+                1f);
+
+        e.Graphics.DrawLine(
+            borderPen,
+            rect.Right - 1,
+            0,
+            rect.Right - 1,
+            rect.Bottom);
+    }
+
+    private static void CardPaint(
+        object? sender,
+        PaintEventArgs e)
+    {
+        if (sender is not Control control)
+            return;
+
+        if (control.Tag is not ThemeTag tag)
+            return;
+
+        var palette = tag.Palette;
+
+        var rect =
+            control.ClientRectangle;
+
+        if (rect.Width < 5 ||
+            rect.Height < 5)
+            return;
+
+        e.Graphics.SmoothingMode =
+            SmoothingMode.AntiAlias;
+
+        var cardRect =
+            new Rectangle(
+                1,
+                1,
+                rect.Width - 2,
+                rect.Height - 2);
+
+        int radius =
+            Math.Min(
+                14,
+                Math.Max(
+                    8,
+                    rect.Height / 12));
+
+        using var path =
+            CreateRoundedRectangle(
+                cardRect,
+                radius);
+
+        // Soft shadow.
+        if (IsDarkPalette(palette))
+        {
+            using var shadow =
+                new SolidBrush(
+                    Color.FromArgb(
+                        60,
+                        0,
+                        0,
+                        0));
+
+            var shadowRect =
+                new Rectangle(
+                    cardRect.X,
+                    cardRect.Y + 2,
+                    cardRect.Width,
+                    cardRect.Height);
+
+            using var shadowPath =
+                CreateRoundedRectangle(
+                    shadowRect,
+                    radius);
+
+            e.Graphics.FillPath(
+                shadow,
+                shadowPath);
+        }
+
+        // Card surface gradient.
+        using var cardBrush =
+            new LinearGradientBrush(
+                cardRect,
+                palette.Card,
+                Blend(
+                    palette.Card,
+                    palette.SurfaceSecondary,
+                    IsDarkPalette(palette)
+                        ? 0.18f
+                        : 0.35f),
+                LinearGradientMode.Vertical);
+
+        e.Graphics.FillPath(
+            cardBrush,
+            path);
+
+        // Border.
+        using var borderPen =
+            new Pen(
+                palette.BorderSoft,
+                1f);
+
+        e.Graphics.DrawPath(
+            borderPen,
+            path);
     }
 
     private static void ApplyModernButton(
         Button button,
         ThemePalette palette)
     {
-        if (!ButtonStates.TryGetValue(button, out var state))
+        if (!ButtonStates.TryGetValue(
+                button,
+                out var state))
         {
-            state = new ButtonVisualState();
-            ButtonStates[button] = state;
+            state =
+                new ButtonState();
+
+            ButtonStates[button] =
+                state;
 
             button.MouseEnter += Button_MouseEnter;
             button.MouseLeave += Button_MouseLeave;
@@ -329,44 +801,47 @@ public static class ThemeManager
             button.Paint += Button_Paint;
         }
 
-        state.Palette = palette;
+        state.Palette =
+            palette;
 
-        button.FlatStyle = FlatStyle.Flat;
-        button.FlatAppearance.BorderSize = 0;
+        button.FlatStyle =
+            FlatStyle.Flat;
 
-        button.FlatAppearance.MouseOverBackColor = Color.Transparent;
-        button.FlatAppearance.MouseDownBackColor = Color.Transparent;
+        button.FlatAppearance.BorderSize =
+            0;
 
-        button.UseVisualStyleBackColor = false;
+        button.FlatAppearance.MouseOverBackColor =
+            Color.Transparent;
 
-        button.BackColor = Color.Transparent;
-        button.ForeColor = Color.White;
+        button.FlatAppearance.MouseDownBackColor =
+            Color.Transparent;
 
-        button.Cursor = button.Enabled
-            ? Cursors.Hand
-            : Cursors.Default;
+        button.UseVisualStyleBackColor =
+            false;
 
-        button.Padding = new Padding(16, 7, 16, 7);
+        button.BackColor =
+            Color.Transparent;
 
-        if (button.Font == null || button.Font.Size < 8)
-        {
-            button.Font = new Font(
-                "Segoe UI",
-                9.5f,
-                FontStyle.Regular,
-                GraphicsUnit.Point);
-        }
+        button.ForeColor =
+            Color.White;
 
-        // Consistent modern button proportions.
+        button.Cursor =
+            button.Enabled
+                ? Cursors.Hand
+                : Cursors.Default;
+
+        button.Padding =
+            new Padding(
+                16,
+                7,
+                16,
+                7);
+
         if (button.Height < 40)
-        {
             button.Height = 40;
-        }
 
         if (button.Width < 100)
-        {
             button.Width = 100;
-        }
 
         button.Invalidate();
     }
@@ -378,7 +853,9 @@ public static class ThemeManager
         if (sender is not Button button)
             return;
 
-        if (ButtonStates.TryGetValue(button, out var state))
+        if (ButtonStates.TryGetValue(
+                button,
+                out var state))
         {
             state.Hovered = true;
             button.Invalidate();
@@ -392,11 +869,12 @@ public static class ThemeManager
         if (sender is not Button button)
             return;
 
-        if (ButtonStates.TryGetValue(button, out var state))
+        if (ButtonStates.TryGetValue(
+                button,
+                out var state))
         {
             state.Hovered = false;
             state.Pressed = false;
-
             button.Invalidate();
         }
     }
@@ -408,13 +886,13 @@ public static class ThemeManager
         if (sender is not Button button)
             return;
 
-        if (e.Button != MouseButtons.Left)
+        if (e.Button != MouseButtons.Left ||
+            !button.Enabled)
             return;
 
-        if (!button.Enabled)
-            return;
-
-        if (ButtonStates.TryGetValue(button, out var state))
+        if (ButtonStates.TryGetValue(
+                button,
+                out var state))
         {
             state.Pressed = true;
             button.Invalidate();
@@ -428,7 +906,9 @@ public static class ThemeManager
         if (sender is not Button button)
             return;
 
-        if (ButtonStates.TryGetValue(button, out var state))
+        if (ButtonStates.TryGetValue(
+                button,
+                out var state))
         {
             state.Pressed = false;
             button.Invalidate();
@@ -442,9 +922,10 @@ public static class ThemeManager
         if (sender is not Button button)
             return;
 
-        button.Cursor = button.Enabled
-            ? Cursors.Hand
-            : Cursors.Default;
+        button.Cursor =
+            button.Enabled
+                ? Cursors.Hand
+                : Cursors.Default;
 
         button.Invalidate();
     }
@@ -454,9 +935,7 @@ public static class ThemeManager
         EventArgs e)
     {
         if (sender is Button button)
-        {
             ButtonStates.Remove(button);
-        }
     }
 
     private static void Button_Paint(
@@ -466,17 +945,22 @@ public static class ThemeManager
         if (sender is not Button button)
             return;
 
-        if (!ButtonStates.TryGetValue(button, out var state))
+        if (!ButtonStates.TryGetValue(
+                button,
+                out var state))
             return;
 
-        var palette = state.Palette;
+        var palette =
+            state.Palette;
 
         if (palette == null)
             return;
 
-        var bounds = button.ClientRectangle;
+        var bounds =
+            button.ClientRectangle;
 
-        if (bounds.Width < 4 || bounds.Height < 4)
+        if (bounds.Width < 4 ||
+            bounds.Height < 4)
             return;
 
         e.Graphics.SmoothingMode =
@@ -485,89 +969,118 @@ public static class ThemeManager
         e.Graphics.PixelOffsetMode =
             PixelOffsetMode.HighQuality;
 
-        e.Graphics.CompositingQuality =
-            CompositingQuality.HighQuality;
+        int radius =
+            Math.Min(
+                11,
+                Math.Max(
+                    7,
+                    bounds.Height / 4));
 
-        int radius = Math.Min(
-            11,
-            Math.Max(7, bounds.Height / 4));
+        var rect =
+            new Rectangle(
+                1,
+                1,
+                bounds.Width - 2,
+                bounds.Height - 2);
 
-        var buttonRect = new Rectangle(
-            1,
-            1,
-            bounds.Width - 2,
-            bounds.Height - 2);
-
-        using var buttonPath =
+        using var path =
             CreateRoundedRectangle(
-                buttonRect,
+                rect,
                 radius);
 
-        Color gradientStart;
-        Color gradientEnd;
-        Color borderColor;
-        Color textColor;
+        Color start;
+        Color end;
+        Color border;
+        Color text;
 
         if (!button.Enabled)
         {
-            gradientStart = GetDisabledGradientStart(palette);
-            gradientEnd = GetDisabledGradientEnd(palette);
-            borderColor = GetDisabledBorder(palette);
-            textColor = GetDisabledText(palette);
+            start =
+                Blend(
+                    palette.SurfaceSecondary,
+                    palette.Background,
+                    0.25f);
+
+            end =
+                Blend(
+                    palette.SurfaceSecondary,
+                    palette.Background,
+                    0.60f);
+
+            border =
+                palette.BorderSoft;
+
+            text =
+                palette.TextSecondary;
         }
         else if (state.Pressed)
         {
-            gradientStart = Darken(
-                palette.AccentHover,
-                0.18f);
+            start =
+                Darken(
+                    palette.AccentHover,
+                    0.20f);
 
-            gradientEnd = Darken(
-                palette.Accent,
-                0.20f);
+            end =
+                Darken(
+                    palette.Accent,
+                    0.18f);
 
-            borderColor = Darken(
-                palette.Accent,
-                0.24f);
+            border =
+                Darken(
+                    palette.Accent,
+                    0.24f);
 
-            textColor = Color.White;
+            text =
+                Color.White;
         }
         else if (state.Hovered)
         {
-            gradientStart = Lighten(
-                palette.AccentHover,
-                0.08f);
+            start =
+                Lighten(
+                    palette.AccentHover,
+                    0.08f);
 
-            gradientEnd = palette.AccentHover;
+            end =
+                palette.AccentHover;
 
-            borderColor = Lighten(
-                palette.AccentHover,
-                0.10f);
+            border =
+                Lighten(
+                    palette.AccentHover,
+                    0.10f);
 
-            textColor = Color.White;
+            text =
+                Color.White;
         }
         else
         {
-            // Normal state:
-            // REAL LINEAR GRADIENT.
-            gradientStart = palette.Accent;
-            gradientEnd = palette.AccentHover;
+            start =
+                palette.Accent;
 
-            borderColor = Blend(
-                palette.Accent,
-                palette.Border,
-                0.30f);
+            end =
+                palette.AccentHover;
 
-            textColor = Color.White;
+            border =
+                Blend(
+                    palette.Accent,
+                    palette.Border,
+                    0.25f);
+
+            text =
+                Color.White;
         }
 
-        // Subtle depth/shadow.
+        // ------------------------------------------------------------
+        // BUTTON SHADOW
+        // ------------------------------------------------------------
+
         if (button.Enabled)
         {
-            var shadowRect = new Rectangle(
-                1,
-                3,
-                bounds.Width - 2,
-                bounds.Height - 2);
+            var shadowRect =
+                new Rectangle(
+                    rect.X,
+                    rect.Y + 2,
+                    rect.Width,
+                    rect.Height);
 
             using var shadowPath =
                 CreateRoundedRectangle(
@@ -578,8 +1091,8 @@ public static class ThemeManager
                 new SolidBrush(
                     Color.FromArgb(
                         IsDarkPalette(palette)
-                            ? 80
-                            : 32,
+                            ? 75
+                            : 35,
                         0,
                         0,
                         0));
@@ -589,42 +1102,50 @@ public static class ThemeManager
                 shadowPath);
         }
 
-        // ============================================================
-        // IMPORTANT:
-        // Actual Linear Gradient used for the button surface.
-        // ============================================================
+        // ------------------------------------------------------------
+        // REAL LINEAR GRADIENT
+        // ------------------------------------------------------------
 
-        using (var gradientBrush =
+        using (var gradient =
                new LinearGradientBrush(
-                   buttonRect,
-                   gradientStart,
-                   gradientEnd,
+                   rect,
+                   start,
+                   end,
                    LinearGradientMode.Horizontal))
         {
             e.Graphics.FillPath(
-                gradientBrush,
-                buttonPath);
+                gradient,
+                path);
         }
 
-        // Very subtle top highlight.
-        if (button.Enabled && !state.Pressed)
+        // ------------------------------------------------------------
+        // TOP LIGHT
+        // ------------------------------------------------------------
+
+        if (button.Enabled &&
+            !state.Pressed)
         {
-            var highlightRect = new Rectangle(
-                buttonRect.X + 1,
-                buttonRect.Y + 1,
-                Math.Max(1, buttonRect.Width - 2),
-                Math.Max(1, buttonRect.Height / 3));
+            var highlightRect =
+                new Rectangle(
+                    rect.X + 1,
+                    rect.Y + 1,
+                    rect.Width - 2,
+                    Math.Max(
+                        1,
+                        rect.Height / 2));
 
             using var highlightPath =
                 CreateRoundedRectangle(
                     highlightRect,
-                    Math.Max(4, radius - 2));
+                    Math.Max(
+                        4,
+                        radius - 2));
 
-            using var highlightBrush =
+            using var highlight =
                 new LinearGradientBrush(
                     highlightRect,
                     Color.FromArgb(
-                        state.Hovered ? 28 : 18,
+                        state.Hovered ? 30 : 18,
                         255,
                         255,
                         255),
@@ -636,65 +1157,61 @@ public static class ThemeManager
                     LinearGradientMode.Vertical);
 
             e.Graphics.FillPath(
-                highlightBrush,
+                highlight,
                 highlightPath);
         }
 
-        // Border.
-        using (var borderPen =
-               new Pen(borderColor, 1f))
+        // ------------------------------------------------------------
+        // BORDER
+        // ------------------------------------------------------------
+
+        using var borderPen =
+            new Pen(
+                border,
+                1f);
+
+        e.Graphics.DrawPath(
+            borderPen,
+            path);
+
+        // ------------------------------------------------------------
+        // TEXT
+        // ------------------------------------------------------------
+
+        if (!string.IsNullOrWhiteSpace(
+                button.Text))
         {
-            e.Graphics.DrawPath(
-                borderPen,
-                buttonPath);
+            TextRenderer.DrawText(
+                e.Graphics,
+                button.Text,
+                button.Font,
+                rect,
+                text,
+                TextFormatFlags.HorizontalCenter |
+                TextFormatFlags.VerticalCenter |
+                TextFormatFlags.EndEllipsis |
+                TextFormatFlags.NoPrefix);
         }
-
-        DrawButtonText(
-            e.Graphics,
-            button,
-            buttonRect,
-            textColor);
-    }
-
-    private static void DrawButtonText(
-        Graphics graphics,
-        Button button,
-        Rectangle rect,
-        Color textColor)
-    {
-        if (string.IsNullOrEmpty(button.Text))
-            return;
-
-        TextFormatFlags flags =
-            TextFormatFlags.HorizontalCenter |
-            TextFormatFlags.VerticalCenter |
-            TextFormatFlags.EndEllipsis |
-            TextFormatFlags.NoPrefix;
-
-        TextRenderer.DrawText(
-            graphics,
-            button.Text,
-            button.Font,
-            rect,
-            textColor,
-            flags);
     }
 
     private static GraphicsPath CreateRoundedRectangle(
         Rectangle rectangle,
         int radius)
     {
-        var path = new GraphicsPath();
+        var path =
+            new GraphicsPath();
 
-        radius = Math.Max(1, radius);
+        radius =
+            Math.Max(
+                1,
+                radius);
 
-        int diameter = radius * 2;
-
-        diameter = Math.Min(
-            diameter,
+        int diameter =
             Math.Min(
-                rectangle.Width,
-                rectangle.Height));
+                radius * 2,
+                Math.Min(
+                    rectangle.Width,
+                    rectangle.Height));
 
         path.AddArc(
             rectangle.X,
@@ -733,64 +1250,35 @@ public static class ThemeManager
         return path;
     }
 
-    private static Color GetDisabledGradientStart(
-        ThemePalette palette)
-    {
-        return Blend(
-            palette.SurfaceSecondary,
-            palette.Background,
-            IsDarkPalette(palette)
-                ? 0.35f
-                : 0.20f);
-    }
-
-    private static Color GetDisabledGradientEnd(
-        ThemePalette palette)
-    {
-        return Blend(
-            palette.SurfaceSecondary,
-            palette.Background,
-            IsDarkPalette(palette)
-                ? 0.65f
-                : 0.45f);
-    }
-
-    private static Color GetDisabledBorder(
-        ThemePalette palette)
-    {
-        return Blend(
-            palette.Border,
-            palette.Background,
-            0.45f);
-    }
-
-    private static Color GetDisabledText(
-        ThemePalette palette)
-    {
-        return Blend(
-            palette.TextSecondary,
-            palette.Background,
-            0.25f);
-    }
-
     private static Color Lighten(
         Color color,
         float amount)
     {
-        amount = Math.Clamp(amount, 0f, 1f);
+        amount =
+            Math.Clamp(
+                amount,
+                0f,
+                1f);
 
         return Color.FromArgb(
             color.A,
-            color.R + (int)((255 - color.R) * amount),
-            color.G + (int)((255 - color.G) * amount),
-            color.B + (int)((255 - color.B) * amount));
+            color.R +
+                (int)((255 - color.R) * amount),
+            color.G +
+                (int)((255 - color.G) * amount),
+            color.B +
+                (int)((255 - color.B) * amount));
     }
 
     private static Color Darken(
         Color color,
         float amount)
     {
-        amount = Math.Clamp(amount, 0f, 1f);
+        amount =
+            Math.Clamp(
+                amount,
+                0f,
+                1f);
 
         return Color.FromArgb(
             color.A,
@@ -804,19 +1292,20 @@ public static class ThemeManager
         Color second,
         float amount)
     {
-        amount = Math.Clamp(amount, 0f, 1f);
+        amount =
+            Math.Clamp(
+                amount,
+                0f,
+                1f);
 
         return Color.FromArgb(
             first.A,
-
             (int)(
                 first.R +
                 (second.R - first.R) * amount),
-
             (int)(
                 first.G +
                 (second.G - first.G) * amount),
-
             (int)(
                 first.B +
                 (second.B - first.B) * amount));
@@ -839,12 +1328,12 @@ public static class ThemeManager
     {
         try
         {
-            const string registryPath =
+            const string path =
                 "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
 
             var value =
-                Microsoft.Win32.Registry.GetValue(
-                    registryPath,
+                Registry.GetValue(
+                    path,
                     "AppsUseLightTheme",
                     null);
 
