@@ -33,6 +33,7 @@ public partial class MainForm : Form
     private WizardStep _currentStep = WizardStep.Step1;
     private int _completionSecondsLeft = 6;
     private bool _completionTimerActive;
+    private bool _isApplyingLanguage;
 
     private enum WizardStep
     {
@@ -1028,7 +1029,21 @@ public partial class MainForm : Form
             return;
         }
 
+        var manifest = ModPackageService.ResolveManifest(packageRoot);
+        if (manifest is null)
+        {
+            MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
         var modName = ModPackageService.ResolveModName(packageRoot, Path.GetFileName(packageRoot));
+
+        if (manifest.IsReplacing)
+        {
+            await InstallReplacingPackageAsync(payloadPath, modName, packageRoot);
+            return;
+        }
+
         var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
         var targetDir = Path.Combine(modLoaderFolder, modName);
 
@@ -1055,6 +1070,87 @@ public partial class MainForm : Form
             ModLoaderService.RecordInstallation(modName, packageRoot, targetDir);
             MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
             RefreshModList();
+        }
+        catch (Exception ex)
+        {
+            progressForm.Fail();
+            MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            progressForm.Close();
+        }
+    }
+
+    private async Task InstallReplacingPackageAsync(string payloadPath, string modName, string packageRoot)
+    {
+        var filesToReplace = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(path => !string.Equals(Path.GetFileName(path), "mod.json", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (filesToReplace.Count == 0)
+        {
+            MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected replacement package does not contain any files to replace."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var progressForm = new InstallProgressForm(_localizationService, modName);
+        progressForm.Show(this);
+        progressForm.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName + " (Replacing)" );
+
+        var records = new List<ReplaceInstallationRecord>();
+
+        try
+        {
+            for (var i = 0; i < filesToReplace.Count; i++)
+            {
+                var sourceFile = filesToReplace[i];
+                var relativePath = Path.GetRelativePath(payloadPath, sourceFile)
+                    .Replace('/', Path.DirectorySeparatorChar)
+                    .Replace('\\', Path.DirectorySeparatorChar);
+                var destinationFile = Path.Combine(_selectedGamePath, relativePath);
+                var destinationDirectory = Path.GetDirectoryName(destinationFile);
+
+                if (!string.IsNullOrWhiteSpace(destinationDirectory))
+                {
+                    Directory.CreateDirectory(destinationDirectory);
+                }
+
+                var backupFilePath = string.Empty;
+                if (File.Exists(destinationFile))
+                {
+                    backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationFile, modName, ModPackageService.GetDefaultBackupRoot());
+                }
+
+                File.Copy(sourceFile, destinationFile, true);
+
+                var record = new ReplaceInstallationRecord
+                {
+                    BackupId = Guid.NewGuid().ToString("N"),
+                    ModName = modName,
+                    GameFolder = _selectedGamePath,
+                    OriginalFilePath = destinationFile,
+                    BackupFilePath = backupFilePath,
+                    InstalledModFile = sourceFile,
+                    InstallationDate = DateTime.UtcNow,
+                    InstallationType = "Replacing",
+                    ReplacementSucceeded = true,
+                    OriginalBackupAvailable = !string.IsNullOrWhiteSpace(backupFilePath) && File.Exists(backupFilePath),
+                    Restored = false,
+                    StatusMessage = "Original file backed up and replaced."
+                };
+
+                records.Add(record);
+                ModPackageService.RecordReplacementInstallation(record);
+
+                var percent = (int)((i + 1) * 100d / Math.Max(1, filesToReplace.Count));
+                progressForm.UpdateProgress(percent + "%");
+                await Task.Delay(30);
+            }
+
+            progressForm.Complete();
+            MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
@@ -1154,10 +1250,45 @@ public partial class MainForm : Form
         ApplySidebarDirection();
     }
 
+    private void ApplyComboSelectionSafely(ComboBox? comboBox, string displayValue)
+    {
+        if (comboBox == null || comboBox.IsDisposed)
+        {
+            return;
+        }
+
+        if (!comboBox.Items.Contains(displayValue))
+        {
+            return;
+        }
+
+        if (string.Equals(comboBox.Text, displayValue, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        comboBox.SelectedIndexChanged -= LanguageComboBox_SelectedIndexChanged;
+        comboBox.SelectedIndexChanged -= ThemeComboBox_SelectedIndexChanged;
+        try
+        {
+            comboBox.SelectedItem = displayValue;
+        }
+        finally
+        {
+            comboBox.SelectedIndexChanged += LanguageComboBox_SelectedIndexChanged;
+            comboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
+        }
+    }
+
     private void LanguageComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
+        if (_isApplyingLanguage)
+        {
+            return;
+        }
+
         var selectedComboBox = sender as ComboBox ?? LanguageComboBox;
-        if (selectedComboBox == null || selectedComboBox.SelectedItem == null)
+        if (selectedComboBox == null || selectedComboBox.IsDisposed || selectedComboBox.SelectedItem == null)
         {
             return;
         }
@@ -1168,21 +1299,37 @@ public partial class MainForm : Form
             return;
         }
 
-        _settings.Language = selectedValue switch
+        var requestedLanguage = selectedValue switch
         {
             "فارسی" => "Persian",
             _ => "English"
         };
 
-        _settingsService.Save(_settings);
-        ApplyCurrentLanguage();
-        ApplyLocalization();
-        ApplyCurrentTheme();
-        ApplySidebarDirection();
-        UpdateSidebarState();
-        RefreshModList();
-        RefreshModLibrary();
-        Invalidate();
+        if (string.Equals(_settings.Language, requestedLanguage, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        _isApplyingLanguage = true;
+        try
+        {
+            _settings.Language = requestedLanguage;
+            ApplyCurrentLanguage();
+            ApplyLocalization();
+            ApplyCurrentTheme();
+            ApplySidebarDirection();
+            UpdateSidebarState();
+            RefreshModList();
+            RefreshModLibrary();
+            Invalidate();
+            _settingsService.Save(_settings);
+            ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
+            ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
+        }
+        finally
+        {
+            _isApplyingLanguage = false;
+        }
     }
 
     protected override void OnShown(EventArgs e)
@@ -1195,24 +1342,26 @@ public partial class MainForm : Form
             _currentStep = startupStep;
         }
 
-        if (ThemeComboBox != null)
+        if (ThemeComboBox != null && !ThemeComboBox.IsDisposed)
         {
-            ThemeComboBox.SelectedItem = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+            var themeDisplay = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+            ApplyComboSelectionSafely(ThemeComboBox, themeDisplay);
         }
 
-        if (LanguageComboBox != null)
+        if (LanguageComboBox != null && !LanguageComboBox.IsDisposed)
         {
-            LanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
+            ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
         }
 
-        if (_sidebarThemeComboBox != null)
+        if (_sidebarThemeComboBox != null && !_sidebarThemeComboBox.IsDisposed)
         {
-            _sidebarThemeComboBox.SelectedItem = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+            var themeDisplay = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+            ApplyComboSelectionSafely(_sidebarThemeComboBox, themeDisplay);
         }
 
-        if (_sidebarLanguageComboBox != null)
+        if (_sidebarLanguageComboBox != null && !_sidebarLanguageComboBox.IsDisposed)
         {
-            _sidebarLanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
+            ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
         }
 
         ApplyCurrentTheme();
@@ -1300,37 +1449,30 @@ public partial class MainForm : Form
 
     private void ApplyLocalization()
     {
-        if (GameStatusLabel != null) GameStatusLabel.Text = _localizationService.GetString("GameStatus", "Game Status");
-        if (GamePathLabel != null) GamePathLabel.Text = _localizationService.GetString("GamePath", "Game Path");
-        if (GameFolderNotConfiguredLabel != null) GameFolderNotConfiguredLabel.Text = _localizationService.GetString("GameFolderNotConfigured", "Game folder not configured");
-        if (ModLibraryTitleLabel != null) ModLibraryTitleLabel.Text = _localizationService.GetString("ModLibraryTitle", "Mod Library");
-        if (ModLibraryPathLabel != null) ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Mods Folder");
-        if (ModLibraryChangeButton != null) ModLibraryChangeButton.Text = _localizationService.GetString("Change", "Change");
-        if (ModLibraryOpenButton != null) ModLibraryOpenButton.Text = _localizationService.GetString("OpenFolder", "Open Folder");
-        if (OpenGameFolderButton != null) OpenGameFolderButton.Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder");
-        if (RunGameButton != null) RunGameButton.Text = _localizationService.GetString("RunGame", "Run Game");
-        if (InstallModButton != null) InstallModButton.Text = _localizationService.GetString("InstallMod", "Install Mod");
-        if (ModLoaderTitleLabel != null) ModLoaderTitleLabel.Text = _localizationService.GetString("ModLoaderMods", "ModLoader Mods");
-        if (ThemeLabel != null) ThemeLabel.Text = _localizationService.GetString("Theme", "Theme");
-        if (LanguageLabel != null) LanguageLabel.Text = _localizationService.GetString("Language", "Language");
+        if (GameStatusLabel != null && !GameStatusLabel.IsDisposed) GameStatusLabel.Text = _localizationService.GetString("GameStatus", "Game Status");
+        if (GamePathLabel != null && !GamePathLabel.IsDisposed) GamePathLabel.Text = _localizationService.GetString("GamePath", "Game Path");
+        if (GameFolderNotConfiguredLabel != null && !GameFolderNotConfiguredLabel.IsDisposed) GameFolderNotConfiguredLabel.Text = _localizationService.GetString("GameFolderNotConfigured", "Game folder not configured");
+        if (ModLibraryTitleLabel != null && !ModLibraryTitleLabel.IsDisposed) ModLibraryTitleLabel.Text = _localizationService.GetString("ModLibraryTitle", "Mod Library");
+        if (ModLibraryPathLabel != null && !ModLibraryPathLabel.IsDisposed) ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Mods Folder");
+        if (ModLibraryChangeButton != null && !ModLibraryChangeButton.IsDisposed) ModLibraryChangeButton.Text = _localizationService.GetString("Change", "Change");
+        if (ModLibraryOpenButton != null && !ModLibraryOpenButton.IsDisposed) ModLibraryOpenButton.Text = _localizationService.GetString("OpenFolder", "Open Folder");
+        if (OpenGameFolderButton != null && !OpenGameFolderButton.IsDisposed) OpenGameFolderButton.Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder");
+        if (RunGameButton != null && !RunGameButton.IsDisposed) RunGameButton.Text = _localizationService.GetString("RunGame", "Run Game");
+        if (InstallModButton != null && !InstallModButton.IsDisposed) InstallModButton.Text = _localizationService.GetString("InstallMod", "Install Mod");
+        if (ModLoaderTitleLabel != null && !ModLoaderTitleLabel.IsDisposed) ModLoaderTitleLabel.Text = _localizationService.GetString("ModLoaderMods", "ModLoader Mods");
+        if (ThemeLabel != null && !ThemeLabel.IsDisposed) ThemeLabel.Text = _localizationService.GetString("Theme", "Theme");
+        if (LanguageLabel != null && !LanguageLabel.IsDisposed) LanguageLabel.Text = _localizationService.GetString("Language", "Language");
 
-        if (_sidebarPreviousButton != null) _sidebarPreviousButton.Text = _localizationService.GetString("Previous", "Previous");
-        if (_sidebarNextButton != null) _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
-        if (_sidebarReadmeButton != null) _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+        if (_sidebarPreviousButton != null && !_sidebarPreviousButton.IsDisposed) _sidebarPreviousButton.Text = _localizationService.GetString("Previous", "Previous");
+        if (_sidebarNextButton != null && !_sidebarNextButton.IsDisposed) _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+        if (_sidebarReadmeButton != null && !_sidebarReadmeButton.IsDisposed) _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
 
-        if (_sidebarLanguageComboBox != null)
+        ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
+        ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
+
+        foreach (var panel in _wizardPanels.Values.Where(p => p != null && !p.IsDisposed).ToList())
         {
-            _sidebarLanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
-        }
-
-        if (LanguageComboBox != null)
-        {
-            LanguageComboBox.SelectedItem = GetLanguageDisplayName(_settings.Language);
-        }
-
-        foreach (var panel in _wizardPanels.Values)
-        {
-            foreach (Control control in panel.Controls)
+            foreach (var control in panel.Controls.Cast<Control>().ToList())
             {
                 if (control is Label label && label.Name == "ProfileSummary")
                 {

@@ -91,13 +91,23 @@ public class ModPackageService
                 return false;
             }
 
-            if (document.RootElement.EnumerateObject().Any())
+            var properties = document.RootElement.EnumerateObject().ToList();
+            if (properties.Count == 0)
             {
-                error = "mod.json must be an empty JSON object {}.";
-                return false;
+                return true;
             }
 
-            return true;
+            if (properties.Count == 1 &&
+                string.Equals(properties[0].Name, "type", StringComparison.OrdinalIgnoreCase) &&
+                properties[0].Value.ValueKind == JsonValueKind.String &&
+                (string.Equals(properties[0].Value.GetString(), "ModLoader", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(properties[0].Value.GetString(), "Replacing", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+
+            error = "mod.json must be empty or contain exactly { \"type\": \"Replacing\" } for replacement installs.";
+            return false;
         }
         catch (JsonException ex)
         {
@@ -123,12 +133,109 @@ public class ModPackageService
                 return null;
             }
 
-            return new ModManifest();
+            var manifest = new ModManifest();
+            if (document.RootElement.TryGetProperty("type", out var typeProperty) &&
+                typeProperty.ValueKind == JsonValueKind.String)
+            {
+                manifest.Type = typeProperty.GetString() ?? string.Empty;
+            }
+
+            return manifest;
         }
         catch
         {
             return null;
         }
+    }
+
+    public static ModManifest ResolveManifest(string basePath)
+    {
+        return TryReadManifest(basePath) ?? new ModManifest();
+    }
+
+    public static bool IsReplacingInstall(string packageRoot)
+    {
+        return ResolveManifest(packageRoot).IsReplacing;
+    }
+
+    public static string GetDefaultBackupRoot()
+    {
+        return @"C:\ZBackUP-SaModManager\";
+    }
+
+    public static string GetReplacementHistoryPath()
+    {
+        var appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GtaSaModManager");
+        Directory.CreateDirectory(appData);
+        return Path.Combine(appData, "replacement-install-history.json");
+    }
+
+    public static List<ReplaceInstallationRecord> LoadReplacementRecords()
+    {
+        var historyPath = GetReplacementHistoryPath();
+        if (!File.Exists(historyPath))
+        {
+            return new List<ReplaceInstallationRecord>();
+        }
+
+        try
+        {
+            var json = File.ReadAllText(historyPath);
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return new List<ReplaceInstallationRecord>();
+            }
+
+            var records = JsonSerializer.Deserialize<List<ReplaceInstallationRecord>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            return records ?? new List<ReplaceInstallationRecord>();
+        }
+        catch
+        {
+            return new List<ReplaceInstallationRecord>();
+        }
+    }
+
+    public static void SaveReplacementRecords(IEnumerable<ReplaceInstallationRecord> records)
+    {
+        var historyPath = GetReplacementHistoryPath();
+        var json = JsonSerializer.Serialize(records.ToList(), new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+
+        File.WriteAllText(historyPath, json);
+    }
+
+    public static void RecordReplacementInstallation(ReplaceInstallationRecord record)
+    {
+        var records = LoadReplacementRecords();
+        records.RemoveAll(item => string.Equals(item.BackupId, record.BackupId, StringComparison.OrdinalIgnoreCase));
+        records.Insert(0, record);
+        SaveReplacementRecords(records);
+    }
+
+    public static string BackupOriginalFileForReplacement(string gameFolder, string originalFilePath, string modName, string? backupRoot = null)
+    {
+        if (string.IsNullOrWhiteSpace(originalFilePath) || !File.Exists(originalFilePath))
+        {
+            return string.Empty;
+        }
+
+        var targetBackupRoot = string.IsNullOrWhiteSpace(backupRoot) ? GetDefaultBackupRoot() : backupRoot;
+        var relativePath = Path.GetRelativePath(gameFolder, originalFilePath)
+            .Replace('/', Path.DirectorySeparatorChar)
+            .Replace('\\', Path.DirectorySeparatorChar);
+
+        var backupPath = Path.Combine(targetBackupRoot, SanitizeFolderName(modName), relativePath);
+        var backupDirectory = Path.GetDirectoryName(backupPath) ?? targetBackupRoot;
+        Directory.CreateDirectory(backupDirectory);
+        File.Copy(originalFilePath, backupPath, true);
+
+        return backupPath;
     }
 
     public static List<ModPackageInfo> DiscoverModPackages(string libraryRoot)
