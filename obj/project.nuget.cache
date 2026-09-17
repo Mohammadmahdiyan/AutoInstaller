@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FXTBsCHlx34=",
+  "dgSpecHash": "SB33nU82ifc=",
   "success": true,
-  "projectFilePath": "G:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\AliMohammad\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.28\\microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
-    "C:\\Users\\AliMohammad\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.28\\microsoft.windowsdesktop.app.ref.8.0.28.nupkg.sha512",
-    "C:\\Users\\AliMohammad\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.28\\microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512",
-    "C:\\Users\\AliMohammad\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.28\\microsoft.netcore.app.host.win-x64.8.0.28.nupkg.sha512"
-  ],
+  "projectFilePath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

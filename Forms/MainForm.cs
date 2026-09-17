@@ -63,6 +63,51 @@ public partial class MainForm : Form
         RefreshModLibrary();
         RefreshModList();
         UpdateSidebarState();
+
+        // Synchronize UI inputs from cache for the initial step
+        SynchronizeStepInputs(_currentStep);
+    }
+
+    private void SynchronizeStepInputs(WizardStep step)
+    {
+        if (step == WizardStep.Step1)
+        {
+            if (_wizardPanels.TryGetValue(WizardStep.Step1, out var panel))
+            {
+                var tb = panel.Controls.OfType<TextBox>().FirstOrDefault(t => t.Name == "Step1GamePathTextBox");
+                if (tb != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(_settings.GamePath) && Directory.Exists(_settings.GamePath))
+                    {
+                        tb.Text = _settings.GamePath;
+                    }
+                }
+            }
+            if (GamePathTextBox != null)
+            {
+                GamePathTextBox.Text = _settings.GamePath ?? string.Empty;
+            }
+        }
+
+        if (step == WizardStep.Step2)
+        {
+            if (_wizardPanels.TryGetValue(WizardStep.Step2, out var panel))
+            {
+                var tb = panel.Controls.OfType<TextBox>().FirstOrDefault(t => t.Name == "Step2ModLibraryPathTextBox");
+                if (tb != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder))
+                    {
+                        tb.Text = _settings.ModSourceFolder;
+                    }
+                }
+            }
+
+            if (ModLibraryPathTextBox != null)
+            {
+                ModLibraryPathTextBox.Text = _settings.ModSourceFolder ?? string.Empty;
+            }
+        }
     }
 
     private void ConfigureUi()
@@ -289,12 +334,13 @@ public partial class MainForm : Form
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
         var title = new Label { Text = _localizationService.GetString("Step1GameFolder", "Game folder"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
         var description = new Label { Text = _localizationService.GetString("GameFolderRequired", "Choose your GTA San Andreas folder."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
-        var pathText = new TextBox { Width = 560, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
+        var pathText = new TextBox { Name = "Step1GamePathTextBox", Width = 560, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
         var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
 
         browse.Click += (_, _) =>
         {
-            var selected = PromptForFolderSelection(_localizationService.GetString("SelectGameFolder", "Select the GTA San Andreas folder"));
+            var initial = Directory.Exists(pathText.Text) ? pathText.Text : _settings.GamePath;
+            var selected = PromptForFolderSelection(_localizationService.GetString("SelectGameFolder", "Select the GTA San Andreas folder"), initial);
             if (string.IsNullOrWhiteSpace(selected) || !GameService.IsValidGameFolder(selected))
             {
                 MessageBox.Show(_localizationService.GetString("InvalidGameFolder", "This folder does not contain a valid GTA San Andreas installation."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -322,6 +368,13 @@ public partial class MainForm : Form
         title.Location = new Point(18, 18);
         description.Location = new Point(18, 58);
         flow.Location = new Point(18, 100);
+
+        // Preload cached GamePath if valid (do not overwrite cache with empty UI)
+        if (!string.IsNullOrWhiteSpace(_settings.GamePath) && Directory.Exists(_settings.GamePath))
+        {
+            pathText.Text = _settings.GamePath;
+        }
+
         return panel;
     }
 
@@ -331,10 +384,52 @@ public partial class MainForm : Form
         var title = new Label { Text = _localizationService.GetString("Step2Profile", "Game profile"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
         var summary = new Label { Name = "ProfileSummary", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
 
+        // Mod Base Folder input for Step 2 (synchronized with _settings.ModSourceFolder)
+        var modBaseLabel = new Label { Text = _localizationService.GetString("ModLibraryPath", "Mods Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold) };
+        var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
+        var modBaseBrowse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
+
+        modBaseBrowse.Click += (_, _) =>
+        {
+            var initial = Directory.Exists(modBaseText.Text) ? modBaseText.Text : _settings.ModSourceFolder;
+            var selected = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"), initial);
+            if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
+            {
+                MessageBox.Show(_localizationService.GetString("InvalidModLibraryFolder", "This folder is not a valid mods library folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _selectedModSourcePath = selected;
+            _settings.ModSourceFolder = selected;
+            _settingsService.Save(_settings);
+            modBaseText.Text = selected;
+            if (ModLibraryPathTextBox != null)
+            {
+                ModLibraryPathTextBox.Text = selected;
+            }
+
+            RefreshModLibrary();
+        };
+
+        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
+        flow.Controls.Add(modBaseText);
+        flow.Controls.Add(modBaseBrowse);
+
         panel.Controls.Add(title);
         panel.Controls.Add(summary);
+        panel.Controls.Add(modBaseLabel);
+        panel.Controls.Add(flow);
         title.Location = new Point(18, 18);
         summary.Location = new Point(18, 58);
+        modBaseLabel.Location = new Point(18, 110);
+        flow.Location = new Point(18, 140);
+
+        // Preload cached ModSourceFolder if valid
+        if (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder))
+        {
+            modBaseText.Text = _settings.ModSourceFolder;
+        }
+
         return panel;
     }
 
@@ -349,7 +444,8 @@ public partial class MainForm : Form
 
         browse.Click += (_, _) =>
         {
-            var selected = PromptForFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"));
+            var initial = Directory.Exists(_settings.ModSourceFolder ?? string.Empty) ? _settings.ModSourceFolder : null;
+            var selected = PromptForFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
                 _selectedModName = string.Empty;
@@ -484,6 +580,21 @@ public partial class MainForm : Form
         }
 
         UpdateSidebarState();
+
+        // Ensure designer header panels are hidden while wizard is active to avoid overlapping UI
+        try
+        {
+            if (GamePanel != null) GamePanel.Visible = false;
+            if (ModLibraryPanel != null) ModLibraryPanel.Visible = false;
+            if (ModLoaderPanel != null) ModLoaderPanel.Visible = false;
+        }
+        catch
+        {
+            // ignore if controls are not initialized yet
+        }
+
+        // Synchronize inputs from cache for the newly visible step
+        SynchronizeStepInputs(step);
 
         if (step == WizardStep.Step6)
         {
@@ -808,7 +919,7 @@ public partial class MainForm : Form
     {
         if (!GameService.IsValidGameFolder(_settings.GamePath))
         {
-            var selected = PromptForFolderSelection(_localizationService.GetString("SelectGameFolder", "Select the GTA San Andreas folder"));
+            var selected = PromptForFolderSelection(_localizationService.GetString("SelectGameFolder", "Select the GTA San Andreas folder"), _settings.GamePath);
             if (GameService.IsValidGameFolder(selected))
             {
                 _settings.GamePath = selected;
@@ -820,7 +931,7 @@ public partial class MainForm : Form
 
         if (string.IsNullOrWhiteSpace(_settings.ModSourceFolder) || !Directory.Exists(_settings.ModSourceFolder))
         {
-            var selected = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"));
+            var selected = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"), _settings.ModSourceFolder);
             if (!string.IsNullOrWhiteSpace(selected) && Directory.Exists(selected))
             {
                 _settings.ModSourceFolder = selected;
@@ -829,9 +940,21 @@ public partial class MainForm : Form
         }
     }
 
-    private string PromptForFolderSelection(string description)
+    private string PromptForFolderSelection(string description, string? initialFolder = null)
     {
         using var folderDialog = new FolderBrowserDialog { Description = description };
+        if (!string.IsNullOrWhiteSpace(initialFolder) && Directory.Exists(initialFolder))
+        {
+            try
+            {
+                folderDialog.SelectedPath = initialFolder;
+            }
+            catch
+            {
+                // ignore any platform-specific errors setting SelectedPath
+            }
+        }
+
         return folderDialog.ShowDialog(this) == DialogResult.OK ? folderDialog.SelectedPath : string.Empty;
     }
 
@@ -1181,7 +1304,7 @@ public partial class MainForm : Form
 
     private void ModLibraryChangeButton_Click(object sender, EventArgs e)
     {
-        var selected = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"));
+        var selected = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"), _settings.ModSourceFolder);
         if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
         {
             MessageBox.Show(_localizationService.GetString("InvalidModLibraryFolder", "This folder is not a valid mods library folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1212,7 +1335,7 @@ public partial class MainForm : Form
 
     private void GamePathSelectButton_Click(object sender, EventArgs e)
     {
-        var selected = PromptForFolderSelection(_localizationService.GetString("SelectGameFolder", "Select the GTA San Andreas folder"));
+        var selected = PromptForFolderSelection(_localizationService.GetString("SelectGameFolder", "Select the GTA San Andreas folder"), _settings.GamePath);
         if (string.IsNullOrWhiteSpace(selected) || !GameService.IsValidGameFolder(selected))
         {
             MessageBox.Show(_localizationService.GetString("InvalidGameFolder", "This folder does not contain gta_sa.exe."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);

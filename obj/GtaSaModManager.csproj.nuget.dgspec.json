@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "G:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj": {}
+    "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj": {}
   },
   "projects": {
-    "G:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj": {
+    "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
+        "projectUniqueName": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
         "projectName": "GtaSaModManager",
-        "projectPath": "G:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
-        "packagesPath": "C:\\Users\\AliMohammad\\.nuget\\packages\\",
-        "outputPath": "G:\\B\\AA-MiniProject\\ModAutoInstaller\\obj\\",
+        "projectPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
+        "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
+        "outputPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\AliMohammad\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0-windows"
@@ -39,7 +39,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "11.0.100"
       },
       "frameworks": {
         "net8.0-windows": {
@@ -56,24 +56,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.28, 8.0.28]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.28, 8.0.28]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.28, 8.0.28]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.28, 8.0.28]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
@@ -82,7 +64,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\11.0.100-rc.1.26425.128/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
