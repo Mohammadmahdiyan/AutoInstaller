@@ -51,6 +51,11 @@ public partial class MainForm : Form
         _settings = _settingsService.Load();
         SyncCachedGameDataFromFilesystem();
 
+        _selectedGamePath = IsCachedGameFolderValid() ? _settings.GamePath ?? string.Empty : string.Empty;
+        _selectedModSourcePath = !string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder)
+            ? _settings.ModSourceFolder
+            : string.Empty;
+
         var startupStep = DetermineFirstRequiredStep();
         _currentStep = startupStep;
 
@@ -68,6 +73,101 @@ public partial class MainForm : Form
         SynchronizeStepInputs(_currentStep);
     }
 
+    private void RestoreCachedValueIfMissing(TextBox? textBox, string? cachedValue, Func<string, bool> isValidCachedValue)
+    {
+        if (textBox == null || textBox.IsDisposed || string.IsNullOrWhiteSpace(cachedValue) || !isValidCachedValue(cachedValue))
+        {
+            return;
+        }
+
+        var currentValue = textBox.Text ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(currentValue) || string.Equals(currentValue, cachedValue, StringComparison.OrdinalIgnoreCase))
+        {
+            textBox.Text = cachedValue.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        }
+    }
+
+    private static void ApplyPathSelectorTextBoxStyle(TextBox textBox)
+    {
+        if (textBox == null || textBox.IsDisposed)
+        {
+            return;
+        }
+
+        textBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+        textBox.Height = 38;
+        textBox.Margin = new Padding(0);
+        textBox.Padding = new Padding(8, 6, 8, 3);
+        textBox.BorderStyle = BorderStyle.FixedSingle;
+        textBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        textBox.BackColor = Color.White;
+        textBox.ForeColor = SystemColors.WindowText;
+        textBox.ReadOnly = true;
+        textBox.TextAlign = HorizontalAlignment.Left;
+    }
+
+    private static void ApplyBrowseButtonStyle(Button button, Color normalColor)
+    {
+        if (button == null || button.IsDisposed)
+        {
+            return;
+        }
+
+        button.FlatStyle = FlatStyle.Flat;
+        button.FlatAppearance.BorderColor = Color.FromArgb(148, 163, 184);
+        button.FlatAppearance.BorderSize = 1;
+        button.FlatAppearance.MouseDownBackColor = Color.FromArgb(59, 130, 246);
+        button.FlatAppearance.MouseOverBackColor = Color.FromArgb(96, 165, 250);
+        button.Margin = new Padding(12, 0, 0, 0);
+        button.Height = 38;
+        button.Width = 140;
+        button.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        button.ForeColor = Color.White;
+        button.BackColor = normalColor;
+        button.UseVisualStyleBackColor = false;
+        button.Cursor = Cursors.Hand;
+        button.EnabledChanged += (_, _) =>
+        {
+            if (button.Enabled)
+            {
+                button.BackColor = normalColor;
+            }
+            else
+            {
+                button.BackColor = Color.FromArgb(203, 213, 225);
+                button.ForeColor = Color.FromArgb(71, 85, 105);
+            }
+        };
+        button.MouseEnter += (_, _) =>
+        {
+            if (button.Enabled)
+            {
+                button.BackColor = Color.FromArgb(37, 99, 235);
+            }
+        };
+        button.MouseLeave += (_, _) =>
+        {
+            if (button.Enabled)
+            {
+                button.BackColor = normalColor;
+            }
+        };
+        button.MouseDown += (_, _) =>
+        {
+            if (button.Enabled)
+            {
+                button.BackColor = Color.FromArgb(30, 64, 175);
+            }
+        };
+        button.MouseUp += (_, _) =>
+        {
+            if (button.Enabled)
+            {
+                button.BackColor = Color.FromArgb(37, 99, 235);
+            }
+        };
+    }
+
     private void SynchronizeStepInputs(WizardStep step)
     {
         if (step == WizardStep.Step1)
@@ -75,17 +175,12 @@ public partial class MainForm : Form
             if (_wizardPanels.TryGetValue(WizardStep.Step1, out var panel))
             {
                 var tb = panel.Controls.OfType<TextBox>().FirstOrDefault(t => t.Name == "Step1GamePathTextBox");
-                if (tb != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(_settings.GamePath) && Directory.Exists(_settings.GamePath))
-                    {
-                        tb.Text = _settings.GamePath;
-                    }
-                }
+                RestoreCachedValueIfMissing(tb, _settings.GamePath, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value) && GameService.IsValidGameFolder(value));
             }
+
             if (GamePathTextBox != null)
             {
-                GamePathTextBox.Text = _settings.GamePath ?? string.Empty;
+                RestoreCachedValueIfMissing(GamePathTextBox, _settings.GamePath, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value) && GameService.IsValidGameFolder(value));
             }
         }
 
@@ -94,18 +189,12 @@ public partial class MainForm : Form
             if (_wizardPanels.TryGetValue(WizardStep.Step2, out var panel))
             {
                 var tb = panel.Controls.OfType<TextBox>().FirstOrDefault(t => t.Name == "Step2ModLibraryPathTextBox");
-                if (tb != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder))
-                    {
-                        tb.Text = _settings.ModSourceFolder;
-                    }
-                }
+                RestoreCachedValueIfMissing(tb, _settings.ModSourceFolder, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value));
             }
 
             if (ModLibraryPathTextBox != null)
             {
-                ModLibraryPathTextBox.Text = _settings.ModSourceFolder ?? string.Empty;
+                RestoreCachedValueIfMissing(ModLibraryPathTextBox, _settings.ModSourceFolder, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value));
             }
         }
     }
@@ -331,11 +420,13 @@ public partial class MainForm : Form
 
     private Panel CreateWizardStep1()
     {
-        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Text = _localizationService.GetString("Step1GameFolder", "Game folder"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
-        var description = new Label { Text = _localizationService.GetString("GameFolderRequired", "Choose your GTA San Andreas folder."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
-        var pathText = new TextBox { Name = "Step1GamePathTextBox", Width = 560, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
-        var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
+        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
+        var title = new Label { Text = _localizationService.GetString("Step1GameFolder", "Game folder"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
+        var description = new Label { Text = _localizationService.GetString("GameFolderRequired", "Choose your GTA San Andreas folder."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
+        var pathText = new TextBox { Name = "Step1GamePathTextBox", Width = 560, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
+        var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        ApplyPathSelectorTextBoxStyle(pathText);
+        ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
 
         browse.Click += (_, _) =>
         {
@@ -358,21 +449,20 @@ public partial class MainForm : Form
             GameService.EnsureModLoaderFolder(selected);
         };
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
+        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0) };
         flow.Controls.Add(pathText);
         flow.Controls.Add(browse);
 
-        panel.Controls.Add(title);
-        panel.Controls.Add(description);
-        panel.Controls.Add(flow);
-        title.Location = new Point(18, 18);
-        description.Location = new Point(18, 58);
-        flow.Location = new Point(18, 100);
+        var stack = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown, WrapContents = false, Margin = new Padding(0), Padding = new Padding(0) };
+        stack.Controls.Add(title);
+        stack.Controls.Add(description);
+        stack.Controls.Add(flow);
 
-        // Preload cached GamePath if valid (do not overwrite cache with empty UI)
-        if (!string.IsNullOrWhiteSpace(_settings.GamePath) && Directory.Exists(_settings.GamePath))
+        panel.Controls.Add(stack);
+
+        if (!string.IsNullOrWhiteSpace(_settings.GamePath) && Directory.Exists(_settings.GamePath) && GameService.IsValidGameFolder(_settings.GamePath))
         {
-            pathText.Text = _settings.GamePath;
+            pathText.Text = _settings.GamePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
 
         return panel;
@@ -380,14 +470,14 @@ public partial class MainForm : Form
 
     private Panel CreateWizardStep2()
     {
-        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Text = _localizationService.GetString("Step2Profile", "Game profile"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
-        var summary = new Label { Name = "ProfileSummary", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
+        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
+        var title = new Label { Text = "Base Mods Folder", Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
+        var subtitle = new Label { Text = "select base mods folder for easy access", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
 
-        // Mod Base Folder input for Step 2 (synchronized with _settings.ModSourceFolder)
-        var modBaseLabel = new Label { Text = _localizationService.GetString("ModLibraryPath", "Mods Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold) };
-        var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
-        var modBaseBrowse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
+        var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
+        var modBaseBrowse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        ApplyPathSelectorTextBoxStyle(modBaseText);
+        ApplyBrowseButtonStyle(modBaseBrowse, Color.FromArgb(37, 99, 235));
 
         modBaseBrowse.Click += (_, _) =>
         {
@@ -411,23 +501,20 @@ public partial class MainForm : Form
             RefreshModLibrary();
         };
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
+        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0) };
         flow.Controls.Add(modBaseText);
         flow.Controls.Add(modBaseBrowse);
 
-        panel.Controls.Add(title);
-        panel.Controls.Add(summary);
-        panel.Controls.Add(modBaseLabel);
-        panel.Controls.Add(flow);
-        title.Location = new Point(18, 18);
-        summary.Location = new Point(18, 58);
-        modBaseLabel.Location = new Point(18, 110);
-        flow.Location = new Point(18, 140);
+        var stack = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown, WrapContents = false, Margin = new Padding(0), Padding = new Padding(0) };
+        stack.Controls.Add(title);
+        stack.Controls.Add(subtitle);
+        stack.Controls.Add(flow);
 
-        // Preload cached ModSourceFolder if valid
+        panel.Controls.Add(stack);
+
         if (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder))
         {
-            modBaseText.Text = _settings.ModSourceFolder;
+            modBaseText.Text = _settings.ModSourceFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
 
         return panel;
@@ -435,16 +522,20 @@ public partial class MainForm : Form
 
     private Panel CreateWizardStep3()
     {
-        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Text = _localizationService.GetString("Step3Mod", "Select mod"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
-        var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold) };
-        var folderText = new TextBox { Width = 520, Height = 32, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle };
-        var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 36 };
-        var selectedName = new Label { AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
+        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
+        var title = new Label { Text = _localizationService.GetString("Step3Mod", "Select mod"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
+        var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold), Margin = new Padding(0, 0, 0, 8) };
+        var folderText = new TextBox { Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
+        var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var selectedName = new Label { AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 12, 0, 0) };
+        ApplyPathSelectorTextBoxStyle(folderText);
+        ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
 
         browse.Click += (_, _) =>
         {
-            var initial = Directory.Exists(_settings.ModSourceFolder ?? string.Empty) ? _settings.ModSourceFolder : null;
+            var initial = !string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder)
+                ? _settings.ModSourceFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                : null;
             var selected = PromptForFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
@@ -474,18 +565,17 @@ public partial class MainForm : Form
             UpdateSidebarState();
         };
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
+        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0) };
         flow.Controls.Add(folderText);
         flow.Controls.Add(browse);
 
-        panel.Controls.Add(title);
-        panel.Controls.Add(folderLabel);
-        panel.Controls.Add(flow);
-        panel.Controls.Add(selectedName);
-        title.Location = new Point(18, 18);
-        folderLabel.Location = new Point(18, 58);
-        flow.Location = new Point(18, 88);
-        selectedName.Location = new Point(18, 150);
+        var stack = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown, WrapContents = false, Margin = new Padding(0), Padding = new Padding(0) };
+        stack.Controls.Add(title);
+        stack.Controls.Add(folderLabel);
+        stack.Controls.Add(flow);
+        stack.Controls.Add(selectedName);
+
+        panel.Controls.Add(stack);
         return panel;
     }
 
@@ -947,7 +1037,8 @@ public partial class MainForm : Form
         {
             try
             {
-                folderDialog.SelectedPath = initialFolder;
+                var normalizedInitial = initialFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                folderDialog.SelectedPath = normalizedInitial;
             }
             catch
             {
@@ -960,8 +1051,10 @@ public partial class MainForm : Form
 
     private void LoadSettingsIntoUi()
     {
-        _selectedGamePath = _settings.GamePath ?? string.Empty;
-        _selectedModSourcePath = _settings.ModSourceFolder ?? string.Empty;
+        _selectedGamePath = IsCachedGameFolderValid() ? _settings.GamePath ?? string.Empty : string.Empty;
+        _selectedModSourcePath = !string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder)
+            ? _settings.ModSourceFolder
+            : string.Empty;
 
         if (GamePathTextBox != null)
         {
@@ -1632,6 +1725,8 @@ public partial class MainForm : Form
             MainPanel.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
         }
 
+        _sidebarPreviousButton.Visible = _currentStep != WizardStep.Step1;
+        _sidebarNextButton.Visible = true;
         _sidebarPreviousButton.Enabled = false;
         _sidebarNextButton.Enabled = false;
         _sidebarReadmeButton.Visible = _currentStep is WizardStep.Step4 or WizardStep.Step6;
