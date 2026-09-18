@@ -165,7 +165,7 @@ partial class MainForm
         this.ModLibraryPathLabel.AutoSize = true;
         this.ModLibraryPathLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
         this.ModLibraryPathLabel.Location = new System.Drawing.Point(18, 50);
-        this.ModLibraryPathLabel.Text = "Mods Folder";
+        this.ModLibraryPathLabel.Text = "Base Mods Folder";
 
         this.ModLibraryPathTextBox.Location = new System.Drawing.Point(18, 74);
         this.ModLibraryPathTextBox.Width = 560;

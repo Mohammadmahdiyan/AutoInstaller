@@ -234,7 +234,7 @@ public partial class MainForm : Form
 
         if (ModLibraryPathLabel != null)
         {
-            ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Mods Folder");
+            ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Base Mods Folder");
         }
 
         if (ModLibraryChangeButton != null)
@@ -472,7 +472,7 @@ public partial class MainForm : Form
     {
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
         var title = new Label { Text = "Base Mods Folder", Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
-        var subtitle = new Label { Text = "select base mods folder for easy access", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
+        var subtitle = new Label { Text = "select base mod for easy access", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
 
         var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
         var modBaseBrowse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
@@ -481,7 +481,11 @@ public partial class MainForm : Form
 
         modBaseBrowse.Click += (_, _) =>
         {
-            var initial = Directory.Exists(modBaseText.Text) ? modBaseText.Text : _settings.ModSourceFolder;
+            var initial = Directory.Exists(modBaseText.Text)
+                ? modBaseText.Text.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                : (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder)
+                    ? _settings.ModSourceFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                    : null);
             var selected = PromptForFolderSelection(_localizationService.GetString("SelectModLibraryFolder", "Select the Mod Library / Mods Source Folder"), initial);
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
@@ -533,10 +537,13 @@ public partial class MainForm : Form
 
         browse.Click += (_, _) =>
         {
-            var initial = !string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder)
-                ? _settings.ModSourceFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                : null;
-            var selected = PromptForFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
+            var initial = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
+                ? _selectedModSourcePath
+                : (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder)
+                    ? _settings.ModSourceFolder
+                    : null);
+            initial = NormalizeExistingDirectory(initial);
+            var selected = PromptForModFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
                 _selectedModName = string.Empty;
@@ -1032,13 +1039,18 @@ public partial class MainForm : Form
 
     private string PromptForFolderSelection(string description, string? initialFolder = null)
     {
-        using var folderDialog = new FolderBrowserDialog { Description = description };
-        if (!string.IsNullOrWhiteSpace(initialFolder) && Directory.Exists(initialFolder))
+        using var folderDialog = new FolderBrowserDialog
+        {
+            Description = description,
+            RootFolder = Environment.SpecialFolder.MyComputer,
+            ShowNewFolderButton = true
+        };
+        var exactInitialFolder = NormalizeExistingDirectory(initialFolder);
+        if (!string.IsNullOrWhiteSpace(exactInitialFolder))
         {
             try
             {
-                var normalizedInitial = initialFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                folderDialog.SelectedPath = normalizedInitial;
+                folderDialog.SelectedPath = exactInitialFolder;
             }
             catch
             {
@@ -1047,6 +1059,38 @@ public partial class MainForm : Form
         }
 
         return folderDialog.ShowDialog(this) == DialogResult.OK ? folderDialog.SelectedPath : string.Empty;
+    }
+
+    private string PromptForModFolderSelection(string description, string? initialFolder)
+    {
+        using var folderContentsDialog = new OpenFileDialog
+        {
+            Title = description,
+            InitialDirectory = NormalizeExistingDirectory(initialFolder) ?? string.Empty,
+            CheckFileExists = false,
+            CheckPathExists = true,
+            ValidateNames = false,
+            FileName = "Select this folder",
+            Filter = "Folders|*.folder"
+        };
+
+        if (folderContentsDialog.ShowDialog(this) != DialogResult.OK)
+        {
+            return string.Empty;
+        }
+
+        var selectedDirectory = Path.GetDirectoryName(folderContentsDialog.FileName);
+        return NormalizeExistingDirectory(selectedDirectory) ?? string.Empty;
+    }
+
+    private static string? NormalizeExistingDirectory(string? directoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath))
+        {
+            return null;
+        }
+
+        return new DirectoryInfo(directoryPath).FullName.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     }
 
     private void LoadSettingsIntoUi()
@@ -1669,7 +1713,7 @@ public partial class MainForm : Form
         if (GamePathLabel != null && !GamePathLabel.IsDisposed) GamePathLabel.Text = _localizationService.GetString("GamePath", "Game Path");
         if (GameFolderNotConfiguredLabel != null && !GameFolderNotConfiguredLabel.IsDisposed) GameFolderNotConfiguredLabel.Text = _localizationService.GetString("GameFolderNotConfigured", "Game folder not configured");
         if (ModLibraryTitleLabel != null && !ModLibraryTitleLabel.IsDisposed) ModLibraryTitleLabel.Text = _localizationService.GetString("ModLibraryTitle", "Mod Library");
-        if (ModLibraryPathLabel != null && !ModLibraryPathLabel.IsDisposed) ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Mods Folder");
+        if (ModLibraryPathLabel != null && !ModLibraryPathLabel.IsDisposed) ModLibraryPathLabel.Text = _localizationService.GetString("ModLibraryPath", "Base Mods Folder");
         if (ModLibraryChangeButton != null && !ModLibraryChangeButton.IsDisposed) ModLibraryChangeButton.Text = _localizationService.GetString("Change", "Change");
         if (ModLibraryOpenButton != null && !ModLibraryOpenButton.IsDisposed) ModLibraryOpenButton.Text = _localizationService.GetString("OpenFolder", "Open Folder");
         if (OpenGameFolderButton != null && !OpenGameFolderButton.IsDisposed) OpenGameFolderButton.Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder");
