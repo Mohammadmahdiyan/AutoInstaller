@@ -34,6 +34,7 @@ public partial class MainForm : Form
     private int _completionSecondsLeft = 6;
     private bool _completionTimerActive;
     private bool _isApplyingLanguage;
+    private bool _returnedToInstallStepFromCompletion;
 
     private enum WizardStep
     {
@@ -651,7 +652,7 @@ public partial class MainForm : Form
 
         runButton.Click += (_, _) => GameService.LaunchGame(_selectedGamePath);
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
+        var flow = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
         flow.Controls.Add(openButton);
         flow.Controls.Add(runButton);
 
@@ -665,6 +666,7 @@ public partial class MainForm : Form
         flow.Location = new Point(18, 90);
         countdown.Location = new Point(18, 160);
         gallery.Location = new Point(18, 190);
+        panel.AutoScroll = true;
         return panel;
     }
 
@@ -817,6 +819,27 @@ public partial class MainForm : Form
         NavigateToStep(_currentStep);
     }
 
+    private async Task<bool> EnsureDependenciesBeforeInstallAsync()
+    {
+        var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        var result = await DependencyInstallationService.EnsureInstalledAsync(_selectedGamePath, baseModsFolder);
+        if (result.Success)
+        {
+            if (string.IsNullOrWhiteSpace(_selectedReadmePath))
+            {
+                var dependencyReadmeRoot = Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles");
+                _selectedReadmePath = FindReadmeFile(dependencyReadmeRoot);
+            }
+
+            return true;
+        }
+
+        MessageBox.Show(result.ErrorMessage, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        return false;
+    }
+
     private async Task InstallSelectedModAsync()
     {
         if (!GameService.IsValidGameFolder(_selectedGamePath))
@@ -834,6 +857,11 @@ public partial class MainForm : Form
         if (!Directory.Exists(_selectedModPayloadPath) || Directory.EnumerateFileSystemEntries(_selectedModPayloadPath).Any() == false)
         {
             MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (!await EnsureDependenciesBeforeInstallAsync())
+        {
             return;
         }
 
@@ -948,7 +976,7 @@ public partial class MainForm : Form
             .Replace("_", string.Empty)
             .Replace("-", string.Empty);
 
-        return normalized.Equals("readme", StringComparison.OrdinalIgnoreCase);
+        return normalized.Contains("readme", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string FindReadmeFile(string root)
@@ -1298,16 +1326,52 @@ public partial class MainForm : Form
 
         var modName = ModPackageService.ResolveModName(packageRoot, Path.GetFileName(packageRoot));
 
+        if (!await EnsureDependenciesBeforeInstallAsync())
+        {
+            return;
+        }
+
         if (manifest.IsReplacing)
         {
             await InstallReplacingPackageAsync(payloadPath, modName, packageRoot);
             return;
         }
 
-        var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
-        var targetDir = Path.Combine(modLoaderFolder, modName);
+        if (manifest.NormalizedType is "putinmodloader" or "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces")
+        {
+            await InstallTypedPackageAsync(payloadPath, modName, packageRoot, manifest);
+            return;
+        }
 
-        if (Directory.Exists(targetDir))
+        MessageBox.Show("This mod type is not implemented yet: " + manifest.Type, _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return;
+
+    }
+
+    private async Task InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, ModManifest manifest)
+    {
+        var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(path => !string.Equals(Path.GetFileName(path), "mod.json", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (packageFiles.Count == 0)
+        {
+            MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected mod package does not contain installable files."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var targetRoot = manifest.NormalizedType switch
+        {
+            "putinmodloader" => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName),
+            "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
+            _ => string.Empty
+        };
+        if (string.IsNullOrWhiteSpace(targetRoot))
+        {
+            return;
+        }
+
+        if (manifest.NormalizedType == "putinmodloader" && Directory.Exists(targetRoot))
         {
             var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), modName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result != DialogResult.Yes)
@@ -1315,19 +1379,119 @@ public partial class MainForm : Form
                 return;
             }
 
-            Directory.Delete(targetDir, true);
+            Directory.Delete(targetRoot, true);
+        }
+
+        var replacementTargets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (manifest.NormalizedType == "putandreplace")
+        {
+            foreach (var replacement in ModPackageService.ReadReplacementEntries(packageRoot))
+            {
+                var sourcePath = GetSafePackagePath(payloadPath, replacement.Source);
+                if (!File.Exists(sourcePath))
+                {
+                    MessageBox.Show("Replacement source was not found: " + replacement.Source, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                replacementTargets[sourcePath] = GetSafeGamePath(replacement.Target);
+            }
+        }
+        else if (manifest.NormalizedType is "putandreplaces" or "putingamefolder")
+        {
+            foreach (var sourcePath in packageFiles)
+            {
+                var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
+                var destinationPath = GetSafeGamePath(relativePath);
+                if (manifest.NormalizedType == "putandreplaces" && File.Exists(destinationPath)
+                    || manifest.NormalizedType == "putingamefolder" && File.Exists(destinationPath))
+                {
+                    replacementTargets[sourcePath] = destinationPath;
+                }
+            }
+        }
+
+        var backupPlan = replacementTargets.Count > 0
+            ? BackupStorageService.CreatePlan(_selectedGamePath, modName, replacementTargets.Values)
+            : new BackupStoragePlan { HasBackup = true };
+        if (replacementTargets.Count > 0 && !backupPlan.HasBackup)
+        {
+            var chooseAlternative = MessageBox.Show(
+                "The game drive and drive C do not have enough space for the backup.\n\nWould you like to choose another location?",
+                _appName,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+            if (chooseAlternative == DialogResult.Yes)
+            {
+                var alternativeRoot = PromptForFolderSelection("Choose another backup location", _selectedGamePath);
+                if (string.IsNullOrWhiteSpace(alternativeRoot))
+                {
+                    return;
+                }
+
+                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, replacementTargets.Values, alternativeRoot);
+                if (!backupPlan.HasBackup)
+                {
+                    MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else if (MessageBox.Show("No backup will be created. Continue?", _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
         }
 
         var progressForm = new InstallProgressForm(_localizationService, modName);
         progressForm.Show(this);
         progressForm.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName);
-
         try
         {
-            var progress = new Progress<string>(message => progressForm.UpdateProgress(message));
-            await ModPackageService.CopyDirectoryAsync(payloadPath, targetDir, progress);
+            var records = new List<ReplaceInstallationRecord>();
+            for (var index = 0; index < packageFiles.Count; index++)
+            {
+                var sourcePath = packageFiles[index];
+                var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
+                var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)
+                    ? replacementTarget
+                    : GetSafeGamePath(manifest.NormalizedType == "putinmodloader"
+                        ? Path.Combine("modloader", modName, relativePath)
+                        : relativePath);
+
+                if (replacementTargets.ContainsKey(sourcePath) && File.Exists(destinationPath) && backupPlan.HasBackup)
+                {
+                    var backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationPath, modName, backupPlan.BackupRoot);
+                    records.Add(new ReplaceInstallationRecord
+                    {
+                        BackupId = Guid.NewGuid().ToString("N"),
+                        ModName = modName,
+                        GameFolder = _selectedGamePath,
+                        OriginalFilePath = destinationPath,
+                        BackupFilePath = backupFilePath,
+                        InstalledModFile = sourcePath,
+                        InstallationType = manifest.NormalizedType,
+                        ReplacementSucceeded = true,
+                        OriginalBackupAvailable = File.Exists(backupFilePath)
+                    });
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                File.Copy(sourcePath, destinationPath, true);
+                progressForm.UpdateProgress((int)((index + 1) * 100d / packageFiles.Count) + "%");
+                await Task.Yield();
+            }
+
+            foreach (var record in records)
+            {
+                ModPackageService.RecordReplacementInstallation(record);
+            }
+
+            if (manifest.NormalizedType == "putinmodloader")
+            {
+                ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
+            }
+
             progressForm.Complete();
-            ModLoaderService.RecordInstallation(modName, packageRoot, targetDir);
             MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
             RefreshModList();
         }
@@ -1342,6 +1506,33 @@ public partial class MainForm : Form
         }
     }
 
+    private string GetSafePackagePath(string packageRoot, string relativePath)
+    {
+        return GetSafePath(packageRoot, relativePath, "Package path");
+    }
+
+    private string GetSafeGamePath(string relativePath)
+    {
+        return GetSafePath(_selectedGamePath, relativePath, "Game path");
+    }
+
+    private static string GetSafePath(string root, string relativePath, string label)
+    {
+        if (string.IsNullOrWhiteSpace(relativePath) || Path.IsPathRooted(relativePath))
+        {
+            throw new InvalidDataException(label + " must be a relative path.");
+        }
+
+        var fullRoot = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var fullPath = Path.GetFullPath(Path.Combine(root, relativePath));
+        if (!fullPath.StartsWith(fullRoot, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidDataException(label + " escapes its root folder.");
+        }
+
+        return fullPath;
+    }
+
     private async Task InstallReplacingPackageAsync(string payloadPath, string modName, string packageRoot)
     {
         var filesToReplace = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
@@ -1353,6 +1544,44 @@ public partial class MainForm : Form
         {
             MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected replacement package does not contain any files to replace."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
+        }
+
+        var backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToReplace);
+        if (!backupPlan.HasBackup)
+        {
+            var chooseAlternative = MessageBox.Show(
+                "The game drive and drive C do not have enough space for the backup.\n\nWould you like to choose another location?",
+                _appName,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (chooseAlternative == DialogResult.Yes)
+            {
+                var alternativeRoot = PromptForFolderSelection("Choose another backup location", _selectedGamePath);
+                if (string.IsNullOrWhiteSpace(alternativeRoot))
+                {
+                    return;
+                }
+
+                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToReplace, alternativeRoot);
+                if (!backupPlan.HasBackup)
+                {
+                    MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else
+            {
+                var installWithoutBackup = MessageBox.Show(
+                    "No backup will be created. Continue replacing the original files?",
+                    _appName,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (installWithoutBackup != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
         }
 
         var progressForm = new InstallProgressForm(_localizationService, modName);
@@ -1378,9 +1607,9 @@ public partial class MainForm : Form
                 }
 
                 var backupFilePath = string.Empty;
-                if (File.Exists(destinationFile))
+                if (File.Exists(destinationFile) && backupPlan.HasBackup)
                 {
-                    backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationFile, modName, ModPackageService.GetDefaultBackupRoot());
+                    backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationFile, modName, backupPlan.BackupRoot);
                 }
 
                 File.Copy(sourceFile, destinationFile, true);
@@ -1796,8 +2025,10 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step4:
                 _sidebarPreviousButton.Enabled = false;
-                _sidebarNextButton.Enabled = false;
-                _sidebarNextButton.Text = _localizationService.GetString("Installing", "Installing");
+                _sidebarNextButton.Enabled = _returnedToInstallStepFromCompletion;
+                _sidebarNextButton.Text = _returnedToInstallStepFromCompletion
+                    ? _localizationService.GetString("Next", "Next")
+                    : _localizationService.GetString("Installing", "Installing");
                 break;
             case WizardStep.Step5:
                 _sidebarPreviousButton.Enabled = true;
@@ -1838,7 +2069,8 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step6)
         {
-            NavigateToStep(WizardStep.Step5);
+            _returnedToInstallStepFromCompletion = true;
+            NavigateToStep(WizardStep.Step4);
             return;
         }
     }
@@ -1864,6 +2096,13 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step5:
                 NavigateToStep(WizardStep.Step6);
+                break;
+            case WizardStep.Step4:
+                if (_returnedToInstallStepFromCompletion)
+                {
+                    _returnedToInstallStepFromCompletion = false;
+                    NavigateToStep(WizardStep.Step5);
+                }
                 break;
         }
     }

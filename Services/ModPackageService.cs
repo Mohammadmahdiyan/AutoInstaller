@@ -97,17 +97,46 @@ public class ModPackageService
                 return true;
             }
 
-            if (properties.Count == 1 &&
-                string.Equals(properties[0].Name, "type", StringComparison.OrdinalIgnoreCase) &&
-                properties[0].Value.ValueKind == JsonValueKind.String &&
-                (string.Equals(properties[0].Value.GetString(), "ModLoader", StringComparison.OrdinalIgnoreCase) ||
-                 string.Equals(properties[0].Value.GetString(), "Replacing", StringComparison.OrdinalIgnoreCase)))
+            if (!document.RootElement.TryGetProperty("type", out var typeProperty) ||
+                typeProperty.ValueKind != JsonValueKind.String)
             {
-                return true;
+                error = "mod.json must contain a string type property.";
+                return false;
             }
 
-            error = "mod.json must be empty or contain exactly { \"type\": \"Replacing\" } for replacement installs.";
-            return false;
+            var manifest = TryReadManifest(packagePath);
+            if (manifest == null || !new[]
+                {
+                    "putinmodloader", "replacing", "putincleo", "putingamefolder",
+                    "putandreplace", "putandreplaces", "vehicleandskinandweapon",
+                    "vehiclesandskinsandweapons", "savesandmissions", "missiondsl"
+                }.Contains(manifest.NormalizedType, StringComparer.OrdinalIgnoreCase))
+            {
+                error = "mod.json contains an unsupported type.";
+                return false;
+            }
+
+            if (manifest.NormalizedType == "putandreplace" &&
+                (!document.RootElement.TryGetProperty("replacements", out var replacements) || replacements.ValueKind != JsonValueKind.Array))
+            {
+                error = "PutAndReplace requires a replacements array.";
+                return false;
+            }
+
+            if (manifest.NormalizedType == "putandreplace")
+            {
+                try
+                {
+                    _ = ReadReplacementEntries(packagePath);
+                }
+                catch (InvalidDataException ex)
+                {
+                    error = ex.Message;
+                    return false;
+                }
+            }
+
+            return true;
         }
         catch (JsonException ex)
         {
@@ -151,6 +180,49 @@ public class ModPackageService
     public static ModManifest ResolveManifest(string basePath)
     {
         return TryReadManifest(basePath) ?? new ModManifest();
+    }
+
+    public static List<ModReplacementEntry> ReadReplacementEntries(string packageRoot)
+    {
+        var configPath = Path.Combine(packageRoot, "mod.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(configPath));
+        if (!document.RootElement.TryGetProperty("replacements", out var replacements) || replacements.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidDataException("PutAndReplace requires a replacements array.");
+        }
+
+        var result = new List<ModReplacementEntry>();
+        foreach (var item in replacements.EnumerateArray())
+        {
+            if (item.ValueKind == JsonValueKind.String)
+            {
+                var path = item.GetString();
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    result.Add(new ModReplacementEntry(path, path));
+                }
+            }
+            else if (item.ValueKind == JsonValueKind.Object)
+            {
+                var source = item.TryGetProperty("source", out var sourceProperty) && sourceProperty.ValueKind == JsonValueKind.String
+                    ? sourceProperty.GetString()
+                    : null;
+                var target = item.TryGetProperty("target", out var targetProperty) && targetProperty.ValueKind == JsonValueKind.String
+                    ? targetProperty.GetString()
+                    : null;
+                if (!string.IsNullOrWhiteSpace(source) && !string.IsNullOrWhiteSpace(target))
+                {
+                    result.Add(new ModReplacementEntry(source, target));
+                }
+            }
+        }
+
+        if (result.Count == 0)
+        {
+            throw new InvalidDataException("PutAndReplace contains no valid replacement entries.");
+        }
+
+        return result;
     }
 
     public static bool IsReplacingInstall(string packageRoot)
