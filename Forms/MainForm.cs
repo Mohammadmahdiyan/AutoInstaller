@@ -28,6 +28,9 @@ public partial class MainForm : Form
     private string _selectedModSourcePath = string.Empty;
     private string _selectedModName = string.Empty;
     private string _selectedModPayloadPath = string.Empty;
+    private string _selectedModPackageRoot = string.Empty;
+    private ModManifest? _selectedModManifest;
+    private GameAsset? _selectedAssetForInstall;
     private string _selectedReadmePath = string.Empty;
     private List<string> _selectedImageFiles = new();
     private List<string> _installPaths = new();
@@ -569,6 +572,9 @@ public partial class MainForm : Form
 
             _selectedModName = ResolveDirectoryName(selected);
             _selectedModPayloadPath = selected;
+            _selectedModPackageRoot = selected;
+            _selectedModManifest = ModPackageService.ResolveManifest(selected);
+            _selectedAssetForInstall = null;
             folderText.Text = selected;
             selectedName.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
             UpdateSidebarState();
@@ -666,7 +672,12 @@ public partial class MainForm : Form
         }
 
         gallery.Controls.Clear();
-        var assets = _assetCatalogService.FindAssetsInPackage(_selectedModPayloadPath);
+        var detectedAssets = _assetCatalogService.FindAssetsInPackage(_selectedModPayloadPath);
+        var catalogAssets = _assetCatalogService.LoadAssets();
+        var detectedTypes = detectedAssets.Select(asset => asset.AssetType).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var assets = detectedTypes.Count == 0
+            ? catalogAssets
+            : catalogAssets.Where(asset => detectedTypes.Contains(asset.AssetType)).ToList();
         var categories = assets.Select(asset => asset.Category).Where(category => !string.IsNullOrWhiteSpace(category)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(category => category).ToList();
         var selectedCategory = categoryFilter.SelectedItem?.ToString();
         categoryFilter.Items.Clear();
@@ -732,6 +743,22 @@ public partial class MainForm : Form
         card.Controls.Add(preview);
         card.Controls.Add(name);
         card.Controls.Add(id);
+        void SelectAsset(object? _, EventArgs __)
+        {
+            _selectedAssetForInstall = asset;
+            foreach (var sibling in card.Parent?.Controls.OfType<Panel>() ?? Enumerable.Empty<Panel>())
+            {
+                sibling.BackColor = Color.White;
+            }
+
+            card.BackColor = Color.FromArgb(219, 234, 254);
+            UpdateSidebarState();
+        }
+
+        card.Click += SelectAsset;
+        preview.Click += SelectAsset;
+        name.Click += SelectAsset;
+        id.Click += SelectAsset;
         return card;
     }
 
@@ -988,6 +1015,24 @@ public partial class MainForm : Form
             {
                 MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
+        _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
+
+        if (_selectedModManifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
+        {
+            if (_selectedAssetForInstall != null)
+            {
+                await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
+                GoToStep(WizardStep.Step6);
+                return;
+            }
+
+            _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+            _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+            GoToStep(WizardStep.Step5);
+            return;
         }
 
         var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
@@ -1560,11 +1605,12 @@ public partial class MainForm : Form
             {
                 var sourcePath = packageFiles[index];
                 var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
-                var sourceName = Path.GetFileNameWithoutExtension(sourcePath);
                 var asset = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
-                    ? _assetCatalogService.FindAssetsInPackage(payloadPath).FirstOrDefault(item => string.Equals(item.NameFile, sourceName, StringComparison.OrdinalIgnoreCase))
+                    ? _selectedAssetForInstall
                     : null;
-                if (asset != null && Path.GetExtension(sourcePath) is ".dff" or ".txd")
+                if (asset != null
+                    && (manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
+                    && (Path.GetExtension(sourcePath) is ".dff" or ".txd"))
                 {
                     relativePath = Path.Combine(Path.GetDirectoryName(relativePath) ?? string.Empty, asset.NameFile + Path.GetExtension(sourcePath));
                 }
@@ -2148,8 +2194,10 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step5:
                 _sidebarPreviousButton.Enabled = true;
-                _sidebarNextButton.Enabled = true;
-                _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+                _sidebarNextButton.Enabled = _selectedAssetForInstall != null;
+                _sidebarNextButton.Text = _selectedModManifest?.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
+                    ? _localizationService.GetString("InstallMod", "Install Mod")
+                    : _localizationService.GetString("Next", "Next");
                 break;
             case WizardStep.Step6:
                 _sidebarPreviousButton.Enabled = true;
@@ -2211,7 +2259,10 @@ public partial class MainForm : Form
                 }
                 break;
             case WizardStep.Step5:
-                NavigateToStep(WizardStep.Step6);
+                if (_selectedAssetForInstall != null)
+                {
+                    _ = InstallSelectedModAsync();
+                }
                 break;
             case WizardStep.Step4:
                 if (_returnedToInstallStepFromCompletion)
