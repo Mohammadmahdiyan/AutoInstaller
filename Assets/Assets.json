@@ -1270,1798 +1270,2419 @@
     ],
     "Skins": [
         {
+            "id": null,
+            "name": "Bettina",
+            "nameFile": "csbettina",
+            "image": "Assets/Skins/csbettina.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Blue Gang Member",
+            "nameFile": "csblue2",
+            "image": "Assets/Skins/csblue2.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Bogman",
+            "nameFile": "csbogman",
+            "image": "Assets/Skins/csbogman.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Burger Shot Worker",
+            "nameFile": "csburger1",
+            "image": "Assets/Skins/csburger1.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Triad Member",
+            "nameFile": "cscutriad",
+            "image": "Assets/Skins/cscutriad.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Dope",
+            "nameFile": "csdope",
+            "image": "Assets/Skins/csdope.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Dancer A",
+            "nameFile": "csdancera",
+            "image": "Assets/Skins/csdancera.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Businessman",
+            "nameFile": "csdasuit2",
+            "image": "Assets/Skins/csdasuit2.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "DJ",
+            "nameFile": "csdjm",
+            "image": "Assets/Skins/csdjm.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Drug Dealer",
+            "nameFile": "csdrug1",
+            "image": "Assets/Skins/csdrug1.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Helper",
+            "nameFile": "cshelper1",
+            "image": "Assets/Skins/cshelper1.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Helper",
+            "nameFile": "cshelper2",
+            "image": "Assets/Skins/cshelper2.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Ho",
+            "nameFile": "cshoel",
+            "image": "Assets/Skins/cshoel.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Jimmy Silverman",
+            "nameFile": "csjimsilv",
+            "image": "Assets/Skins/csjimsilv.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Jose",
+            "nameFile": "csjose",
+            "image": "Assets/Skins/csjose.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Lil Bill",
+            "nameFile": "cslilbill",
+            "image": "Assets/Skins/cslilbill.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Magoon",
+            "nameFile": "csmagoon1",
+            "image": "Assets/Skins/csmagoon1.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Magoon",
+            "nameFile": "csmagoon2",
+            "image": "Assets/Skins/csmagoon2.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Mechanic",
+            "nameFile": "csmecha",
+            "image": "Assets/Skins/csmecha.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "OG Burger",
+            "nameFile": "csogburger",
+            "image": "Assets/Skins/csogburger.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Ralph",
+            "nameFile": "csralph",
+            "image": "Assets/Skins/csralph.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Ran Fa Li",
+            "nameFile": "csranfali",
+            "image": "Assets/Skins/csranfali.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Salvatore Leone",
+            "nameFile": "cssleone",
+            "image": "Assets/Skins/cssleone.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Loot",
+            "nameFile": "cssloot1",
+            "image": "Assets/Skins/cssloot1.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Stew",
+            "nameFile": "csstew",
+            "image": "Assets/Skins/csstew.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Triad Boss",
+            "nameFile": "cstboss",
+            "image": "Assets/Skins/cstboss.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Texan",
+            "nameFile": "cstexan1",
+            "image": "Assets/Skins/cstexan1.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "Texan",
+            "nameFile": "cstexan2",
+            "image": "Assets/Skins/cstexan2.png",
+            "category": "cutscene"
+        },
+        {
+            "id": null,
+            "name": "B-Dup",
+            "nameFile": "csbdup",
+            "image": "Assets/Skins/csbdup.png",
+            "category": "cutscene"
+        },
+        {
             "id": "0",
             "name": "CJ",
             "nameFile": "cj",
-            "image": "Assets/Skins/0.png"
+            "image": "Assets/Skins/0.png",
+            "category": "normal"
         },
         {
             "id": "1",
             "name": "Truth",
             "nameFile": "truth",
-            "image": "Assets/Skins/1.png"
+            "image": "Assets/Skins/1.png",
+            "category": "special"
+        },
+        {
+            "id": "CS-1",
+            "name": "The Truth",
+            "nameFile": "cstruth",
+            "image": "Assets/Skins/cstruth.png",
+            "category": "cutscene"
         },
         {
             "id": "2",
             "name": "Maccer",
             "nameFile": "maccer",
-            "image": "Assets/Skins/2.png"
+            "image": "Assets/Skins/2.png",
+            "category": "special"
         },
         {
             "id": "3",
             "name": "Andre",
             "nameFile": "cdeput",
-            "image": "Assets/Skins/3.png"
+            "image": "Assets/Skins/3.png",
+            "category": "special"
         },
         {
             "id": "4",
             "name": "SFPD",
             "nameFile": "sfpdm1",
-            "image": "Assets/Skins/4.png"
+            "image": "Assets/Skins/4.png",
+            "category": "normal"
         },
         {
             "id": "5",
             "name": "Big Bear",
             "nameFile": "bb",
-            "image": "Assets/Skins/5.png"
+            "image": "Assets/Skins/5.png",
+            "category": "normal"
         },
         {
             "id": "6",
             "name": "Farm Worker",
             "nameFile": "wfycrp",
-            "image": "Assets/Skins/6.png"
+            "image": "Assets/Skins/6.png",
+            "category": "normal"
         },
         {
             "id": "7",
             "name": "Taxi Driver",
             "nameFile": "male01",
-            "image": "Assets/Skins/7.png"
+            "image": "Assets/Skins/7.png",
+            "category": "normal"
         },
         {
             "id": "8",
             "name": "Worker",
             "nameFile": "wmycd2",
-            "image": "Assets/Skins/8.png"
+            "image": "Assets/Skins/8.png",
+            "category": "normal"
         },
         {
             "id": "9",
             "name": "Business Lady",
             "nameFile": "bfori",
-            "image": "Assets/Skins/9.png"
+            "image": "Assets/Skins/9.png",
+            "category": "normal"
         },
         {
             "id": "10",
             "name": "Old Fat Lady",
             "nameFile": "bfost",
-            "image": "Assets/Skins/10.png"
+            "image": "Assets/Skins/10.png",
+            "category": "normal"
         },
         {
             "id": "11",
             "name": "Card Dealer",
             "nameFile": "vbfycrp",
-            "image": "Assets/Skins/11.png"
+            "image": "Assets/Skins/11.png",
+            "category": "normal"
         },
         {
             "id": "12",
             "name": "Rich Woman",
             "nameFile": "bfyri",
-            "image": "Assets/Skins/12.png"
+            "image": "Assets/Skins/12.png",
+            "category": "normal"
         },
         {
             "id": "13",
             "name": "Street Girl",
             "nameFile": "bfyst",
-            "image": "Assets/Skins/13.png"
+            "image": "Assets/Skins/13.png",
+            "category": "normal"
         },
         {
             "id": "14",
             "name": "Normal Ped",
             "nameFile": "bmori",
-            "image": "Assets/Skins/14.png"
+            "image": "Assets/Skins/14.png",
+            "category": "normal"
         },
         {
             "id": "15",
             "name": "Mr. Whittaker",
             "nameFile": "bmost",
-            "image": "Assets/Skins/15.png"
+            "image": "Assets/Skins/15.png",
+            "category": "normal"
         },
         {
             "id": "16",
             "name": "Airport Worker",
             "nameFile": "bmyap",
-            "image": "Assets/Skins/16.png"
+            "image": "Assets/Skins/16.png",
+            "category": "normal"
         },
         {
             "id": "17",
             "name": "Businessman",
             "nameFile": "bmybu",
-            "image": "Assets/Skins/17.png"
+            "image": "Assets/Skins/17.png",
+            "category": "normal"
         },
         {
             "id": "18",
             "name": "Beach Visitor",
             "nameFile": "bmybe",
-            "image": "Assets/Skins/18.png"
+            "image": "Assets/Skins/18.png",
+            "category": "normal"
         },
         {
             "id": "19",
             "name": "DJ",
             "nameFile": "bmydj",
-            "image": "Assets/Skins/19.png"
+            "image": "Assets/Skins/19.png",
+            "category": "normal"
         },
         {
             "id": "20",
             "name": "Rich Guy",
             "nameFile": "bmyri",
-            "image": "Assets/Skins/20.png"
+            "image": "Assets/Skins/20.png",
+            "category": "normal"
         },
         {
             "id": "21",
             "name": "Normal Ped",
             "nameFile": "bmycr",
-            "image": "Assets/Skins/21.png"
+            "image": "Assets/Skins/21.png",
+            "category": "normal"
         },
         {
             "id": "22",
             "name": "Normal Ped",
             "nameFile": "bmyst",
-            "image": "Assets/Skins/22.png"
+            "image": "Assets/Skins/22.png",
+            "category": "normal"
         },
         {
             "id": "23",
             "name": "BMXer",
             "nameFile": "wmybmx",
-            "image": "Assets/Skins/23.png"
+            "image": "Assets/Skins/23.png",
+            "category": "normal"
         },
         {
             "id": "24",
             "name": "Madd Dogg Bodyguard",
             "nameFile": "wbdyg1",
-            "image": "Assets/Skins/24.png"
+            "image": "Assets/Skins/24.png",
+            "category": "normal"
         },
         {
             "id": "25",
             "name": "Madd Dogg Bodyguard",
             "nameFile": "wbdyg2",
-            "image": "Assets/Skins/25.png"
+            "image": "Assets/Skins/25.png",
+            "category": "normal"
         },
         {
             "id": "26",
             "name": "Backpacker",
             "nameFile": "wmybp",
-            "image": "Assets/Skins/26.png"
+            "image": "Assets/Skins/26.png",
+            "category": "normal"
         },
         {
             "id": "27",
             "name": "Construction Worker",
             "nameFile": "wmycon",
-            "image": "Assets/Skins/27.png"
+            "image": "Assets/Skins/27.png",
+            "category": "normal"
         },
         {
             "id": "28",
             "name": "Drug Dealer",
             "nameFile": "bmydrug",
-            "image": "Assets/Skins/28.png"
+            "image": "Assets/Skins/28.png",
+            "category": "normal"
         },
         {
             "id": "29",
             "name": "Drug Dealer",
             "nameFile": "wmydrug",
-            "image": "Assets/Skins/29.png"
+            "image": "Assets/Skins/29.png",
+            "category": "normal"
         },
         {
             "id": "30",
             "name": "Drug Dealer",
             "nameFile": "hmydrug",
-            "image": "Assets/Skins/30.png"
+            "image": "Assets/Skins/30.png",
+            "category": "normal"
         },
         {
             "id": "31",
             "name": "Farm-Town Inhabitant",
             "nameFile": "dwfolc",
-            "image": "Assets/Skins/31.png"
+            "image": "Assets/Skins/31.png",
+            "category": "normal"
         },
         {
             "id": "32",
             "name": "Farm-Town Inhabitant",
             "nameFile": "dwmolc1",
-            "image": "Assets/Skins/32.png"
+            "image": "Assets/Skins/32.png",
+            "category": "normal"
         },
         {
             "id": "33",
             "name": "Farm-Town Inhabitant",
             "nameFile": "dwmolc2",
-            "image": "Assets/Skins/33.png"
+            "image": "Assets/Skins/33.png",
+            "category": "normal"
         },
         {
             "id": "34",
             "name": "Farm-Town Inhabitant",
             "nameFile": "dwmylc1",
-            "image": "Assets/Skins/34.png"
+            "image": "Assets/Skins/34.png",
+            "category": "normal"
         },
         {
             "id": "35",
             "name": "Farm-Town Inhabitant",
             "nameFile": "hmogar",
-            "image": "Assets/Skins/35.png"
+            "image": "Assets/Skins/35.png",
+            "category": "normal"
         },
         {
             "id": "36",
             "name": "Golfer",
             "nameFile": "wmygol1",
-            "image": "Assets/Skins/36.png"
+            "image": "Assets/Skins/36.png",
+            "category": "normal"
         },
         {
             "id": "37",
             "name": "Golfer",
             "nameFile": "wmygol2",
-            "image": "Assets/Skins/37.png"
+            "image": "Assets/Skins/37.png",
+            "category": "normal"
         },
         {
             "id": "38",
             "name": "Normal Ped",
             "nameFile": "hfori",
-            "image": "Assets/Skins/38.png"
+            "image": "Assets/Skins/38.png",
+            "category": "normal"
         },
         {
             "id": "39",
             "name": "Normal Ped",
             "nameFile": "hfost",
-            "image": "Assets/Skins/39.png"
+            "image": "Assets/Skins/39.png",
+            "category": "normal"
         },
         {
             "id": "40",
             "name": "Normal Ped",
             "nameFile": "hfyri",
-            "image": "Assets/Skins/40.png"
+            "image": "Assets/Skins/40.png",
+            "category": "normal"
         },
         {
             "id": "41",
             "name": "Tracksuit Girl",
             "nameFile": "hfyst",
-            "image": "Assets/Skins/41.png"
+            "image": "Assets/Skins/41.png",
+            "category": "normal"
         },
         {
             "id": "42",
             "name": "Suzie",
             "nameFile": "suzie",
-            "image": "Assets/Skins/42.png"
+            "image": "Assets/Skins/42.png",
+            "category": "normal"
         },
         {
             "id": "43",
             "name": "Porn Producer",
             "nameFile": "hmori",
-            "image": "Assets/Skins/43.png"
+            "image": "Assets/Skins/43.png",
+            "category": "normal"
         },
         {
             "id": "44",
             "name": "Tattooed Plaid",
             "nameFile": "hmost",
-            "image": "Assets/Skins/44.png"
+            "image": "Assets/Skins/44.png",
+            "category": "normal"
         },
         {
             "id": "45",
             "name": "Beach Mustache",
             "nameFile": "hmybe",
-            "image": "Assets/Skins/45.png"
+            "image": "Assets/Skins/45.png",
+            "category": "normal"
         },
         {
             "id": "46",
             "name": "Dark Romeo",
             "nameFile": "hmyri",
-            "image": "Assets/Skins/46.png"
+            "image": "Assets/Skins/46.png",
+            "category": "normal"
         },
         {
             "id": "47",
             "name": "Top Button Essey",
             "nameFile": "hmycr",
-            "image": "Assets/Skins/47.png"
+            "image": "Assets/Skins/47.png",
+            "category": "normal"
         },
         {
             "id": "48",
             "name": "Normal Ped",
             "nameFile": "hmyst",
-            "image": "Assets/Skins/48.png"
+            "image": "Assets/Skins/48.png",
+            "category": "normal"
         },
         {
             "id": "49",
             "name": "Ninja Sensei",
             "nameFile": "omokung",
-            "image": "Assets/Skins/49.png"
+            "image": "Assets/Skins/49.png",
+            "category": "normal"
         },
         {
             "id": "50",
             "name": "Mechanic",
             "nameFile": "wmymech",
-            "image": "Assets/Skins/50.png"
+            "image": "Assets/Skins/50.png",
+            "category": "normal"
         },
         {
             "id": "51",
             "name": "Mountain Biker",
             "nameFile": "bmymoun",
-            "image": "Assets/Skins/51.png"
+            "image": "Assets/Skins/51.png",
+            "category": "normal"
         },
         {
             "id": "52",
             "name": "Mountain Biker",
             "nameFile": "wmymoun",
-            "image": "Assets/Skins/52.png"
+            "image": "Assets/Skins/52.png",
+            "category": "normal"
         },
         {
             "id": "53",
             "name": "Normal Ped",
             "nameFile": "ofori",
-            "image": "Assets/Skins/53.png"
+            "image": "Assets/Skins/53.png",
+            "category": "normal"
         },
         {
             "id": "54",
             "name": "Normal Ped",
             "nameFile": "ofost",
-            "image": "Assets/Skins/54.png"
+            "image": "Assets/Skins/54.png",
+            "category": "normal"
         },
         {
             "id": "55",
             "name": "Normal Ped",
             "nameFile": "ofyri",
-            "image": "Assets/Skins/55.png"
+            "image": "Assets/Skins/55.png",
+            "category": "normal"
         },
         {
             "id": "56",
             "name": "Normal Ped",
             "nameFile": "ofyst",
-            "image": "Assets/Skins/56.png"
+            "image": "Assets/Skins/56.png",
+            "category": "normal"
         },
         {
             "id": "57",
             "name": "Oriental Ped",
             "nameFile": "omori",
-            "image": "Assets/Skins/57.png"
+            "image": "Assets/Skins/57.png",
+            "category": "normal"
         },
         {
             "id": "58",
             "name": "Oriental Ped",
             "nameFile": "omost",
-            "image": "Assets/Skins/58.png"
+            "image": "Assets/Skins/58.png",
+            "category": "normal"
         },
         {
             "id": "59",
             "name": "Normal Ped",
             "nameFile": "omyri",
-            "image": "Assets/Skins/59.png"
+            "image": "Assets/Skins/59.png",
+            "category": "normal"
         },
         {
             "id": "60",
             "name": "Normal Ped",
             "nameFile": "omyst",
-            "image": "Assets/Skins/60.png"
+            "image": "Assets/Skins/60.png",
+            "category": "normal"
         },
         {
             "id": "61",
             "name": "Pilot",
             "nameFile": "wmyplt",
-            "image": "Assets/Skins/61.png"
+            "image": "Assets/Skins/61.png",
+            "category": "normal"
         },
         {
             "id": "62",
             "name": "Colonel Fuhrberger",
             "nameFile": "wmopj",
-            "image": "Assets/Skins/62.png"
+            "image": "Assets/Skins/62.png",
+            "category": "normal"
         },
         {
             "id": "63",
             "name": "Prostitute",
             "nameFile": "bfypro",
-            "image": "Assets/Skins/63.png"
+            "image": "Assets/Skins/63.png",
+            "category": "normal"
         },
         {
             "id": "64",
             "name": "Prostitute",
             "nameFile": "hfypro",
-            "image": "Assets/Skins/64.png"
+            "image": "Assets/Skins/64.png",
+            "category": "normal"
         },
         {
             "id": "65",
             "name": "Business Woman",
             "nameFile": "vwmyap",
-            "image": "Assets/Skins/65.png"
+            "image": "Assets/Skins/65.png",
+            "category": "normal"
         },
         {
             "id": "66",
             "name": "Pool Player",
             "nameFile": "bmypol1",
-            "image": "Assets/Skins/66.png"
+            "image": "Assets/Skins/66.png",
+            "category": "normal"
         },
         {
             "id": "67",
             "name": "Pool Player",
             "nameFile": "bmypol2",
-            "image": "Assets/Skins/67.png"
+            "image": "Assets/Skins/67.png",
+            "category": "normal"
         },
         {
             "id": "68",
             "name": "Preacher",
             "nameFile": "wmoprea",
-            "image": "Assets/Skins/68.png"
+            "image": "Assets/Skins/68.png",
+            "category": "normal"
         },
         {
             "id": "69",
             "name": "Normal Ped",
             "nameFile": "sbfyst",
-            "image": "Assets/Skins/69.png"
+            "image": "Assets/Skins/69.png",
+            "category": "normal"
         },
         {
             "id": "70",
             "name": "Scientist",
             "nameFile": "wmosci",
-            "image": "Assets/Skins/70.png"
+            "image": "Assets/Skins/70.png",
+            "category": "normal"
         },
         {
             "id": "71",
             "name": "Security Guard",
             "nameFile": "wmysgrd",
-            "image": "Assets/Skins/71.png"
+            "image": "Assets/Skins/71.png",
+            "category": "normal"
         },
         {
             "id": "72",
             "name": "Highway Patrol",
             "nameFile": "swmyhp1",
-            "image": "Assets/Skins/72.png"
+            "image": "Assets/Skins/72.png",
+            "category": "normal"
         },
         {
             "id": "73",
             "name": "Highway Patrol",
             "nameFile": "swmyhp2",
-            "image": "Assets/Skins/73.png"
+            "image": "Assets/Skins/73.png",
+            "category": "normal"
         },
         {
             "id": "75",
             "name": "Prostitute",
             "nameFile": "swfopro",
-            "image": "Assets/Skins/75.png"
+            "image": "Assets/Skins/75.png",
+            "category": "normal"
         },
         {
             "id": "76",
             "name": "Stewardess",
             "nameFile": "wfystew",
-            "image": "Assets/Skins/76.png"
+            "image": "Assets/Skins/76.png",
+            "category": "normal"
         },
         {
             "id": "77",
             "name": "Motorbike Rider",
             "nameFile": "swmotr1",
-            "image": "Assets/Skins/77.png"
+            "image": "Assets/Skins/77.png",
+            "category": "normal"
         },
         {
             "id": "78",
             "name": "Motorbike Rider",
             "nameFile": "wmotr1",
-            "image": "Assets/Skins/78.png"
+            "image": "Assets/Skins/78.png",
+            "category": "normal"
         },
         {
             "id": "79",
             "name": "Motorbike Rider",
             "nameFile": "bmotr1",
-            "image": "Assets/Skins/79.png"
+            "image": "Assets/Skins/79.png",
+            "category": "normal"
         },
         {
             "id": "80",
             "name": "Boxville Worker",
             "nameFile": "vbmybox",
-            "image": "Assets/Skins/80.png"
+            "image": "Assets/Skins/80.png",
+            "category": "normal"
         },
         {
             "id": "81",
             "name": "Boxville Worker",
             "nameFile": "vwmybox",
-            "image": "Assets/Skins/81.png"
+            "image": "Assets/Skins/81.png",
+            "category": "normal"
         },
         {
             "id": "82",
             "name": "Elvis",
             "nameFile": "vhmyelv",
-            "image": "Assets/Skins/82.png"
+            "image": "Assets/Skins/82.png",
+            "category": "normal"
         },
         {
             "id": "83",
             "name": "Elvis",
             "nameFile": "vbmyelv",
-            "image": "Assets/Skins/83.png"
+            "image": "Assets/Skins/83.png",
+            "category": "normal"
         },
         {
             "id": "84",
             "name": "Elvis",
             "nameFile": "vimyelv",
-            "image": "Assets/Skins/84.png"
+            "image": "Assets/Skins/84.png",
+            "category": "normal"
         },
         {
             "id": "85",
             "name": "Prostitute",
             "nameFile": "vwfypro",
-            "image": "Assets/Skins/85.png"
+            "image": "Assets/Skins/85.png",
+            "category": "normal"
         },
         {
             "id": "86",
             "name": "Female",
             "nameFile": "vhfyst",
-            "image": "Assets/Skins/86.png"
+            "image": "Assets/Skins/86.png",
+            "category": "normal"
         },
         {
             "id": "87",
             "name": "Female",
             "nameFile": "vwfyst1",
-            "image": "Assets/Skins/87.png"
+            "image": "Assets/Skins/87.png",
+            "category": "normal"
         },
         {
             "id": "88",
             "name": "Female",
             "nameFile": "wfori",
-            "image": "Assets/Skins/88.png"
+            "image": "Assets/Skins/88.png",
+            "category": "normal"
         },
         {
             "id": "89",
             "name": "Female",
             "nameFile": "wfost",
-            "image": "Assets/Skins/89.png"
+            "image": "Assets/Skins/89.png",
+            "category": "normal"
         },
         {
             "id": "90",
             "name": "Female",
             "nameFile": "wfyjg",
-            "image": "Assets/Skins/90.png"
+            "image": "Assets/Skins/90.png",
+            "category": "normal"
         },
         {
             "id": "91",
             "name": "Female",
             "nameFile": "wfyri",
-            "image": "Assets/Skins/91.png"
+            "image": "Assets/Skins/91.png",
+            "category": "normal"
         },
         {
             "id": "92",
             "name": "Female",
             "nameFile": "wfyro",
-            "image": "Assets/Skins/92.png"
+            "image": "Assets/Skins/92.png",
+            "category": "normal"
         },
         {
             "id": "93",
             "name": "Female",
             "nameFile": "wfyst",
-            "image": "Assets/Skins/93.png"
+            "image": "Assets/Skins/93.png",
+            "category": "normal"
         },
         {
             "id": "94",
             "name": "Male",
             "nameFile": "wmori",
-            "image": "Assets/Skins/94.png"
+            "image": "Assets/Skins/94.png",
+            "category": "normal"
         },
         {
             "id": "95",
             "name": "Male",
             "nameFile": "wmost",
-            "image": "Assets/Skins/95.png"
+            "image": "Assets/Skins/95.png",
+            "category": "normal"
         },
         {
             "id": "96",
             "name": "Male",
             "nameFile": "wmyjg",
-            "image": "Assets/Skins/96.png"
+            "image": "Assets/Skins/96.png",
+            "category": "normal"
         },
         {
             "id": "97",
             "name": "Male",
             "nameFile": "wmylg",
-            "image": "Assets/Skins/97.png"
+            "image": "Assets/Skins/97.png",
+            "category": "normal"
         },
         {
             "id": "98",
             "name": "Male",
             "nameFile": "wmyri",
-            "image": "Assets/Skins/98.png"
+            "image": "Assets/Skins/98.png",
+            "category": "normal"
         },
         {
             "id": "99",
             "name": "Male",
             "nameFile": "wmyro",
-            "image": "Assets/Skins/99.png"
+            "image": "Assets/Skins/99.png",
+            "category": "normal"
         },
         {
             "id": "100",
             "name": "Male",
             "nameFile": "wmycr",
-            "image": "Assets/Skins/100.png"
+            "image": "Assets/Skins/100.png",
+            "category": "normal"
         },
         {
             "id": "101",
             "name": "Male",
             "nameFile": "wmyst",
-            "image": "Assets/Skins/101.png"
+            "image": "Assets/Skins/101.png",
+            "category": "normal"
         },
         {
             "id": "102",
             "name": "Ballas",
             "nameFile": "ballas1",
-            "image": "Assets/Skins/102.png"
+            "image": "Assets/Skins/102.png",
+            "category": "normal"
         },
         {
             "id": "103",
             "name": "Ballas",
             "nameFile": "ballas2",
-            "image": "Assets/Skins/103.png"
+            "image": "Assets/Skins/103.png",
+            "category": "normal"
         },
         {
             "id": "104",
             "name": "Ballas",
             "nameFile": "ballas3",
-            "image": "Assets/Skins/104.png"
+            "image": "Assets/Skins/104.png",
+            "category": "normal"
         },
         {
             "id": "105",
             "name": "Grove Street Family",
             "nameFile": "fam1",
-            "image": "Assets/Skins/105.png"
+            "image": "Assets/Skins/105.png",
+            "category": "normal"
         },
         {
             "id": "106",
             "name": "Grove Street Family",
             "nameFile": "fam2",
-            "image": "Assets/Skins/106.png"
+            "image": "Assets/Skins/106.png",
+            "category": "normal"
         },
         {
             "id": "107",
             "name": "Grove Street Family",
             "nameFile": "fam3",
-            "image": "Assets/Skins/107.png"
+            "image": "Assets/Skins/107.png",
+            "category": "normal"
         },
         {
             "id": "108",
             "name": "Los Santos Vagos",
             "nameFile": "lsv1",
-            "image": "Assets/Skins/108.png"
+            "image": "Assets/Skins/108.png",
+            "category": "normal"
         },
         {
             "id": "109",
             "name": "Los Santos Vagos",
             "nameFile": "lsv2",
-            "image": "Assets/Skins/109.png"
+            "image": "Assets/Skins/109.png",
+            "category": "normal"
         },
         {
             "id": "110",
             "name": "Los Santos Vagos",
             "nameFile": "lsv3",
-            "image": "Assets/Skins/110.png"
+            "image": "Assets/Skins/110.png",
+            "category": "normal"
         },
         {
             "id": "111",
             "name": "Mafia",
             "nameFile": "maffa",
-            "image": "Assets/Skins/111.png"
+            "image": "Assets/Skins/111.png",
+            "category": "normal"
         },
         {
             "id": "112",
             "name": "Mafia",
             "nameFile": "maffb",
-            "image": "Assets/Skins/112.png"
+            "image": "Assets/Skins/112.png",
+            "category": "normal"
         },
         {
             "id": "113",
             "name": "Mafia Boss",
             "nameFile": "mafboss",
-            "image": "Assets/Skins/113.png"
+            "image": "Assets/Skins/113.png",
+            "category": "normal"
         },
         {
             "id": "114",
             "name": "Vagos",
             "nameFile": "vla1",
-            "image": "Assets/Skins/114.png"
+            "image": "Assets/Skins/114.png",
+            "category": "normal"
         },
         {
             "id": "115",
             "name": "Vagos",
             "nameFile": "vla2",
-            "image": "Assets/Skins/115.png"
+            "image": "Assets/Skins/115.png",
+            "category": "normal"
         },
         {
             "id": "116",
             "name": "Vagos",
             "nameFile": "vla3",
-            "image": "Assets/Skins/116.png"
+            "image": "Assets/Skins/116.png",
+            "category": "normal"
         },
         {
             "id": "117",
             "name": "Triad",
             "nameFile": "triada",
-            "image": "Assets/Skins/117.png"
+            "image": "Assets/Skins/117.png",
+            "category": "normal"
         },
         {
             "id": "118",
             "name": "Triad",
             "nameFile": "triadb",
-            "image": "Assets/Skins/118.png"
+            "image": "Assets/Skins/118.png",
+            "category": "normal"
         },
         {
             "id": "119",
             "name": "LVPD",
             "nameFile": "lvpdm1",
-            "image": "Assets/Skins/119.png"
+            "image": "Assets/Skins/119.png",
+            "category": "normal"
         },
         {
             "id": "120",
             "name": "Triad Boss",
             "nameFile": "triboss",
-            "image": "Assets/Skins/120.png"
+            "image": "Assets/Skins/120.png",
+            "category": "normal"
         },
         {
             "id": "121",
             "name": "Da Nang",
             "nameFile": "dnb1",
-            "image": "Assets/Skins/121.png"
+            "image": "Assets/Skins/121.png",
+            "category": "normal"
         },
         {
             "id": "122",
             "name": "Da Nang",
             "nameFile": "dnb2",
-            "image": "Assets/Skins/122.png"
+            "image": "Assets/Skins/122.png",
+            "category": "normal"
         },
         {
             "id": "123",
             "name": "Da Nang",
             "nameFile": "dnb3",
-            "image": "Assets/Skins/123.png"
+            "image": "Assets/Skins/123.png",
+            "category": "normal"
         },
         {
             "id": "124",
             "name": "Mafia",
             "nameFile": "vmaff1",
-            "image": "Assets/Skins/124.png"
+            "image": "Assets/Skins/124.png",
+            "category": "normal"
         },
         {
             "id": "125",
             "name": "Mafia",
             "nameFile": "vmaff2",
-            "image": "Assets/Skins/125.png"
+            "image": "Assets/Skins/125.png",
+            "category": "normal"
         },
         {
             "id": "126",
             "name": "Mafia",
             "nameFile": "vmaff3",
-            "image": "Assets/Skins/126.png"
+            "image": "Assets/Skins/126.png",
+            "category": "normal"
         },
         {
             "id": "127",
             "name": "Mafia",
             "nameFile": "vmaff4",
-            "image": "Assets/Skins/127.png"
+            "image": "Assets/Skins/127.png",
+            "category": "normal"
         },
         {
             "id": "128",
             "name": "Da Nang",
             "nameFile": "dnmylc",
-            "image": "Assets/Skins/128.png"
+            "image": "Assets/Skins/128.png",
+            "category": "normal"
         },
         {
             "id": "129",
             "name": "Da Nang",
             "nameFile": "dnfolc1",
-            "image": "Assets/Skins/129.png"
+            "image": "Assets/Skins/129.png",
+            "category": "normal"
         },
         {
             "id": "130",
             "name": "Da Nang",
             "nameFile": "dnfolc2",
-            "image": "Assets/Skins/130.png"
+            "image": "Assets/Skins/130.png",
+            "category": "normal"
         },
         {
             "id": "131",
             "name": "Da Nang",
             "nameFile": "dnfylc",
-            "image": "Assets/Skins/131.png"
+            "image": "Assets/Skins/131.png",
+            "category": "normal"
         },
         {
             "id": "132",
             "name": "Da Nang",
             "nameFile": "dnmolc1",
-            "image": "Assets/Skins/132.png"
+            "image": "Assets/Skins/132.png",
+            "category": "normal"
         },
         {
             "id": "133",
             "name": "Da Nang",
             "nameFile": "dnmolc2",
-            "image": "Assets/Skins/133.png"
+            "image": "Assets/Skins/133.png",
+            "category": "normal"
         },
         {
             "id": "134",
             "name": "Motorbike Rider",
             "nameFile": "sbmotr2",
-            "image": "Assets/Skins/134.png"
+            "image": "Assets/Skins/134.png",
+            "category": "normal"
         },
         {
             "id": "135",
             "name": "Motorbike Rider",
             "nameFile": "swmotr2",
-            "image": "Assets/Skins/135.png"
+            "image": "Assets/Skins/135.png",
+            "category": "normal"
         },
         {
             "id": "136",
             "name": "Motorbike Rider",
             "nameFile": "sbmytr3",
-            "image": "Assets/Skins/136.png"
+            "image": "Assets/Skins/136.png",
+            "category": "normal"
         },
         {
             "id": "137",
             "name": "Motorbike Rider",
             "nameFile": "swmotr3",
-            "image": "Assets/Skins/137.png"
+            "image": "Assets/Skins/137.png",
+            "category": "normal"
         },
         {
             "id": "138",
             "name": "Beach Guy",
             "nameFile": "wfybe",
-            "image": "Assets/Skins/138.png"
+            "image": "Assets/Skins/138.png",
+            "category": "normal"
         },
         {
             "id": "139",
             "name": "Beach Girl",
             "nameFile": "bfybe",
-            "image": "Assets/Skins/139.png"
+            "image": "Assets/Skins/139.png",
+            "category": "normal"
         },
         {
             "id": "140",
             "name": "Beach Guy",
             "nameFile": "hfybe",
-            "image": "Assets/Skins/140.png"
+            "image": "Assets/Skins/140.png",
+            "category": "normal"
         },
         {
             "id": "141",
             "name": "Business Woman",
             "nameFile": "sofybu",
-            "image": "Assets/Skins/141.png"
+            "image": "Assets/Skins/141.png",
+            "category": "normal"
         },
         {
             "id": "142",
             "name": "Male",
             "nameFile": "sbmyst",
-            "image": "Assets/Skins/142.png"
+            "image": "Assets/Skins/142.png",
+            "category": "normal"
         },
         {
             "id": "143",
             "name": "Male",
             "nameFile": "sbmycr",
-            "image": "Assets/Skins/143.png"
+            "image": "Assets/Skins/143.png",
+            "category": "normal"
         },
         {
             "id": "144",
             "name": "Male",
             "nameFile": "bmycg",
-            "image": "Assets/Skins/144.png"
+            "image": "Assets/Skins/144.png",
+            "category": "normal"
         },
         {
             "id": "145",
             "name": "Criminal",
             "nameFile": "wfycrk",
-            "image": "Assets/Skins/145.png"
+            "image": "Assets/Skins/145.png",
+            "category": "normal"
         },
         {
             "id": "146",
             "name": "Criminal",
             "nameFile": "hmycm",
-            "image": "Assets/Skins/146.png"
+            "image": "Assets/Skins/146.png",
+            "category": "normal"
         },
         {
             "id": "147",
             "name": "Male",
             "nameFile": "wmybu",
-            "image": "Assets/Skins/147.png"
+            "image": "Assets/Skins/147.png",
+            "category": "normal"
         },
         {
             "id": "148",
             "name": "Female",
             "nameFile": "bfybu",
-            "image": "Assets/Skins/148.png"
+            "image": "Assets/Skins/148.png",
+            "category": "normal"
         },
         {
             "id": "149",
             "name": "Unused",
             "nameFile": "smokev",
-            "image": "Assets/Skins/149.png"
+            "image": "Assets/Skins/149.png",
+            "category": "normal"
         },
         {
             "id": "150",
             "name": "Female",
             "nameFile": "wfybu",
-            "image": "Assets/Skins/150.png"
+            "image": "Assets/Skins/150.png",
+            "category": "normal"
         },
         {
             "id": "151",
             "name": "Farm Worker",
             "nameFile": "dwfylc1",
-            "image": "Assets/Skins/151.png"
+            "image": "Assets/Skins/151.png",
+            "category": "normal"
         },
         {
             "id": "152",
             "name": "Female",
             "nameFile": "wfypro",
-            "image": "Assets/Skins/152.png"
+            "image": "Assets/Skins/152.png",
+            "category": "normal"
         },
         {
             "id": "153",
             "name": "Construction Worker",
             "nameFile": "wmyconb",
-            "image": "Assets/Skins/153.png"
+            "image": "Assets/Skins/153.png",
+            "category": "normal"
         },
         {
             "id": "154",
             "name": "Beach Guy",
             "nameFile": "wmybe",
-            "image": "Assets/Skins/154.png"
+            "image": "Assets/Skins/154.png",
+            "category": "normal"
         },
         {
             "id": "155",
             "name": "Pizza Worker",
             "nameFile": "wmypizz",
-            "image": "Assets/Skins/155.png"
+            "image": "Assets/Skins/155.png",
+            "category": "normal"
         },
         {
             "id": "156",
             "name": "Bar Staff",
             "nameFile": "bmobar",
-            "image": "Assets/Skins/156.png"
+            "image": "Assets/Skins/156.png",
+            "category": "normal"
         },
         {
             "id": "157",
             "name": "Female",
             "nameFile": "cwfyhb",
-            "image": "Assets/Skins/157.png"
+            "image": "Assets/Skins/157.png",
+            "category": "normal"
         },
         {
             "id": "158",
             "name": "Female",
             "nameFile": "cwmofr",
-            "image": "Assets/Skins/158.png"
+            "image": "Assets/Skins/158.png",
+            "category": "normal"
         },
         {
             "id": "159",
             "name": "Female",
             "nameFile": "cwmohb1",
-            "image": "Assets/Skins/159.png"
+            "image": "Assets/Skins/159.png",
+            "category": "normal"
         },
         {
             "id": "160",
             "name": "Female",
             "nameFile": "cwmohb2",
-            "image": "Assets/Skins/160.png"
+            "image": "Assets/Skins/160.png",
+            "category": "normal"
         },
         {
             "id": "161",
             "name": "Female",
             "nameFile": "cwmyfr",
-            "image": "Assets/Skins/161.png"
+            "image": "Assets/Skins/161.png",
+            "category": "normal"
         },
         {
             "id": "162",
             "name": "Female",
             "nameFile": "cwmyhb1",
-            "image": "Assets/Skins/162.png"
+            "image": "Assets/Skins/162.png",
+            "category": "normal"
         },
         {
             "id": "163",
             "name": "Bounty Hunter",
             "nameFile": "bmyboun",
-            "image": "Assets/Skins/163.png"
+            "image": "Assets/Skins/163.png",
+            "category": "normal"
         },
         {
             "id": "164",
             "name": "Bounty Hunter",
             "nameFile": "wmyboun",
-            "image": "Assets/Skins/164.png"
+            "image": "Assets/Skins/164.png",
+            "category": "normal"
         },
         {
             "id": "165",
             "name": "MIB",
             "nameFile": "wmomib",
-            "image": "Assets/Skins/165.png"
+            "image": "Assets/Skins/165.png",
+            "category": "normal"
         },
         {
             "id": "166",
             "name": "MIB",
             "nameFile": "bmymib",
-            "image": "Assets/Skins/166.png"
+            "image": "Assets/Skins/166.png",
+            "category": "normal"
         },
         {
             "id": "167",
             "name": "Bellman",
             "nameFile": "wmybell",
-            "image": "Assets/Skins/167.png"
+            "image": "Assets/Skins/167.png",
+            "category": "normal"
         },
         {
             "id": "168",
             "name": "Chinatown Ped",
             "nameFile": "bmochil",
-            "image": "Assets/Skins/168.png"
+            "image": "Assets/Skins/168.png",
+            "category": "normal"
         },
         {
             "id": "169",
             "name": "Female",
             "nameFile": "sofyri",
-            "image": "Assets/Skins/169.png"
+            "image": "Assets/Skins/169.png",
+            "category": "normal"
         },
         {
             "id": "170",
             "name": "Male",
             "nameFile": "somyst",
-            "image": "Assets/Skins/170.png"
+            "image": "Assets/Skins/170.png",
+            "category": "normal"
         },
         {
             "id": "171",
             "name": "Biker",
             "nameFile": "vwmybjd",
-            "image": "Assets/Skins/171.png"
+            "image": "Assets/Skins/171.png",
+            "category": "normal"
         },
         {
             "id": "172",
             "name": "Female",
             "nameFile": "vwfycrp",
-            "image": "Assets/Skins/172.png"
+            "image": "Assets/Skins/172.png",
+            "category": "normal"
         },
         {
             "id": "173",
             "name": "San Fierro Rifa",
             "nameFile": "sfr1",
-            "image": "Assets/Skins/173.png"
+            "image": "Assets/Skins/173.png",
+            "category": "normal"
         },
         {
             "id": "174",
             "name": "San Fierro Rifa",
             "nameFile": "sfr2",
-            "image": "Assets/Skins/174.png"
+            "image": "Assets/Skins/174.png",
+            "category": "normal"
         },
         {
             "id": "175",
             "name": "San Fierro Rifa",
             "nameFile": "sfr3",
-            "image": "Assets/Skins/175.png"
+            "image": "Assets/Skins/175.png",
+            "category": "normal"
         },
         {
             "id": "176",
             "name": "Bar Staff",
             "nameFile": "bmybar",
-            "image": "Assets/Skins/176.png"
+            "image": "Assets/Skins/176.png",
+            "category": "normal"
         },
         {
             "id": "177",
             "name": "Bar Staff",
             "nameFile": "wmybar",
-            "image": "Assets/Skins/177.png"
+            "image": "Assets/Skins/177.png",
+            "category": "normal"
         },
         {
             "id": "178",
             "name": "Sex Worker",
             "nameFile": "wfysex",
-            "image": "Assets/Skins/178.png"
+            "image": "Assets/Skins/178.png",
+            "category": "normal"
         },
         {
             "id": "179",
             "name": "Ammu-Nation Worker",
             "nameFile": "wmyammo",
-            "image": "Assets/Skins/179.png"
+            "image": "Assets/Skins/179.png",
+            "category": "normal"
         },
         {
             "id": "180",
             "name": "Tattoo Artist",
             "nameFile": "bmytatt",
-            "image": "Assets/Skins/180.png"
+            "image": "Assets/Skins/180.png",
+            "category": "normal"
         },
         {
             "id": "181",
             "name": "Criminal",
             "nameFile": "vwmycr",
-            "image": "Assets/Skins/181.png"
+            "image": "Assets/Skins/181.png",
+            "category": "normal"
         },
         {
             "id": "182",
             "name": "CD Worker",
             "nameFile": "vbmocd",
-            "image": "Assets/Skins/182.png"
+            "image": "Assets/Skins/182.png",
+            "category": "normal"
         },
         {
             "id": "183",
             "name": "Criminal",
             "nameFile": "vbmycr",
-            "image": "Assets/Skins/183.png"
+            "image": "Assets/Skins/183.png",
+            "category": "normal"
         },
         {
             "id": "184",
             "name": "Criminal",
             "nameFile": "vhmycr",
-            "image": "Assets/Skins/184.png"
+            "image": "Assets/Skins/184.png",
+            "category": "normal"
         },
         {
             "id": "185",
             "name": "Male",
             "nameFile": "sbmyri",
-            "image": "Assets/Skins/185.png"
+            "image": "Assets/Skins/185.png",
+            "category": "normal"
         },
         {
             "id": "186",
             "name": "Male",
             "nameFile": "somyri",
-            "image": "Assets/Skins/186.png"
+            "image": "Assets/Skins/186.png",
+            "category": "normal"
         },
         {
             "id": "187",
             "name": "Male",
             "nameFile": "somybu",
-            "image": "Assets/Skins/187.png"
+            "image": "Assets/Skins/187.png",
+            "category": "normal"
         },
         {
             "id": "188",
             "name": "Male",
             "nameFile": "swmyst",
-            "image": "Assets/Skins/188.png"
+            "image": "Assets/Skins/188.png",
+            "category": "normal"
         },
         {
             "id": "189",
             "name": "Van Driver",
             "nameFile": "wmyva",
-            "image": "Assets/Skins/189.png"
+            "image": "Assets/Skins/189.png",
+            "category": "normal"
         },
         {
             "id": "190",
             "name": "Cop Girl",
             "nameFile": "copgrl3",
-            "image": "Assets/Skins/190.png"
+            "image": "Assets/Skins/190.png",
+            "category": "normal"
         },
         {
             "id": "191",
             "name": "Gang Girl",
             "nameFile": "gungrl3",
-            "image": "Assets/Skins/191.png"
+            "image": "Assets/Skins/191.png",
+            "category": "normal"
         },
         {
             "id": "192",
             "name": "Mechanic Girl",
             "nameFile": "mecgrl3",
-            "image": "Assets/Skins/192.png"
+            "image": "Assets/Skins/192.png",
+            "category": "normal"
         },
         {
             "id": "193",
             "name": "Nurse",
             "nameFile": "nurgrl3",
-            "image": "Assets/Skins/193.png"
+            "image": "Assets/Skins/193.png",
+            "category": "normal"
         },
         {
             "id": "194",
             "name": "Criminal Girl",
             "nameFile": "crogrl3",
-            "image": "Assets/Skins/194.png"
+            "image": "Assets/Skins/194.png",
+            "category": "normal"
         },
         {
             "id": "195",
             "name": "Gang Girl",
             "nameFile": "gangrl3",
-            "image": "Assets/Skins/195.png"
+            "image": "Assets/Skins/195.png",
+            "category": "normal"
         },
         {
             "id": "196",
             "name": "Female",
             "nameFile": "cwfofr",
-            "image": "Assets/Skins/196.png"
+            "image": "Assets/Skins/196.png",
+            "category": "normal"
         },
         {
             "id": "197",
             "name": "Female",
             "nameFile": "cwfohb",
-            "image": "Assets/Skins/197.png"
+            "image": "Assets/Skins/197.png",
+            "category": "normal"
         },
         {
             "id": "198",
             "name": "Female",
             "nameFile": "cwfyfr1",
-            "image": "Assets/Skins/198.png"
+            "image": "Assets/Skins/198.png",
+            "category": "normal"
         },
         {
             "id": "199",
             "name": "Female",
             "nameFile": "cwfyfr2",
-            "image": "Assets/Skins/199.png"
+            "image": "Assets/Skins/199.png",
+            "category": "normal"
         },
         {
             "id": "200",
             "name": "Male",
             "nameFile": "cwmyhb2",
-            "image": "Assets/Skins/200.png"
+            "image": "Assets/Skins/200.png",
+            "category": "normal"
         },
         {
             "id": "201",
             "name": "Farm Worker",
             "nameFile": "dwfylc2",
-            "image": "Assets/Skins/201.png"
+            "image": "Assets/Skins/201.png",
+            "category": "normal"
         },
         {
             "id": "202",
             "name": "Farm Worker",
             "nameFile": "dwmylc2",
-            "image": "Assets/Skins/202.png"
+            "image": "Assets/Skins/202.png",
+            "category": "normal"
         },
         {
             "id": "203",
             "name": "Karate",
             "nameFile": "omykara",
-            "image": "Assets/Skins/203.png"
+            "image": "Assets/Skins/203.png",
+            "category": "normal"
         },
         {
             "id": "204",
             "name": "Karate",
             "nameFile": "wmykara",
-            "image": "Assets/Skins/204.png"
+            "image": "Assets/Skins/204.png",
+            "category": "normal"
         },
         {
             "id": "205",
             "name": "Burger Shot Worker",
             "nameFile": "wfyburg",
-            "image": "Assets/Skins/205.png"
+            "image": "Assets/Skins/205.png",
+            "category": "normal"
         },
         {
             "id": "206",
             "name": "Casino Worker",
             "nameFile": "vwmycd",
-            "image": "Assets/Skins/206.png"
+            "image": "Assets/Skins/206.png",
+            "category": "normal"
         },
         {
             "id": "207",
             "name": "Female",
             "nameFile": "vhfypro",
-            "image": "Assets/Skins/207.png"
+            "image": "Assets/Skins/207.png",
+            "category": "normal"
         },
         {
             "id": "208",
-            "name": "Unused",
+            "name": "suzie",
             "nameFile": "suzie",
-            "image": "Assets/Skins/208.png"
+            "image": "Assets/Skins/208.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-208",
+            "name": "Su Xi Mu (Suzie)",
+            "nameFile": "cssuzie",
+            "image": "Assets/Skins/cssuzie.png",
+            "category": "cutscene"
         },
         {
             "id": "209",
             "name": "Noose",
             "nameFile": "omonood",
-            "image": "Assets/Skins/209.png"
+            "image": "Assets/Skins/209.png",
+            "category": "normal"
         },
         {
             "id": "210",
             "name": "Boat Worker",
             "nameFile": "omoboat",
-            "image": "Assets/Skins/210.png"
+            "image": "Assets/Skins/210.png",
+            "category": "normal"
         },
         {
             "id": "211",
             "name": "Clothing Worker",
             "nameFile": "wfyclot",
-            "image": "Assets/Skins/211.png"
+            "image": "Assets/Skins/211.png",
+            "category": "normal"
         },
         {
             "id": "212",
             "name": "Motorbike Rider",
             "nameFile": "vwmotr1",
-            "image": "Assets/Skins/212.png"
+            "image": "Assets/Skins/212.png",
+            "category": "normal"
         },
         {
             "id": "213",
             "name": "Motorbike Rider",
             "nameFile": "vwmotr2",
-            "image": "Assets/Skins/213.png"
+            "image": "Assets/Skins/213.png",
+            "category": "normal"
         },
         {
             "id": "214",
             "name": "Waitress",
             "nameFile": "vwfywai",
-            "image": "Assets/Skins/214.png"
+            "image": "Assets/Skins/214.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-214",
+            "name": "Maria Latore",
+            "nameFile": "csmaria",
+            "image": "Assets/Skins/csmaria.png",
+            "category": "cutscene"
         },
         {
             "id": "215",
             "name": "Farmer",
             "nameFile": "sbfori",
-            "image": "Assets/Skins/215.png"
+            "image": "Assets/Skins/215.png",
+            "category": "normal"
         },
         {
             "id": "216",
             "name": "Farmer",
             "nameFile": "swfyri",
-            "image": "Assets/Skins/216.png"
+            "image": "Assets/Skins/216.png",
+            "category": "normal"
         },
         {
             "id": "217",
             "name": "Clothing Worker",
             "nameFile": "wmyclot",
-            "image": "Assets/Skins/217.png"
+            "image": "Assets/Skins/217.png",
+            "category": "normal"
         },
         {
             "id": "218",
             "name": "Farmer",
             "nameFile": "sbfost",
-            "image": "Assets/Skins/218.png"
+            "image": "Assets/Skins/218.png",
+            "category": "normal"
         },
         {
             "id": "219",
             "name": "Farmer",
             "nameFile": "sbfyri",
-            "image": "Assets/Skins/219.png"
+            "image": "Assets/Skins/219.png",
+            "category": "normal"
         },
         {
             "id": "220",
             "name": "CD Worker",
             "nameFile": "sbmocd",
-            "image": "Assets/Skins/220.png"
+            "image": "Assets/Skins/220.png",
+            "category": "normal"
         },
         {
             "id": "221",
             "name": "Male",
             "nameFile": "sbmori",
-            "image": "Assets/Skins/221.png"
+            "image": "Assets/Skins/221.png",
+            "category": "normal"
         },
         {
             "id": "222",
             "name": "Male",
             "nameFile": "sbmost",
-            "image": "Assets/Skins/222.png"
+            "image": "Assets/Skins/222.png",
+            "category": "normal"
         },
         {
             "id": "223",
             "name": "Male",
             "nameFile": "shmycr",
-            "image": "Assets/Skins/223.png"
+            "image": "Assets/Skins/223.png",
+            "category": "normal"
         },
         {
             "id": "224",
             "name": "Female",
             "nameFile": "sofori",
-            "image": "Assets/Skins/224.png"
+            "image": "Assets/Skins/224.png",
+            "category": "normal"
         },
         {
             "id": "225",
             "name": "Female",
             "nameFile": "sofost",
-            "image": "Assets/Skins/225.png"
+            "image": "Assets/Skins/225.png",
+            "category": "normal"
         },
         {
             "id": "226",
             "name": "Female",
             "nameFile": "sofyst",
-            "image": "Assets/Skins/226.png"
+            "image": "Assets/Skins/226.png",
+            "category": "normal"
         },
         {
             "id": "227",
             "name": "Female",
             "nameFile": "somobu",
-            "image": "Assets/Skins/227.png"
+            "image": "Assets/Skins/227.png",
+            "category": "normal"
         },
         {
             "id": "228",
             "name": "Female",
             "nameFile": "somori",
-            "image": "Assets/Skins/228.png"
+            "image": "Assets/Skins/228.png",
+            "category": "normal"
         },
         {
             "id": "229",
             "name": "Female",
             "nameFile": "somost",
-            "image": "Assets/Skins/229.png"
+            "image": "Assets/Skins/229.png",
+            "category": "normal"
         },
         {
             "id": "230",
             "name": "Motorbike Rider",
             "nameFile": "swmotr5",
-            "image": "Assets/Skins/230.png"
+            "image": "Assets/Skins/230.png",
+            "category": "normal"
         },
         {
             "id": "231",
             "name": "Farmer",
             "nameFile": "swfori",
-            "image": "Assets/Skins/231.png"
+            "image": "Assets/Skins/231.png",
+            "category": "normal"
         },
         {
             "id": "232",
             "name": "Farmer",
             "nameFile": "swfost",
-            "image": "Assets/Skins/232.png"
+            "image": "Assets/Skins/232.png",
+            "category": "normal"
         },
         {
             "id": "233",
             "name": "Farmer",
             "nameFile": "swfyst",
-            "image": "Assets/Skins/233.png"
+            "image": "Assets/Skins/233.png",
+            "category": "normal"
         },
         {
             "id": "234",
             "name": "CD Worker",
             "nameFile": "swmocd",
-            "image": "Assets/Skins/234.png"
+            "image": "Assets/Skins/234.png",
+            "category": "normal"
         },
         {
             "id": "235",
             "name": "Female",
             "nameFile": "swmori",
-            "image": "Assets/Skins/235.png"
+            "image": "Assets/Skins/235.png",
+            "category": "normal"
         },
         {
             "id": "236",
             "name": "Female",
             "nameFile": "swmost",
-            "image": "Assets/Skins/236.png"
+            "image": "Assets/Skins/236.png",
+            "category": "normal"
         },
         {
             "id": "237",
             "name": "Prostitute",
             "nameFile": "shfypro",
-            "image": "Assets/Skins/237.png"
+            "image": "Assets/Skins/237.png",
+            "category": "normal"
         },
         {
             "id": "238",
             "name": "Prostitute",
             "nameFile": "sbfypro",
-            "image": "Assets/Skins/238.png"
+            "image": "Assets/Skins/238.png",
+            "category": "normal"
         },
         {
             "id": "239",
             "name": "Motorbike Rider",
             "nameFile": "swmotr4",
-            "image": "Assets/Skins/239.png"
+            "image": "Assets/Skins/239.png",
+            "category": "normal"
         },
         {
             "id": "240",
             "name": "Male",
             "nameFile": "swmyri",
-            "image": "Assets/Skins/240.png"
+            "image": "Assets/Skins/240.png",
+            "category": "normal"
         },
         {
             "id": "241",
             "name": "Male",
             "nameFile": "smyst",
-            "image": "Assets/Skins/241.png"
+            "image": "Assets/Skins/241.png",
+            "category": "normal"
         },
         {
             "id": "242",
             "name": "Male",
             "nameFile": "smyst2",
-            "image": "Assets/Skins/242.png"
+            "image": "Assets/Skins/242.png",
+            "category": "normal"
         },
         {
             "id": "243",
             "name": "Female",
             "nameFile": "sfypro",
-            "image": "Assets/Skins/243.png"
+            "image": "Assets/Skins/243.png",
+            "category": "normal"
         },
         {
             "id": "244",
             "name": "Female",
             "nameFile": "vbfyst2",
-            "image": "Assets/Skins/244.png"
+            "image": "Assets/Skins/244.png",
+            "category": "normal"
         },
         {
             "id": "245",
             "name": "Female",
             "nameFile": "vbfypro",
-            "image": "Assets/Skins/245.png"
+            "image": "Assets/Skins/245.png",
+            "category": "normal"
         },
         {
             "id": "246",
             "name": "Female",
             "nameFile": "vhfyst3",
-            "image": "Assets/Skins/246.png"
+            "image": "Assets/Skins/246.png",
+            "category": "normal"
         },
         {
             "id": "247",
             "name": "Biker",
             "nameFile": "bikera",
-            "image": "Assets/Skins/247.png"
+            "image": "Assets/Skins/247.png",
+            "category": "normal"
         },
         {
             "id": "248",
             "name": "Biker",
             "nameFile": "bikerb",
-            "image": "Assets/Skins/248.png"
+            "image": "Assets/Skins/248.png",
+            "category": "normal"
         },
         {
             "id": "249",
             "name": "Pimp",
             "nameFile": "bmypimp",
-            "image": "Assets/Skins/249.png"
+            "image": "Assets/Skins/249.png",
+            "category": "normal"
         },
         {
             "id": "250",
             "name": "Male",
             "nameFile": "swmycr",
-            "image": "Assets/Skins/250.png"
+            "image": "Assets/Skins/250.png",
+            "category": "normal"
         },
         {
             "id": "251",
             "name": "Female",
             "nameFile": "wfylg",
-            "image": "Assets/Skins/251.png"
+            "image": "Assets/Skins/251.png",
+            "category": "normal"
         },
         {
             "id": "252",
             "name": "Van Driver",
             "nameFile": "wmyva2",
-            "image": "Assets/Skins/252.png"
+            "image": "Assets/Skins/252.png",
+            "category": "normal"
         },
         {
             "id": "253",
             "name": "Security Guard",
             "nameFile": "bmosec",
-            "image": "Assets/Skins/253.png"
+            "image": "Assets/Skins/253.png",
+            "category": "normal"
         },
         {
             "id": "254",
             "name": "Drug Dealer",
             "nameFile": "bikdrug",
-            "image": "Assets/Skins/254.png"
+            "image": "Assets/Skins/254.png",
+            "category": "normal"
         },
         {
             "id": "255",
             "name": "Chinese",
             "nameFile": "wmych",
-            "image": "Assets/Skins/255.png"
+            "image": "Assets/Skins/255.png",
+            "category": "normal"
         },
         {
             "id": "256",
             "name": "Stripper",
             "nameFile": "sbfystr",
-            "image": "Assets/Skins/256.png"
+            "image": "Assets/Skins/256.png",
+            "category": "normal"
         },
         {
             "id": "257",
             "name": "Stripper",
             "nameFile": "swfystr",
-            "image": "Assets/Skins/257.png"
+            "image": "Assets/Skins/257.png",
+            "category": "normal"
         },
         {
             "id": "258",
             "name": "Heckler",
             "nameFile": "heck1",
-            "image": "Assets/Skins/258.png"
+            "image": "Assets/Skins/258.png",
+            "category": "normal"
         },
         {
             "id": "259",
             "name": "Heckler",
             "nameFile": "heck2",
-            "image": "Assets/Skins/259.png"
+            "image": "Assets/Skins/259.png",
+            "category": "normal"
         },
         {
             "id": "260",
             "name": "Construction Worker",
             "nameFile": "bmycon",
-            "image": "Assets/Skins/260.png"
+            "image": "Assets/Skins/260.png",
+            "category": "normal"
         },
         {
             "id": "261",
             "name": "CD Worker",
             "nameFile": "wmycd1",
-            "image": "Assets/Skins/261.png"
+            "image": "Assets/Skins/261.png",
+            "category": "normal"
         },
         {
             "id": "262",
             "name": "CD Worker",
             "nameFile": "bmocd",
-            "image": "Assets/Skins/262.png"
+            "image": "Assets/Skins/262.png",
+            "category": "normal"
         },
         {
             "id": "263",
             "name": "Waitress",
             "nameFile": "vwfywa2",
-            "image": "Assets/Skins/263.png"
+            "image": "Assets/Skins/263.png",
+            "category": "normal"
         },
         {
             "id": "264",
             "name": "Ice Cream Vendor",
             "nameFile": "wmoice",
-            "image": "Assets/Skins/264.png"
+            "image": "Assets/Skins/264.png",
+            "category": "normal"
         },
         {
             "id": "265",
             "name": "Tenpenny",
             "nameFile": "tenpen",
-            "image": "Assets/Skins/265.png"
+            "image": "Assets/Skins/265.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-265",
+            "name": "Frank Tenpenny",
+            "nameFile": "cstenpenny",
+            "image": "Assets/Skins/cstenpenny.png",
+            "category": "cutscene"
         },
         {
             "id": "266",
             "name": "Pulaski",
             "nameFile": "pulaski",
-            "image": "Assets/Skins/266.png"
+            "image": "Assets/Skins/266.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-266",
+            "name": "Eddie Pulaski",
+            "nameFile": "cspulaski",
+            "image": "Assets/Skins/cspulaski.png",
+            "category": "cutscene"
         },
         {
             "id": "267",
             "name": "Hernandez",
             "nameFile": "hern",
-            "image": "Assets/Skins/267.png"
+            "image": "Assets/Skins/267.png",
+            "category": "normal"
         },
         {
             "id": "268",
             "name": "Dwayne",
             "nameFile": "dwayne",
-            "image": "Assets/Skins/268.png"
+            "image": "Assets/Skins/268.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-268",
+            "name": "Dwayne",
+            "nameFile": "csdwayne",
+            "image": "Assets/Skins/csdwayne.png",
+            "category": "cutscene"
         },
         {
             "id": "269",
             "name": "Smoke",
             "nameFile": "smoke",
-            "image": "Assets/Skins/269.png"
+            "image": "Assets/Skins/269.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-269",
+            "name": "Big Smoke",
+            "nameFile": "cssmoke",
+            "image": "Assets/Skins/cssmoke.png",
+            "category": "cutscene"
+        },
+        {
+            "id": "CS-1-269",
+            "name": "Big Smoke - Vest",
+            "nameFile": "cssmokevest",
+            "image": "Assets/Skins/cssmokevest.png",
+            "category": "cutscene"
+        },
+        {
+            "id": "CS-2-269",
+            "name": "Big Smoke - Vest 2",
+            "nameFile": "cssmokevest2",
+            "image": "Assets/Skins/cssmokevest2.png",
+            "category": "cutscene"
         },
         {
             "id": "270",
             "name": "Sweet",
             "nameFile": "sweet",
-            "image": "Assets/Skins/270.png"
+            "image": "Assets/Skins/270.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-270",
+            "name": "Sweet",
+            "nameFile": "cssweet",
+            "image": "Assets/Skins/cssweet.png",
+            "category": "cutscene"
         },
         {
             "id": "271",
             "name": "Ryder",
             "nameFile": "ryder",
-            "image": "Assets/Skins/271.png"
+            "image": "Assets/Skins/271.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-271",
+            "name": "Ryder",
+            "nameFile": "csryder",
+            "image": "Assets/Skins/csryder.png",
+            "category": "cutscene"
         },
         {
             "id": "272",
             "name": "Forelli",
             "nameFile": "forelli",
-            "image": "Assets/Skins/272.png"
+            "image": "Assets/Skins/272.png",
+            "category": "normal"
         },
         {
             "id": "273",
             "name": "Media",
             "nameFile": "mediatr",
-            "image": "Assets/Skins/273.png"
+            "image": "Assets/Skins/273.png",
+            "category": "normal"
         },
         {
             "id": "274",
             "name": "Los Santos EMT",
             "nameFile": "laemt1",
-            "image": "Assets/Skins/274.png"
+            "image": "Assets/Skins/274.png",
+            "category": "normal"
         },
         {
             "id": "275",
             "name": "Las Venturas EMT",
             "nameFile": "lvemt1",
-            "image": "Assets/Skins/275.png"
+            "image": "Assets/Skins/275.png",
+            "category": "normal"
         },
         {
             "id": "276",
             "name": "San Fierro EMT",
             "nameFile": "sfemt1",
-            "image": "Assets/Skins/276.png"
+            "image": "Assets/Skins/276.png",
+            "category": "normal"
         },
         {
             "id": "277",
             "name": "Los Santos Firefighter",
             "nameFile": "lafd1",
-            "image": "Assets/Skins/277.png"
+            "image": "Assets/Skins/277.png",
+            "category": "normal"
         },
         {
             "id": "278",
             "name": "Las Venturas Firefighter",
             "nameFile": "lvfd1",
-            "image": "Assets/Skins/278.png"
+            "image": "Assets/Skins/278.png",
+            "category": "normal"
         },
         {
             "id": "279",
             "name": "San Fierro Firefighter",
             "nameFile": "sffd1",
-            "image": "Assets/Skins/279.png"
+            "image": "Assets/Skins/279.png",
+            "category": "normal"
         },
         {
             "id": "280",
             "name": "Los Santos Police",
             "nameFile": "lapd1",
-            "image": "Assets/Skins/280.png"
+            "image": "Assets/Skins/280.png",
+            "category": "normal"
         },
         {
             "id": "281",
             "name": "San Fierro Police",
             "nameFile": "sfpd1",
-            "image": "Assets/Skins/281.png"
+            "image": "Assets/Skins/281.png",
+            "category": "normal"
         },
         {
             "id": "282",
             "name": "Las Venturas Police",
             "nameFile": "lvpd1",
-            "image": "Assets/Skins/282.png"
+            "image": "Assets/Skins/282.png",
+            "category": "normal"
         },
         {
             "id": "283",
             "name": "County Sheriff",
             "nameFile": "csher",
-            "image": "Assets/Skins/283.png"
+            "image": "Assets/Skins/283.png",
+            "category": "normal"
         },
         {
             "id": "284",
             "name": "Motorbike Cop",
             "nameFile": "lapdm1",
-            "image": "Assets/Skins/284.png"
+            "image": "Assets/Skins/284.png",
+            "category": "normal"
         },
         {
             "id": "285",
             "name": "S.W.A.T.",
             "nameFile": "swat",
-            "image": "Assets/Skins/285.png"
+            "image": "Assets/Skins/285.png",
+            "category": "normal"
         },
         {
             "id": "286",
             "name": "FBI",
             "nameFile": "fbi",
-            "image": "Assets/Skins/286.png"
+            "image": "Assets/Skins/286.png",
+            "category": "normal"
         },
         {
             "id": "287",
             "name": "Army",
             "nameFile": "army",
-            "image": "Assets/Skins/287.png"
+            "image": "Assets/Skins/287.png",
+            "category": "normal"
         },
         {
             "id": "288",
             "name": "Desert Sheriff",
             "nameFile": "dsher",
-            "image": "Assets/Skins/288.png"
+            "image": "Assets/Skins/288.png",
+            "category": "normal"
         },
         {
             "id": "289",
             "name": "Special",
             "nameFile": "somyap",
-            "image": "Assets/Skins/289.png"
+            "image": "Assets/Skins/289.png",
+            "category": "normal"
         },
         {
             "id": "290",
             "name": "Ken Rosenberg",
             "nameFile": "rose",
-            "image": "Assets/Skins/290.png"
+            "image": "Assets/Skins/290.png",
+            "category": "normal"
         },
         {
             "id": "291",
             "name": "Kent Paul",
             "nameFile": "paul",
-            "image": "Assets/Skins/291.png"
+            "image": "Assets/Skins/291.png",
+            "category": "normal"
         },
         {
             "id": "292",
             "name": "Cesar Vialpando",
             "nameFile": "cesar",
-            "image": "Assets/Skins/292.png"
+            "image": "Assets/Skins/292.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-292",
+            "name": "Cesar Vialpando",
+            "nameFile": "cscesar",
+            "image": "Assets/Skins/cscesar.png",
+            "category": "cutscene"
         },
         {
             "id": "293",
             "name": "OG Loc",
             "nameFile": "ogloc",
-            "image": "Assets/Skins/293.png"
+            "image": "Assets/Skins/293.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-293",
+            "name": "OG Loc",
+            "nameFile": "csogloc",
+            "image": "Assets/Skins/csogloc.png",
+            "category": "cutscene"
         },
         {
             "id": "294",
             "name": "Wu Zi Mu",
             "nameFile": "wuzimu",
-            "image": "Assets/Skins/294.png"
+            "image": "Assets/Skins/294.png",
+            "category": "normal"
         },
         {
             "id": "295",
             "name": "Michael Toreno",
             "nameFile": "torino",
-            "image": "Assets/Skins/295.png"
+            "image": "Assets/Skins/295.png",
+            "category": "normal"
         },
         {
             "id": "296",
             "name": "Jizzy B.",
             "nameFile": "jizzy",
-            "image": "Assets/Skins/296.png"
+            "image": "Assets/Skins/296.png",
+            "category": "normal"
         },
         {
             "id": "297",
             "name": "Madd Dogg",
             "nameFile": "maddogg",
-            "image": "Assets/Skins/297.png"
+            "image": "Assets/Skins/297.png",
+            "category": "normal"
         },
         {
             "id": "298",
             "name": "Catalina",
             "nameFile": "cat",
-            "image": "Assets/Skins/298.png"
+            "image": "Assets/Skins/298.png",
+            "category": "normal"
         },
         {
             "id": "299",
             "name": "Claude",
             "nameFile": "claude",
-            "image": "Assets/Skins/299.png"
+            "image": "Assets/Skins/299.png",
+            "category": "normal"
+        },
+        {
+            "id": "CS-302",
+            "name": "Emmet",
+            "nameFile": "csemmet",
+            "image": "Assets/Skins/csemmet.png",
+            "category": "cutscene"
+        },
+        {
+            "id": "CS-304",
+            "name": "Kendl Johnson",
+            "nameFile": "cskendl",
+            "image": "Assets/Skins/cskendl.png",
+            "category": "cutscene"
+        },
+        {
+            "id": "CS-305",
+            "name": "Jethro",
+            "nameFile": "csjethro",
+            "image": "Assets/Skins/csjethro.png",
+            "category": "cutscene"
+        },
+        {
+            "id": "CS-310",
+            "name": "Big Bear",
+            "nameFile": "csbigbearthin",
+            "image": "Assets/Skins/csbigbearthin.png",
+            "category": "cutscene"
         }
     ],
     "weapons": [
