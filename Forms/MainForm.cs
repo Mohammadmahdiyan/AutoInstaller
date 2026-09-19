@@ -24,6 +24,8 @@ public partial class MainForm : Form
     private Button _sidebarReadmeButton = null!;
     private PictureBox _sidebarStep4Image = null!;
     private readonly System.Windows.Forms.Timer _step4ImageTimer = new();
+    private readonly System.Windows.Forms.Timer _detectedModTimer = new();
+    private Label? _detectedModLabel;
     private int _step4ImageIndex;
     private AppSettings _settings;
     private readonly string _appName = "Mod Manager";
@@ -77,6 +79,15 @@ public partial class MainForm : Form
         ConfigureUi();
         InitializeSidebar();
         InitializeWizard();
+        _detectedModTimer.Interval = 3000;
+        _detectedModTimer.Tick += (_, _) =>
+        {
+            if (_detectedModLabel != null && !_detectedModLabel.IsDisposed)
+            {
+                _detectedModLabel.Text = string.Empty;
+            }
+            _detectedModTimer.Stop();
+        };
         GoToStep(_currentStep);
         RefreshModLibrary();
         RefreshModList();
@@ -592,7 +603,10 @@ public partial class MainForm : Form
             _selectedModManifest = ModPackageService.ResolveManifest(selected);
             _selectedAssetForInstall = null;
             folderText.Text = selected;
-            selectedName.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+            _detectedModLabel = selectedName;
+            selectedName.Text = string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName);
+            _detectedModTimer.Stop();
+            _detectedModTimer.Start();
             RefreshStep3Images(panel, selected);
             UpdateSidebarState();
         };
@@ -669,29 +683,297 @@ public partial class MainForm : Form
     private Panel CreateWizardStep4()
     {
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Text = _localizationService.GetString("Installing", "Installing"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
-        var status = new Label { Name = "ProgressStatus", AutoSize = true, Font = new Font("Segoe UI", 10F, FontStyle.Bold) };
-        var progressBar = new ProgressBar { Width = 680, Height = 24, Minimum = 0, Maximum = 100, Value = 0 };
-        var fileList = new ListBox { Width = 680, Height = 180, BorderStyle = BorderStyle.FixedSingle };
-        var readme = new TextBox { Width = 680, Height = 180, Multiline = true, ScrollBars = ScrollBars.Vertical, ReadOnly = true };
-        var gallery = new FlowLayoutPanel { Name = "InstallImageGallery", AutoScroll = true, WrapContents = true, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
+        var title = new Label { Text = _localizationService.GetString("Installing", "Installing"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top };
+        var status = new Label { Name = "ProgressStatus", AutoSize = true, Font = new Font("Segoe UI", 10F, FontStyle.Bold), Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 0) };
+        var progressBar = new ProgressBar { Width = 680, Height = 24, Minimum = 0, Maximum = 100, Value = 0, Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 8) };
+        var fileList = new ListBox { Name = "Step4FileList", Dock = DockStyle.Bottom, Height = 140, Font = new Font("Segoe UI", 9F), Margin = new Padding(0, 8, 0, 0), Visible = true };
+        var previewRoot = new Panel { Name = "Step4PreviewRoot", Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0) };
+        var readmeButton = new Button { Name = "Step4ReadmeButton", Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"), AutoSize = true, Visible = false, Dock = DockStyle.Bottom, Margin = new Padding(0, 8, 0, 0) };
+        readmeButton.Click += (_, _) =>
+        {
+            if (!string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath))
+            {
+                ShowReadmeDialog(_selectedReadmePath);
+            }
+        };
 
         panel.Controls.Add(title);
         panel.Controls.Add(status);
         panel.Controls.Add(progressBar);
+        panel.Controls.Add(previewRoot);
         panel.Controls.Add(fileList);
-        panel.Controls.Add(readme);
-        panel.Controls.Add(gallery);
-        title.Location = new Point(18, 18);
-        status.Location = new Point(18, 58);
-        progressBar.Location = new Point(18, 88);
-        fileList.Location = new Point(18, 120);
-        readme.Location = new Point(18, 120);
-        gallery.Location = new Point(18, 120);
-        gallery.Size = new Size(900, 420);
-        readme.Visible = false;
-        gallery.Visible = false;
+        panel.Controls.Add(readmeButton);
+        previewRoot.BringToFront();
+        fileList.BringToFront();
+        readmeButton.BringToFront();
         return panel;
+    }
+
+    private void RefreshStep4Preview()
+    {
+        if (!_wizardPanels.TryGetValue(WizardStep.Step4, out var panel) || panel.IsDisposed)
+        {
+            return;
+        }
+
+        var root = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+        var readmeButton = panel.Controls.OfType<Button>().FirstOrDefault(control => control.Name == "Step4ReadmeButton");
+        var fileList = panel.Controls.OfType<ListBox>().FirstOrDefault(control => control.Name == "Step4FileList");
+        if (root == null)
+        {
+            return;
+        }
+
+        if (fileList != null)
+        {
+            fileList.Items.Clear();
+            foreach (var item in _installPaths.Where(path => !string.IsNullOrWhiteSpace(path)).Select(path => Path.GetRelativePath(_selectedModPayloadPath, path).Replace('\\', '/')).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                fileList.Items.Add(item);
+            }
+            fileList.Visible = _installPaths.Count > 0;
+            fileList.Height = _installPaths.Count > 0 ? 140 : 0;
+        }
+
+        root.SuspendLayout();
+        root.Controls.Clear();
+
+        var hasReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath);
+        var imageFiles = _selectedImageFiles.Where(File.Exists).ToList();
+        var hasImages = imageFiles.Count > 0;
+
+        if (readmeButton != null)
+        {
+            readmeButton.Visible = hasReadme;
+            readmeButton.Enabled = hasReadme;
+            readmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+        }
+
+        if (!hasReadme && !hasImages)
+        {
+            root.ResumeLayout(true);
+            return;
+        }
+
+        if (hasReadme && hasImages)
+        {
+            var readmePanel = new Panel { Dock = DockStyle.Top, Height = Math.Max(180, root.Height / 2), Padding = new Padding(0), Margin = new Padding(0, 0, 0, 8) };
+            var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath);
+            readmeBox.Dock = DockStyle.Fill;
+            readmePanel.Controls.Add(readmeBox);
+
+            var imagePanel = CreateStep4ImagePanel(imageFiles);
+            imagePanel.Dock = DockStyle.Fill;
+            root.Controls.Add(imagePanel);
+            root.Controls.Add(readmePanel);
+            readmePanel.BringToFront();
+        }
+        else if (hasReadme)
+        {
+            var readmePanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0) };
+            var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath);
+            readmeBox.Dock = DockStyle.Fill;
+            readmePanel.Controls.Add(readmeBox);
+            root.Controls.Add(readmePanel);
+        }
+        else
+        {
+            var imagePanel = CreateStep4ImagePanel(imageFiles);
+            imagePanel.Dock = DockStyle.Fill;
+            root.Controls.Add(imagePanel);
+        }
+
+        root.ResumeLayout(true);
+        panel.PerformLayout();
+    }
+
+    private TextBox CreateStep4ReadmeBox(string readmePath)
+    {
+        var box = new TextBox
+        {
+            Name = "Step4ReadmeBox",
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            BorderStyle = BorderStyle.FixedSingle,
+            Font = new Font("Segoe UI", 10F),
+            BackColor = Color.FromArgb(248, 250, 252),
+            ForeColor = Color.FromArgb(15, 23, 42),
+            WordWrap = true,
+            RightToLeft = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian ? RightToLeft.Yes : RightToLeft.No,
+            Dock = DockStyle.Fill
+        };
+
+        try
+        {
+            box.Text = File.ReadAllText(readmePath);
+            if (!string.IsNullOrWhiteSpace(box.Text))
+            {
+                box.SelectionStart = 0;
+                box.SelectionLength = 0;
+                box.ScrollToCaret();
+            }
+        }
+        catch
+        {
+            box.Text = "README";
+        }
+
+        return box;
+    }
+
+    private Panel CreateStep4ImagePanel(List<string> imageFiles)
+    {
+        var basePanel = new Panel { Name = "Step4ImagePanel", BackColor = Color.FromArgb(255, 255, 255), Padding = new Padding(0) };
+        if (imageFiles.Count == 0)
+        {
+            return basePanel;
+        }
+
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        if (imageFiles.Count > 4)
+        {
+            var slidePanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0), BackColor = Color.White };
+            var imagePreview = CreateImagePreviewCard(imageFiles[0], 0);
+            imagePreview.Dock = DockStyle.Fill;
+            imagePreview.Margin = new Padding(0);
+
+            var prev = new Button { Text = "◀", Width = 40, Height = 40, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Dock = isRtl ? DockStyle.Left : DockStyle.Left };
+            var next = new Button { Text = "▶", Width = 40, Height = 40, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Dock = isRtl ? DockStyle.Right : DockStyle.Right };
+            var index = 0;
+            prev.Click += (_, _) =>
+            {
+                index = (index - 1 + imageFiles.Count) % imageFiles.Count;
+                slidePanel.Controls.Clear();
+                var preview = CreateImagePreviewCard(imageFiles[index], index);
+                preview.Dock = DockStyle.Fill;
+                slidePanel.Controls.Add(preview);
+            };
+            next.Click += (_, _) =>
+            {
+                index = (index + 1) % imageFiles.Count;
+                slidePanel.Controls.Clear();
+                var preview = CreateImagePreviewCard(imageFiles[index], index);
+                preview.Dock = DockStyle.Fill;
+                slidePanel.Controls.Add(preview);
+            };
+
+            var wrap = new Panel { Dock = DockStyle.Fill, Padding = new Padding(6) };
+            wrap.Controls.Add(imagePreview);
+            slidePanel.Controls.Add(wrap);
+            slidePanel.Controls.Add(prev);
+            slidePanel.Controls.Add(next);
+            prev.BringToFront();
+            next.BringToFront();
+            basePanel.Controls.Add(slidePanel);
+            return basePanel;
+        }
+
+        var grid = new FlowLayoutPanel
+        {
+            Name = "Step4ImageGrid",
+            Dock = DockStyle.Fill,
+            WrapContents = true,
+            AutoScroll = true,
+            FlowDirection = FlowDirection.LeftToRight,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            Padding = new Padding(0),
+            BackColor = Color.White
+        };
+
+        var columns = imageFiles.Count switch
+        {
+            1 => 1,
+            2 => 2,
+            3 => 3,
+            _ => 4
+        };
+
+        foreach (var (imageFile, index) in imageFiles.Select((file, i) => (file, i)))
+        {
+            var card = CreateImagePreviewCard(imageFile, index);
+            card.Width = Math.Max(120, (basePanel.Width - 20) / columns);
+            card.Height = Math.Max(120, (basePanel.Height - 20) / Math.Max(1, (imageFiles.Count + columns - 1) / columns));
+            card.Margin = new Padding(4);
+            card.Tag = imageFile;
+            grid.Controls.Add(card);
+        }
+
+        basePanel.Controls.Add(grid);
+        return basePanel;
+    }
+
+    private PictureBox CreateImagePreviewCard(string imagePath, int index)
+    {
+        var box = new PictureBox
+        {
+            Name = $"Step4Image_{index}",
+            SizeMode = PictureBoxSizeMode.Zoom,
+            BorderStyle = BorderStyle.FixedSingle,
+            BackColor = Color.FromArgb(245, 247, 250),
+            Cursor = Cursors.Hand,
+            Margin = new Padding(4),
+            Padding = new Padding(0),
+            Dock = DockStyle.Fill,
+            Image = TryLoadImage(imagePath)
+        };
+
+        box.Click += (_, _) => OpenFullImageViewer(imagePath, index, imagePath);
+        return box;
+    }
+
+    private void OpenFullImageViewer(string imagePath, int index, string? fallbackTitle = null)
+    {
+        if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+        {
+            return;
+        }
+
+        using var viewer = new Form
+        {
+            Text = fallbackTitle ?? Path.GetFileName(imagePath),
+            StartPosition = FormStartPosition.CenterParent,
+            WindowState = FormWindowState.Normal,
+            Width = 1000,
+            Height = 700,
+            MinimumSize = new Size(600, 420),
+            FormBorderStyle = FormBorderStyle.FixedDialog
+        };
+
+        var imageBox = new PictureBox
+        {
+            Dock = DockStyle.Fill,
+            SizeMode = PictureBoxSizeMode.Zoom,
+            BorderStyle = BorderStyle.None,
+            Image = TryLoadImage(imagePath)
+        };
+
+        var closeButton = new Button { Text = _localizationService.GetString("Close", "Close"), AutoSize = true, Anchor = AnchorStyles.Bottom | AnchorStyles.Right };
+        closeButton.Click += (_, _) => viewer.Close();
+
+        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(8) };
+        panel.Controls.Add(imageBox);
+        panel.Controls.Add(closeButton);
+        viewer.Controls.Add(panel);
+        viewer.ShowDialog(this);
+    }
+
+    private static Image? TryLoadImage(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var stream = File.OpenRead(path);
+            return Image.FromStream(stream);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private Panel CreateWizardStep5()
@@ -939,7 +1221,8 @@ public partial class MainForm : Form
                 : 3;
         }
 
-        var cardWidth = Math.Max(170, (gallery.Width - (_step5ColumnCount - 1) * 12) / _step5ColumnCount);
+        var galleryWidth = Math.Max(gallery.Width, panel.Width - 48);
+        var cardWidth = Math.Max(170, (galleryWidth - (_step5ColumnCount - 1) * 12) / _step5ColumnCount);
         foreach (var asset in visibleAssets)
         {
             gallery.Controls.Add(CreateAssetCard(asset, cardWidth));
@@ -959,10 +1242,10 @@ public partial class MainForm : Form
         var innerWidth = cardWidth - 18;
         var selectionKey = GetAssetSelectionKey(asset);
         var isSelected = _step5SelectedAssetKeys.Contains(selectionKey);
-        var card = new Panel { Width = cardWidth, Height = 222, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = isSelected ? Color.FromArgb(219, 234, 254) : Color.White, Cursor = Cursors.Hand, Padding = new Padding(0) };
-        var preview = new PictureBox { Width = innerWidth, Height = 145, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
-        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 38, Location = new Point(8, 158), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Cursor = Cursors.Hand };
-        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 38, Location = new Point(8, 158), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(30, 41, 59), Visible = false, Cursor = Cursors.Hand };
+        var card = new Panel { Width = cardWidth, Height = 260, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = isSelected ? Color.FromArgb(219, 234, 254) : Color.White, Cursor = Cursors.Hand, Padding = new Padding(0) };
+        var preview = new PictureBox { Width = innerWidth, Height = 170, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
+        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 42, Location = new Point(8, 182), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Cursor = Cursors.Hand };
+        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 42, Location = new Point(8, 182), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(30, 41, 59), Visible = false, Cursor = Cursors.Hand };
         var id = string.IsNullOrWhiteSpace(asset.Id) ? null : new Label { Text = asset.Id, Width = 36, Height = 26, Location = new Point(cardWidth - 42, 8), TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White, BackColor = GetAssetTypeColor(asset.AssetType), Font = new Font("Segoe UI", 8F, FontStyle.Bold), AutoSize = false, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
 
         if (id != null)
@@ -1147,6 +1430,11 @@ public partial class MainForm : Form
         if (step == WizardStep.Step5)
         {
             RefreshAssetStep();
+        }
+
+        if (step == WizardStep.Step4)
+        {
+            RefreshStep4Preview();
         }
 
         if (step is WizardStep.Step4 or WizardStep.Step6)
@@ -2399,8 +2687,7 @@ public partial class MainForm : Form
             return;
         }
 
-        var selectedValue = selectedComboBox.SelectedItem.ToString();
-        if (string.IsNullOrWhiteSpace(selectedValue))
+        if (selectedComboBox.SelectedItem == null || selectedComboBox.SelectedItem.ToString() is not { } selectedValue || string.IsNullOrWhiteSpace(selectedValue))
         {
             return;
         }
@@ -2656,7 +2943,7 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step4:
                 _sidebarPreviousButton.Enabled = false;
-                _sidebarNextButton.Enabled = _returnedToInstallStepFromCompletion;
+                _sidebarNextButton.Enabled = _returnedToInstallStepFromCompletion || _selectedAssetForInstall != null || _selectedModManifest?.IsSingleAssetPackage == true || _selectedModManifest?.IsMultiAssetPackage == true;
                 _sidebarNextButton.Text = _returnedToInstallStepFromCompletion
                     ? _localizationService.GetString("Next", "Next")
                     : _localizationService.GetString("Installing", "Installing");
