@@ -1512,21 +1512,21 @@
             "name": "SFPD",
             "nameFile": "sfpdm1",
             "image": "Assets/Skins/4.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "5",
             "name": "Big Bear",
             "nameFile": "bb",
             "image": "Assets/Skins/5.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "6",
             "name": "Farm Worker",
             "nameFile": "wfycrp",
             "image": "Assets/Skins/6.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "7",
@@ -1540,7 +1540,7 @@
             "name": "Worker",
             "nameFile": "wmycd2",
             "image": "Assets/Skins/8.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "9",
@@ -1778,7 +1778,7 @@
             "name": "Suzie",
             "nameFile": "suzie",
             "image": "Assets/Skins/42.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "43",
@@ -1939,7 +1939,7 @@
             "name": "Business Woman",
             "nameFile": "vwmyap",
             "image": "Assets/Skins/65.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "66",
@@ -2079,7 +2079,7 @@
             "name": "Female",
             "nameFile": "vhfyst",
             "image": "Assets/Skins/86.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "87",
@@ -2310,7 +2310,7 @@
             "name": "LVPD",
             "nameFile": "lvpdm1",
             "image": "Assets/Skins/119.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "120",
@@ -2516,11 +2516,11 @@
             "category": "normal"
         },
         {
-            "id": "149",
-            "name": "Unused",
+            "id": "311",
+            "name": "Smoke V",
             "nameFile": "smokev",
-            "image": "Assets/Skins/149.png",
-            "category": "normal"
+            "image": "Assets/Skins/311.png",
+            "category": "special"
         },
         {
             "id": "150",
@@ -2929,14 +2929,14 @@
             "category": "normal"
         },
         {
-            "id": "208",
-            "name": "suzie",
+            "id": "42",
+            "name": "Suzie",
             "nameFile": "suzie",
-            "image": "Assets/Skins/208.png",
-            "category": "normal"
+            "image": "Assets/Skins/42.png",
+            "category": "special"
         },
         {
-            "id": "CS-208",
+            "id": "CS-42",
             "name": "Su Xi Mu (Suzie)",
             "nameFile": "cssuzie",
             "image": "Assets/Skins/cssuzie.png",
@@ -3346,7 +3346,7 @@
             "name": "Tenpenny",
             "nameFile": "tenpen",
             "image": "Assets/Skins/265.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-265",
@@ -3360,7 +3360,7 @@
             "name": "Pulaski",
             "nameFile": "pulaski",
             "image": "Assets/Skins/266.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-266",
@@ -3374,14 +3374,14 @@
             "name": "Hernandez",
             "nameFile": "hern",
             "image": "Assets/Skins/267.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "268",
             "name": "Dwayne",
             "nameFile": "dwayne",
             "image": "Assets/Skins/268.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-268",
@@ -3395,7 +3395,7 @@
             "name": "Smoke",
             "nameFile": "smoke",
             "image": "Assets/Skins/269.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-269",
@@ -3423,7 +3423,7 @@
             "name": "Sweet",
             "nameFile": "sweet",
             "image": "Assets/Skins/270.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-270",
@@ -3437,7 +3437,7 @@
             "name": "Ryder",
             "nameFile": "ryder",
             "image": "Assets/Skins/271.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-271",
@@ -3451,14 +3451,14 @@
             "name": "Forelli",
             "nameFile": "forelli",
             "image": "Assets/Skins/272.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "273",
             "name": "Media",
             "nameFile": "mediatr",
             "image": "Assets/Skins/273.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "274",
@@ -3570,28 +3570,28 @@
             "name": "Special",
             "nameFile": "somyap",
             "image": "Assets/Skins/289.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "290",
             "name": "Ken Rosenberg",
             "nameFile": "rose",
             "image": "Assets/Skins/290.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "291",
             "name": "Kent Paul",
             "nameFile": "paul",
             "image": "Assets/Skins/291.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "292",
             "name": "Cesar Vialpando",
             "nameFile": "cesar",
             "image": "Assets/Skins/292.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-292",
@@ -3605,7 +3605,7 @@
             "name": "OG Loc",
             "nameFile": "ogloc",
             "image": "Assets/Skins/293.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-293",
@@ -3619,42 +3619,42 @@
             "name": "Wu Zi Mu",
             "nameFile": "wuzimu",
             "image": "Assets/Skins/294.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "295",
             "name": "Michael Toreno",
             "nameFile": "torino",
             "image": "Assets/Skins/295.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "296",
             "name": "Jizzy B.",
             "nameFile": "jizzy",
             "image": "Assets/Skins/296.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "297",
             "name": "Madd Dogg",
             "nameFile": "maddogg",
             "image": "Assets/Skins/297.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "298",
             "name": "Catalina",
             "nameFile": "cat",
             "image": "Assets/Skins/298.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "299",
             "name": "Claude",
             "nameFile": "claude",
             "image": "Assets/Skins/299.png",
-            "category": "normal"
+            "category": "special"
         },
         {
             "id": "CS-302",
