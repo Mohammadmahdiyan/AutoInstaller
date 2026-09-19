@@ -126,11 +126,13 @@ public partial class MainForm : Form
             return;
         }
 
+        button.TabStop = false;
         button.FlatStyle = FlatStyle.Flat;
         button.FlatAppearance.BorderColor = Color.FromArgb(148, 163, 184);
         button.FlatAppearance.BorderSize = 1;
         button.FlatAppearance.MouseDownBackColor = Color.FromArgb(59, 130, 246);
         button.FlatAppearance.MouseOverBackColor = Color.FromArgb(96, 165, 250);
+        button.FlatAppearance.CheckedBackColor = normalColor;
         button.Margin = new Padding(12, 0, 0, 0);
         button.Height = 38;
         button.Width = 140;
@@ -695,16 +697,16 @@ public partial class MainForm : Form
     private Panel CreateWizardStep5()
     {
         var panel = new Panel { Name = "AssetStepPanel", BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Name = "AssetStepTitle", Text = "If you wish to select the model to be replaced...", Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top };
+        var title = new Label { Name = "AssetStepTitle", Text = _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced..."), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top };
         var filters = new FlowLayoutPanel { Name = "AssetFilters", Dock = DockStyle.Top, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Padding = new Padding(0, 4, 0, 4) };
-        var categoryLabel = new Label { Name = "AssetCategoryLabel", Text = "Category", AutoSize = true, Margin = new Padding(0, 7, 8, 0), Visible = false };
+        var categoryLabel = new Label { Name = "AssetCategoryLabel", Text = _localizationService.GetString("AssetCategory", "Category"), AutoSize = true, Margin = new Padding(0, 7, 8, 0), Visible = false };
         var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 240, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
         var columns = new ComboBox { Name = "AssetColumns", Width = 80, DropDownStyle = ComboBoxStyle.DropDownList };
         columns.Items.AddRange(new object[] { "2", "3", "4", "5" });
         columns.SelectedItem = "3";
         filters.Controls.Add(categoryLabel);
         filters.Controls.Add(categoryFilter);
-        filters.Controls.Add(new Label { Text = "Columns", AutoSize = true, Margin = new Padding(18, 7, 8, 0) });
+        filters.Controls.Add(new Label { Text = _localizationService.GetString("AssetColumns", "Columns"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) });
         filters.Controls.Add(columns);
         var gallery = new FlowLayoutPanel { Name = "AssetGallery", Dock = DockStyle.Fill, AutoScroll = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Padding = new Padding(0, 8, 0, 0) };
 
@@ -748,10 +750,10 @@ public partial class MainForm : Form
     {
         return assetType switch
         {
-            "Vehicle" => "If you wish to select the Vehicle model to be replaced...",
-            "Weapon" => "If you wish to select the Weapon model to be replaced...",
-            "Skin" => "If you wish to select the Skin model to be replaced...",
-            _ => "If you wish to select the model to be replaced..."
+            "Vehicle" => _localizationService.GetString("AssetStepTitleVehicle", "If you wish to select the Vehicle model to be replaced..."),
+            "Weapon" => _localizationService.GetString("AssetStepTitleWeapon", "If you wish to select the Weapon model to be replaced..."),
+            "Skin" => _localizationService.GetString("AssetStepTitleSkin", "If you wish to select the Skin model to be replaced..."),
+            _ => _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced...")
         };
     }
 
@@ -945,7 +947,7 @@ public partial class MainForm : Form
 
         if (visibleAssets.Count == 0)
         {
-            gallery.Controls.Add(new Label { Text = "No matching assets were found in this Mod.", AutoSize = true, Font = new Font("Segoe UI", 10F), Margin = new Padding(0, 12, 0, 0) });
+            gallery.Controls.Add(new Label { Text = _localizationService.GetString("AssetNoMatching", "No matching assets were found in this Mod."), AutoSize = true, Font = new Font("Segoe UI", 10F), Margin = new Padding(0, 12, 0, 0) });
         }
 
         gallery.ResumeLayout(true);
@@ -1390,8 +1392,6 @@ public partial class MainForm : Form
         ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
         GoToStep(WizardStep.Step5);
         _selectedReadmePath = FindReadmeFile(targetDir);
-
-        GoToStep(WizardStep.Step6);
     }
 
     private async Task CompleteAssetPreparationStepAsync()
@@ -1469,11 +1469,36 @@ public partial class MainForm : Form
         }
     }
 
+    private static bool IsMetadataOrNonInstallableFile(string path)
+    {
+        var fileName = Path.GetFileName(path);
+        if (string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (IsReadmeFileName(fileName))
+        {
+            return true;
+        }
+
+        var extension = Path.GetExtension(fileName);
+        return extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".webp", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase);
+    }
+
     private async Task CopyPayloadWithProgressAsync(string sourceDir, string targetDir)
     {
-        var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories);
-        var total = files.Length;
-        for (var i = 0; i < files.Length; i++)
+        var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories)
+            .Where(path => !IsMetadataOrNonInstallableFile(path))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var total = files.Count;
+        for (var i = 0; i < files.Count; i++)
         {
             var file = files[i];
             var relative = Path.GetRelativePath(sourceDir, file).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
@@ -1565,7 +1590,11 @@ public partial class MainForm : Form
         return Directory.GetFiles(root, "*", SearchOption.AllDirectories)
             .Where(file => file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
                 || file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                || file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)
+                || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase)
+                || file.EndsWith(".gif", StringComparison.OrdinalIgnoreCase)
+                || file.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
             .ToList();
     }
 
@@ -2745,6 +2774,10 @@ public partial class MainForm : Form
                 if (_selectedAssetForInstall != null)
                 {
                     _ = InstallSelectedModAsync();
+                }
+                else
+                {
+                    NavigateToStep(WizardStep.Step6);
                 }
                 break;
             case WizardStep.Step4:
