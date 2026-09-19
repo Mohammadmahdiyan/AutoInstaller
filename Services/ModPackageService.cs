@@ -76,15 +76,15 @@ public class ModPackageService
     public static bool TryValidateModJson(string packagePath, out string? error)
     {
         error = null;
-        var modJsonPath = Path.Combine(packagePath, "mod.json");
-        if (!File.Exists(modJsonPath))
+        var manifestPath = GetManifestPath(packagePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
         {
             return true;
         }
 
         try
         {
-            using var document = JsonDocument.Parse(File.ReadAllText(modJsonPath));
+            using var document = JsonDocument.Parse(File.ReadAllText(manifestPath));
             if (document.RootElement.ValueKind != JsonValueKind.Object)
             {
                 error = "mod.json must contain a JSON object.";
@@ -147,8 +147,8 @@ public class ModPackageService
 
     public static ModManifest? TryReadManifest(string basePath)
     {
-        var manifestPath = Path.Combine(basePath, "mod.json");
-        if (!File.Exists(manifestPath))
+        var manifestPath = GetManifestPath(basePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
         {
             return new ModManifest();
         }
@@ -177,6 +177,18 @@ public class ModPackageService
         }
     }
 
+    private static string? GetManifestPath(string basePath)
+    {
+        var modJsonPath = Path.Combine(basePath, "mod.json");
+        if (File.Exists(modJsonPath))
+        {
+            return modJsonPath;
+        }
+
+        var configJsonPath = Path.Combine(basePath, "config.json");
+        return File.Exists(configJsonPath) ? configJsonPath : null;
+    }
+
     public static ModManifest ResolveManifest(string basePath)
     {
         return TryReadManifest(basePath) ?? new ModManifest();
@@ -184,7 +196,8 @@ public class ModPackageService
 
     public static List<ModReplacementEntry> ReadReplacementEntries(string packageRoot)
     {
-        var configPath = Path.Combine(packageRoot, "mod.json");
+        var configPath = GetManifestPath(packageRoot)
+            ?? throw new InvalidDataException("The package manifest was not found.");
         using var document = JsonDocument.Parse(File.ReadAllText(configPath));
         if (!document.RootElement.TryGetProperty("replacements", out var replacements) || replacements.ValueKind != JsonValueKind.Array)
         {

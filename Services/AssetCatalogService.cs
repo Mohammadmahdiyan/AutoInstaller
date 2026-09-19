@@ -8,6 +8,7 @@ public sealed class AssetCatalogService
 {
     private readonly string _catalogPath;
     private List<GameAsset>? _assets;
+    public string ValidationError { get; private set; } = string.Empty;
 
     public AssetCatalogService()
     {
@@ -51,6 +52,7 @@ public sealed class AssetCatalogService
                     var nameFile = GetString(item, "nameFile");
                     if (string.IsNullOrWhiteSpace(nameFile))
                     {
+                        ValidationError = "Assets.json مشکل دارد: یک فایل در دستهٔ " + assetType + " مقدار nameFile ندارد.";
                         continue;
                     }
 
@@ -58,9 +60,9 @@ public sealed class AssetCatalogService
                     {
                         AssetType = assetType,
                         Id = GetValueAsString(item, "id"),
-                        Name = GetString(item, "name") ?? nameFile,
+                        Name = GetString(item, "name") is { Length: > 0 } name ? name : nameFile,
                         NameFile = nameFile,
-                        Category = GetString(item, "category") ?? string.Empty,
+                        Category = GetString(item, "category") is { Length: > 0 } category ? category : "normal",
                         Image = GetString(item, "image")
                     });
                 }

@@ -22,6 +22,10 @@ public class ModManifest
     public bool IsReplacing => NormalizedType == "replacing";
 
     public bool IsModLoader => NormalizedType == "putinmodloader";
+
+    public bool IsSingleAssetPackage => NormalizedType == "vehicleandskinandweapon";
+
+    public bool IsMultiAssetPackage => NormalizedType == "vehiclesandskinsandweapons";
 }
 
 public sealed record ModReplacementEntry(string Source, string Target);
