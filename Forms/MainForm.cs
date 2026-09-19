@@ -12,6 +12,7 @@ public partial class MainForm : Form
 {
     private readonly SettingsService _settingsService = new();
     private readonly LocalizationService _localizationService = new();
+    private readonly AssetCatalogService _assetCatalogService = new();
     private readonly Dictionary<WizardStep, Panel> _wizardPanels = new();
     private readonly System.Windows.Forms.Timer _completionTimer = new();
     private Panel _wizardHost = null!;
@@ -616,20 +617,122 @@ public partial class MainForm : Form
 
     private Panel CreateWizardStep5()
     {
-        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
+        var panel = new Panel { Name = "AssetStepPanel", BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoScroll = true };
         var title = new Label { Text = _localizationService.GetString("Step5Category", "Cars / Weapons / Skins"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
-        var description = new Label { Text = _localizationService.GetString("CategoryPlaceholder", "This category step is reserved for future advanced installers."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F) };
-        var continueButton = new Button { Text = _localizationService.GetString("Continue", "Continue"), Width = 170, Height = 40 };
+        var description = new Label { Name = "AssetStepDescription", Text = _localizationService.GetString("CategoryPlaceholder", "Select an asset to install."), AutoSize = true, MaximumSize = new Size(900, 0), Font = new Font("Segoe UI", 11F) };
+        var categoryLabel = new Label { Text = "Category", AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+        var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 220, DropDownStyle = ComboBoxStyle.DropDownList };
+        var columnsLabel = new Label { Text = "Columns", AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold), Margin = new Padding(18, 6, 0, 0) };
+        var columns = new ComboBox { Name = "AssetColumns", Width = 80, DropDownStyle = ComboBoxStyle.DropDownList };
+        columns.Items.AddRange(new object[] { "2", "3", "4", "5" });
+        columns.SelectedItem = "3";
+        var filters = new FlowLayoutPanel { Name = "AssetFilters", AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0, 12, 0, 8) };
+        filters.Controls.Add(categoryLabel);
+        filters.Controls.Add(categoryFilter);
+        filters.Controls.Add(columnsLabel);
+        filters.Controls.Add(columns);
+        var gallery = new FlowLayoutPanel { Name = "AssetGallery", AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Width = 900, WrapContents = true, FlowDirection = FlowDirection.LeftToRight, Margin = new Padding(0) };
+        var continueButton = new Button { Text = _localizationService.GetString("Continue", "Continue"), Width = 170, Height = 40, Margin = new Padding(0, 16, 0, 0) };
 
+        categoryFilter.SelectedIndexChanged += (_, _) => RefreshAssetStep();
+        columns.SelectedIndexChanged += (_, _) => RefreshAssetStep();
         continueButton.Click += (_, _) => GoToStep(WizardStep.Step6);
 
         panel.Controls.Add(title);
         panel.Controls.Add(description);
+        panel.Controls.Add(filters);
+        panel.Controls.Add(gallery);
         panel.Controls.Add(continueButton);
         title.Location = new Point(18, 18);
         description.Location = new Point(18, 58);
-        continueButton.Location = new Point(18, 150);
+        filters.Location = new Point(18, 94);
+        gallery.Location = new Point(18, 145);
+        continueButton.Location = new Point(18, 500);
         return panel;
+    }
+
+    private void RefreshAssetStep()
+    {
+        if (!_wizardPanels.TryGetValue(WizardStep.Step5, out var panel))
+        {
+            return;
+        }
+
+        var gallery = panel.Controls.Find("AssetGallery", false).FirstOrDefault() as FlowLayoutPanel;
+        var categoryFilter = panel.Controls.Find("AssetCategoryFilter", false).FirstOrDefault() as ComboBox;
+        if (gallery == null || categoryFilter == null)
+        {
+            return;
+        }
+
+        gallery.Controls.Clear();
+        var assets = _assetCatalogService.FindAssetsInPackage(_selectedModPayloadPath);
+        var categories = assets.Select(asset => asset.Category).Where(category => !string.IsNullOrWhiteSpace(category)).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(category => category).ToList();
+        var selectedCategory = categoryFilter.SelectedItem?.ToString();
+        categoryFilter.Items.Clear();
+        categoryFilter.Items.Add("All");
+        foreach (var category in categories)
+        {
+            categoryFilter.Items.Add(category);
+        }
+
+        categoryFilter.SelectedItem = !string.IsNullOrWhiteSpace(selectedCategory) && categories.Contains(selectedCategory, StringComparer.OrdinalIgnoreCase)
+            ? selectedCategory
+            : "All";
+
+        var visibleAssets = string.Equals(categoryFilter.SelectedItem?.ToString(), "All", StringComparison.OrdinalIgnoreCase)
+            ? assets
+            : assets.Where(asset => string.Equals(asset.Category, categoryFilter.SelectedItem?.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+        var selectedColumns = int.TryParse(panel.Controls.Find("AssetColumns", false).FirstOrDefault() is ComboBox columns
+            ? columns.SelectedItem?.ToString()
+            : null, out var columnCount) ? Math.Clamp(columnCount, 2, 5) : 3;
+        var cardWidth = Math.Max(170, (gallery.Width - (columnCount - 1) * 12) / columnCount);
+
+        foreach (var asset in visibleAssets)
+        {
+            gallery.Controls.Add(CreateAssetCard(asset, cardWidth));
+        }
+
+        if (visibleAssets.Count == 0)
+        {
+            gallery.Controls.Add(new Label { Text = "No matching assets were found in this Mod.", AutoSize = true, Font = new Font("Segoe UI", 10F), Margin = new Padding(0, 12, 0, 0) });
+        }
+    }
+
+    private Control CreateAssetCard(GameAsset asset, int cardWidth)
+    {
+        var innerWidth = cardWidth - 18;
+        var card = new Panel { Width = cardWidth, Height = 220, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = Color.White };
+        var preview = new PictureBox { Width = innerWidth, Height = 145, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250) };
+        var name = new Label { Text = asset.Name + " (" + asset.NameFile + ")", AutoSize = false, Width = innerWidth, Height = 38, Location = new Point(8, 158), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+        var id = new Label { Text = string.IsNullOrWhiteSpace(asset.Id) ? asset.AssetType : asset.AssetType + "  ID: " + asset.Id, AutoSize = false, Width = innerWidth, Height = 18, Location = new Point(8, 198), TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.FromArgb(71, 85, 105) };
+        var imagePath = _assetCatalogService.ResolveImagePath(asset);
+        if (!string.IsNullOrWhiteSpace(imagePath))
+        {
+            try
+            {
+                using var sourceImage = Image.FromFile(imagePath);
+                preview.Image = new Bitmap(sourceImage);
+            }
+            catch (Exception) when (imagePath.Contains("Image_not_available", StringComparison.OrdinalIgnoreCase))
+            {
+                preview.Image = null;
+            }
+            catch
+            {
+                var fallback = _assetCatalogService.ResolveImagePath(new GameAsset());
+                if (!string.IsNullOrWhiteSpace(fallback))
+                {
+                    using var fallbackImage = Image.FromFile(fallback);
+                    preview.Image = new Bitmap(fallbackImage);
+                }
+            }
+        }
+
+        card.Controls.Add(preview);
+        card.Controls.Add(name);
+        card.Controls.Add(id);
+        return card;
     }
 
     private Panel CreateWizardStep6()
@@ -694,6 +797,11 @@ public partial class MainForm : Form
 
         // Synchronize inputs from cache for the newly visible step
         SynchronizeStepInputs(step);
+
+        if (step == WizardStep.Step5)
+        {
+            RefreshAssetStep();
+        }
 
         if (step == WizardStep.Step6)
         {
@@ -1337,7 +1445,7 @@ public partial class MainForm : Form
             return;
         }
 
-        if (manifest.NormalizedType is "putinmodloader" or "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces")
+        if (manifest.NormalizedType is "putinmodloader" or "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
         {
             await InstallTypedPackageAsync(payloadPath, modName, packageRoot, manifest);
             return;
@@ -1362,7 +1470,7 @@ public partial class MainForm : Form
 
         var targetRoot = manifest.NormalizedType switch
         {
-            "putinmodloader" => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName),
+            "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons" => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName),
             "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
             _ => string.Empty
         };
@@ -1452,9 +1560,17 @@ public partial class MainForm : Form
             {
                 var sourcePath = packageFiles[index];
                 var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
+                var sourceName = Path.GetFileNameWithoutExtension(sourcePath);
+                var asset = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
+                    ? _assetCatalogService.FindAssetsInPackage(payloadPath).FirstOrDefault(item => string.Equals(item.NameFile, sourceName, StringComparison.OrdinalIgnoreCase))
+                    : null;
+                if (asset != null && Path.GetExtension(sourcePath) is ".dff" or ".txd")
+                {
+                    relativePath = Path.Combine(Path.GetDirectoryName(relativePath) ?? string.Empty, asset.NameFile + Path.GetExtension(sourcePath));
+                }
                 var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)
                     ? replacementTarget
-                    : GetSafeGamePath(manifest.NormalizedType == "putinmodloader"
+                    : GetSafeGamePath(manifest.NormalizedType is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
                         ? Path.Combine("modloader", modName, relativePath)
                         : relativePath);
 
