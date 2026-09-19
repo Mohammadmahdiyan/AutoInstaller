@@ -38,3 +38,21 @@ public class InstalledModRecord
 
     public DateTime InstalledAtUtc { get; set; } = DateTime.UtcNow;
 }
+
+public class InstallationManifestEntry
+{
+    public string ModId { get; set; } = string.Empty;
+
+    public string Type { get; set; } = string.Empty;
+
+    public List<string> InstalledFiles { get; set; } = new();
+
+    public string SourcePackagePath { get; set; } = string.Empty;
+
+    public string InstalledDestination { get; set; } = string.Empty;
+}
+
+public class InstallationManifest
+{
+    public List<InstallationManifestEntry> Entries { get; set; } = new();
+}

@@ -14,6 +14,209 @@ public class ModLoaderService
         return Path.Combine(appData, InstalledModsFileName);
     }
 
+    public static string GetGameInstallationsManifestPath(string gamePath)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || !Directory.Exists(gamePath))
+        {
+            return string.Empty;
+        }
+
+        var folder = Path.Combine(gamePath, ".zGtaSaModManager");
+        Directory.CreateDirectory(folder);
+        return Path.Combine(folder, "installations.json");
+    }
+
+    public static string GetUserFilesInstallationsManifestPath()
+    {
+        var userFilesRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GTA San Andreas User Files");
+        var folder = Path.Combine(userFilesRoot, ".zGtaSaModManager");
+        Directory.CreateDirectory(folder);
+        return Path.Combine(folder, "installations.json");
+    }
+
+    public static InstallationManifest LoadInstallationManifest(string manifestPath)
+    {
+        if (string.IsNullOrWhiteSpace(manifestPath) || !File.Exists(manifestPath))
+        {
+            return new InstallationManifest();
+        }
+
+        try
+        {
+            var json = File.ReadAllText(manifestPath);
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return new InstallationManifest();
+            }
+
+            var manifest = JsonSerializer.Deserialize<InstallationManifest>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return manifest ?? new InstallationManifest();
+        }
+        catch
+        {
+            return new InstallationManifest();
+        }
+    }
+
+    public static void SaveInstallationManifest(string manifestPath, InstallationManifest manifest)
+    {
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return;
+        }
+
+        var directory = Path.GetDirectoryName(manifestPath);
+        if (!string.IsNullOrWhiteSpace(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        var json = JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(manifestPath, json);
+    }
+
+    public static void RecordPackageInstallation(string modType, string modName, string sourcePackagePath, string installedDestination, IEnumerable<string> installedFiles)
+    {
+        var gamePath = Path.GetDirectoryName(installedDestination);
+        var manifestGamePath = !string.IsNullOrWhiteSpace(gamePath) && Directory.Exists(gamePath) && gamePath.Contains("modloader", StringComparison.OrdinalIgnoreCase)
+            ? Path.GetDirectoryName(Path.GetDirectoryName(installedDestination)) ?? gamePath
+            : Path.GetDirectoryName(installedDestination) ?? gamePath;
+
+        var manifestPath = string.IsNullOrWhiteSpace(manifestGamePath)
+            ? string.Empty
+            : GetGameInstallationsManifestPath(manifestGamePath);
+
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return;
+        }
+
+        var manifest = LoadInstallationManifest(manifestPath);
+        var modId = string.IsNullOrWhiteSpace(modName) ? Guid.NewGuid().ToString("N") : modName;
+        manifest.Entries.RemoveAll(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        manifest.Entries.Add(new InstallationManifestEntry
+        {
+            ModId = modId,
+            Type = modType,
+            SourcePackagePath = sourcePackagePath,
+            InstalledDestination = installedDestination,
+            InstalledFiles = installedFiles
+                .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList()
+        });
+        SaveInstallationManifest(manifestPath, manifest);
+    }
+
+    public static void RecordUserFilesInstallation(string modName, string modType, IEnumerable<string> installedFiles)
+    {
+        var manifestPath = GetUserFilesInstallationsManifestPath();
+        var manifest = LoadInstallationManifest(manifestPath);
+        var modId = string.IsNullOrWhiteSpace(modName) ? Guid.NewGuid().ToString("N") : modName;
+        manifest.Entries.RemoveAll(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        manifest.Entries.Add(new InstallationManifestEntry
+        {
+            ModId = modId,
+            Type = modType,
+            InstalledFiles = installedFiles
+                .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList()
+        });
+        SaveInstallationManifest(manifestPath, manifest);
+    }
+
+    public static bool TryUninstallByModId(string modId, string modType, string? installedDestination = null, string? gamePath = null)
+    {
+        if (string.IsNullOrWhiteSpace(modId))
+        {
+            return false;
+        }
+
+        var normalizedType = (modType ?? string.Empty).Trim();
+        var normalizedTypeLower = normalizedType.ToLowerInvariant();
+
+        if (normalizedTypeLower is "savesandmissions" or "missiondsl")
+        {
+            return TryUninstallUserFilesInstall(modId);
+        }
+
+        if (normalizedTypeLower == "putinmodloader")
+        {
+            if (!string.IsNullOrWhiteSpace(installedDestination) && Directory.Exists(installedDestination))
+            {
+                Directory.Delete(installedDestination, true);
+                return true;
+            }
+
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(gamePath) || !Directory.Exists(gamePath))
+        {
+            return false;
+        }
+
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        var manifest = LoadInstallationManifest(manifestPath);
+        var entry = manifest.Entries.FirstOrDefault(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        if (entry == null)
+        {
+            return false;
+        }
+
+        foreach (var file in entry.InstalledFiles)
+        {
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.InstalledDestination) && Directory.Exists(entry.InstalledDestination))
+        {
+            Directory.Delete(entry.InstalledDestination, true);
+        }
+
+        manifest.Entries.RemoveAll(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        SaveInstallationManifest(manifestPath, manifest);
+        return true;
+    }
+
+    public static bool TryUninstallUserFilesInstall(string modId)
+    {
+        var manifestPath = GetUserFilesInstallationsManifestPath();
+        var manifest = LoadInstallationManifest(manifestPath);
+        var entry = manifest.Entries.FirstOrDefault(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        if (entry == null)
+        {
+            return false;
+        }
+
+        foreach (var file in entry.InstalledFiles)
+        {
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+        }
+
+        manifest.Entries.RemoveAll(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        SaveInstallationManifest(manifestPath, manifest);
+        return true;
+    }
+
+    public static bool TryUninstallModFolder(string modFolderPath)
+    {
+        if (string.IsNullOrWhiteSpace(modFolderPath) || !Directory.Exists(modFolderPath))
+        {
+            return false;
+        }
+
+        Directory.Delete(modFolderPath, true);
+        return true;
+    }
+
     public static List<InstalledModRecord> LoadInstalledRecords()
     {
         var path = GetInstalledModsPath();

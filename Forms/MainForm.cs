@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 using GtaSaModManager.UI;
@@ -119,15 +120,16 @@ public partial class MainForm : Form
         }
 
         textBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
-        textBox.Height = 38;
+        textBox.Height = 42;
         textBox.Margin = new Padding(0);
-        textBox.Padding = new Padding(8, 6, 8, 3);
+        textBox.Padding = new Padding(12, 9, 12, 9);
         textBox.BorderStyle = BorderStyle.FixedSingle;
         textBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        textBox.BackColor = Color.White;
-        textBox.ForeColor = SystemColors.WindowText;
+        textBox.BackColor = Color.FromArgb(248, 250, 252);
+        textBox.ForeColor = Color.FromArgb(15, 23, 42);
         textBox.ReadOnly = true;
         textBox.TextAlign = HorizontalAlignment.Left;
+        textBox.Multiline = false;
     }
 
     private static void ApplyBrowseButtonStyle(Button button, Color normalColor)
@@ -141,22 +143,24 @@ public partial class MainForm : Form
         button.FlatStyle = FlatStyle.Flat;
         button.FlatAppearance.BorderColor = Color.FromArgb(148, 163, 184);
         button.FlatAppearance.BorderSize = 1;
-        button.FlatAppearance.MouseDownBackColor = Color.FromArgb(59, 130, 246);
-        button.FlatAppearance.MouseOverBackColor = Color.FromArgb(96, 165, 250);
+        button.FlatAppearance.MouseDownBackColor = Color.FromArgb(30, 90, 220);
+        button.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
         button.FlatAppearance.CheckedBackColor = normalColor;
-        button.Margin = new Padding(12, 0, 0, 0);
-        button.Height = 38;
+        button.Margin = new Padding(10, 0, 0, 0);
+        button.Height = 42;
         button.Width = 140;
-        button.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        button.Font = new Font("Segoe UI", 9.25F, FontStyle.Bold);
         button.ForeColor = Color.White;
         button.BackColor = normalColor;
         button.UseVisualStyleBackColor = false;
         button.Cursor = Cursors.Hand;
+        button.TextAlign = ContentAlignment.MiddleCenter;
         button.EnabledChanged += (_, _) =>
         {
             if (button.Enabled)
             {
                 button.BackColor = normalColor;
+                button.ForeColor = Color.White;
             }
             else
             {
@@ -481,11 +485,31 @@ public partial class MainForm : Form
             GameService.EnsureModLoaderFolder(selected);
         };
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0) };
+        var flow = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.LeftToRight,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
         flow.Controls.Add(pathText);
         flow.Controls.Add(browse);
 
-        var stack = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown, WrapContents = false, Margin = new Padding(0), Padding = new Padding(0) };
+        var stack = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
         stack.Controls.Add(title);
         stack.Controls.Add(description);
         stack.Controls.Add(flow);
@@ -537,11 +561,31 @@ public partial class MainForm : Form
             RefreshModLibrary();
         };
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0) };
+        var flow = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.LeftToRight,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
         flow.Controls.Add(modBaseText);
         flow.Controls.Add(modBaseBrowse);
 
-        var stack = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown, WrapContents = false, Margin = new Padding(0), Padding = new Padding(0) };
+        var stack = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
         stack.Controls.Add(title);
         stack.Controls.Add(subtitle);
         stack.Controls.Add(flow);
@@ -611,12 +655,32 @@ public partial class MainForm : Form
             UpdateSidebarState();
         };
 
-        var flow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Margin = new Padding(0) };
+        var flow = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.LeftToRight,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
         flow.Controls.Add(folderText);
         flow.Controls.Add(browse);
         var imageGallery = new FlowLayoutPanel { Name = "Step3ImageGallery", AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Margin = new Padding(0, 12, 0, 0) };
 
-        var stack = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown, WrapContents = false, Margin = new Padding(0), Padding = new Padding(0) };
+        var stack = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
         stack.Controls.Add(title);
         stack.Controls.Add(folderLabel);
         stack.Controls.Add(flow);
@@ -1632,6 +1696,18 @@ public partial class MainForm : Form
         _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
         _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
 
+        if (_selectedModManifest.NormalizedType == "savesandmissions")
+        {
+            await InstallSaveOrDyomPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModManifest);
+            return;
+        }
+
+        if (_selectedModManifest.NormalizedType == "missiondsl")
+        {
+            await InstallMissionDslPackageAsync(_selectedModPayloadPath, _selectedModName);
+            return;
+        }
+
         if (_selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage)
         {
             if (_selectedAssetForInstall != null || _selectedModManifest.IsMultiAssetPackage)
@@ -1759,24 +1835,7 @@ public partial class MainForm : Form
 
     private static bool IsMetadataOrNonInstallableFile(string path)
     {
-        var fileName = Path.GetFileName(path);
-        if (string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        if (IsReadmeFileName(fileName))
-        {
-            return true;
-        }
-
-        var extension = Path.GetExtension(fileName);
-        return extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
-            || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
-            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
-            || extension.Equals(".webp", StringComparison.OrdinalIgnoreCase)
-            || extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)
-            || extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase);
+        return ModPackageService.IsMetadataOrNonInstallableFile(path);
     }
 
     private async Task CopyPayloadWithProgressAsync(string sourceDir, string targetDir)
@@ -2227,6 +2286,182 @@ public partial class MainForm : Form
 
     }
 
+    private static string GetGtaUserFilesDirectory()
+    {
+        var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        var userFilesPath = Path.Combine(documentsPath, "GTA San Andreas User Files");
+        Directory.CreateDirectory(userFilesPath);
+        return userFilesPath;
+    }
+
+    private static bool IsDyomPackage(string packageRoot)
+    {
+        if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
+        {
+            return false;
+        }
+
+        return Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)
+            .Any(file => Regex.IsMatch(Path.GetFileName(file), "^DYOM\\d+\\.dat$", RegexOptions.IgnoreCase));
+    }
+
+    private static bool IsSaveSlotFile(string fileName, bool isDyom)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return false;
+        }
+
+        return isDyom
+            ? Regex.IsMatch(fileName, "^DYOM\\d+\\.dat$", RegexOptions.IgnoreCase)
+            : Regex.IsMatch(fileName, "^GTASAsf\\d+\\.b$", RegexOptions.IgnoreCase);
+    }
+
+    private static HashSet<int> GetOccupiedSlots(string userFilesRoot, bool isDyom)
+    {
+        if (string.IsNullOrWhiteSpace(userFilesRoot) || !Directory.Exists(userFilesRoot))
+        {
+            return new HashSet<int>();
+        }
+
+        var occupied = new HashSet<int>();
+        foreach (var file in Directory.GetFiles(userFilesRoot, "*", SearchOption.TopDirectoryOnly))
+        {
+            var fileName = Path.GetFileName(file);
+            var match = Regex.Match(fileName, isDyom ? "^DYOM(\\d+)\\.dat$" : "^GTASAsf(\\d+)\\.b$", RegexOptions.IgnoreCase);
+            if (match.Success && int.TryParse(match.Groups[1].Value, out var slot))
+            {
+                occupied.Add(slot);
+            }
+        }
+
+        return occupied;
+    }
+
+    private static string GetNextAvailableSlotTargetName(string userFilesRoot, bool isDyom)
+    {
+        var occupied = GetOccupiedSlots(userFilesRoot, isDyom);
+        for (var slot = 1; slot <= 8; slot++)
+        {
+            if (!occupied.Contains(slot))
+            {
+                return isDyom ? $"DYOM{slot}.dat" : $"GTASAsf{slot}.b";
+            }
+        }
+
+        return isDyom ? "DYOM1.dat" : "GTASAsf1.b";
+    }
+
+    private async Task InstallSaveOrDyomPackageAsync(string packageRoot, string modName, ModManifest manifest)
+    {
+        var userFilesRoot = GetGtaUserFilesDirectory();
+        var isDyom = IsDyomPackage(packageRoot);
+        var packageFiles = Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)
+            .Where(path => IsSaveSlotFile(Path.GetFileName(path), isDyom))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (packageFiles.Count == 0)
+        {
+            MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected package does not contain a valid save or DYOM file."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (isDyom)
+        {
+            var dyomDependencyRoot = Path.Combine(_settings.ModSourceFolder ?? _selectedGamePath, "Scripts", "DYOM", "DYOM v8.2");
+            if (Directory.Exists(dyomDependencyRoot))
+            {
+                var destination = Path.Combine(userFilesRoot, "DYOM v8.2");
+                if (Directory.Exists(destination))
+                {
+                    Directory.Delete(destination, true);
+                }
+
+                await ModPackageService.CopyDirectoryAsync(dyomDependencyRoot, destination, null);
+            }
+            else
+            {
+                MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "DYOM dependency was not found in the Base Mods folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+
+        var trashRoot = Path.Combine(userFilesRoot, ".trash");
+        Directory.CreateDirectory(trashRoot);
+        var trashInfo = new DirectoryInfo(trashRoot);
+        trashInfo.Attributes |= FileAttributes.Hidden;
+
+        foreach (var sourceFile in packageFiles)
+        {
+            var fileName = Path.GetFileName(sourceFile);
+            var destinationName = GetNextAvailableSlotTargetName(userFilesRoot, isDyom);
+            var destinationPath = Path.Combine(userFilesRoot, destinationName);
+            var targetSlot = int.TryParse(Regex.Match(destinationName, isDyom ? "^DYOM(\\d+)\\.dat$" : "^GTASAsf(\\d+)\\.b$", RegexOptions.IgnoreCase).Groups[1].Value, out var slot) ? slot : 1;
+
+            if (File.Exists(destinationPath))
+            {
+                var archivedPath = Path.Combine(trashRoot, fileName);
+                if (File.Exists(archivedPath))
+                {
+                    File.Delete(archivedPath);
+                }
+
+                File.Move(destinationPath, archivedPath);
+            }
+
+            File.Copy(sourceFile, destinationPath, true);
+            var displayName = string.IsNullOrWhiteSpace(modName) ? Path.GetFileNameWithoutExtension(fileName) : modName;
+            if (isDyom)
+            {
+                MessageBox.Show($"DYOM slot {targetSlot} installed successfully.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show($"Save slot {targetSlot} installed successfully.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            break;
+        }
+    }
+
+    private async Task InstallMissionDslPackageAsync(string packageRoot, string modName)
+    {
+        var userFilesRoot = GetGtaUserFilesDirectory();
+        var dyomDependencyRoot = Path.Combine(_settings.ModSourceFolder ?? _selectedGamePath, "Scripts", "DYOM", "DYOM v8.2");
+        if (!Directory.Exists(dyomDependencyRoot))
+        {
+            MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "DYOM dependency was not found in the Base Mods folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var destinationRoot = Path.Combine(userFilesRoot, "DYOM v8.2");
+        if (Directory.Exists(destinationRoot))
+        {
+            Directory.Delete(destinationRoot, true);
+        }
+
+        await ModPackageService.CopyDirectoryAsync(dyomDependencyRoot, destinationRoot, null);
+
+        var dslRoot = Path.Combine(userFilesRoot, "DSL");
+        if (Directory.Exists(dslRoot))
+        {
+            foreach (var file in Directory.GetFiles(dslRoot, "*", SearchOption.AllDirectories))
+            {
+                File.Delete(file);
+            }
+
+            foreach (var directory in Directory.GetDirectories(dslRoot, "*", SearchOption.AllDirectories).OrderByDescending(d => d, StringComparer.OrdinalIgnoreCase))
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        Directory.CreateDirectory(dslRoot);
+        await ModPackageService.CopyDirectoryAsync(packageRoot, dslRoot, null, excludeMetadataFiles: true);
+        MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
     private async Task InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, ModManifest manifest)
     {
         var targetRoot = manifest.NormalizedType switch
@@ -2441,7 +2676,7 @@ public partial class MainForm : Form
     private async Task InstallReplacingPackageAsync(string payloadPath, string modName, string packageRoot)
     {
         var filesToReplace = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => !string.Equals(Path.GetFileName(path), "mod.json", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

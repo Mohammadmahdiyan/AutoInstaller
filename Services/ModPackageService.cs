@@ -357,6 +357,40 @@ public class ModPackageService
             .ToList();
     }
 
+    public static bool IsMetadataOrNonInstallableFile(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return true;
+        }
+
+        var fileName = Path.GetFileName(path);
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return true;
+        }
+
+        if (string.Equals(fileName, "mod.json", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (fileName.StartsWith("README", StringComparison.OrdinalIgnoreCase)
+            || fileName.StartsWith("readme", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var extension = Path.GetExtension(fileName);
+        return extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".webp", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase);
+    }
+
     public static string GetPayloadDirectory(string packageRoot)
     {
         if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
@@ -459,7 +493,7 @@ public class ModPackageService
         return Path.Combine(GameService.GetModLoaderFolder(gamePath), modName);
     }
 
-    public static async Task CopyDirectoryAsync(string sourceDir, string destinationDir, IProgress<string>? progress, CancellationToken cancellationToken = default)
+    public static async Task CopyDirectoryAsync(string sourceDir, string destinationDir, IProgress<string>? progress, CancellationToken cancellationToken = default, bool excludeMetadataFiles = false)
     {
         if (!Directory.Exists(sourceDir))
         {
@@ -468,7 +502,10 @@ public class ModPackageService
 
         Directory.CreateDirectory(destinationDir);
 
-        var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories);
+        var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories)
+            .Where(file => !excludeMetadataFiles || !IsMetadataOrNonInstallableFile(file))
+            .ToArray();
+
         for (var i = 0; i < files.Length; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
