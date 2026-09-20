@@ -106,11 +106,24 @@ public sealed class AssetCatalogService
             }
         }
 
-        var fallbackName = string.Equals(CultureInfo.CurrentCulture.Name, "fa-IR", StringComparison.OrdinalIgnoreCase)
-            ? "Image_not_available_Persion.png"
-            : "Image_not_available_English.png";
-        var fallbackPath = Path.Combine(AppContext.BaseDirectory, "Assets", fallbackName);
-        return File.Exists(fallbackPath) ? fallbackPath : null;
+        var cultureName = CultureInfo.CurrentUICulture.Name;
+        var isPersian = cultureName.StartsWith("fa", StringComparison.OrdinalIgnoreCase)
+            || cultureName.Contains("Persian", StringComparison.OrdinalIgnoreCase);
+
+        var candidateNames = isPersian
+            ? new[] { "Image_not_available_Persion.png", "Image_not_available_Persian.png", "Image_not_available_English.png" }
+            : new[] { "Image_not_available_English.png", "Image_not_available_Persion.png", "Image_not_available_Persian.png" };
+
+        foreach (var fallbackName in candidateNames)
+        {
+            var fallbackPath = Path.Combine(AppContext.BaseDirectory, "Assets", fallbackName);
+            if (File.Exists(fallbackPath))
+            {
+                return fallbackPath;
+            }
+        }
+
+        return null;
     }
 
     private static string? GetString(JsonElement item, string propertyName)

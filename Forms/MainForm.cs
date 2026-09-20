@@ -1555,19 +1555,25 @@ public partial class MainForm : Form
     private static (int Width, int Height) GetStep5CardSize(string? assetType, int baseWidth, int baseHeight)
     {
         var normalizedType = assetType?.Trim();
+
         if (string.Equals(normalizedType, "Vehicle", StringComparison.OrdinalIgnoreCase))
         {
-            return (Math.Max(baseWidth, 190), Math.Max(120, Math.Min(160, (int)Math.Round(baseWidth * 0.72d))));
+            var width = Math.Max(210, baseWidth + 24);
+            var height = Math.Max(120, Math.Min(170, (int)Math.Round(width * 0.62d)));
+            return (width, height);
         }
 
         if (string.Equals(normalizedType, "Weapon", StringComparison.OrdinalIgnoreCase))
         {
-            return (Math.Max(baseWidth, 150), Math.Max(120, Math.Min(170, (int)Math.Round(baseWidth * 0.92d))));
+            var size = Math.Max(130, Math.Min(170, baseWidth));
+            return (size, size);
         }
 
         if (string.Equals(normalizedType, "Skin", StringComparison.OrdinalIgnoreCase))
         {
-            return (Math.Max(baseWidth, 160), Math.Max(140, Math.Min(210, (int)Math.Round(baseWidth * 1.18d))));
+            var width = Math.Max(120, Math.Min(170, baseWidth));
+            var height = Math.Max(160, Math.Min(230, (int)Math.Round(width * 1.42d)));
+            return (width, height);
         }
 
         return (baseWidth, baseHeight);
@@ -1600,7 +1606,7 @@ public partial class MainForm : Form
             preview.BackColor = Color.FromArgb(248, 250, 252);
             preview.Controls.Add(new Label
             {
-                Text = _localizationService.GetString("ImageUnavailable", "No image available"),
+                Text = _localizationService.GetString("ImageUnavailableFriendly", "No image available"),
                 AutoSize = false,
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
