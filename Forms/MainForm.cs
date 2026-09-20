@@ -23,8 +23,10 @@ public partial class MainForm : Form
     private ComboBox _sidebarLanguageComboBox = null!;
     private ComboBox _sidebarThemeComboBox = null!;
     private Button _sidebarReadmeButton = null!;
+    private TextBox _sidebarReadmeTextBox = null!;
     private PictureBox _sidebarStep4Image = null!;
     private readonly System.Windows.Forms.Timer _step4ImageTimer = new();
+    private readonly System.Windows.Forms.Timer _step5ImageTimer = new();
     private readonly System.Windows.Forms.Timer _detectedModTimer = new();
     private Label? _detectedModLabel;
     private int _step4ImageIndex;
@@ -48,6 +50,7 @@ public partial class MainForm : Form
     private bool _isRefreshingAssetStep;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
     private int _step5ColumnCount = 3;
     private string _step5CategoryFilter = "All";
 
@@ -140,12 +143,14 @@ public partial class MainForm : Form
         }
 
         button.TabStop = false;
+        button.NotifyDefault(false);
         button.FlatStyle = FlatStyle.Flat;
         button.FlatAppearance.BorderColor = Color.FromArgb(148, 163, 184);
-        button.FlatAppearance.BorderSize = 1;
+        button.FlatAppearance.BorderSize = 0;
         button.FlatAppearance.MouseDownBackColor = Color.FromArgb(30, 90, 220);
         button.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
         button.FlatAppearance.CheckedBackColor = normalColor;
+        button.FlatAppearance.BorderColor = Color.Transparent;
         button.Margin = new Padding(10, 0, 0, 0);
         button.Height = 42;
         button.Width = 140;
@@ -155,6 +160,8 @@ public partial class MainForm : Form
         button.UseVisualStyleBackColor = false;
         button.Cursor = Cursors.Hand;
         button.TextAlign = ContentAlignment.MiddleCenter;
+        button.GotFocus += (_, _) => button.BackColor = normalColor;
+        button.LostFocus += (_, _) => button.BackColor = normalColor;
         button.EnabledChanged += (_, _) =>
         {
             if (button.Enabled)
@@ -333,7 +340,7 @@ public partial class MainForm : Form
         {
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 8,
+            RowCount = 9,
             AutoSize = false,
             Padding = new Padding(0),
             Margin = new Padding(0),
@@ -347,14 +354,31 @@ public partial class MainForm : Form
         stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
+        stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
         stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 46F));
 
         _sidebarPreviousButton = new Button { Text = _localizationService.GetString("Previous", "Previous"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarNextButton = new Button { Text = _localizationService.GetString("Next", "Next"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarLanguageComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarThemeComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
-        _sidebarReadmeButton = new Button { Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10), Visible = false };
         _sidebarStep4Image = new PictureBox { Width = 190, Height = 110, Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarReadmeTextBox = new TextBox
+        {
+            Name = "SidebarReadmeTextBox",
+            Dock = DockStyle.Fill,
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            BorderStyle = BorderStyle.FixedSingle,
+            BackColor = Color.FromArgb(248, 250, 252),
+            ForeColor = Color.FromArgb(30, 41, 59),
+            Font = new Font("Segoe UI", 8.5F),
+            Visible = false,
+            Margin = new Padding(0, 0, 0, 10),
+            Height = 120,
+            WordWrap = true
+        };
+        _sidebarReadmeButton = new Button { Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10), Visible = false };
 
         _sidebarLanguageComboBox.Items.AddRange(new object[] { "English", "فارسی" });
         _sidebarThemeComboBox.Items.AddRange(new object[] { "System", "Light Blue", "Light Purple", "Light Green", "Light Orange", "Dark Blue", "Dark Purple", "Dark Green", "Dark Red" });
@@ -378,7 +402,8 @@ public partial class MainForm : Form
         stack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
         stack.Controls.Add(_sidebarThemeComboBox, 0, 5);
         stack.Controls.Add(_sidebarStep4Image, 0, 6);
-        stack.Controls.Add(_sidebarReadmeButton, 0, 7);
+        stack.Controls.Add(_sidebarReadmeTextBox, 0, 7);
+        stack.Controls.Add(_sidebarReadmeButton, 0, 8);
 
         _sidebarPanel.Controls.Add(stack);
         MainPanel.Controls.Add(_sidebarPanel);
@@ -388,6 +413,8 @@ public partial class MainForm : Form
 
         _step4ImageTimer.Interval = 1800;
         _step4ImageTimer.Tick += (_, _) => ShowNextStep4Image();
+        _step5ImageTimer.Interval = 3200;
+        _step5ImageTimer.Tick += (_, _) => ShowNextStep5Image();
     }
 
     private void InitializeWizard()
@@ -527,8 +554,8 @@ public partial class MainForm : Form
     private Panel CreateWizardStep2()
     {
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
-        var title = new Label { Text = "Base Mods Folder", Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
-        var subtitle = new Label { Text = "select base mod for easy access", AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
+        var title = new Label { Text = _localizationService.GetString("BaseModsFolderTitle", "Base Mods Folder"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
+        var subtitle = new Label { Text = _localizationService.GetString("BaseModsFolderSubtitle", "Select the base mod folder for easy access"), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
 
         var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
         var modBaseBrowse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
@@ -722,7 +749,12 @@ public partial class MainForm : Form
         {
             try
             {
-                using var sourceImage = Image.FromFile(imageFile);
+                var sourceImage = TryLoadBitmap(imageFile);
+                if (sourceImage == null)
+                {
+                    continue;
+                }
+
                 var preview = new PictureBox
                 {
                     Width = 150,
@@ -730,7 +762,7 @@ public partial class MainForm : Form
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.FromArgb(245, 247, 250),
-                    Image = new Bitmap(sourceImage),
+                    Image = sourceImage,
                     Margin = new Padding(0, 0, 10, 10)
                 };
                 var toolTip = new ToolTip();
@@ -751,8 +783,23 @@ public partial class MainForm : Form
         var status = new Label { Name = "ProgressStatus", AutoSize = true, Font = new Font("Segoe UI", 10F, FontStyle.Bold), Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 0) };
         var progressBar = new ProgressBar { Width = 680, Height = 24, Minimum = 0, Maximum = 100, Value = 0, Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 8) };
         var fileList = new ListBox { Name = "Step4FileList", Dock = DockStyle.Bottom, Height = 140, Font = new Font("Segoe UI", 9F), Margin = new Padding(0, 8, 0, 0), Visible = true };
-        var previewRoot = new Panel { Name = "Step4PreviewRoot", Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0) };
-        var readmeButton = new Button { Name = "Step4ReadmeButton", Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"), AutoSize = true, Visible = false, Dock = DockStyle.Bottom, Margin = new Padding(0, 8, 0, 0) };
+        var previewRoot = new Panel { Name = "Step4PreviewRoot", Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0), BackColor = Color.FromArgb(255, 255, 255) };
+        var readmeButton = new Button
+        {
+            Name = "Step4ReadmeButton",
+            Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"),
+            AutoSize = true,
+            Visible = false,
+            Dock = DockStyle.Bottom,
+            Height = 36,
+            Margin = new Padding(0, 10, 0, 0),
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(37, 99, 235),
+            ForeColor = Color.White,
+            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+            Cursor = Cursors.Hand
+        };
+        readmeButton.FlatAppearance.BorderSize = 0;
         readmeButton.Click += (_, _) =>
         {
             if (!string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath))
@@ -767,9 +814,9 @@ public partial class MainForm : Form
         panel.Controls.Add(previewRoot);
         panel.Controls.Add(fileList);
         panel.Controls.Add(readmeButton);
-        previewRoot.BringToFront();
-        fileList.BringToFront();
-        readmeButton.BringToFront();
+        panel.Controls.SetChildIndex(previewRoot, 3);
+        panel.Controls.SetChildIndex(fileList, 4);
+        panel.Controls.SetChildIndex(readmeButton, 5);
         return panel;
     }
 
@@ -815,21 +862,33 @@ public partial class MainForm : Form
 
         if (!hasReadme && !hasImages)
         {
+            root.Controls.Clear();
+            root.Visible = false;
+            root.Height = 0;
             root.ResumeLayout(true);
             return;
         }
 
+        root.Visible = true;
+        root.Height = 0;
+
+        var contentPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0), Margin = new Padding(0), BackColor = Color.White };
+
         if (hasReadme && hasImages)
         {
-            var readmePanel = new Panel { Dock = DockStyle.Top, Height = Math.Max(180, root.Height / 2), Padding = new Padding(0), Margin = new Padding(0, 0, 0, 8) };
-            var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath);
+            var availableHeight = Math.Max(180, root.ClientSize.Height - 40);
+            var readmePanelHeight = Math.Clamp(availableHeight - 160, 180, Math.Max(180, availableHeight));
+
+            var readmePanel = new Panel { Dock = DockStyle.Bottom, Height = readmePanelHeight, Padding = new Padding(0), Margin = new Padding(0, 0, 0, 8) };
+            var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath, readmePanelHeight);
             readmeBox.Dock = DockStyle.Fill;
             readmePanel.Controls.Add(readmeBox);
 
             var imagePanel = CreateStep4ImagePanel(imageFiles);
             imagePanel.Dock = DockStyle.Fill;
-            root.Controls.Add(imagePanel);
-            root.Controls.Add(readmePanel);
+            contentPanel.Controls.Add(imagePanel);
+            contentPanel.Controls.Add(readmePanel);
+            imagePanel.BringToFront();
             readmePanel.BringToFront();
         }
         else if (hasReadme)
@@ -838,20 +897,42 @@ public partial class MainForm : Form
             var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath);
             readmeBox.Dock = DockStyle.Fill;
             readmePanel.Controls.Add(readmeBox);
-            root.Controls.Add(readmePanel);
+            contentPanel.Controls.Add(readmePanel);
         }
         else
         {
             var imagePanel = CreateStep4ImagePanel(imageFiles);
             imagePanel.Dock = DockStyle.Fill;
-            root.Controls.Add(imagePanel);
+            contentPanel.Controls.Add(imagePanel);
         }
 
+        root.Controls.Add(contentPanel);
+        contentPanel.BringToFront();
         root.ResumeLayout(true);
         panel.PerformLayout();
     }
 
-    private TextBox CreateStep4ReadmeBox(string readmePath)
+    private int CalculateReadmeViewportHeight(string content, int availableWidth, Font font, int minimumHeight, int maximumHeight)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return minimumHeight;
+        }
+
+        var textWidth = Math.Max(120, availableWidth - 24);
+        var textSize = TextRenderer.MeasureText(content, font, new Size(textWidth, int.MaxValue),
+            TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPrefix);
+
+        var computedHeight = textSize.Height + 20;
+        if (computedHeight < minimumHeight)
+        {
+            return minimumHeight;
+        }
+
+        return Math.Min(Math.Max(computedHeight, minimumHeight), maximumHeight);
+    }
+
+    private TextBox CreateStep4ReadmeBox(string readmePath, int availableHeight = 220)
     {
         var box = new TextBox
         {
@@ -865,12 +946,16 @@ public partial class MainForm : Form
             ForeColor = Color.FromArgb(15, 23, 42),
             WordWrap = true,
             RightToLeft = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian ? RightToLeft.Yes : RightToLeft.No,
-            Dock = DockStyle.Fill
+            Dock = DockStyle.Fill,
+            Height = availableHeight,
+            MinimumSize = new Size(0, 120)
         };
 
         try
         {
             box.Text = File.ReadAllText(readmePath);
+            var computedHeight = CalculateReadmeViewportHeight(box.Text, Math.Max(160, box.Width), box.Font, 120, Math.Max(180, availableHeight));
+            box.Height = Math.Min(Math.Max(computedHeight, 120), Math.Max(180, availableHeight));
             if (!string.IsNullOrWhiteSpace(box.Text))
             {
                 box.SelectionStart = 0;
@@ -880,7 +965,7 @@ public partial class MainForm : Form
         }
         catch
         {
-            box.Text = "README";
+            box.Text = _localizationService.GetString("ReadmeFallback", "README");
         }
 
         return box;
@@ -897,39 +982,44 @@ public partial class MainForm : Form
         var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
         if (imageFiles.Count > 4)
         {
-            var slidePanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0), BackColor = Color.White };
-            var imagePreview = CreateImagePreviewCard(imageFiles[0], 0);
-            imagePreview.Dock = DockStyle.Fill;
-            imagePreview.Margin = new Padding(0);
-
-            var prev = new Button { Text = "◀", Width = 40, Height = 40, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Dock = isRtl ? DockStyle.Left : DockStyle.Left };
-            var next = new Button { Text = "▶", Width = 40, Height = 40, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Dock = isRtl ? DockStyle.Right : DockStyle.Right };
+            var slideHost = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0), BackColor = Color.White };
+            var slideView = new Panel { Dock = DockStyle.Fill, Padding = new Padding(6), BackColor = Color.White };
+            var prev = new Button { Text = "◀", Width = 40, Height = 40, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Dock = DockStyle.Left };
+            var next = new Button { Text = "▶", Width = 40, Height = 40, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Dock = DockStyle.Right };
             var index = 0;
+
+            void RenderCurrentSlide()
+            {
+                slideView.Controls.Clear();
+                var preview = CreateImagePreviewCard(imageFiles[index], index, imageFiles);
+                preview.Dock = DockStyle.Fill;
+                slideView.Controls.Add(preview);
+            }
+
+            RenderCurrentSlide();
             prev.Click += (_, _) =>
             {
                 index = (index - 1 + imageFiles.Count) % imageFiles.Count;
-                slidePanel.Controls.Clear();
-                var preview = CreateImagePreviewCard(imageFiles[index], index);
-                preview.Dock = DockStyle.Fill;
-                slidePanel.Controls.Add(preview);
+                RenderCurrentSlide();
             };
             next.Click += (_, _) =>
             {
                 index = (index + 1) % imageFiles.Count;
-                slidePanel.Controls.Clear();
-                var preview = CreateImagePreviewCard(imageFiles[index], index);
-                preview.Dock = DockStyle.Fill;
-                slidePanel.Controls.Add(preview);
+                RenderCurrentSlide();
             };
 
-            var wrap = new Panel { Dock = DockStyle.Fill, Padding = new Padding(6) };
-            wrap.Controls.Add(imagePreview);
-            slidePanel.Controls.Add(wrap);
-            slidePanel.Controls.Add(prev);
-            slidePanel.Controls.Add(next);
+            if (isRtl)
+            {
+                prev.Dock = DockStyle.Right;
+                next.Dock = DockStyle.Left;
+            }
+
+            slideHost.Controls.Add(slideView);
+            slideHost.Controls.Add(prev);
+            slideHost.Controls.Add(next);
             prev.BringToFront();
             next.BringToFront();
-            basePanel.Controls.Add(slidePanel);
+            basePanel.Controls.Add(slideHost);
             return basePanel;
         }
 
@@ -938,7 +1028,7 @@ public partial class MainForm : Form
             Name = "Step4ImageGrid",
             Dock = DockStyle.Fill,
             WrapContents = true,
-            AutoScroll = true,
+            AutoScroll = false,
             FlowDirection = FlowDirection.LeftToRight,
             RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
             Padding = new Padding(0),
@@ -955,9 +1045,15 @@ public partial class MainForm : Form
 
         foreach (var (imageFile, index) in imageFiles.Select((file, i) => (file, i)))
         {
-            var card = CreateImagePreviewCard(imageFile, index);
-            card.Width = Math.Max(120, (basePanel.Width - 20) / columns);
-            card.Height = Math.Max(120, (basePanel.Height - 20) / Math.Max(1, (imageFiles.Count + columns - 1) / columns));
+            var card = CreateImagePreviewCard(imageFile, index, imageFiles);
+            var width = imageFiles.Count == 1 ? Math.Max(220, basePanel.Width - 20) : (basePanel.Width - (columns - 1) * 8) / columns;
+            card.Width = Math.Max(120, width);
+            card.Height = imageFiles.Count switch
+            {
+                1 => Math.Max(220, basePanel.Height - 20),
+                2 => Math.Max(120, (basePanel.Height - 12) / 1),
+                _ => Math.Max(120, (basePanel.Height - 12) / Math.Max(1, (imageFiles.Count + columns - 1) / columns))
+            };
             card.Margin = new Padding(4);
             card.Tag = imageFile;
             grid.Controls.Add(card);
@@ -967,8 +1063,9 @@ public partial class MainForm : Form
         return basePanel;
     }
 
-    private PictureBox CreateImagePreviewCard(string imagePath, int index)
+    private PictureBox CreateImagePreviewCard(string imagePath, int index, List<string>? imageList = null)
     {
+        var items = imageList is { Count: > 0 } ? imageList : new List<string> { imagePath };
         var box = new PictureBox
         {
             Name = $"Step4Image_{index}",
@@ -982,26 +1079,46 @@ public partial class MainForm : Form
             Image = TryLoadImage(imagePath)
         };
 
-        box.Click += (_, _) => OpenFullImageViewer(imagePath, index, imagePath);
+        box.Click += (_, _) =>
+        {
+            var currentIndex = items.FindIndex(path => string.Equals(path, imagePath, StringComparison.OrdinalIgnoreCase));
+            if (currentIndex < 0)
+            {
+                currentIndex = 0;
+            }
+
+            OpenFullImageViewer(items, currentIndex, imagePath);
+        };
         return box;
     }
 
-    private void OpenFullImageViewer(string imagePath, int index, string? fallbackTitle = null)
+    private void OpenFullImageViewer(List<string> imagePaths, int selectedIndex, string? fallbackTitle = null)
     {
-        if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+        var validPaths = imagePaths
+            .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (validPaths.Count == 0)
         {
             return;
         }
 
+        var currentIndex = Math.Clamp(selectedIndex, 0, validPaths.Count - 1);
+
         using var viewer = new Form
         {
-            Text = fallbackTitle ?? Path.GetFileName(imagePath),
+            Text = fallbackTitle ?? Path.GetFileName(validPaths[currentIndex]),
             StartPosition = FormStartPosition.CenterParent,
             WindowState = FormWindowState.Normal,
-            Width = 1000,
-            Height = 700,
-            MinimumSize = new Size(600, 420),
-            FormBorderStyle = FormBorderStyle.FixedDialog
+            Width = 1100,
+            Height = 760,
+            MinimumSize = new Size(640, 420),
+            FormBorderStyle = FormBorderStyle.Sizable,
+            MaximizeBox = true,
+            MinimizeBox = true,
+            ShowIcon = false,
+            BackColor = Color.Black
         };
 
         var imageBox = new PictureBox
@@ -1009,20 +1126,97 @@ public partial class MainForm : Form
             Dock = DockStyle.Fill,
             SizeMode = PictureBoxSizeMode.Zoom,
             BorderStyle = BorderStyle.None,
-            Image = TryLoadImage(imagePath)
+            BackColor = Color.Black,
+            Image = TryLoadImage(validPaths[currentIndex])
         };
 
-        var closeButton = new Button { Text = _localizationService.GetString("Close", "Close"), AutoSize = true, Anchor = AnchorStyles.Bottom | AnchorStyles.Right };
-        closeButton.Click += (_, _) => viewer.Close();
+        var closeButton = new Button
+        {
+            Text = _localizationService.GetString("Close", "Close"),
+            AutoSize = true,
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(15, 23, 42),
+            ForeColor = Color.White,
+            Cursor = Cursors.Hand
+        };
 
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(8) };
-        panel.Controls.Add(imageBox);
-        panel.Controls.Add(closeButton);
-        viewer.Controls.Add(panel);
+        var prevButton = new Button
+        {
+            Text = "◀",
+            Width = 44,
+            Height = 44,
+            Visible = validPaths.Count > 1,
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(37, 99, 235),
+            ForeColor = Color.White,
+            Cursor = Cursors.Hand
+        };
+
+        var nextButton = new Button
+        {
+            Text = "▶",
+            Width = 44,
+            Height = 44,
+            Visible = validPaths.Count > 1,
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(37, 99, 235),
+            ForeColor = Color.White,
+            Cursor = Cursors.Hand
+        };
+
+        void RenderCurrentImage()
+        {
+            var selectedPath = validPaths[currentIndex];
+            viewer.Text = fallbackTitle ?? Path.GetFileName(selectedPath);
+            imageBox.Image?.Dispose();
+            imageBox.Image = TryLoadImage(selectedPath);
+            prevButton.Visible = validPaths.Count > 1;
+            nextButton.Visible = validPaths.Count > 1;
+        }
+
+        closeButton.Click += (_, _) => viewer.Close();
+        prevButton.Click += (_, _) =>
+        {
+            currentIndex = (currentIndex - 1 + validPaths.Count) % validPaths.Count;
+            RenderCurrentImage();
+        };
+        nextButton.Click += (_, _) =>
+        {
+            currentIndex = (currentIndex + 1) % validPaths.Count;
+            RenderCurrentImage();
+        };
+
+        var topBar = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            Height = 52,
+            Padding = new Padding(8),
+            BackColor = Color.FromArgb(15, 23, 42),
+            FlowDirection = FlowDirection.RightToLeft,
+            WrapContents = false
+        };
+
+        topBar.Controls.Add(closeButton);
+        topBar.Controls.Add(nextButton);
+        topBar.Controls.Add(prevButton);
+
+        var content = new Panel { Dock = DockStyle.Fill, BackColor = Color.Black, Padding = new Padding(10) };
+        content.Controls.Add(imageBox);
+
+        viewer.Controls.Add(content);
+        viewer.Controls.Add(topBar);
+        topBar.BringToFront();
+        RenderCurrentImage();
         viewer.ShowDialog(this);
     }
 
     private static Image? TryLoadImage(string path)
+    {
+        return TryLoadBitmap(path);
+    }
+
+    private static Bitmap? TryLoadBitmap(string path)
     {
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
         {
@@ -1032,11 +1226,24 @@ public partial class MainForm : Form
         try
         {
             using var stream = File.OpenRead(path);
-            return Image.FromStream(stream);
+            using var image = System.Drawing.Image.FromStream(stream);
+            return new Bitmap(image);
         }
         catch
         {
-            return null;
+            try
+            {
+                using var webpImage = SixLabors.ImageSharp.Image.Load(path);
+                using var pngStream = new MemoryStream();
+                webpImage.Save(pngStream, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+                pngStream.Position = 0;
+                using var converted = System.Drawing.Image.FromStream(pngStream);
+                return new Bitmap(converted);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 
@@ -1165,6 +1372,35 @@ public partial class MainForm : Form
         return (string.IsNullOrWhiteSpace(asset.AssetType) ? "asset" : asset.AssetType.Trim()) + "|" + (string.IsNullOrWhiteSpace(asset.NameFile) ? asset.Name : asset.NameFile.Trim());
     }
 
+    private Image? LoadCachedImage(string? imagePath)
+    {
+        if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+        {
+            return null;
+        }
+
+        if (_assetImageCache.TryGetValue(imagePath, out var cachedImage))
+        {
+            return cachedImage;
+        }
+
+        try
+        {
+            var bitmap = TryLoadBitmap(imagePath);
+            if (bitmap == null)
+            {
+                return null;
+            }
+
+            _assetImageCache[imagePath] = bitmap;
+            return bitmap;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     private List<GameAsset> GetSelectedAssetListForInstall(ModManifest manifest, string payloadPath)
     {
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
@@ -1229,6 +1465,11 @@ public partial class MainForm : Form
 
         _isRefreshingAssetStep = true;
         gallery.SuspendLayout();
+        foreach (var oldControl in gallery.Controls.OfType<PictureBox>().ToList())
+        {
+            oldControl.Image?.Dispose();
+            oldControl.Image = null;
+        }
         gallery.Controls.Clear();
 
         var assets = _step5DetectedAssets
@@ -1256,20 +1497,22 @@ public partial class MainForm : Form
                 .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            var selectedCategory = string.IsNullOrWhiteSpace(_step5CategoryFilter) ? "All" : _step5CategoryFilter;
+            var allText = _localizationService.GetString("AssetAll", "All");
+            var selectedCategory = string.IsNullOrWhiteSpace(_step5CategoryFilter) ? allText : _step5CategoryFilter;
             categoryFilter.Items.Clear();
-            categoryFilter.Items.Add("All");
+            categoryFilter.Items.Add(allText);
             foreach (var category in categories)
             {
                 categoryFilter.Items.Add(category);
             }
 
-            var validSelection = categories.Contains(selectedCategory, StringComparer.OrdinalIgnoreCase) || string.Equals(selectedCategory, "All", StringComparison.OrdinalIgnoreCase);
-            categoryFilter.SelectedItem = validSelection ? selectedCategory : "All";
-            _step5CategoryFilter = categoryFilter.SelectedItem?.ToString() ?? "All";
+            var validSelection = categories.Contains(selectedCategory, StringComparer.OrdinalIgnoreCase) || string.Equals(selectedCategory, allText, StringComparison.OrdinalIgnoreCase);
+            categoryFilter.SelectedItem = validSelection ? selectedCategory : allText;
+            _step5CategoryFilter = categoryFilter.SelectedItem?.ToString() ?? allText;
         }
 
-        var visibleAssets = vehicleOnly && !string.Equals(_step5CategoryFilter, "All", StringComparison.OrdinalIgnoreCase)
+        var allCategoryText = _localizationService.GetString("AssetAll", "All");
+        var visibleAssets = vehicleOnly && !string.Equals(_step5CategoryFilter, allCategoryText, StringComparison.OrdinalIgnoreCase)
             ? assets.Where(asset => string.Equals(asset.Category, _step5CategoryFilter, StringComparison.OrdinalIgnoreCase)).ToList()
             : assets;
 
@@ -1285,11 +1528,18 @@ public partial class MainForm : Form
                 : 3;
         }
 
-        var galleryWidth = Math.Max(gallery.Width, panel.Width - 48);
-        var cardWidth = Math.Max(170, (galleryWidth - (_step5ColumnCount - 1) * 12) / _step5ColumnCount);
+        var availableGalleryWidth = gallery.ClientSize.Width > 0
+            ? gallery.ClientSize.Width
+            : Math.Max(320, panel.ClientSize.Width - 32);
+
+        var usableGalleryWidth = Math.Max(260, availableGalleryWidth - gallery.Padding.Horizontal);
+        var columnGap = 12;
+        var cardWidth = Math.Max(150, (usableGalleryWidth - (Math.Max(1, _step5ColumnCount) - 1) * columnGap) / Math.Max(1, _step5ColumnCount));
+        var cardHeight = Math.Max(95, Math.Min(130, (int)Math.Round(cardWidth * 0.475d)));
+
         foreach (var asset in visibleAssets)
         {
-            gallery.Controls.Add(CreateAssetCard(asset, cardWidth));
+            gallery.Controls.Add(CreateAssetCard(asset, cardWidth, cardHeight));
         }
 
         if (visibleAssets.Count == 0)
@@ -1301,15 +1551,16 @@ public partial class MainForm : Form
         _isRefreshingAssetStep = false;
     }
 
-    private Control CreateAssetCard(GameAsset asset, int cardWidth)
+    private Control CreateAssetCard(GameAsset asset, int cardWidth, int cardHeight)
     {
         var innerWidth = cardWidth - 18;
+        var previewHeight = Math.Max(52, cardHeight - 34);
         var selectionKey = GetAssetSelectionKey(asset);
         var isSelected = _step5SelectedAssetKeys.Contains(selectionKey);
-        var card = new Panel { Width = cardWidth, Height = 260, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = isSelected ? Color.FromArgb(219, 234, 254) : Color.White, Cursor = Cursors.Hand, Padding = new Padding(0) };
-        var preview = new PictureBox { Width = innerWidth, Height = 170, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
-        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 42, Location = new Point(8, 182), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Cursor = Cursors.Hand };
-        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 42, Location = new Point(8, 182), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = Color.FromArgb(30, 41, 59), Visible = false, Cursor = Cursors.Hand };
+        var card = new Panel { Width = cardWidth, Height = cardHeight, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = isSelected ? Color.FromArgb(219, 234, 254) : Color.White, Cursor = Cursors.Hand, Padding = new Padding(0) };
+        var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
+        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 22, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Cursor = Cursors.Hand };
+        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 20, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(30, 41, 59), Visible = false, Cursor = Cursors.Hand };
         var id = string.IsNullOrWhiteSpace(asset.Id) ? null : new Label { Text = asset.Id, Width = 36, Height = 26, Location = new Point(cardWidth - 42, 8), TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White, BackColor = GetAssetTypeColor(asset.AssetType), Font = new Font("Segoe UI", 8F, FontStyle.Bold), AutoSize = false, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
 
         if (id != null)
@@ -1320,7 +1571,8 @@ public partial class MainForm : Form
         }
 
         var imagePath = _assetCatalogService.ResolveImagePath(asset);
-        if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+        var cachedImage = LoadCachedImage(imagePath);
+        if (cachedImage == null)
         {
             preview.Image = null;
             preview.BackColor = Color.FromArgb(248, 250, 252);
@@ -1337,27 +1589,8 @@ public partial class MainForm : Form
         }
         else
         {
-            try
-            {
-                using var sourceImage = Image.FromFile(imagePath);
-                preview.Image = new Bitmap(sourceImage);
-                preview.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            catch
-            {
-                preview.Image = null;
-                preview.BackColor = Color.FromArgb(248, 250, 252);
-                preview.Controls.Add(new Label
-                {
-                    Text = _localizationService.GetString("ImageNotValid", "IMAGE NOT VALID"),
-                    AutoSize = false,
-                    Dock = DockStyle.Fill,
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
-                    ForeColor = Color.FromArgb(127, 140, 141),
-                    BackColor = Color.FromArgb(248, 250, 252)
-                });
-            }
+            preview.Image = cachedImage;
+            preview.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         card.Controls.Add(preview);
@@ -1435,7 +1668,16 @@ public partial class MainForm : Form
         var countdown = new Label { Name = "CountdownLabel", AutoSize = true, Font = new Font("Segoe UI", 10F) };
         var openButton = new Button { Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
         var runButton = new Button { Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
-        var gallery = new FlowLayoutPanel { Name = "CompletionImageGallery", AutoScroll = true, WrapContents = true, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
+        var gallery = new FlowLayoutPanel
+        {
+            Name = "CompletionImageGallery",
+            AutoScroll = true,
+            WrapContents = true,
+            Dock = DockStyle.Fill,
+            FlowDirection = FlowDirection.LeftToRight,
+            Padding = new Padding(8),
+            BackColor = Color.FromArgb(255, 255, 255)
+        };
 
         openButton.Click += (_, _) =>
         {
@@ -1461,7 +1703,7 @@ public partial class MainForm : Form
         flow.Location = new Point(18, 90);
         countdown.Location = new Point(18, 160);
         gallery.Location = new Point(18, 190);
-        gallery.Size = new Size(900, 420);
+        gallery.Size = new Size(panel.Width - 36, panel.Height - 220);
         panel.AutoScroll = true;
         return panel;
     }
@@ -1797,7 +2039,12 @@ public partial class MainForm : Form
             return;
         }
 
-        gallery.Visible = _selectedImageFiles.Any(File.Exists);
+        var validImages = _selectedImageFiles
+            .Where(File.Exists)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        gallery.Visible = validImages.Count > 0;
 
         foreach (Control control in gallery.Controls)
         {
@@ -1810,21 +2057,97 @@ public partial class MainForm : Form
         }
 
         gallery.Controls.Clear();
-        foreach (var imageFile in _selectedImageFiles.Where(File.Exists))
+
+        if (step == WizardStep.Step6 && validImages.Count > 2)
+        {
+            var slideHost = new Panel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(255, 255, 255), Padding = new Padding(8) };
+            var preview = new PictureBox { Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Cursor = Cursors.Hand };
+            var controlsPanel = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, AutoSize = false };
+            var prev = new Button { Text = "◀", Width = 70, Height = 34, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand };
+            var next = new Button { Text = "▶", Width = 70, Height = 34, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand };
+            var index = 0;
+
+            void RenderCurrentImage()
+            {
+                if (validImages.Count == 0)
+                {
+                    preview.Image = null;
+                    return;
+                }
+
+                var imagePath = validImages[index];
+                try
+                {
+                    var bitmap = TryLoadBitmap(imagePath);
+                    preview.Image?.Dispose();
+                    preview.Image = bitmap;
+                }
+                catch
+                {
+                    preview.Image = null;
+                }
+            }
+
+            prev.Click += (_, _) =>
+            {
+                index = (index - 1 + validImages.Count) % validImages.Count;
+                RenderCurrentImage();
+            };
+
+            next.Click += (_, _) =>
+            {
+                index = (index + 1) % validImages.Count;
+                RenderCurrentImage();
+            };
+
+            preview.Click += (_, _) => OpenFullImageViewer(validImages, index, validImages[index]);
+            controlsPanel.Controls.Add(prev);
+            controlsPanel.Controls.Add(next);
+            slideHost.Controls.Add(preview);
+            slideHost.Controls.Add(controlsPanel);
+            gallery.Controls.Add(slideHost);
+
+            preview.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            controlsPanel.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+            RenderCurrentImage();
+            return;
+        }
+
+        foreach (var imageFile in validImages)
         {
             try
             {
-                using var sourceImage = Image.FromFile(imageFile);
-                gallery.Controls.Add(new PictureBox
+                var sourceImage = TryLoadBitmap(imageFile);
+                if (sourceImage == null)
+                {
+                    continue;
+                }
+
+                var imageList = validImages;
+                var pictureBox = new PictureBox
                 {
                     Width = 280,
                     Height = 220,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.FromArgb(245, 247, 250),
-                    Image = new Bitmap(sourceImage),
-                    Margin = new Padding(0, 0, 14, 14)
-                });
+                    Image = sourceImage,
+                    Margin = new Padding(0, 0, 14, 14),
+                    Cursor = Cursors.Hand
+                };
+
+                pictureBox.Click += (_, _) =>
+                {
+                    var selectedIndex = imageList.FindIndex(path => string.Equals(path, imageFile, StringComparison.OrdinalIgnoreCase));
+                    if (selectedIndex < 0)
+                    {
+                        selectedIndex = 0;
+                    }
+
+                    OpenFullImageViewer(imageList, selectedIndex, imageFile);
+                };
+
+                gallery.Controls.Add(pictureBox);
             }
             catch
             {
@@ -2146,7 +2469,7 @@ public partial class MainForm : Form
 
             if (File.Exists(mod.PreviewPath))
             {
-                preview.Image = Image.FromFile(mod.PreviewPath);
+                preview.Image = TryLoadBitmap(mod.PreviewPath);
             }
 
             readme.Click += (_, _) =>
@@ -2881,26 +3204,39 @@ public partial class MainForm : Form
 
     private void ApplyComboSelectionSafely(ComboBox? comboBox, string displayValue)
     {
-        if (comboBox == null || comboBox.IsDisposed)
+        if (comboBox == null || comboBox.IsDisposed || !comboBox.IsHandleCreated)
         {
             return;
         }
 
-        if (!comboBox.Items.Contains(displayValue))
+        var hasDisplayValue = comboBox.Items.Cast<object?>()
+            .Any(item => item != null && string.Equals(comboBox.GetItemText(item), displayValue, StringComparison.Ordinal));
+
+        if (!hasDisplayValue)
         {
             return;
         }
 
-        if (string.Equals(comboBox.Text, displayValue, StringComparison.Ordinal))
+        var currentText = comboBox.SelectedItem is null ? comboBox.Text : comboBox.GetItemText(comboBox.SelectedItem);
+        if (string.Equals(currentText, displayValue, StringComparison.Ordinal))
         {
             return;
         }
 
-        comboBox.SelectedIndexChanged -= LanguageComboBox_SelectedIndexChanged;
-        comboBox.SelectedIndexChanged -= ThemeComboBox_SelectedIndexChanged;
         try
         {
-            comboBox.SelectedItem = displayValue;
+            comboBox.SelectedIndexChanged -= LanguageComboBox_SelectedIndexChanged;
+            comboBox.SelectedIndexChanged -= ThemeComboBox_SelectedIndexChanged;
+            comboBox.SelectedItem = comboBox.Items.Cast<object?>()
+                .First(item => item != null && string.Equals(comboBox.GetItemText(item), displayValue, StringComparison.Ordinal));
+        }
+        catch (ObjectDisposedException)
+        {
+            return;
+        }
+        catch (InvalidOperationException)
+        {
+            return;
         }
         finally
         {
@@ -2922,7 +3258,8 @@ public partial class MainForm : Form
             return;
         }
 
-        if (selectedComboBox.SelectedItem == null || selectedComboBox.SelectedItem.ToString() is not { } selectedValue || string.IsNullOrWhiteSpace(selectedValue))
+        var selectedValue = selectedComboBox.SelectedItem?.ToString();
+        if (string.IsNullOrWhiteSpace(selectedValue))
         {
             return;
         }
@@ -2951,8 +3288,20 @@ public partial class MainForm : Form
             RefreshModLibrary();
             Invalidate();
             _settingsService.Save(_settings);
-            ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
-            ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
+
+            if (LanguageComboBox != null && !LanguageComboBox.IsDisposed)
+            {
+                ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
+            }
+
+            if (_sidebarLanguageComboBox != null && !_sidebarLanguageComboBox.IsDisposed)
+            {
+                ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            // Ignore transient disposal during rapid UI rebuilds.
         }
         finally
         {
@@ -3141,22 +3490,57 @@ public partial class MainForm : Form
         _sidebarNextButton.Visible = true;
         _sidebarPreviousButton.Enabled = false;
         _sidebarNextButton.Enabled = false;
-        _sidebarReadmeButton.Visible = _currentStep is WizardStep.Step4 or WizardStep.Step6
-            && !string.IsNullOrWhiteSpace(_selectedReadmePath)
+
+        var hasSidebarReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath)
             && File.Exists(_selectedReadmePath);
+        var hasSidebarImage = _currentStep == WizardStep.Step4 && _selectedImageFiles.Any(File.Exists)
+            || _currentStep == WizardStep.Step5 && GetStep5SidebarImageFiles().Any(File.Exists);
+        var hasDetectedModStatus = !string.IsNullOrWhiteSpace(_selectedModName);
+
+        _sidebarReadmeButton.Visible = hasSidebarReadme;
         _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
-        _sidebarReadmeButton.Enabled = !string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath);
-        _sidebarStep4Image.Visible = _currentStep == WizardStep.Step4 && _selectedImageFiles.Any(File.Exists);
-        if (_currentStep == WizardStep.Step4)
+        _sidebarReadmeButton.Enabled = hasSidebarReadme;
+
+        _sidebarReadmeTextBox.Visible = hasSidebarReadme;
+        _sidebarReadmeTextBox.Enabled = hasSidebarReadme;
+        _sidebarReadmeTextBox.Height = hasDetectedModStatus ? 150 : 120;
+        _sidebarReadmeTextBox.Margin = new Padding(0, 0, 0, hasDetectedModStatus ? 14 : 10);
+        if (hasSidebarReadme)
         {
+            var readmeText = TryReadTextFile(_selectedReadmePath);
+            _sidebarReadmeTextBox.Text = string.IsNullOrWhiteSpace(readmeText)
+                ? _localizationService.GetString("ReadmeFallback", "README")
+                : readmeText;
+        }
+        else
+        {
+            _sidebarReadmeTextBox.Text = string.Empty;
+        }
+
+        _sidebarStep4Image.Visible = hasSidebarImage;
+        _sidebarStep4Image.Enabled = hasSidebarImage;
+        _sidebarStep4Image.Height = hasDetectedModStatus ? 135 : 110;
+        _sidebarStep4Image.Margin = new Padding(0, 0, 0, hasDetectedModStatus ? 14 : 10);
+
+        if (_currentStep == WizardStep.Step4 && hasSidebarImage)
+        {
+            _step5ImageTimer.Stop();
             ShowNextStep4Image(true);
             _step4ImageTimer.Start();
+        }
+        else if (_currentStep == WizardStep.Step5 && hasSidebarImage)
+        {
+            _step4ImageTimer.Stop();
+            ShowNextStep5Image(true);
+            _step5ImageTimer.Start();
         }
         else
         {
             _step4ImageTimer.Stop();
+            _step5ImageTimer.Stop();
             _sidebarStep4Image.Image?.Dispose();
             _sidebarStep4Image.Image = null;
+            _sidebarStep4Image.Visible = false;
         }
 
         switch (_currentStep)
@@ -3202,6 +3586,36 @@ public partial class MainForm : Form
         _sidebarReadmeButton.ForeColor = _sidebarReadmeButton.Enabled ? Color.White : Color.FromArgb(148, 163, 184);
     }
 
+    private List<string> GetStep5SidebarImageFiles()
+    {
+        if (_selectedAssetForInstall == null)
+        {
+            return new List<string>();
+        }
+
+        var imagePath = _assetCatalogService.ResolveImagePath(_selectedAssetForInstall);
+        return string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath)
+            ? new List<string>()
+            : new List<string> { imagePath };
+    }
+
+    private string TryReadTextFile(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            return File.ReadAllText(path);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
     private void ShowNextStep4Image(bool reset = false)
     {
         if (_sidebarStep4Image == null || _sidebarStep4Image.IsDisposed)
@@ -3227,10 +3641,46 @@ public partial class MainForm : Form
 
         try
         {
-            using var sourceImage = Image.FromFile(imageFiles[_step4ImageIndex]);
+            var sourceImage = TryLoadBitmap(imageFiles[_step4ImageIndex]);
             _sidebarStep4Image.Image?.Dispose();
-            _sidebarStep4Image.Image = new Bitmap(sourceImage);
-            _sidebarStep4Image.Visible = true;
+            _sidebarStep4Image.Image = sourceImage;
+            _sidebarStep4Image.Visible = sourceImage != null;
+        }
+        catch
+        {
+            _sidebarStep4Image.Visible = false;
+        }
+    }
+
+    private void ShowNextStep5Image(bool reset = false)
+    {
+        if (_sidebarStep4Image == null || _sidebarStep4Image.IsDisposed)
+        {
+            return;
+        }
+
+        var imageFiles = GetStep5SidebarImageFiles();
+        if (imageFiles.Count == 0)
+        {
+            _sidebarStep4Image.Visible = false;
+            return;
+        }
+
+        if (reset)
+        {
+            _step4ImageIndex = 0;
+        }
+        else
+        {
+            _step4ImageIndex = (_step4ImageIndex + 1) % imageFiles.Count;
+        }
+
+        try
+        {
+            var sourceImage = TryLoadBitmap(imageFiles[_step4ImageIndex]);
+            _sidebarStep4Image.Image?.Dispose();
+            _sidebarStep4Image.Image = sourceImage;
+            _sidebarStep4Image.Visible = sourceImage != null;
         }
         catch
         {
@@ -3254,6 +3704,7 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step5)
         {
+            _returnedToInstallStepFromCompletion = true;
             NavigateToStep(WizardStep.Step4);
             return;
         }
@@ -3262,6 +3713,7 @@ public partial class MainForm : Form
         {
             if (_selectedModManifest?.IsSingleAssetPackage == true || _selectedModManifest?.IsMultiAssetPackage == true)
             {
+                _returnedToInstallStepFromCompletion = true;
                 NavigateToStep(WizardStep.Step5);
             }
             else

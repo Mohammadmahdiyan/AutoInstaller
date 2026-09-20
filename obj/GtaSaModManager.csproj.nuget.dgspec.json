@@ -45,6 +45,12 @@
         "net8.0-windows": {
           "framework": "net8.0-windows7.0",
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "SixLabors.ImageSharp": {
+              "target": "Package",
+              "version": "[3.1.11, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -369,7 +369,7 @@
             "category": "Trains/Rolling Stock",
             "name": "Brown Streak (coach)",
             "nameFile": "streakc",
-            "image": null
+            "image": "Assets/Vehicles/streakc.jpg"
         },
         {
             "id": 537,
@@ -489,132 +489,6 @@
             "name": "Dozer",
             "nameFile": "dozer",
             "image": "Assets/Vehicles/Dozer-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Primo",
-            "nameFile": "primo",
-            "id": 547,
-            "image": "Assets/Vehicles/Primo-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Regina",
-            "nameFile": "regina",
-            "id": 479,
-            "image": "Assets/Vehicles/Regina-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Romero",
-            "nameFile": "romero",
-            "id": 442,
-            "image": "Assets/Vehicles/Romero-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Sentinel",
-            "nameFile": "sentinel",
-            "id": 405,
-            "image": "Assets/Vehicles/Sentinel-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Solair",
-            "nameFile": "solair",
-            "id": 458,
-            "image": "Assets/Vehicles/Solair-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Stafford",
-            "nameFile": "stafford",
-            "id": 580,
-            "image": "Assets/Vehicles/Stafford-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Stretch",
-            "nameFile": "stretch",
-            "id": 409,
-            "image": "Assets/Vehicles/Stretch-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Sunrise",
-            "nameFile": "sunrise",
-            "id": 550,
-            "image": "Assets/Vehicles/Sunrise-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Vincent",
-            "nameFile": "vincent",
-            "id": 540,
-            "image": "Assets/Vehicles/Vincent-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Washington",
-            "nameFile": "washing",
-            "id": 421,
-            "image": "Assets/Vehicles/Washington-GTASA-front.webp"
-        },
-        {
-            "category": "Sedans & Station Wagons",
-            "name": "Willard",
-            "nameFile": "willard",
-            "id": 529,
-            "image": "Assets/Vehicles/Willard-GTASA-front.webp"
-        },
-        {
-            "category": "Trains/Rolling Stock",
-            "name": "Brown Streak",
-            "nameFile": "streak",
-            "id": 538,
-            "image": "Assets/Vehicles/BrownStreak-GTASA-front.webp"
-        },
-        {
-            "category": "Trains/Rolling Stock",
-            "name": "Freight",
-            "nameFile": "freight",
-            "id": 537,
-            "image": "Assets/Vehicles/Freight-GTASA-front.webp"
-        },
-        {
-            "category": "Trains/Rolling Stock",
-            "name": "Freight (flatcar)",
-            "nameFile": "freiflat",
-            "id": 569,
-            "image": "Assets/Vehicles/Freiflat-GTASA-front.webp"
-        },
-        {
-            "category": "Trains/Rolling Stock",
-            "name": "Tram",
-            "nameFile": "tram",
-            "id": 449,
-            "image": "Assets/Vehicles/Tram-GTASA-front.webp"
-        },
-        {
-            "category": "Public Service",
-            "name": "Baggage",
-            "nameFile": "baggage",
-            "id": 485,
-            "image": "Assets/Vehicles/Baggage-GTASA-front.webp"
-        },
-        {
-            "category": "Public Service",
-            "name": "Bus",
-            "nameFile": "bus",
-            "id": 431,
-            "image": "Assets/Vehicles/Bus-GTASA-front.webp"
-        },
-        {
-            "category": "Public Service",
-            "name": "Cabbie",
-            "nameFile": "cabbie",
-            "id": 438,
-            "image": "Assets/Vehicles/Cabbie-GTASA-front.webp"
         },
         {
             "category": "Public Service",
@@ -1273,203 +1147,203 @@
             "id": null,
             "name": "Bettina",
             "nameFile": "csbettina",
-            "image": "Assets/Skins/Skinidcsbettina.jpg",
+            "image": "Assets/Skins/cs-bettina.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Blue Gang Member",
             "nameFile": "csblue2",
-            "image": "Assets/Skins/Skinidcsblue2.jpg",
+            "image": "Assets/Skins/cs-blue2.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Bogman",
             "nameFile": "csbogman",
-            "image": "Assets/Skins/Skinidcsbogman.jpg",
+            "image": "Assets/Skins/cs-bogman.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Burger Shot Worker",
             "nameFile": "csburger1",
-            "image": "Assets/Skins/Skinidcsburger1.jpg",
+            "image": "Assets/Skins/cs-burger1.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Triad Member",
             "nameFile": "cscutriad",
-            "image": "Assets/Skins/Skinidcscutriad.jpg",
+            "image": "Assets/Skins/cs-cutriad.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Dope",
             "nameFile": "csdope",
-            "image": "Assets/Skins/Skinidcsdope.jpg",
+            "image": "Assets/Skins/cs-dope.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Dancer A",
             "nameFile": "csdancera",
-            "image": "Assets/Skins/Skinidcsdancera.jpg",
+            "image": "Assets/Skins/cs-dancera.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Businessman",
             "nameFile": "csdasuit2",
-            "image": "Assets/Skins/Skinidcsdasuit2.jpg",
+            "image": "Assets/Skins/cs-dasuit2.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "DJ",
             "nameFile": "csdjm",
-            "image": "Assets/Skins/Skinidcsdjm.jpg",
+            "image": "Assets/Skins/cs-djm.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Drug Dealer",
             "nameFile": "csdrug1",
-            "image": "Assets/Skins/Skinidcsdrug1.jpg",
+            "image": "Assets/Skins/cs-drug1.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Helper",
             "nameFile": "cshelper1",
-            "image": "Assets/Skins/Skinidcshelper1.jpg",
+            "image": "Assets/Skins/cs-helper1.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Helper",
             "nameFile": "cshelper2",
-            "image": "Assets/Skins/Skinidcshelper2.jpg",
+            "image": "Assets/Skins/cs-helper2.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Ho",
             "nameFile": "cshoel",
-            "image": "Assets/Skins/Skinidcshoel.jpg",
+            "image": "Assets/Skins/cs-hoel.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Jimmy Silverman",
             "nameFile": "csjimsilv",
-            "image": "Assets/Skins/Skinidcsjimsilv.jpg",
+            "image": "Assets/Skins/cs-jimsilv.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Jose",
             "nameFile": "csjose",
-            "image": "Assets/Skins/Skinidcsjose.jpg",
+            "image": "Assets/Skins/cs-jose.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Lil Bill",
             "nameFile": "cslilbill",
-            "image": "Assets/Skins/Skinidcslilbill.jpg",
+            "image": "Assets/Skins/cs-lilbill.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Magoon",
             "nameFile": "csmagoon1",
-            "image": "Assets/Skins/Skinidcsmagoon1.jpg",
+            "image": "Assets/Skins/cs-magoon1.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Magoon",
             "nameFile": "csmagoon2",
-            "image": "Assets/Skins/Skinidcsmagoon2.jpg",
+            "image": "Assets/Skins/cs-magoon2.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Mechanic",
             "nameFile": "csmecha",
-            "image": "Assets/Skins/Skinidcsmecha.jpg",
+            "image": "Assets/Skins/cs-mecha.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "OG Burger",
             "nameFile": "csogburger",
-            "image": "Assets/Skins/Skinidcsogburger.jpg",
+            "image": "Assets/Skins/cs-ogburger.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Ralph",
             "nameFile": "csralph",
-            "image": "Assets/Skins/Skinidcsralph.jpg",
+            "image": "Assets/Skins/cs-ralph.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Ran Fa Li",
             "nameFile": "csranfali",
-            "image": "Assets/Skins/Skinidcsranfali.jpg",
+            "image": "Assets/Skins/cs-ranfali.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Salvatore Leone",
             "nameFile": "cssleone",
-            "image": "Assets/Skins/Skinidcssleone.jpg",
+            "image": "Assets/Skins/cs-sleone.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Loot",
             "nameFile": "cssloot1",
-            "image": "Assets/Skins/Skinidcssloot1.jpg",
+            "image": "Assets/Skins/cs-sloot1.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Stew",
             "nameFile": "csstew",
-            "image": "Assets/Skins/Skinidcsstew.jpg",
+            "image": "Assets/Skins/cs-stew.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Triad Boss",
             "nameFile": "cstboss",
-            "image": "Assets/Skins/Skinidcstboss.jpg",
+            "image": "Assets/Skins/cs-tboss.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Texan",
             "nameFile": "cstexan1",
-            "image": "Assets/Skins/Skinidcstexan1.jpg",
+            "image": "Assets/Skins/cs-texan1.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Texan",
             "nameFile": "cstexan2",
-            "image": "Assets/Skins/Skinidcstexan2.jpg",
+            "image": "Assets/Skins/cs-texan2.png",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "B-Dup",
             "nameFile": "csbdup",
-            "image": "Assets/Skins/Skinidcsbdup.jpg",
+            "image": "Assets/Skins/cs-bdup.png",
             "category": "cutscene"
         },
         {
@@ -1490,7 +1364,7 @@
             "id": "CS-1",
             "name": "The Truth",
             "nameFile": "cstruth",
-            "image": "Assets/Skins/Skinidcstruth.png",
+            "image": "Assets/Skins/Skinid1.jpg",
             "category": "cutscene"
         },
         {
@@ -1498,13 +1372,6 @@
             "name": "Maccer",
             "nameFile": "maccer",
             "image": "Assets/Skins/Skinid2.jpg",
-            "category": "special"
-        },
-        {
-            "id": "3",
-            "name": "Andre",
-            "nameFile": "cdeput",
-            "image": "Assets/Skins/Skinid3.jpg",
             "category": "special"
         },
         {
@@ -2929,13 +2796,6 @@
             "category": "normal"
         },
         {
-            "id": "42",
-            "name": "Suzie",
-            "nameFile": "suzie",
-            "image": "Assets/Skins/Skinid42.jpg",
-            "category": "special"
-        },
-        {
             "id": "CS-42",
             "name": "Su Xi Mu (Suzie)",
             "nameFile": "cssuzie",
@@ -3660,28 +3520,28 @@
             "id": "CS-302",
             "name": "Emmet",
             "nameFile": "csemmet",
-            "image": "Assets/Skins/Skinidcsemmet.png",
+            "image": "Assets/Skins/cs-emmet.png",
             "category": "cutscene"
         },
         {
             "id": "CS-304",
             "name": "Kendl Johnson",
             "nameFile": "cskendl",
-            "image": "Assets/Skins/Skinidcskendl.png",
+            "image": "Assets/Skins/cs-kendl.png",
             "category": "cutscene"
         },
         {
             "id": "CS-305",
             "name": "Jethro",
             "nameFile": "csjethro",
-            "image": "Assets/Skins/Skinidcsjethro.png",
+            "image": "Assets/Skins/cs-jethro.png",
             "category": "cutscene"
         },
         {
             "id": "CS-310",
             "name": "Big Bear",
             "nameFile": "csbigbearthin",
-            "image": "Assets/Skins/Skinidcsbigbearthin.png",
+            "image": "Assets/Skins/cs-bigbearthin.png",
             "category": "cutscene"
         }
     ],
