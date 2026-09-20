@@ -1147,203 +1147,203 @@
             "id": null,
             "name": "Bettina",
             "nameFile": "csbettina",
-            "image": "Assets/Skins/cs-bettina.png",
+            "image": "Assets/Skins/cs-bettina.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Blue Gang Member",
             "nameFile": "csblue2",
-            "image": "Assets/Skins/cs-blue2.png",
+            "image": "Assets/Skins/cs-blue2.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Bogman",
             "nameFile": "csbogman",
-            "image": "Assets/Skins/cs-bogman.png",
+            "image": "Assets/Skins/cs-bogman.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Burger Shot Worker",
             "nameFile": "csburger1",
-            "image": "Assets/Skins/cs-burger1.png",
+            "image": "Assets/Skins/cs-burger1.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Triad Member",
             "nameFile": "cscutriad",
-            "image": "Assets/Skins/cs-cutriad.png",
+            "image": "Assets/Skins/cs-cutriad.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Dope",
             "nameFile": "csdope",
-            "image": "Assets/Skins/cs-dope.png",
+            "image": "Assets/Skins/cs-dope.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Dancer A",
             "nameFile": "csdancera",
-            "image": "Assets/Skins/cs-dancera.png",
+            "image": "Assets/Skins/cs-dancera.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Businessman",
             "nameFile": "csdasuit2",
-            "image": "Assets/Skins/cs-dasuit2.png",
+            "image": "Assets/Skins/cs-dasuit2.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "DJ",
             "nameFile": "csdjm",
-            "image": "Assets/Skins/cs-djm.png",
+            "image": "Assets/Skins/cs-djm.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Drug Dealer",
             "nameFile": "csdrug1",
-            "image": "Assets/Skins/cs-drug1.png",
+            "image": "Assets/Skins/cs-drug1.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Helper",
             "nameFile": "cshelper1",
-            "image": "Assets/Skins/cs-helper1.png",
+            "image": "Assets/Skins/cs-helper1.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Helper",
             "nameFile": "cshelper2",
-            "image": "Assets/Skins/cs-helper2.png",
+            "image": "Assets/Skins/cs-helper2.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Ho",
             "nameFile": "cshoel",
-            "image": "Assets/Skins/cs-hoel.png",
+            "image": null,
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Jimmy Silverman",
             "nameFile": "csjimsilv",
-            "image": "Assets/Skins/cs-jimsilv.png",
+            "image": "Assets/Skins/cs-jimsilv.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Jose",
             "nameFile": "csjose",
-            "image": "Assets/Skins/cs-jose.png",
+            "image": "Assets/Skins/cs-jose.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Lil Bill",
             "nameFile": "cslilbill",
-            "image": "Assets/Skins/cs-lilbill.png",
+            "image": "Assets/Skins/cs-lilbill.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Magoon",
             "nameFile": "csmagoon1",
-            "image": "Assets/Skins/cs-magoon1.png",
+            "image": "Assets/Skins/cs-magoon1.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Magoon",
             "nameFile": "csmagoon2",
-            "image": "Assets/Skins/cs-magoon2.png",
+            "image": "Assets/Skins/cs-magoon2.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Mechanic",
             "nameFile": "csmecha",
-            "image": "Assets/Skins/cs-mecha.png",
+            "image": "Assets/Skins/cs-mecha.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "OG Burger",
             "nameFile": "csogburger",
-            "image": "Assets/Skins/cs-ogburger.png",
+            "image": "Assets/Skins/cs-ogburger.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Ralph",
             "nameFile": "csralph",
-            "image": "Assets/Skins/cs-ralph.png",
+            "image": "Assets/Skins/cs-ralph.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Ran Fa Li",
             "nameFile": "csranfali",
-            "image": "Assets/Skins/cs-ranfali.png",
+            "image": "Assets/Skins/cs-ranfali.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Salvatore Leone",
             "nameFile": "cssleone",
-            "image": "Assets/Skins/cs-sleone.png",
+            "image": "Assets/Skins/cs-sleone.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Loot",
             "nameFile": "cssloot1",
-            "image": "Assets/Skins/cs-sloot1.png",
+            "image": "Assets/Skins/cs-sloot1.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Stew",
             "nameFile": "csstew",
-            "image": "Assets/Skins/cs-stew.png",
+            "image": "Assets/Skins/cs-stew.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Triad Boss",
             "nameFile": "cstboss",
-            "image": "Assets/Skins/cs-tboss.png",
+            "image": "Assets/Skins/cs-tboss.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Texan",
             "nameFile": "cstexan1",
-            "image": "Assets/Skins/cs-texan1.png",
+            "image": "Assets/Skins/cs-texan1.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "Texan",
             "nameFile": "cstexan2",
-            "image": "Assets/Skins/cs-texan2.png",
+            "image": "Assets/Skins/cs-texan2.jpg",
             "category": "cutscene"
         },
         {
             "id": null,
             "name": "B-Dup",
             "nameFile": "csbdup",
-            "image": "Assets/Skins/cs-bdup.png",
+            "image": "Assets/Skins/cs-bdup.jpg",
             "category": "cutscene"
         },
         {
@@ -1798,7 +1798,7 @@
             "id": "64",
             "name": "Prostitute",
             "nameFile": "hfypro",
-            "image": "Assets/Skins/Skinid64.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -1868,7 +1868,7 @@
             "id": "75",
             "name": "Prostitute",
             "nameFile": "swfopro",
-            "image": "Assets/Skins/Skinid75.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -1938,7 +1938,7 @@
             "id": "85",
             "name": "Prostitute",
             "nameFile": "vwfypro",
-            "image": "Assets/Skins/Skinid85.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -1952,7 +1952,7 @@
             "id": "87",
             "name": "Female",
             "nameFile": "vwfyst1",
-            "image": "Assets/Skins/Skinid87.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -2260,7 +2260,7 @@
             "id": "131",
             "name": "Da Nang",
             "nameFile": "dnfylc",
-            "image": "Assets/Skins/Skinid131.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -2400,14 +2400,14 @@
             "id": "151",
             "name": "Farm Worker",
             "nameFile": "dwfylc1",
-            "image": "Assets/Skins/Skinid151.jpg",
+            "image": null,
             "category": "normal"
         },
         {
             "id": "152",
             "name": "Female",
             "nameFile": "wfypro",
-            "image": "Assets/Skins/Skinid152.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -2587,9 +2587,9 @@
         },
         {
             "id": "178",
-            "name": "Sex Worker",
+            "name": "*** Worker",
             "nameFile": "wfysex",
-            "image": "Assets/Skins/Skinid178.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -2729,7 +2729,7 @@
             "id": "198",
             "name": "Female",
             "nameFile": "cwfyfr1",
-            "image": "Assets/Skins/Skinid198.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -2799,7 +2799,7 @@
             "id": "CS-42",
             "name": "Su Xi Mu (Suzie)",
             "nameFile": "cssuzie",
-            "image": "Assets/Skins/Skinidcssuzie.png",
+            "image": "Assets/Skins/cs-suzie.jpg",
             "category": "cutscene"
         },
         {
@@ -2848,7 +2848,7 @@
             "id": "CS-214",
             "name": "Maria Latore",
             "nameFile": "csmaria",
-            "image": "Assets/Skins/Skinidcsmaria.png",
+            "image": "Assets/Skins/cs-maria.jpg",
             "category": "cutscene"
         },
         {
@@ -3212,21 +3212,21 @@
             "id": "CS-265",
             "name": "Frank Tenpenny",
             "nameFile": "cstenpenny",
-            "image": "Assets/Skins/Skinidcstenpenny.png",
+            "image": "Assets/Skins/Skinid265.jpg",
             "category": "cutscene"
         },
         {
             "id": "266",
             "name": "Pulaski",
             "nameFile": "pulaski",
-            "image": "Assets/Skins/Skinid266.jpg",
+            "image": "Assets/Skins/Skinid266.png",
             "category": "special"
         },
         {
             "id": "CS-266",
             "name": "Eddie Pulaski",
             "nameFile": "cspulaski",
-            "image": "Assets/Skins/Skinidcspulaski.png",
+            "image": "Assets/Skins/Skinid266.png",
             "category": "cutscene"
         },
         {
@@ -3235,6 +3235,13 @@
             "nameFile": "hern",
             "image": "Assets/Skins/Skinid267.jpg",
             "category": "special"
+        },
+        {
+            "id": "CS-267",
+            "name": "Hernandez",
+            "nameFile": "cshernandez",
+            "image": "Assets/Skins/Skinid267.jpg",
+            "category": "cutscene"
         },
         {
             "id": "268",
@@ -3247,7 +3254,7 @@
             "id": "CS-268",
             "name": "Dwayne",
             "nameFile": "csdwayne",
-            "image": "Assets/Skins/Skinidcsdwayne.png",
+            "image": "Assets/Skins/Skinid268.jpg",
             "category": "cutscene"
         },
         {
@@ -3261,21 +3268,21 @@
             "id": "CS-269",
             "name": "Big Smoke",
             "nameFile": "cssmoke",
-            "image": "Assets/Skins/Skinidcssmoke.png",
+            "image": "Assets/Skins/Skinid269.jpg",
             "category": "cutscene"
         },
         {
             "id": "CS-1-269",
             "name": "Big Smoke - Vest",
             "nameFile": "cssmokevest",
-            "image": "Assets/Skins/Skinidcssmokevest.png",
+            "image": "Assets/Skins/Skinid311.jpg",
             "category": "cutscene"
         },
         {
             "id": "CS-2-269",
             "name": "Big Smoke - Vest 2",
             "nameFile": "cssmokevest2",
-            "image": "Assets/Skins/Skinidcssmokevest2.png",
+            "image": "Assets/Skins/cs-smokevest2.jpg",
             "category": "cutscene"
         },
         {
@@ -3289,7 +3296,7 @@
             "id": "CS-270",
             "name": "Sweet",
             "nameFile": "cssweet",
-            "image": "Assets/Skins/Skinidcssweet.png",
+            "image": "Assets/Skins/Skinid270.jpg",
             "category": "cutscene"
         },
         {
@@ -3303,7 +3310,7 @@
             "id": "CS-271",
             "name": "Ryder",
             "nameFile": "csryder",
-            "image": "Assets/Skins/Skinidcsryder.png",
+            "image": "Assets/Skins/Skinid271.jpg",
             "category": "cutscene"
         },
         {
@@ -3457,7 +3464,7 @@
             "id": "CS-292",
             "name": "Cesar Vialpando",
             "nameFile": "cscesar",
-            "image": "Assets/Skins/Skinidcscesar.png",
+            "image": "Assets/Skins/Skinid292.jpg",
             "category": "cutscene"
         },
         {
@@ -3471,7 +3478,7 @@
             "id": "CS-293",
             "name": "OG Loc",
             "nameFile": "csogloc",
-            "image": "Assets/Skins/Skinidcsogloc.png",
+            "image": "Assets/Skins/Skinid293.jpg",
             "category": "cutscene"
         },
         {
@@ -3520,28 +3527,28 @@
             "id": "CS-302",
             "name": "Emmet",
             "nameFile": "csemmet",
-            "image": "Assets/Skins/cs-emmet.png",
+            "image": "Assets/Skins/Skinid302.jpg",
             "category": "cutscene"
         },
         {
             "id": "CS-304",
             "name": "Kendl Johnson",
             "nameFile": "cskendl",
-            "image": "Assets/Skins/cs-kendl.png",
+            "image": "Assets/Skins/cs-kendl.jpg",
             "category": "cutscene"
         },
         {
             "id": "CS-305",
             "name": "Jethro",
             "nameFile": "csjethro",
-            "image": "Assets/Skins/cs-jethro.png",
+            "image": "Assets/Skins/Skinid305.jpg",
             "category": "cutscene"
         },
         {
             "id": "CS-310",
             "name": "Big Bear",
             "nameFile": "csbigbearthin",
-            "image": "Assets/Skins/cs-bigbearthin.png",
+            "image": "Assets/Skins/Skinid5.jpg",
             "category": "cutscene"
         }
     ],
