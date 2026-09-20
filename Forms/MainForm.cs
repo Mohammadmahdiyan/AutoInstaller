@@ -1534,12 +1534,13 @@ public partial class MainForm : Form
 
         var usableGalleryWidth = Math.Max(260, availableGalleryWidth - gallery.Padding.Horizontal);
         var columnGap = 12;
-        var cardWidth = Math.Max(150, (usableGalleryWidth - (Math.Max(1, _step5ColumnCount) - 1) * columnGap) / Math.Max(1, _step5ColumnCount));
-        var cardHeight = Math.Max(95, Math.Min(130, (int)Math.Round(cardWidth * 0.475d)));
+        var baseCardWidth = Math.Max(150, (usableGalleryWidth - (Math.Max(1, _step5ColumnCount) - 1) * columnGap) / Math.Max(1, _step5ColumnCount));
+        var cardHeight = Math.Max(95, Math.Min(130, (int)Math.Round(baseCardWidth * 0.475d)));
 
         foreach (var asset in visibleAssets)
         {
-            gallery.Controls.Add(CreateAssetCard(asset, cardWidth, cardHeight));
+            var (cardWidth, cardBodyHeight) = GetStep5CardSize(asset.AssetType, baseCardWidth, cardHeight);
+            gallery.Controls.Add(CreateAssetCard(asset, cardWidth, cardBodyHeight));
         }
 
         if (visibleAssets.Count == 0)
@@ -1551,10 +1552,31 @@ public partial class MainForm : Form
         _isRefreshingAssetStep = false;
     }
 
+    private static (int Width, int Height) GetStep5CardSize(string? assetType, int baseWidth, int baseHeight)
+    {
+        var normalizedType = assetType?.Trim();
+        if (string.Equals(normalizedType, "Vehicle", StringComparison.OrdinalIgnoreCase))
+        {
+            return (Math.Max(baseWidth, 190), Math.Max(120, Math.Min(160, (int)Math.Round(baseWidth * 0.72d))));
+        }
+
+        if (string.Equals(normalizedType, "Weapon", StringComparison.OrdinalIgnoreCase))
+        {
+            return (Math.Max(baseWidth, 150), Math.Max(120, Math.Min(170, (int)Math.Round(baseWidth * 0.92d))));
+        }
+
+        if (string.Equals(normalizedType, "Skin", StringComparison.OrdinalIgnoreCase))
+        {
+            return (Math.Max(baseWidth, 160), Math.Max(140, Math.Min(210, (int)Math.Round(baseWidth * 1.18d))));
+        }
+
+        return (baseWidth, baseHeight);
+    }
+
     private Control CreateAssetCard(GameAsset asset, int cardWidth, int cardHeight)
     {
         var innerWidth = cardWidth - 18;
-        var previewHeight = Math.Max(52, cardHeight - 34);
+        var previewHeight = Math.Max(62, cardHeight - 38);
         var selectionKey = GetAssetSelectionKey(asset);
         var isSelected = _step5SelectedAssetKeys.Contains(selectionKey);
         var card = new Panel { Width = cardWidth, Height = cardHeight, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = isSelected ? Color.FromArgb(219, 234, 254) : Color.White, Cursor = Cursors.Hand, Padding = new Padding(0) };
@@ -1578,7 +1600,7 @@ public partial class MainForm : Form
             preview.BackColor = Color.FromArgb(248, 250, 252);
             preview.Controls.Add(new Label
             {
-                Text = _localizationService.GetString("ImageNotValid", "IMAGE NOT VALID"),
+                Text = _localizationService.GetString("ImageUnavailable", "No image available"),
                 AutoSize = false,
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,

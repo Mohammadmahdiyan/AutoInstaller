@@ -50,7 +50,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
-      "projectName": "GtaSaModManager",
+      "projectName": "gta_sa_mod_manager",
       "projectPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
       "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
       "outputPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\obj\\",
