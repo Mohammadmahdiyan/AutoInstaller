@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iRdwNRPwgdo=",
+  "dgSpecHash": "AXlU1pIN9vw=",
   "success": true,
-  "projectFilePath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
+  "projectFilePath": "h:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moham\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512"
   ],

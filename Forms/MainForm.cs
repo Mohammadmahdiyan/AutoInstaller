@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -145,12 +146,10 @@ public partial class MainForm : Form
         button.TabStop = false;
         button.NotifyDefault(false);
         button.FlatStyle = FlatStyle.Flat;
-        button.FlatAppearance.BorderColor = Color.FromArgb(148, 163, 184);
         button.FlatAppearance.BorderSize = 0;
-        button.FlatAppearance.MouseDownBackColor = Color.FromArgb(30, 90, 220);
-        button.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 130, 246);
+        button.FlatAppearance.MouseDownBackColor = normalColor;
+        button.FlatAppearance.MouseOverBackColor = normalColor;
         button.FlatAppearance.CheckedBackColor = normalColor;
-        button.FlatAppearance.BorderColor = Color.Transparent;
         button.Margin = new Padding(10, 0, 0, 0);
         button.Height = 42;
         button.Width = 140;
@@ -160,26 +159,15 @@ public partial class MainForm : Form
         button.UseVisualStyleBackColor = false;
         button.Cursor = Cursors.Hand;
         button.TextAlign = ContentAlignment.MiddleCenter;
-        button.GotFocus += (_, _) => button.BackColor = normalColor;
-        button.LostFocus += (_, _) => button.BackColor = normalColor;
-        button.EnabledChanged += (_, _) =>
-        {
-            if (button.Enabled)
-            {
-                button.BackColor = normalColor;
-                button.ForeColor = Color.White;
-            }
-            else
-            {
-                button.BackColor = Color.FromArgb(203, 213, 225);
-                button.ForeColor = Color.FromArgb(71, 85, 105);
-            }
-        };
+        button.Padding = new Padding(8, 0, 8, 0);
+        button.EnabledChanged += (_, _) => button.Invalidate();
+
         button.MouseEnter += (_, _) =>
         {
             if (button.Enabled)
             {
-                button.BackColor = Color.FromArgb(37, 99, 235);
+                button.BackColor = Color.FromArgb(59, 130, 246);
+                button.Invalidate();
             }
         };
         button.MouseLeave += (_, _) =>
@@ -187,6 +175,7 @@ public partial class MainForm : Form
             if (button.Enabled)
             {
                 button.BackColor = normalColor;
+                button.Invalidate();
             }
         };
         button.MouseDown += (_, _) =>
@@ -194,15 +183,76 @@ public partial class MainForm : Form
             if (button.Enabled)
             {
                 button.BackColor = Color.FromArgb(30, 64, 175);
+                button.Invalidate();
             }
         };
         button.MouseUp += (_, _) =>
         {
             if (button.Enabled)
             {
-                button.BackColor = Color.FromArgb(37, 99, 235);
+                button.BackColor = Color.FromArgb(59, 130, 246);
+                button.Invalidate();
             }
         };
+
+        button.Paint += (_, e) =>
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            var bounds = new Rectangle(1, 1, button.Width - 2, button.Height - 2);
+            var shadowRect = Rectangle.Inflate(bounds, 2, 2);
+            using var shadowBrush = new SolidBrush(Color.FromArgb(25, 15, 23, 42));
+            using var shadowPath = CreateRoundedRectanglePath(shadowRect, 12);
+            g.FillPath(shadowBrush, shadowPath);
+
+            var fillColor = button.Enabled ? button.BackColor : Color.FromArgb(203, 213, 225);
+            var topColor = ControlPaint.Light(fillColor, 0.12f);
+            var bottomColor = ControlPaint.Dark(fillColor, 0.08f);
+
+            using var fillPath = CreateRoundedRectanglePath(bounds, 12);
+            using var gradientBrush = new LinearGradientBrush(bounds, topColor, bottomColor, LinearGradientMode.Vertical);
+            g.FillPath(gradientBrush, fillPath);
+
+            using var borderPen = new Pen(Color.FromArgb(120, 255, 255, 255), 1.25f);
+            g.DrawPath(borderPen, fillPath);
+
+            if (button.Enabled)
+            {
+                using var innerGlow = new Pen(Color.FromArgb(60, 255, 255, 255), 1f);
+                using var innerPath = CreateRoundedRectanglePath(Rectangle.Inflate(bounds, -2, -2), 10);
+                g.DrawPath(innerGlow, innerPath);
+            }
+
+            var textColor = button.Enabled ? Color.White : Color.FromArgb(71, 85, 105);
+            using var textBrush = new SolidBrush(textColor);
+            var textSize = g.MeasureString(button.Text, button.Font);
+            var textX = (button.Width - textSize.Width) / 2f;
+            var textY = (button.Height - textSize.Height) / 2f;
+            g.DrawString(button.Text, button.Font, textBrush, textX, textY);
+        };
+    }
+
+    private static GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int radius)
+    {
+        var path = new GraphicsPath();
+        var corner = Math.Max(2, radius);
+        var x = rect.X;
+        var y = rect.Y;
+        var width = rect.Width;
+        var height = rect.Height;
+
+        path.AddArc(x, y, corner * 2, corner * 2, 180, 90);
+        path.AddLine(x + corner, y, x + width - corner, y);
+        path.AddArc(x + width - corner * 2, y, corner * 2, corner * 2, 270, 90);
+        path.AddLine(x + width, y + corner, x + width, y + height - corner);
+        path.AddArc(x + width - corner * 2, y + height - corner * 2, corner * 2, corner * 2, 0, 90);
+        path.AddLine(x + width - corner, y + height, x + corner, y + height);
+        path.AddArc(x, y + height - corner * 2, corner * 2, corner * 2, 90, 90);
+        path.AddLine(x, y + height - corner, x, y + corner);
+        path.CloseFigure();
+        return path;
     }
 
     private void SynchronizeStepInputs(WizardStep step)

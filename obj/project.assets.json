@@ -49,11 +49,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
+      "projectUniqueName": "h:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
       "projectName": "gta_sa_mod_manager",
-      "projectPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\GtaSaModManager.csproj",
+      "projectPath": "h:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
       "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
-      "outputPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\obj\\",
+      "outputPath": "h:\\B\\AA-MiniProject\\ModAutoInstaller\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1,5 +1,0 @@
-
-
-3. اگر ادرس خروجی H:\B\AA-MiniProject\ModAutoInstaller\bin\Debug\net8.0-windows\GtaSaModManager.exe هست فایل رو روش دابل کلیک میکنم نمیاد بالا
-4. میخام اگر جایی نوشتی یا اسم فایل رو نوشتی GtaSaModManager میخام تغییرش بدی به ModManager 
-فقط اسم فایل خروجی exe بشه gta_sa_mod_manager.exe
