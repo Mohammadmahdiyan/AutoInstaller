@@ -70,17 +70,20 @@ public class InstallProgressForm : Form
         _statusLabel.Text = status;
     }
 
-    public void UpdateProgress(string fileName)
+    public void UpdateProgress(int percent, string fileName = "")
     {
-        _currentFileLabel.Text = fileName;
-        var current = _progressBar.Value + 10;
-        if (current > 100)
-        {
-            current = 100;
-        }
+        var safePercent = Math.Clamp(percent, 0, 100);
+        _progressBar.Value = safePercent;
 
-        _progressBar.Value = current;
-        _statusLabel.Text = _localizationService.GetString("Installing", "Installing") + " " + fileName;
+        if (!string.IsNullOrWhiteSpace(fileName))
+        {
+            _currentFileLabel.Text = fileName;
+            _statusLabel.Text = _localizationService.GetString("Installing", "Installing") + " " + fileName;
+        }
+        else
+        {
+            _statusLabel.Text = _localizationService.GetString("Installing", "Installing");
+        }
     }
 
     public void Complete()

@@ -49,11 +49,13 @@ public partial class MainForm : Form
     private bool _isApplyingLanguage;
     private bool _returnedToInstallStepFromCompletion;
     private bool _isRefreshingAssetStep;
+    private Panel? _globalLoadingOverlay;
+    private Label? _globalLoadingLabel;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
     private int _step5ColumnCount = 3;
-    private string _step5CategoryFilter = "All";
+    private string _step5CategoryFilter = string.Empty;
 
     private enum WizardStep
     {
@@ -80,6 +82,7 @@ public partial class MainForm : Form
         _currentStep = startupStep;
 
         ApplyCurrentLanguage();
+        _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
         ApplyCurrentTheme();
         ConfigureUi();
         InitializeSidebar();
@@ -161,77 +164,74 @@ public partial class MainForm : Form
         button.TextAlign = ContentAlignment.MiddleCenter;
         button.Padding = new Padding(8, 0, 8, 0);
         button.EnabledChanged += (_, _) => button.Invalidate();
+    }
 
-        button.MouseEnter += (_, _) =>
+    private void EnsureGlobalLoadingOverlay()
+    {
+        if (_globalLoadingOverlay != null && !_globalLoadingOverlay.IsDisposed)
         {
-            if (button.Enabled)
-            {
-                button.BackColor = Color.FromArgb(59, 130, 246);
-                button.Invalidate();
-            }
-        };
-        button.MouseLeave += (_, _) =>
+            return;
+        }
+
+        _globalLoadingOverlay = new Panel
         {
-            if (button.Enabled)
-            {
-                button.BackColor = normalColor;
-                button.Invalidate();
-            }
-        };
-        button.MouseDown += (_, _) =>
-        {
-            if (button.Enabled)
-            {
-                button.BackColor = Color.FromArgb(30, 64, 175);
-                button.Invalidate();
-            }
-        };
-        button.MouseUp += (_, _) =>
-        {
-            if (button.Enabled)
-            {
-                button.BackColor = Color.FromArgb(59, 130, 246);
-                button.Invalidate();
-            }
+            Name = "GlobalLoadingOverlay",
+            Dock = DockStyle.Fill,
+            Visible = false,
+            BackColor = Color.FromArgb(245, 247, 250),
+            BorderStyle = BorderStyle.None,
+            Enabled = false
         };
 
-        button.Paint += (_, e) =>
+        _globalLoadingLabel = new Label
         {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-            var bounds = new Rectangle(1, 1, button.Width - 2, button.Height - 2);
-            var shadowRect = Rectangle.Inflate(bounds, 2, 2);
-            using var shadowBrush = new SolidBrush(Color.FromArgb(25, 15, 23, 42));
-            using var shadowPath = CreateRoundedRectanglePath(shadowRect, 12);
-            g.FillPath(shadowBrush, shadowPath);
-
-            var fillColor = button.Enabled ? button.BackColor : Color.FromArgb(203, 213, 225);
-            var topColor = ControlPaint.Light(fillColor, 0.12f);
-            var bottomColor = ControlPaint.Dark(fillColor, 0.08f);
-
-            using var fillPath = CreateRoundedRectanglePath(bounds, 12);
-            using var gradientBrush = new LinearGradientBrush(bounds, topColor, bottomColor, LinearGradientMode.Vertical);
-            g.FillPath(gradientBrush, fillPath);
-
-            using var borderPen = new Pen(Color.FromArgb(120, 255, 255, 255), 1.25f);
-            g.DrawPath(borderPen, fillPath);
-
-            if (button.Enabled)
-            {
-                using var innerGlow = new Pen(Color.FromArgb(60, 255, 255, 255), 1f);
-                using var innerPath = CreateRoundedRectanglePath(Rectangle.Inflate(bounds, -2, -2), 10);
-                g.DrawPath(innerGlow, innerPath);
-            }
-
-            var textColor = button.Enabled ? Color.White : Color.FromArgb(71, 85, 105);
-            using var textBrush = new SolidBrush(textColor);
-            var textSize = g.MeasureString(button.Text, button.Font);
-            var textX = (button.Width - textSize.Width) / 2f;
-            var textY = (button.Height - textSize.Height) / 2f;
-            g.DrawString(button.Text, button.Font, textBrush, textX, textY);
+            Name = "GlobalLoadingLabel",
+            AutoSize = true,
+            Text = "Loading...",
+            Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(15, 23, 42),
+            TextAlign = ContentAlignment.MiddleCenter
         };
+
+        _globalLoadingOverlay.Controls.Add(_globalLoadingLabel);
+        _globalLoadingOverlay.Resize += (_, _) =>
+        {
+            if (_globalLoadingLabel != null && _globalLoadingOverlay != null)
+            {
+                _globalLoadingLabel.Location = new Point(
+                    (_globalLoadingOverlay.Width - _globalLoadingLabel.Width) / 2,
+                    (_globalLoadingOverlay.Height - _globalLoadingLabel.Height) / 2);
+            }
+        };
+
+        Controls.Add(_globalLoadingOverlay);
+        _globalLoadingOverlay.BringToFront();
+    }
+
+    private void ShowGlobalLoadingOverlay(string message)
+    {
+        EnsureGlobalLoadingOverlay();
+        if (_globalLoadingLabel != null)
+        {
+            _globalLoadingLabel.Text = message;
+        }
+
+        if (_globalLoadingOverlay != null)
+        {
+            _globalLoadingOverlay.Visible = true;
+            _globalLoadingOverlay.Enabled = true;
+            _globalLoadingOverlay.BringToFront();
+            _globalLoadingOverlay.Refresh();
+        }
+    }
+
+    private void HideGlobalLoadingOverlay()
+    {
+        if (_globalLoadingOverlay != null)
+        {
+            _globalLoadingOverlay.Visible = false;
+            _globalLoadingOverlay.Enabled = false;
+        }
     }
 
     private static GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int radius)
@@ -537,7 +537,7 @@ public partial class MainForm : Form
         var title = new Label { Text = _localizationService.GetString("Step1GameFolder", "Game folder"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
         var description = new Label { Text = _localizationService.GetString("GameFolderRequired", "Choose your GTA San Andreas folder."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
         var pathText = new TextBox { Name = "Step1GamePathTextBox", Width = 560, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-        var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var browse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
         ApplyPathSelectorTextBoxStyle(pathText);
         ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
 
@@ -608,7 +608,7 @@ public partial class MainForm : Form
         var subtitle = new Label { Text = _localizationService.GetString("BaseModsFolderSubtitle", "Select the base mod folder for easy access"), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
 
         var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-        var modBaseBrowse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var modBaseBrowse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
         ApplyPathSelectorTextBoxStyle(modBaseText);
         ApplyBrowseButtonStyle(modBaseBrowse, Color.FromArgb(37, 99, 235));
 
@@ -683,7 +683,7 @@ public partial class MainForm : Form
         var title = new Label { Text = _localizationService.GetString("Step3Mod", "Select mod"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
         var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold), Margin = new Padding(0, 0, 0, 8) };
         var folderText = new TextBox { Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-        var browse = new Button { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var browse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
         var selectedName = new Label { AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 12, 0, 0) };
         ApplyPathSelectorTextBoxStyle(folderText);
         ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
@@ -834,6 +834,45 @@ public partial class MainForm : Form
         var progressBar = new ProgressBar { Width = 680, Height = 24, Minimum = 0, Maximum = 100, Value = 0, Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 8) };
         var fileList = new ListBox { Name = "Step4FileList", Dock = DockStyle.Bottom, Height = 140, Font = new Font("Segoe UI", 9F), Margin = new Padding(0, 8, 0, 0), Visible = true };
         var previewRoot = new Panel { Name = "Step4PreviewRoot", Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0), BackColor = Color.FromArgb(255, 255, 255) };
+        var loadingOverlay = new Panel
+        {
+            Name = "Step4LoadingOverlay",
+            Dock = DockStyle.Fill,
+            Visible = false,
+            BackColor = Color.FromArgb(245, 247, 250),
+            Padding = new Padding(18),
+            BorderStyle = BorderStyle.None
+        };
+        var loadingSpinner = new Label
+        {
+            Name = "Step4LoadingSpinner",
+            Text = "⏳",
+            AutoSize = true,
+            Font = new Font("Segoe UI", 28F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(37, 99, 235),
+            TextAlign = ContentAlignment.MiddleCenter
+        };
+        var loadingText = new Label
+        {
+            Name = "Step4LoadingText",
+            AutoSize = true,
+            Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(15, 23, 42),
+            TextAlign = ContentAlignment.MiddleCenter,
+            Text = _localizationService.GetString("LoadingVehicles", "Loading vehicles...")
+        };
+        loadingSpinner.Anchor = AnchorStyles.None;
+        loadingText.Anchor = AnchorStyles.None;
+        loadingOverlay.Controls.Add(loadingText);
+        loadingOverlay.Controls.Add(loadingSpinner);
+        loadingOverlay.Resize += (_, _) =>
+        {
+            if (loadingOverlay.Width > 0)
+            {
+                loadingSpinner.Location = new Point((loadingOverlay.Width - loadingSpinner.Width) / 2, (loadingOverlay.Height - loadingSpinner.Height - loadingText.Height - 16) / 2);
+                loadingText.Location = new Point((loadingOverlay.Width - loadingText.Width) / 2, loadingSpinner.Bottom + 12);
+            }
+        };
         var readmeButton = new Button
         {
             Name = "Step4ReadmeButton",
@@ -864,10 +903,69 @@ public partial class MainForm : Form
         panel.Controls.Add(previewRoot);
         panel.Controls.Add(fileList);
         panel.Controls.Add(readmeButton);
+        panel.Controls.Add(loadingOverlay);
         panel.Controls.SetChildIndex(previewRoot, 3);
         panel.Controls.SetChildIndex(fileList, 4);
         panel.Controls.SetChildIndex(readmeButton, 5);
+        panel.Controls.SetChildIndex(loadingOverlay, 6);
         return panel;
+    }
+
+    private string GetStep4LoadingText(string? assetType)
+    {
+        var normalizedType = assetType?.Trim();
+        return normalizedType switch
+        {
+            "Vehicle" => _localizationService.GetString("LoadingVehicles", "Loading vehicles..."),
+            "Weapon" => _localizationService.GetString("LoadingWeapons", "Loading weapons..."),
+            "Skin" => _localizationService.GetString("LoadingSkins", "Loading skins..."),
+            _ => _localizationService.GetString("LoadingVehicles", "Loading vehicles...")
+        };
+    }
+
+    private void ShowStep4LoadingOverlay(string? assetType)
+    {
+        if (!_wizardPanels.TryGetValue(WizardStep.Step4, out var panel) || panel.IsDisposed)
+        {
+            return;
+        }
+
+        var overlay = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4LoadingOverlay");
+        var loadingText = overlay?.Controls.OfType<Label>().FirstOrDefault(control => control.Name == "Step4LoadingText");
+        if (overlay == null || loadingText == null)
+        {
+            return;
+        }
+
+        loadingText.Text = GetStep4LoadingText(assetType);
+        overlay.BringToFront();
+        overlay.Visible = true;
+        overlay.Enabled = true;
+        overlay.Refresh();
+    }
+
+    private void HideStep4LoadingOverlay()
+    {
+        if (!_wizardPanels.TryGetValue(WizardStep.Step4, out var panel) || panel.IsDisposed)
+        {
+            return;
+        }
+
+        var overlay = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4LoadingOverlay");
+        if (overlay == null)
+        {
+            return;
+        }
+
+        overlay.Visible = false;
+        overlay.Enabled = false;
+    }
+
+    private async Task ShowStep4LoadingTransitionAsync(string? assetType)
+    {
+        ShowStep4LoadingOverlay(assetType);
+        await Task.Delay(350);
+        HideStep4LoadingOverlay();
     }
 
     private void RefreshStep4Preview()
@@ -1414,7 +1512,7 @@ public partial class MainForm : Form
 
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
-        _step5CategoryFilter = "All";
+        _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
     }
 
     private static string GetAssetSelectionKey(GameAsset asset)
@@ -1605,28 +1703,27 @@ public partial class MainForm : Form
     private static (int Width, int Height) GetStep5CardSize(string? assetType, int baseWidth, int baseHeight)
     {
         var normalizedType = assetType?.Trim();
+        var width = Math.Max(150, baseWidth);
 
         if (string.Equals(normalizedType, "Vehicle", StringComparison.OrdinalIgnoreCase))
         {
-            var width = Math.Max(210, baseWidth + 24);
-            var height = Math.Max(120, Math.Min(170, (int)Math.Round(width * 0.62d)));
+            var height = Math.Max(120, Math.Min(200, (int)Math.Round(width * 0.62d)));
             return (width, height);
         }
 
         if (string.Equals(normalizedType, "Weapon", StringComparison.OrdinalIgnoreCase))
         {
-            var size = Math.Max(130, Math.Min(170, baseWidth));
-            return (size, size);
+            var height = Math.Max(110, Math.Min(180, (int)Math.Round(width * 0.88d)));
+            return (width, height);
         }
 
         if (string.Equals(normalizedType, "Skin", StringComparison.OrdinalIgnoreCase))
         {
-            var width = Math.Max(120, Math.Min(170, baseWidth));
-            var height = Math.Max(160, Math.Min(230, (int)Math.Round(width * 1.42d)));
+            var height = Math.Max(150, (int)Math.Round(width * 1.35d));
             return (width, height);
         }
 
-        return (baseWidth, baseHeight);
+        return (width, baseHeight);
     }
 
     private Control CreateAssetCard(GameAsset asset, int cardWidth, int cardHeight)
@@ -1792,6 +1889,11 @@ public partial class MainForm : Form
         foreach (var item in _wizardPanels)
         {
             item.Value.Visible = item.Key == step;
+        }
+
+        if (step == WizardStep.Step5 && !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
+        {
+            PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
         }
 
         UpdateSidebarState();
@@ -2002,7 +2104,9 @@ public partial class MainForm : Form
             try
             {
                 using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(modJsonPath));
-                if (jsonDoc.RootElement.ValueKind != System.Text.Json.JsonValueKind.Object || jsonDoc.RootElement.EnumerateObject().Any())
+                var root = jsonDoc.RootElement;
+                var hasAnyProperties = root.ValueKind == System.Text.Json.JsonValueKind.Object && root.EnumerateObject().Any();
+                if (root.ValueKind != System.Text.Json.JsonValueKind.Object || !hasAnyProperties)
                 {
                     MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -2037,7 +2141,8 @@ public partial class MainForm : Form
                 PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
                 GoToStep(WizardStep.Step4);
                 await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
-                GoToStep(WizardStep.Step5);
+                await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
+                GoToStep(WizardStep.Step6);
                 return;
             }
 
@@ -2074,6 +2179,7 @@ public partial class MainForm : Form
         GoToStep(WizardStep.Step4);
         await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir);
         ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
+        await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
         GoToStep(WizardStep.Step5);
         _selectedReadmePath = FindReadmeFile(targetDir);
     }
@@ -2516,13 +2622,29 @@ public partial class MainForm : Form
 
     private void RefreshModList()
     {
+        _ = RefreshModListAsync();
+    }
+
+    private async Task RefreshModListAsync()
+    {
         if (ModLoaderFlowPanel == null)
         {
             return;
         }
 
+        var gamePath = _selectedGamePath;
+        var isValidGameFolder = !string.IsNullOrWhiteSpace(gamePath) && GameService.IsValidGameFolder(gamePath);
+        var mods = isValidGameFolder
+            ? await Task.Run(() => ModLoaderService.GetInstalledMods(gamePath))
+            : new List<ModInfo>();
+
+        if (ModLoaderFlowPanel.IsDisposed)
+        {
+            return;
+        }
+
         ModLoaderFlowPanel.Controls.Clear();
-        if (string.IsNullOrWhiteSpace(_selectedGamePath) || !GameService.IsValidGameFolder(_selectedGamePath))
+        if (!isValidGameFolder)
         {
             var empty = new Label
             {
@@ -2536,7 +2658,7 @@ public partial class MainForm : Form
             return;
         }
 
-        foreach (var mod in ModLoaderService.GetInstalledMods(_selectedGamePath))
+        foreach (var mod in mods)
         {
             var card = new Panel { Width = 260, Height = 250, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(10), Margin = new Padding(10) };
             var preview = new PictureBox { Width = 220, Height = 110, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle };
@@ -2574,24 +2696,37 @@ public partial class MainForm : Form
 
     private void RefreshModLibrary()
     {
+        _ = RefreshModLibraryAsync();
+    }
+
+    private async Task RefreshModLibraryAsync()
+    {
         if (ModLibraryListBox == null)
         {
             return;
         }
 
-        ModLibraryListBox.Items.Clear();
-        if (string.IsNullOrWhiteSpace(_selectedModSourcePath) || !Directory.Exists(_selectedModSourcePath))
+        var sourcePath = _selectedModSourcePath;
+        var entries = await Task.Run(() =>
         {
-            ModLibraryListBox.Items.Add(_localizationService.GetString("NoModPackagesInLibrary", "No mod packages found in this library yet."));
+            if (string.IsNullOrWhiteSpace(sourcePath) || !Directory.Exists(sourcePath))
+            {
+                return new List<string>();
+            }
+
+            return ModPackageService.DiscoverModPackages(sourcePath)
+                .Select(item => item.DisplayName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(item => item, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        });
+
+        if (ModLibraryListBox.IsDisposed)
+        {
             return;
         }
 
-        var entries = ModPackageService.DiscoverModPackages(_selectedModSourcePath)
-            .Select(item => item.DisplayName)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(item => item, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
+        ModLibraryListBox.Items.Clear();
         if (entries.Count == 0)
         {
             ModLibraryListBox.Items.Add(_localizationService.GetString("NoModPackagesInLibrary", "No mod packages found in this library yet."));
@@ -2739,9 +2874,17 @@ public partial class MainForm : Form
         return occupied;
     }
 
-    private static string GetNextAvailableSlotTargetName(string userFilesRoot, bool isDyom)
+    private static string GetNextAvailableSlotTargetName(string userFilesRoot, bool isDyom, HashSet<int>? reservedSlots = null)
     {
         var occupied = GetOccupiedSlots(userFilesRoot, isDyom);
+        if (reservedSlots != null)
+        {
+            foreach (var reservedSlot in reservedSlots)
+            {
+                occupied.Add(reservedSlot);
+            }
+        }
+
         for (var slot = 1; slot <= 8; slot++)
         {
             if (!occupied.Contains(slot))
@@ -2793,12 +2936,15 @@ public partial class MainForm : Form
         var trashInfo = new DirectoryInfo(trashRoot);
         trashInfo.Attributes |= FileAttributes.Hidden;
 
+        var installedSlots = new List<int>();
         foreach (var sourceFile in packageFiles)
         {
             var fileName = Path.GetFileName(sourceFile);
-            var destinationName = GetNextAvailableSlotTargetName(userFilesRoot, isDyom);
+            var destinationName = GetNextAvailableSlotTargetName(userFilesRoot, isDyom, new HashSet<int>(installedSlots));
             var destinationPath = Path.Combine(userFilesRoot, destinationName);
-            var targetSlot = int.TryParse(Regex.Match(destinationName, isDyom ? "^DYOM(\\d+)\\.dat$" : "^GTASAsf(\\d+)\\.b$", RegexOptions.IgnoreCase).Groups[1].Value, out var slot) ? slot : 1;
+            var targetSlot = int.TryParse(Regex.Match(destinationName, isDyom ? "^DYOM(\\d+)\\.dat$" : "^GTASAsf(\\d+)\\.b$", RegexOptions.IgnoreCase).Groups[1].Value, out var slot)
+                ? slot
+                : 1;
 
             if (File.Exists(destinationPath))
             {
@@ -2812,18 +2958,16 @@ public partial class MainForm : Form
             }
 
             File.Copy(sourceFile, destinationPath, true);
-            var displayName = string.IsNullOrWhiteSpace(modName) ? Path.GetFileNameWithoutExtension(fileName) : modName;
-            if (isDyom)
-            {
-                MessageBox.Show($"DYOM slot {targetSlot} installed successfully.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show($"Save slot {targetSlot} installed successfully.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            break;
+            installedSlots.Add(targetSlot);
         }
+
+        var slotLabel = isDyom ? "DYOM" : "save";
+        var installedCount = installedSlots.Count;
+        var summary = installedCount == 1
+            ? $"{slotLabel} slot {installedSlots[0]} installed successfully."
+            : $"{installedCount} {slotLabel} slots installed successfully: {string.Join(", ", installedSlots)}.";
+
+        MessageBox.Show(summary, _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private async Task InstallMissionDslPackageAsync(string packageRoot, string modName)
@@ -3014,7 +3158,8 @@ public partial class MainForm : Form
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
                 File.Copy(sourcePath, destinationPath, true);
-                progressForm.UpdateProgress((int)((index + 1) * 100d / packageFiles.Count) + "%");
+                var percent = (int)((index + 1) * 100d / Math.Max(1, packageFiles.Count));
+                progressForm.UpdateProgress(percent, sourcePath);
                 await Task.Yield();
             }
 
@@ -3175,7 +3320,7 @@ public partial class MainForm : Form
                 ModPackageService.RecordReplacementInstallation(record);
 
                 var percent = (int)((i + 1) * 100d / Math.Max(1, filesToReplace.Count));
-                progressForm.UpdateProgress(percent + "%");
+                progressForm.UpdateProgress(percent, sourceFile);
                 await Task.Delay(30);
             }
 
@@ -3323,7 +3468,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void LanguageComboBox_SelectedIndexChanged(object? sender, EventArgs e)
+    private async void LanguageComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (_isApplyingLanguage)
         {
@@ -3356,14 +3501,15 @@ public partial class MainForm : Form
         _isApplyingLanguage = true;
         try
         {
+            ShowGlobalLoadingOverlay(_localizationService.GetString("LoadingVehicles", "Loading vehicles...") /* lightweight refresh indicator */);
             _settings.Language = requestedLanguage;
             ApplyCurrentLanguage();
             ApplyLocalization();
             ApplyCurrentTheme();
             ApplySidebarDirection();
             UpdateSidebarState();
-            RefreshModList();
-            RefreshModLibrary();
+            await RefreshModListAsync();
+            await RefreshModLibraryAsync();
             Invalidate();
             _settingsService.Save(_settings);
 
@@ -3383,6 +3529,7 @@ public partial class MainForm : Form
         }
         finally
         {
+            HideGlobalLoadingOverlay();
             _isApplyingLanguage = false;
         }
     }

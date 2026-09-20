@@ -520,7 +520,7 @@ public class ModPackageService
                 Directory.CreateDirectory(destinationDirectory);
             }
 
-            await Task.Run(() => File.Copy(file, destination, false), cancellationToken);
+            await Task.Run(() => File.Copy(file, destination, true), cancellationToken);
             progress?.Report(Path.GetFileName(file));
         }
     }
@@ -535,16 +535,18 @@ public class ModPackageService
                 ZipFile.ExtractToDirectory(archivePath, destinationRoot, overwriteFiles: true);
                 break;
             case ".7z":
-                if (!File.Exists("7z.exe"))
+                var sevenZipExecutablePath = Path.Combine(AppContext.BaseDirectory, "7z.exe");
+                if (!File.Exists(sevenZipExecutablePath))
                 {
-                    throw new InvalidOperationException("7z support is not available on this system.");
+                    throw new InvalidOperationException(
+                        $"7z.exe was not found next to the application. Please place 7z.exe in '{AppContext.BaseDirectory}' so archive extraction can work.");
                 }
 
                 await Task.Run(() =>
                 {
                     var psi = new System.Diagnostics.ProcessStartInfo
                     {
-                        FileName = "7z.exe",
+                        FileName = sevenZipExecutablePath,
                         Arguments = $"x \"{archivePath}\" -o\"{destinationRoot}\" -y",
                         RedirectStandardOutput = true,
                         UseShellExecute = false
