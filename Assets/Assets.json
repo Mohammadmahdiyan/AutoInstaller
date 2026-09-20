@@ -2750,7 +2750,7 @@
             "id": "201",
             "name": "Farm Worker",
             "nameFile": "dwfylc2",
-            "image": "Assets/Skins/Skinid201.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -3009,7 +3009,7 @@
             "id": "237",
             "name": "Prostitute",
             "nameFile": "shfypro",
-            "image": "Assets/Skins/Skinid237.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -3072,7 +3072,7 @@
             "id": "246",
             "name": "Female",
             "nameFile": "vhfyst3",
-            "image": "Assets/Skins/Skinid246.jpg",
+            "image": null,
             "category": "normal"
         },
         {
@@ -3149,7 +3149,7 @@
             "id": "257",
             "name": "Stripper",
             "nameFile": "swfystr",
-            "image": "Assets/Skins/Skinid257.jpg",
+            "image": null,
             "category": "normal"
         },
         {
