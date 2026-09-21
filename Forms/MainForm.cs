@@ -1610,8 +1610,23 @@ public partial class MainForm : Form
     private Panel CreateWizardStep5()
     {
         var panel = new Panel { Name = "AssetStepPanel", BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Name = "AssetStepTitle", Text = _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced..."), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top };
-        var filters = new FlowLayoutPanel { Name = "AssetFilters", Dock = DockStyle.Top, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Padding = new Padding(0, 4, 0, 4) };
+        var layout = new TableLayoutPanel
+        {
+            Name = "AssetStepLayout",
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 3,
+            Padding = new Padding(0),
+            Margin = new Padding(0),
+            BackColor = Color.Transparent
+        };
+        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+        var title = new Label { Name = "AssetStepTitle", Text = _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced..."), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        var filters = new FlowLayoutPanel { Name = "AssetFilters", Dock = DockStyle.Fill, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Padding = new Padding(0, 4, 0, 4), Margin = new Padding(0, 0, 0, 8) };
         var categoryLabel = new Label { Name = "AssetCategoryLabel", Text = _localizationService.GetString("AssetCategory", "Category"), AutoSize = true, Margin = new Padding(0, 7, 8, 0), Visible = false };
         var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 240, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
         var columns = new ComboBox { Name = "AssetColumns", Width = 80, DropDownStyle = ComboBoxStyle.DropDownList };
@@ -1636,7 +1651,7 @@ public partial class MainForm : Form
         filters.Controls.Add(columns);
         filters.Controls.Add(sortLabel);
         filters.Controls.Add(sorting);
-        var gallery = new FlowLayoutPanel { Name = "AssetGallery", Dock = DockStyle.Fill, AutoScroll = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Padding = new Padding(0, 8, 0, 0) };
+        var gallery = new FlowLayoutPanel { Name = "AssetGallery", Dock = DockStyle.Fill, AutoScroll = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Padding = new Padding(0, 8, 0, 0), Margin = new Padding(0) };
         gallery.SizeChanged += (_, _) => RefreshAssetStep();
 
         categoryFilter.SelectedIndexChanged += (_, _) =>
@@ -1661,9 +1676,10 @@ public partial class MainForm : Form
             RefreshAssetStep();
         };
 
-        panel.Controls.Add(gallery);
-        panel.Controls.Add(filters);
-        panel.Controls.Add(title);
+        layout.Controls.Add(title, 0, 0);
+        layout.Controls.Add(filters, 0, 1);
+        layout.Controls.Add(gallery, 0, 2);
+        panel.Controls.Add(layout);
         return panel;
     }
 
