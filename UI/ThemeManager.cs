@@ -1,6 +1,7 @@
 using GtaSaModManager.Models;
 using Microsoft.Win32;
 using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 
 namespace GtaSaModManager.UI;
 
@@ -259,6 +260,9 @@ public static class ThemeManager
         public ThemePalette? Palette { get; set; }
     }
 
+    [DllImport("uxtheme.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+    private static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string? pszSubIdList);
+
     private static readonly Dictionary<Button, ButtonState> ButtonStates = new();
 
     public static AppTheme ParseTheme(string? value)
@@ -469,12 +473,38 @@ public static class ThemeManager
                 palette.TextPrimary;
         }
 
+        if (control is ScrollableControl scrollableControl)
+        {
+            ApplyScrollBarTheme(scrollableControl, palette);
+        }
+
         foreach (Control child in control.Controls)
         {
             ApplyThemeToControl(
                 child,
                 palette);
         }
+    }
+
+    private static void ApplyScrollBarTheme(
+        ScrollableControl control,
+        ThemePalette palette)
+    {
+        if (control == null)
+            return;
+
+        var themeName = IsDarkPalette(palette) ? "DarkMode_Explorer" : "Explorer";
+
+        if (control.IsHandleCreated)
+        {
+            _ = SetWindowTheme(control.Handle, themeName, null);
+            return;
+        }
+
+        control.HandleCreated += (_, _) =>
+        {
+            _ = SetWindowTheme(control.Handle, themeName, null);
+        };
     }
 
     private static void EnsureGradientBackground(
