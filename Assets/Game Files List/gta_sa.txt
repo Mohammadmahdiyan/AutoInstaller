@@ -1,0 +1,471 @@
+📚 gta_sa inside game folder
+
+├── 📁 01-anim
+│   ├── 📄 anim.img
+│   ├── 📄 cuts.img
+│   └── 📄 ped.ifp
+├── 📁 02-audio
+│   ├── 📁 CONFIG
+│   │   ├── 📄 AudioEventHistory.txt
+│   │   ├── 📄 Backup_BankLkup.dat
+│   │   ├── 📄 Backup_TrakLkup.dat
+│   │   ├── 📄 BankLkup.dat
+│   │   ├── 📄 BankSlot.dat
+│   │   ├── 📄 EventVol.dat
+│   │   ├── 📄 PakFiles.dat
+│   │   ├── 📄 StrmPaks.dat
+│   │   └── 📄 TrakLkup.dat
+│   ├──📁 SFX
+│   │   ├── 📄 FEET
+│   │   ├── 📄 GENRL
+│   │   ├── 📄 PAIN_A
+│   │   ├── 📄 SCRIPT
+│   │   ├── 📄 SPC_EA
+│   │   ├── 📄 SPC_FA
+│   │   ├── 📄 SPC_GA
+│   │   ├── 📄 SPC_NA
+│   │   └── 📄 SPC_PA
+│   └── 📁 streams
+│   │   ├── 📄 AA
+│   │   ├── 📄 ADVERTS
+│   │   ├── 📄 AMBIENCE
+│   │   ├── 📄 BEATS
+│   │   ├── 📄 CH
+│   │   ├── 📄 CO
+│   │   ├── 📄 CR
+│   │   ├── 📄 CUTSCENE
+│   │   ├── 📄 DS
+│   │   ├── 📄 HC
+│   │   ├── 📄 MH
+│   │   ├── 📄 MR
+│   │   ├── 📄 NJ
+│   │   ├── 📄 RE
+│   │   ├── 📄 RG
+│   │   └── 📄 TK
+│   └── 📁 streams
+│   │   ├── 📄 AA
+│   │   ├── 📄 ADVERTS
+│   │   ├── 📄 AMBIENCE
+│   │   ├── 📄 BEATS
+│   │   ├── 📄 CH
+│   │   ├── 📄 CO
+│   │   ├── 📄 CR
+│   │   ├── 📄 CUTSCENE
+│   │   ├── 📄 DS
+│   │   ├── 📄 HC
+│   │   ├── 📄 MH
+│   │   ├── 📄 MR
+│   │   ├── 📄 NJ
+│   │   ├── 📄 RE
+│   │   ├── 📄 RG
+│   │   └── 📄 TK
+├── 📁 03-data
+│   ├── 📁 01-Decision
+│   │   ├── 📁 01-Allowed
+│   │   │   ├── 📄 Cop.ped
+│   │   │   ├── 📄 Fireman.ped
+│   │   │   ├── 📄 GangMbr.ped
+│   │   │   ├── 📄 Indoors.ped
+│   │   │   ├── 📄 m_empty.ped
+│   │   │   ├── 📄 m_norm.ped
+│   │   │   ├── 📄 m_plyr.ped
+│   │   │   ├── 📄 m_steal.ped
+│   │   │   ├── 📄 m_tough.ped
+│   │   │   ├── 📄 m_weak.ped
+│   │   │   ├── 📄 MISSION.grp
+│   │   │   ├── 📄 R_Norm.ped
+│   │   │   ├── 📄 R_Tough.ped
+│   │   │   ├── 📄 R_Weak.ped
+│   │   │   ├── 📄 RANDOM.grp
+│   │   │   ├── 📄 RANDOM.ped
+│   │   │   └── 📄 RANDOM2.grp
+│   │   ├── 📁 02-andyd
+│   │   │   ├── 📄 ADgrp.grp
+│   │   │   └── 📄 ADtemp.ped
+│   │   ├── 📁 03-chris
+│   │   │   ├── 📄 maf5.ped
+│   │   │   └── 📄 ryder3.ped
+│   │   ├── 📁 04-ChrisM
+│   │   │   ├── 📄 CMblnk.ped
+│   │   │   └── 📄 m_std_cm.ped
+│   │   ├── 📁 05-Craig
+│   │   │   └── 📄 crack1.ped
+│   │   ├── 📁 06-david
+│   │   │   ├── 📄 dam_sec.ped
+│   │   │   └── 📄 hei2_sc.ped
+│   │   ├── 📁 07-Imran
+│   │   │   ├── 📄 sci1_is.ped
+│   │   │   ├── 📄 std1_is.ped
+│   │   │   └── 📄 std2_is.ped
+│   │   ├── 📄 BLANK.ped
+│   │   ├── 📄 Cop.ped
+│   │   ├── 📄 FLAT.ped
+│   │   ├── 📄 GangMbr.ped
+│   │   ├── 📄 GROVE.ped
+│   │   ├── 📄 Indoors.ped
+│   │   ├── 📄 m_empty.ped
+│   │   ├── 📄 m_infrm.ped
+│   │   ├── 📄 m_norm.ped
+│   │   ├── 📄 m_std.ped
+│   │   ├── 📄 m_tough.ped
+│   │   ├── 📄 m_weak.ped
+│   │   ├── 📄 MISSION.grp
+│   │   ├── 📄 MISSION.ped
+│   │   └── 📄 PedEvent.txt
+│   ├── 📁 02-Icons
+│   │   ├── 📄 app.ico
+│   │   └── 📄 bin.ico
+│   ├── 📁 03-maps
+│   │   ├── 📁 01-country
+│   │   │   ├── 📄 countn2.ide
+│   │   │   ├── 📄 countn2.ipl
+│   │   │   ├── 📄 countrye.ide
+│   │   │   ├── 📄 countrye.ipl
+│   │   │   ├── 📄 countryN.ide
+│   │   │   ├── 📄 countryN.ipl
+│   │   │   ├── 📄 countryS.ide
+│   │   │   ├── 📄 countryS.ipl
+│   │   │   ├── 📄 countryW.ide
+│   │   │   ├── 📄 countryw.ipl
+│   │   │   └── 📄 counxref.ide
+│   │   ├── 📁 02-generic
+│   │   │   ├── 📄 barriers.ide
+│   │   │   ├── 📄 dynamic.ide
+│   │   │   ├── 📄 dynamic2.ide
+│   │   │   ├── 📄 multiobj.ide
+│   │   │   ├── 📄 procobj.ide
+│   │   │   └── 📄 vegepart.ide
+│   │   ├── 📁 03-interior
+│   │   │   ├── 📄 gen_int1.ide
+│   │   │   ├── 📄 gen_int1.ipl
+│   │   │   ├── 📄 gen_int2.ide
+│   │   │   ├── 📄 gen_int2.ipl
+│   │   │   ├── 📄 gen_int3.ide
+│   │   │   ├── 📄 gen_int3.ipl
+│   │   │   ├── 📄 gen_int4.ide
+│   │   │   ├── 📄 gen_int4.ipl
+│   │   │   ├── 📄 gen_int5.ide
+│   │   │   ├── 📄 gen_int5.ipl
+│   │   │   ├── 📄 gen_intb.ide
+│   │   │   ├── 📄 gen_intb.ipl
+│   │   │   ├── 📄 int_cont.ide
+│   │   │   ├── 📄 int_cont.ipl
+│   │   │   ├── 📄 int_LA.ide
+│   │   │   ├── 📄 int_LA.ipl
+│   │   │   ├── 📄 int_SF.ide
+│   │   │   ├── 📄 int_SF.ipl
+│   │   │   ├── 📄 int_veg.ide
+│   │   │   ├── 📄 int_veg.ipl
+│   │   │   ├── 📄 propext.ide
+│   │   │   ├── 📄 props.ide
+│   │   │   ├── 📄 props2.ide
+│   │   │   ├── 📄 savehous.ide
+│   │   │   ├── 📄 savehous.ipl
+│   │   │   ├── 📄 stadint.ide
+│   │   │   └── 📄 stadint.ipl
+│   │   ├── 📁 04-LA
+│   │   │   ├── 📄 LAe.ide
+│   │   │   ├── 📄 LAe.ipl
+│   │   │   ├── 📄 LAe2.ide
+│   │   │   ├── 📄 LAe2.ipl
+│   │   │   ├── 📄 LAhills.ide
+│   │   │   ├── 📄 LAhills.ipl
+│   │   │   ├── 📄 LAn.ide
+│   │   │   ├── 📄 LAn.ipl
+│   │   │   ├── 📄 LAn2.ide
+│   │   │   ├── 📄 LAn2.ipl
+│   │   │   ├── 📄 LAs.ide
+│   │   │   ├── 📄 LAs.ipl
+│   │   │   ├── 📄 LAs2.ide
+│   │   │   ├── 📄 LAs2.ipl
+│   │   │   ├── 📄 LAw.ide
+│   │   │   ├── 📄 LAw.ipl
+│   │   │   ├── 📄 LAw2.ide
+│   │   │   ├── 📄 LAw2.ipl
+│   │   │   ├── 📄 LaWn.ide
+│   │   │   ├── 📄 LaWn.ipl
+│   │   │   └── 📄 LAxref.ide
+│   │   ├── 📁 05-leveldes
+│   │   │   ├── 📄 leveldes.ide
+│   │   │   ├── 📄 leveldes.ipl
+│   │   │   ├── 📄 levelmap.ide
+│   │   │   ├── 📄 levelmap.ipl
+│   │   │   ├── 📄 levelxre.ide
+│   │   │   ├── 📄 seabed.ide
+│   │   │   └── 📄 seabed.ipl
+│   │   ├── 📁 06-SF
+│   │   │   ├── 📄 SFe.ide
+│   │   │   ├── 📄 SFe.ipl
+│   │   │   ├── 📄 SFn.ide
+│   │   │   ├── 📄 SFn.ipl
+│   │   │   ├── 📄 SFs.ide
+│   │   │   ├── 📄 SFs.ipl
+│   │   │   ├── 📄 SFSe.ide
+│   │   │   ├── 📄 SFSe.ipl
+│   │   │   ├── 📄 SFw.ide
+│   │   │   ├── 📄 SFw.ipl
+│   │   │   └── 📄 SFxref.ide
+│   │   ├── 📁 07-vegas
+│   │   │   ├── 📄 vegasE.ide
+│   │   │   ├── 📄 vegasE.ipl
+│   │   │   ├── 📄 VegasN.ide
+│   │   │   ├── 📄 vegasN.ipl
+│   │   │   ├── 📄 VegasS.ide
+│   │   │   ├── 📄 vegasS.ipl
+│   │   │   ├── 📄 VegasW.ide
+│   │   │   ├── 📄 vegasW.ipl
+│   │   │   ├── 📄 vegaxref.ide
+│   │   │   └── 📄 vegaxref.ipl
+│   │   ├── 📁 08-veh_mods
+│   │   │   └── 📄 veh_mods.ide
+│   │   ├── 📄 Audiozon.ipl
+│   │   ├── 📄 cull.ipl
+│   │   ├── 📄 occlu.ipl
+│   │   ├── 📄 occluint.ipl
+│   │   ├── 📄 occluLA.ipl
+│   │   ├── 📄 occlusf.ipl
+│   │   ├── 📄 occluveg.ipl
+│   │   ├── 📄 paths.ipl
+│   │   ├── 📄 paths2.ipl
+│   │   ├── 📄 paths3.ipl
+│   │   ├── 📄 paths4.ipl
+│   │   ├── 📄 paths5.ipl
+│   │   ├── 📄 tunnels.ipl
+│   │   └── 📄 txd.ide
+│   ├── 📁 04-Paths
+│   │   ├── 📄 carrec.img
+│   │   ├── 📄 NODES0.DAT
+│   │   ├── 📄 NODES1.DAT
+│   │   ├── 📄 NODES10.DAT
+│   │   ├── 📄 NODES11.DAT
+│   │   ├── 📄 NODES12.DAT
+│   │   ├── 📄 NODES13.DAT
+│   │   ├── 📄 NODES14.DAT
+│   │   ├── 📄 NODES15.DAT
+│   │   ├── 📄 NODES16.DAT
+│   │   ├── 📄 NODES17.DAT
+│   │   ├── 📄 NODES18.DAT
+│   │   ├── 📄 NODES19.DAT
+│   │   ├── 📄 NODES2.DAT
+│   │   ├── 📄 NODES20.DAT
+│   │   ├── 📄 NODES21.DAT
+│   │   ├── 📄 NODES22.DAT
+│   │   ├── 📄 NODES23.DAT
+│   │   ├── 📄 NODES24.DAT
+│   │   ├── 📄 NODES25.DAT
+│   │   ├── 📄 NODES26.DAT
+│   │   ├── 📄 NODES27.DAT
+│   │   ├── 📄 NODES28.DAT
+│   │   ├── 📄 NODES29.DAT
+│   │   ├── 📄 NODES3.DAT
+│   │   ├── 📄 NODES30.DAT
+│   │   ├── 📄 NODES31.DAT
+│   │   ├── 📄 NODES32.DAT
+│   │   ├── 📄 NODES33.DAT
+│   │   ├── 📄 NODES34.DAT
+│   │   ├── 📄 NODES35.DAT
+│   │   ├── 📄 NODES36.DAT
+│   │   ├── 📄 NODES37.DAT
+│   │   ├── 📄 NODES38.DAT
+│   │   ├── 📄 NODES39.DAT
+│   │   ├── 📄 NODES4.DAT
+│   │   ├── 📄 NODES40.DAT
+│   │   ├── 📄 NODES41.DAT
+│   │   ├── 📄 NODES42.DAT
+│   │   ├── 📄 NODES43.DAT
+│   │   ├── 📄 NODES44.DAT
+│   │   ├── 📄 NODES45.DAT
+│   │   ├── 📄 NODES46.DAT
+│   │   ├── 📄 NODES47.DAT
+│   │   ├── 📄 NODES48.DAT
+│   │   ├── 📄 NODES49.DAT
+│   │   ├── 📄 NODES5.DAT
+│   │   ├── 📄 NODES50.DAT
+│   │   ├── 📄 NODES51.DAT
+│   │   ├── 📄 NODES52.DAT
+│   │   ├── 📄 NODES53.DAT
+│   │   ├── 📄 NODES54.DAT
+│   │   ├── 📄 NODES55.DAT
+│   │   ├── 📄 NODES56.DAT
+│   │   ├── 📄 NODES57.DAT
+│   │   ├── 📄 NODES58.DAT
+│   │   ├── 📄 NODES59.DAT
+│   │   ├── 📄 NODES6.DAT
+│   │   ├── 📄 NODES60.DAT
+│   │   ├── 📄 NODES61.DAT
+│   │   ├── 📄 NODES62.DAT
+│   │   ├── 📄 NODES63.DAT
+│   │   ├── 📄 NODES7.DAT
+│   │   ├── 📄 NODES8.DAT
+│   │   ├── 📄 NODES9.DAT
+│   │   ├── 📄 ROADBLOX.DAT
+│   │   ├── 📄 spath0.dat
+│   │   ├── 📄 tracks.dat
+│   │   ├── 📄 tracks2.dat
+│   │   ├── 📄 tracks3.dat
+│   │   ├── 📄 tracks4.dat
+│   │   ├── 📄 train.dat
+│   │   └── 📄 train2.dat
+│   ├── 📁 05-script
+│   │   └── 📄 script.img
+│   ├── 📄 animgrp.dat
+│   ├── 📄 animviewer.dat
+│   ├── 📄 ar_stats.dat
+│   ├── 📄 AudioEvents.txt
+│   ├── 📄 carcols.dat
+│   ├── 📄 cargrp.dat
+│   ├── 📄 carmods.dat
+│   ├── 📄 clothes.dat
+│   ├── 📄 default.dat
+│   ├── 📄 default.ide
+│   ├── 📄 fonts.dat
+│   ├── 📄 furnitur.dat
+│   ├── 📄 gridref.dat
+│   ├── 📄 gta.dat
+│   ├── 📄 gta_quick.dat
+│   ├── 📄 handling.cfg
+│   ├── 📄 info.zon
+│   ├── 📄 main.sc
+│   ├── 📄 map.zon
+│   ├── 📄 melee.dat
+│   ├── 📄 numplate.dat
+│   ├── 📄 object.dat
+│   ├── 📄 ped.dat
+│   ├── 📄 pedgrp.dat
+│   ├── 📄 peds.ide
+│   ├── 📄 pedstats.dat
+│   ├── 📄 plants.dat
+│   ├── 📄 polydensity.dat
+│   ├── 📄 popcycle.dat
+│   ├── 📄 procobj.dat
+│   ├── 📄 shopping.dat
+│   ├── 📄 statdisp.dat
+│   ├── 📄 surface.dat
+│   ├── 📄 surfaud.dat
+│   ├── 📄 surfinfo.dat
+│   ├── 📄 timecyc.dat
+│   ├── 📄 timecycp.dat
+│   ├── 📄 txdcut.ide
+│   ├── 📄 vehicles.ide
+│   ├── 📄 water.dat
+│   ├── 📄 water1.dat
+│   └── 📄 weapon.dat
+├── 📁 04-models
+│   ├── 📁 01-coll
+│   │   ├── 📄 peds.col
+│   │   ├── 📄 vehicles.col
+│   │   └── 📄 weapons.col
+│   ├── 📁 02-generic
+│   │   ├── 📄 air_vlo.DFF
+│   │   ├── 📄 arrow.DFF
+│   │   ├── 📄 hoop.dff
+│   │   ├── 📄 vehicle.txd
+│   │   ├── 📄 wheels.DFF
+│   │   ├── 📄 wheels.txd
+│   │   └── 📄 zonecylb.DFF
+│   ├── 📁 03-grass
+│   │   ├── 📄 grass0_1.dff
+│   │   ├── 📄 grass0_2.dff
+│   │   ├── 📄 grass0_3.dff
+│   │   ├── 📄 grass0_4.dff
+│   │   ├── 📄 grass1_1.dff
+│   │   ├── 📄 grass1_2.dff
+│   │   ├── 📄 grass1_3.dff
+│   │   ├── 📄 grass1_4.dff
+│   │   ├── 📄 grass2_1.dff
+│   │   ├── 📄 grass2_2.dff
+│   │   ├── 📄 grass2_3.dff
+│   │   ├── 📄 grass2_4.dff
+│   │   ├── 📄 grass3_1.dff
+│   │   ├── 📄 grass3_2.dff
+│   │   ├── 📄 grass3_3.dff
+│   │   ├── 📄 grass3_4.dff
+│   │   ├── 📄 plant1.dff
+│   │   └── 📄 plant1.txd
+│   ├── 📁 04-txd
+│   │   ├── 📄 intro1.txd
+│   │   ├── 📄 intro2.txd
+│   │   ├── 📄 INTRO3.TXD
+│   │   ├── 📄 intro4.txd
+│   │   ├── 📄 LD_BEAT.txd
+│   │   ├── 📄 LD_BUM.txd
+│   │   ├── 📄 LD_CARD.txd
+│   │   ├── 📄 LD_CHAT.txd
+│   │   ├── 📄 LD_DRV.txd
+│   │   ├── 📄 LD_DUAL.txd
+│   │   ├── 📄 ld_grav.txd
+│   │   ├── 📄 LD_NONE.txd
+│   │   ├── 📄 LD_OTB.txd
+│   │   ├── 📄 LD_OTB2.txd
+│   │   ├── 📄 LD_PLAN.txd
+│   │   ├── 📄 LD_POKE.txd
+│   │   ├── 📄 LD_POOL.txd
+│   │   ├── 📄 LD_RACE.txd
+│   │   ├── 📄 LD_RCE1.txd
+│   │   ├── 📄 LD_RCE2.txd
+│   │   ├── 📄 LD_RCE3.txd
+│   │   ├── 📄 LD_RCE4.txd
+│   │   ├── 📄 LD_RCE5.txd
+│   │   ├── 📄 LD_ROUL.txd
+│   │   ├── 📄 ld_shtr.txd
+│   │   ├── 📄 LD_SLOT.txd
+│   │   ├── 📄 LD_SPAC.txd
+│   │   ├── 📄 LD_TATT.txd
+│   │   ├── 📄 load0uk.txd
+│   │   ├── 📄 loadsc0.txd
+│   │   ├── 📄 loadsc1.txd
+│   │   ├── 📄 loadsc10.txd
+│   │   ├── 📄 loadsc11.txd
+│   │   ├── 📄 loadsc12.txd
+│   │   ├── 📄 loadsc13.txd
+│   │   ├── 📄 loadsc14.txd
+│   │   ├── 📄 loadsc2.txd
+│   │   ├── 📄 loadsc3.txd
+│   │   ├── 📄 loadsc4.txd
+│   │   ├── 📄 loadsc5.txd
+│   │   ├── 📄 loadsc6.txd
+│   │   ├── 📄 loadsc7.txd
+│   │   ├── 📄 loadsc8.txd
+│   │   ├── 📄 loadsc9.txd
+│   │   ├── 📄 LOADSCS.txd
+│   │   ├── 📄 LOADSUK.txd
+│   │   ├── 📄 outro.txd
+│   │   ├── 📄 splash1.txd
+│   │   ├── 📄 splash2.txd
+│   │   └── 📄 splash3.txd
+│   ├── 📄 cutscene.img
+│   ├── 📄 effects.fxp
+│   ├── 📄 effectsPC.txd
+│   ├── 📄 fonts.txd
+│   ├── 📄 fronten1.txd
+│   ├── 📄 fronten2.txd
+│   ├── 📄 fronten3.txd
+│   ├── 📄 fronten_pc.txd
+│   ├── 📄 gta3.img
+│   ├── 📄 gta_int.img
+│   ├── 📄 hud.txd
+│   ├── 📄 misc.txd
+│   ├── 📄 particle.txd
+│   ├── 📄 pcbtns.txd
+│   └── 📄 player.img
+├── 📁 05-movies
+│   ├── 📄 GTAtitles.mpg
+│   └── 📄 Logo.mpg
+├── 📁 06-text
+│   └── 📄 american.gxt
+├── 📄 1Eyed.uha
+├── 📄 Cheats.doc
+├── 📄 eax.dll
+├── 📄 gta_sa.exe
+├── 📄 gta_sa.nfo
+├── 📄 LibraryTree.txt
+├── 📄 ogg.dll
+├── 📄 PaulpBaker.COM.PNG
+├── 📄 stream.ini
+├── 📄 trainer.exe
+├── 📄 vorbis.dll
+└── 📄 vorbisFile.dll
+
+────────────────────────────
+پوشه‌ها: 31
+فایل‌ها: 388

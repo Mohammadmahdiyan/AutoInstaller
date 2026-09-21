@@ -1,0 +1,181 @@
+📁 Essentials
+
+├── 📁 01-CLEO
+│   ├── 📄 CLEO+.cleo
+│   ├── 📄 FileSystemOperations.cleo
+│   ├── 📄 IniFiles.cleo
+│   ├── 📄 IntOperations.cleo
+│   ├── 📄 memory2048.cs
+│   └── 📄 RZL-Trainer.cs
+├── 📁 02-data
+│   └── 📁 fonts
+│       ├── 📄 fp_font.dat
+│       └── 📄 fp_font.txd
+├── 📁 03-models
+│   └── 📄 FirstPerson.txd
+├── 📁 04-modloader
+│   ├── 📁 01-.data
+│   │   ├── 📁 01-licenses
+│   │   │   ├── 📄 boost.txt
+│   │   │   ├── 📄 cereal.txt
+│   │   │   ├── 📄 tinympl.txt
+│   │   │   └── 📄 utf8-cpp.txt
+│   │   ├── 📁 02-plugins
+│   │   │   └── 📁 gta3
+│   │   │       ├── 📄 std.asi.dll
+│   │   │       ├── 📄 std.asi.md
+│   │   │       ├── 📄 std.bank.dll
+│   │   │       ├── 📄 std.bank.md
+│   │   │       ├── 📄 std.data.dll
+│   │   │       ├── 📄 std.data.md
+│   │   │       ├── 📄 std.fx.dll
+│   │   │       ├── 📄 std.fx.md
+│   │   │       ├── 📄 std.movies.dll
+│   │   │       ├── 📄 std.movies.md
+│   │   │       ├── 📄 std.scm.dll
+│   │   │       ├── 📄 std.scm.md
+│   │   │       ├── 📄 std.sprites.dll
+│   │   │       ├── 📄 std.sprites.md
+│   │   │       ├── 📄 std.stream.dll
+│   │   │       ├── 📄 std.stream.md
+│   │   │       ├── 📄 std.text.dll
+│   │   │       ├── 📄 std.text.md
+│   │   │       ├── 📄 std.tracks.dll
+│   │   │       └── 📄 std.tracks.md
+│   │   ├── 📁 03-text
+│   │   │   ├── 📁 01-1033
+│   │   │   │   └── 📄 menu.fxt
+│   │   │   ├── 📁 02-1046
+│   │   │   │   └── 📄 menu.fxt
+│   │   │   └── 📁 03-2070
+│   │   │       └── 📄 menu.fxt
+│   │   ├── 📄 CHANGELOG.md
+│   │   ├── 📄 Command Line Arguments.md
+│   │   ├── 📄 config.ini.0
+│   │   ├── 📄 Leia-me.md
+│   │   ├── 📄 LICENSE
+│   │   ├── 📄 modloader.ini.0
+│   │   ├── 📄 plugins.ini.0
+│   │   ├── 📄 Profiles.md
+│   │   └── 📄 Readme.md
+│   └── 📁 02-_ESSENTIALS
+│       ├── 📁 01-FramerateVigilante
+│       │   ├── 📄 Framerate Vigilante.url
+│       │   ├── 📄 FramerateVigilante.ini
+│       │   └── 📄 FramerateVigilante.SA.asi
+│       ├── 📁 02-Open Limit Adjuster
+│       │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│       │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│       ├── 📁 03-RepairGTA
+│       │   ├── 📄 RepairGTA.SA.asi
+│       │   └── 📄 RepairGTA.url
+│       ├── 📁 04-RunDLL32 Fix
+│       │   ├── 📄 RunDLL32 Fix.url
+│       │   └── 📄 rundll32exefix.asi
+│       ├── 📁 05-SilentPatch
+│       │   ├── 📄 SilentPatch.url
+│       │   ├── 📄 SilentPatchSA.asi
+│       │   └── 📄 SilentPatchSA.ini
+│       ├── 📁 06-Widescreen Fix by ThirteenAG
+│       │   ├── 📄 GTASA.WidescreenFix.asi
+│       │   ├── 📄 GTASA.WidescreenFix.ini
+│       │   └── 📄 Widescreen Fix.url
+│       └── 📁 07-Windowed Mode
+│           ├── 📄 III.VC.SA.WindowedMode.asi
+│           └── 📄 III.VC.SA.WindowedMode.ini
+├── 📄 _noDEP.asi
+├── 📄 bass.dll
+├── 📄 CLEO.asi
+├── 📄 CrashInfo.ini
+├── 📄 CrashInfo.SA.asi
+├── 📄 CrashList.txt
+├── 📄 Essentials Pack.url
+├── 📄 FirstPerson.cfg
+├── 📄 FirstPerson.sp
+├── 📄 gta_sa.exe
+├── 📄 gta_sa.pdb
+├── 📄 GUI.fp
+├── 📄 Hooks.asi
+├── 📄 libcurl.dll
+├── 📄 LibraryTree.txt
+├── 📄 modloader.asi
+├── 📄 msvcr100d.dll
+├── 📄 vorbisFile.dll
+├── 📄 vorbisHooked.dll
+├── 📄 zlib1.dll
+└── 📄 Essentials (Readme - EN).txt => (
+       __  __ _      __  __           _     
+      |  \/  (_)    |  \/  |         | | 2026
+      | \  / |___  _| \  / | ___   __| |___ 
+      | |\/| | \ \/ / |\/| |/ _ \ / _` / __|
+      | |  | | |>  <| |  | | (_) | (_| \__ \
+      |_|  |_|_/_/\_\_|  |_|\___/ \__,_|___/
+
+
+      =======   MixMods.com.br   ======= - Best visualization with monospaced fonts, like "Consolas".
+
+
+      ------- Instructions:
+
+      Extract ALL to your GTA SA folder.
+
+      If your GTA SA is Steam/RLG, downgrade it: https://www.mixmods.com.br/2021/09/primeiros-passos-para-montar-um-gta-modificado/#Downgrade
+
+
+      == Mods included in this pack (DD/MM/YY):
+      EXE 1.0 US Hoodlum + 4 GB largeaddress patch
+      Silent's ASI Loader v1.5
+      CLEO v4.4.4 (no dev files)
+      CLEO+ v1.2.0 (no dev files)
+      ModLoader v0.3.7
+      SilentPatch v1.1 Build 33 Hotfix 1
+      Widescreen Fix by ThirteenAG (Unofficial) 29/11/24
+      Windowed Mode v2.0
+      Framerate Vigilante 09/11/24
+      CrashInfo v1.2.1
+      RepairGTA Build 5 14/08/23
+      RunDLL32 Fix
+      NoDEP
+      RZL-Trainer 5
+      memory2048
+      FirstPerson
+      Open Limit Adjuster
+
+
+      In the "(ESSENTIALS README)" folder it includes all readme files (IGNORE THE INSTALLATION INSTRUCTIONS IN THEM).
+      Also, a shortcut to the post of each mod for more informations (it's very important to read to learn what the mod does, possible problems etc)
+
+      The "(fix dependencies)" folder may not be necessary for you, but take a look, especially if you've formatted your PC recently.
+
+
+      There are still several important mods to install such as Open Limit Adjuster, MixSets etc.
+      BE SURE TO READ THIS PAGE:
+      https://www.mixmods.com.br/2021/09/primeiros-passos-para-montar-um-gta-modificado/
+      There are more important mods and good practices on how to mod your GTA.
+
+
+      Periodically, visit this page to see if we have released a new version of this pack with updated mods:
+      https://www.mixmods.com.br/2019/06/sa-essentials-pack/
+      It's very important to always have the latest versions of these mods to fix problems, have new features, be able to install new mods etc.
+
+
+      Originally Silent's ASI Loader comes with a "scripts" folder but few people install .asi in it, they prefer to install it in ModLoader to have better control.
+      If you want, just create a folder called "scripts" in the game folder and install the ASI mods in it.
+
+
+      If your PC is very weak, "Windowed Mode" may cause lag as it connects the game window to your desktop and therefore forces vsync. But it fixes bugs when closing and minimizing the game.
+
+
+
+      Pack: 01/03/26 (DD/MM/YY)
+      --------------------
+
+
+      ====   MixMods.com.br                ====
+      ====   fb.com/FamiliaMixMods         ====
+      ====   youtube.com/JuniorDjjrMixMods ====
+)
+
+────────────────────────────
+پوشه‌ها: 21
+فایل‌ها: 82
