@@ -1862,7 +1862,8 @@ public partial class MainForm : Form
             .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var hasMeaningfulCategories = categories.Count > 1;
+        var hasMeaningfulCategories = categories.Count > 0;
+        Debug.WriteLine($"[Step5] categories={categories.Count}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}");
 
         if (categoryFilter != null)
         {
@@ -1889,19 +1890,34 @@ public partial class MainForm : Form
                 _step5CategoryFilter = allText;
             }
 
-            var normalizedSelected = _step5CategoryFilter.Trim();
-            var validSelection = string.Equals(normalizedSelected, allText, StringComparison.OrdinalIgnoreCase)
-                || categories.Any(category => string.Equals(category.Trim(), normalizedSelected, StringComparison.OrdinalIgnoreCase));
+            var normalizedSelected = NormalizeCategoryValue(_step5CategoryFilter);
+            var validSelection = string.Equals(normalizedSelected, NormalizeCategoryValue(allText), StringComparison.OrdinalIgnoreCase)
+                || categories.Any(category => string.Equals(NormalizeCategoryValue(category), normalizedSelected, StringComparison.OrdinalIgnoreCase));
 
-            categoryFilter.SelectedItem = validSelection ? normalizedSelected : allText;
-            _step5CategoryFilter = categoryFilter.SelectedItem?.ToString() ?? allText;
+            if (!validSelection)
+            {
+                Debug.WriteLine($"[Step5] category selection reset from '{_step5CategoryFilter}' to '{allText}'");
+                _step5CategoryFilter = allText;
+            }
+
+            categoryFilter.SelectedItem = _step5CategoryFilter;
+            if (categoryFilter.SelectedItem == null)
+            {
+                categoryFilter.SelectedIndex = 0;
+                _step5CategoryFilter = allText;
+            }
+            else
+            {
+                _step5CategoryFilter = categoryFilter.SelectedItem.ToString() ?? allText;
+            }
         }
 
         var visibleAssets = assets;
         if (hasMeaningfulCategories && !string.Equals(_step5CategoryFilter, allText, StringComparison.OrdinalIgnoreCase))
         {
+            var normalizedSelectedCategory = NormalizeCategoryValue(_step5CategoryFilter);
             visibleAssets = assets
-                .Where(asset => string.Equals(NormalizeCategoryValue(asset.Category), NormalizeCategoryValue(_step5CategoryFilter), StringComparison.OrdinalIgnoreCase))
+                .Where(asset => string.Equals(NormalizeCategoryValue(asset.Category), normalizedSelectedCategory, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
