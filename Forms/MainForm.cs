@@ -60,6 +60,7 @@ public partial class MainForm : Form
     private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
     private int _step5ColumnCount = 3;
     private string _step5CategoryFilter = string.Empty;
+    private string _step5SortMode = "Name";
 
     private enum WizardStep
     {
@@ -1481,16 +1482,49 @@ public partial class MainForm : Form
         var categoryLabel = new Label { Name = "AssetCategoryLabel", Text = _localizationService.GetString("AssetCategory", "Category"), AutoSize = true, Margin = new Padding(0, 7, 8, 0), Visible = false };
         var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 240, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
         var columns = new ComboBox { Name = "AssetColumns", Width = 80, DropDownStyle = ComboBoxStyle.DropDownList };
+        var sorting = new ComboBox { Name = "AssetSortMode", Width = 180, DropDownStyle = ComboBoxStyle.DropDownList };
+        var allText = _localizationService.GetString("AssetAll", "All");
+
         columns.Items.AddRange(new object[] { "2", "3", "4", "5" });
         columns.SelectedItem = "3";
+        sorting.Items.AddRange(new object[] { _localizationService.GetString("SortByFileName", "Sort by file name"), _localizationService.GetString("SortById", "Sort by ID") });
+        sorting.SelectedItem = _localizationService.GetString("SortByFileName", "Sort by file name");
+
         filters.Controls.Add(categoryLabel);
         filters.Controls.Add(categoryFilter);
         filters.Controls.Add(new Label { Text = _localizationService.GetString("AssetColumns", "Columns"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) });
         filters.Controls.Add(columns);
+        filters.Controls.Add(new Label { Text = _localizationService.GetString("AssetSort", "Sort"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) });
+        filters.Controls.Add(sorting);
         var gallery = new FlowLayoutPanel { Name = "AssetGallery", Dock = DockStyle.Fill, AutoScroll = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Padding = new Padding(0, 8, 0, 0) };
 
-        categoryFilter.SelectedIndexChanged += (_, _) => RefreshAssetStep();
-        columns.SelectedIndexChanged += (_, _) => RefreshAssetStep();
+        categoryFilter.SelectedIndexChanged += (_, _) =>
+        {
+            if (categoryFilter.SelectedItem is string selectedCategory)
+            {
+                _step5CategoryFilter = selectedCategory;
+            }
+
+            RefreshAssetStep();
+        };
+
+        columns.SelectedIndexChanged += (_, _) =>
+        {
+            var selectedValue = columns.SelectedItem?.ToString();
+            if (int.TryParse(selectedValue, out var count))
+            {
+                _step5ColumnCount = Math.Clamp(count, 2, 5);
+                Debug.WriteLine($"[Step5] columns changed => {_step5ColumnCount}");
+            }
+
+            RefreshAssetStep();
+        };
+
+        sorting.SelectedIndexChanged += (_, _) =>
+        {
+            _step5SortMode = sorting.SelectedItem?.ToString() == _localizationService.GetString("SortById", "Sort by ID") ? "Id" : "Name";
+            RefreshAssetStep();
+        };
 
         panel.Controls.Add(gallery);
         panel.Controls.Add(filters);
@@ -1675,6 +1709,8 @@ public partial class MainForm : Form
         var categoryFilter = panel.Controls.Find("AssetCategoryFilter", false).FirstOrDefault() as ComboBox;
         var categoryLabel = panel.Controls.Find("AssetCategoryLabel", false).FirstOrDefault() as Label;
         var title = panel.Controls.Find("AssetStepTitle", false).FirstOrDefault() as Label;
+        var columns = panel.Controls.Find("AssetColumns", false).FirstOrDefault() as ComboBox;
+        var sortFilter = panel.Controls.Find("AssetSortMode", false).FirstOrDefault() as ComboBox;
         if (gallery == null)
         {
             return;
@@ -1691,18 +1727,37 @@ public partial class MainForm : Form
             title.Text = GetReplacementTitleForType(sourceType);
         }
 
+        if (columns != null && columns.SelectedItem == null)
+        {
+            columns.SelectedItem = "3";
+        }
+
+        if (columns != null)
+        {
+            var parsedValue = columns.SelectedItem?.ToString();
+            if (int.TryParse(parsedValue, out var parsedColumns))
+            {
+                _step5ColumnCount = Math.Clamp(parsedColumns, 2, 5);
+            }
+            else
+            {
+                _step5ColumnCount = 3;
+            }
+
+            Debug.WriteLine($"[Step5] columns changed => {_step5ColumnCount}");
+        }
+
+        if (sortFilter != null && string.IsNullOrWhiteSpace(sortFilter.SelectedItem?.ToString()) == false)
+        {
+            _step5SortMode = sortFilter.SelectedItem?.ToString() == _localizationService.GetString("SortById", "Sort by ID") ? "Id" : "Name";
+        }
+
         _isRefreshingAssetStep = true;
         gallery.SuspendLayout();
-        foreach (var oldControl in gallery.Controls.OfType<PictureBox>().ToList())
-        {
-            oldControl.Image?.Dispose();
-            oldControl.Image = null;
-        }
         gallery.Controls.Clear();
 
         var assets = _step5DetectedAssets
             .Where(asset => string.IsNullOrWhiteSpace(sourceType) || string.Equals(asset.AssetType, sourceType, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         var categories = assets
@@ -1725,10 +1780,9 @@ public partial class MainForm : Form
             categoryLabel.Visible = hasMeaningfulCategories;
         }
 
-        if (categoryFilter != null && hasMeaningfulCategories)
+        var allText = _localizationService.GetString("AssetAll", "All");
+        if (categoryFilter != null)
         {
-            var allText = _localizationService.GetString("AssetAll", "All");
-            var selectedCategory = string.IsNullOrWhiteSpace(_step5CategoryFilter) ? allText : _step5CategoryFilter;
             categoryFilter.Items.Clear();
             categoryFilter.Items.Add(allText);
             foreach (var category in categories)
@@ -1736,26 +1790,40 @@ public partial class MainForm : Form
                 categoryFilter.Items.Add(category);
             }
 
-            var validSelection = categories.Contains(selectedCategory, StringComparer.OrdinalIgnoreCase) || string.Equals(selectedCategory, allText, StringComparison.OrdinalIgnoreCase);
-            categoryFilter.SelectedItem = validSelection ? selectedCategory : allText;
+            if (string.IsNullOrWhiteSpace(_step5CategoryFilter))
+            {
+                _step5CategoryFilter = allText;
+            }
+
+            var normalizedSelected = _step5CategoryFilter.Trim();
+            var validSelection = string.Equals(normalizedSelected, allText, StringComparison.OrdinalIgnoreCase)
+                || categories.Any(category => string.Equals(category.Trim(), normalizedSelected, StringComparison.OrdinalIgnoreCase));
+
+            categoryFilter.SelectedItem = validSelection ? normalizedSelected : allText;
             _step5CategoryFilter = categoryFilter.SelectedItem?.ToString() ?? allText;
         }
 
-        var allCategoryText = _localizationService.GetString("AssetAll", "All");
-        var visibleAssets = hasMeaningfulCategories && !string.Equals(_step5CategoryFilter, allCategoryText, StringComparison.OrdinalIgnoreCase)
-            ? assets.Where(asset => string.Equals(asset.Category, _step5CategoryFilter, StringComparison.OrdinalIgnoreCase)).ToList()
-            : assets;
-
-        var columns = panel.Controls.Find("AssetColumns", false).FirstOrDefault() as ComboBox;
-        if (columns != null)
+        var visibleAssets = assets;
+        if (hasMeaningfulCategories && !string.Equals(_step5CategoryFilter, allText, StringComparison.OrdinalIgnoreCase))
         {
-            if (columns.SelectedItem == null)
-            {
-                columns.SelectedItem = "3";
-            }
-            _step5ColumnCount = int.TryParse(columns.SelectedItem?.ToString(), out var parsedColumns)
-                ? Math.Clamp(parsedColumns, 2, 5)
-                : 3;
+            visibleAssets = assets
+                .Where(asset => string.Equals(NormalizeCategoryValue(asset.Category), NormalizeCategoryValue(_step5CategoryFilter), StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        if (_step5SortMode == "Id")
+        {
+            visibleAssets = visibleAssets
+                .OrderBy(asset => string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        else
+        {
+            visibleAssets = visibleAssets
+                .OrderBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(asset => string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id, StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
         var availableGalleryWidth = gallery.ClientSize.Width > 0
@@ -1764,8 +1832,8 @@ public partial class MainForm : Form
 
         var usableGalleryWidth = Math.Max(260, availableGalleryWidth - gallery.Padding.Horizontal);
         var columnGap = 12;
-        var baseCardWidth = Math.Max(150, (usableGalleryWidth - (Math.Max(1, _step5ColumnCount) - 1) * columnGap) / Math.Max(1, _step5ColumnCount));
-        var cardHeight = Math.Max(95, Math.Min(130, (int)Math.Round(baseCardWidth * 0.475d)));
+        var baseCardWidth = Math.Max(150, (usableGalleryWidth - (_step5ColumnCount - 1) * columnGap) / Math.Max(1, _step5ColumnCount));
+        var cardHeight = Math.Max(95, (int)Math.Round(baseCardWidth * 0.50d));
 
         foreach (var asset in visibleAssets)
         {
@@ -1782,6 +1850,16 @@ public partial class MainForm : Form
         _isRefreshingAssetStep = false;
     }
 
+    private static string NormalizeCategoryValue(string? category)
+    {
+        if (string.IsNullOrWhiteSpace(category))
+        {
+            return string.Empty;
+        }
+
+        return Regex.Replace(category.Trim(), @"\s+", " ");
+    }
+
     private static (int Width, int Height) GetStep5CardSize(string? assetType, int baseWidth, int baseHeight)
     {
         var normalizedType = assetType?.Trim();
@@ -1789,13 +1867,13 @@ public partial class MainForm : Form
 
         if (string.Equals(normalizedType, "Vehicle", StringComparison.OrdinalIgnoreCase))
         {
-            var height = Math.Max(120, Math.Min(200, (int)Math.Round(width * 0.62d)));
+            var height = Math.Max(120, (int)Math.Round(width * 0.62d));
             return (width, height);
         }
 
         if (string.Equals(normalizedType, "Weapon", StringComparison.OrdinalIgnoreCase))
         {
-            var height = Math.Max(110, Math.Min(180, (int)Math.Round(width * 0.88d)));
+            var height = Math.Max(110, (int)Math.Round(width * 0.88d));
             return (width, height);
         }
 
