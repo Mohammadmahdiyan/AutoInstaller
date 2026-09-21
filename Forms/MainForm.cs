@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -55,6 +56,8 @@ public partial class MainForm : Form
     private bool _isRefreshingAssetStep;
     private Panel? _globalLoadingOverlay;
     private Label? _globalLoadingLabel;
+    private readonly System.Windows.Forms.Timer _loadingSpinnerTimer = new();
+    private float _loadingSpinnerAngle;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
@@ -101,6 +104,23 @@ public partial class MainForm : Form
             }
             _detectedModTimer.Stop();
         };
+
+        _loadingSpinnerTimer.Interval = 30;
+        _loadingSpinnerTimer.Tick += (_, _) =>
+        {
+            _loadingSpinnerAngle = (_loadingSpinnerAngle + 24f) % 360f;
+
+            var spinnerText = GetLoadingSpinnerGlyph(_loadingSpinnerAngle);
+            foreach (var spinner in GetVisibleLoadingSpinners())
+            {
+                if (!spinner.IsDisposed)
+                {
+                    spinner.Text = spinnerText;
+                    spinner.Refresh();
+                }
+            }
+        };
+
         GoToStep(_currentStep);
         RefreshModLibrary();
         RefreshModList();
@@ -223,19 +243,78 @@ public partial class MainForm : Form
 
         if (_globalLoadingOverlay != null)
         {
+            var snapshot = CaptureBlurredBackgroundForOverlay(this);
+            _globalLoadingOverlay.BackgroundImage = snapshot;
+            _globalLoadingOverlay.BackgroundImageLayout = ImageLayout.Stretch;
             _globalLoadingOverlay.Visible = true;
             _globalLoadingOverlay.Enabled = true;
             _globalLoadingOverlay.BringToFront();
             _globalLoadingOverlay.Refresh();
+            _loadingSpinnerTimer.Start();
         }
     }
 
     private void HideGlobalLoadingOverlay()
     {
+        _loadingSpinnerTimer.Stop();
         if (_globalLoadingOverlay != null)
         {
             _globalLoadingOverlay.Visible = false;
             _globalLoadingOverlay.Enabled = false;
+            _globalLoadingOverlay.BackgroundImage = null;
+        }
+    }
+
+    private static IEnumerable<Label> GetVisibleLoadingSpinners()
+    {
+        foreach (var control in Application.OpenForms.Cast<Form>().SelectMany(form => form.Controls.Cast<Control>()))
+        {
+            if (control is Label label && label.Name is "Step4LoadingSpinner")
+            {
+                yield return label;
+            }
+        }
+    }
+
+    private static string GetLoadingSpinnerGlyph(float angle)
+    {
+        var frames = new[] { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
+        var index = (int)((angle / 36f) % frames.Length);
+        return frames[index];
+    }
+
+    private static Bitmap? CaptureBlurredBackgroundForOverlay(Control target)
+    {
+        if (target == null || target.IsDisposed || target.Width <= 0 || target.Height <= 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            var image = new Bitmap(target.Width, target.Height, PixelFormat.Format32bppArgb);
+            using var g = Graphics.FromImage(image);
+            g.CopyFromScreen(target.PointToScreen(new Point(0, 0)), new Point(0, 0), target.Size);
+
+            var blurred = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
+            using var blurredGraphics = Graphics.FromImage(blurred);
+            var preview = new Rectangle(0, 0, image.Width, image.Height);
+            var attrs = new ImageAttributes();
+            var matrix = new ColorMatrix(new[]
+            {
+                new[] { 0.7f, 0, 0, 0, 0 },
+                new[] { 0, 0.7f, 0, 0, 0 },
+                new[] { 0, 0, 0.7f, 0, 0 },
+                new[] { 0, 0, 0, 1f, 0 },
+                new[] { 0, 0, 0, 0, 1f }
+            });
+            attrs.SetColorMatrix(matrix);
+            blurredGraphics.DrawImage(image, preview, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attrs);
+            return blurred;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -979,20 +1058,27 @@ public partial class MainForm : Form
 
         var overlay = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4LoadingOverlay");
         var loadingText = overlay?.Controls.OfType<Label>().FirstOrDefault(control => control.Name == "Step4LoadingText");
-        if (overlay == null || loadingText == null)
+        var spinner = overlay?.Controls.OfType<Label>().FirstOrDefault(control => control.Name == "Step4LoadingSpinner");
+        if (overlay == null || loadingText == null || spinner == null)
         {
             return;
         }
 
         loadingText.Text = GetStep4LoadingText(assetType);
+        overlay.BackgroundImage = CaptureBlurredBackgroundForOverlay(panel);
+        overlay.BackgroundImageLayout = ImageLayout.Stretch;
         overlay.BringToFront();
         overlay.Visible = true;
         overlay.Enabled = true;
         overlay.Refresh();
+        spinner.Text = "⏳";
+        spinner.Refresh();
+        _loadingSpinnerTimer.Start();
     }
 
     private void HideStep4LoadingOverlay()
     {
+        _loadingSpinnerTimer.Stop();
         if (!_wizardPanels.TryGetValue(WizardStep.Step4, out var panel) || panel.IsDisposed)
         {
             return;
@@ -1006,12 +1092,13 @@ public partial class MainForm : Form
 
         overlay.Visible = false;
         overlay.Enabled = false;
+        overlay.BackgroundImage = null;
     }
 
     private async Task ShowStep4LoadingTransitionAsync(string? assetType)
     {
         ShowStep4LoadingOverlay(assetType);
-        await Task.Delay(350);
+        await Task.Yield();
         HideStep4LoadingOverlay();
     }
 
