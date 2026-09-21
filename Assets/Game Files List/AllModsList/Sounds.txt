@@ -1,0 +1,1831 @@
+📁 Sounds
+
+├── 📁 01-Audio original
+│   └── 📄 Audio original.rar
+├── 📁 02-CODM Weapons Sound
+│   ├── 📁 modloader
+│   │   └── 📁 CODM Weapons Sounds
+│   │       └── 📁 GENRL
+│   │           └── 📁 Bank_137
+│   │               ├── 📄 sound_001.wav
+│   │               ├── 📄 sound_002.wav
+│   │               ├── 📄 sound_004.wav
+│   │               ├── 📄 sound_005.wav
+│   │               ├── 📄 sound_006.wav
+│   │               ├── 📄 sound_007.wav
+│   │               ├── 📄 sound_008.wav
+│   │               ├── 📄 sound_009.wav
+│   │               ├── 📄 sound_012.wav
+│   │               ├── 📄 sound_013.wav
+│   │               ├── 📄 sound_014.wav
+│   │               ├── 📄 sound_018.wav
+│   │               ├── 📄 sound_019.wav
+│   │               ├── 📄 sound_022.wav
+│   │               ├── 📄 sound_023.wav
+│   │               ├── 📄 sound_024.wav
+│   │               ├── 📄 sound_025.wav
+│   │               ├── 📄 sound_026.wav
+│   │               ├── 📄 sound_027.wav
+│   │               ├── 📄 sound_028.wav
+│   │               └── 📄 sound_069.wav
+│   └── 📄 README.txt
+├── 📁 03-IslamicEdition
+│   ├── 📁 01-audio
+│   │   └── 📁 CONFIG
+│   │       ├── 📄 AudioEventHistory.txt
+│   │       ├── 📄 Backup_BankLkup.dat
+│   │       ├── 📄 Backup_TrakLkup.dat
+│   │       ├── 📄 BankLkup.dat
+│   │       ├── 📄 BankSlot.dat
+│   │       ├── 📄 EventVol.dat
+│   │       ├── 📄 PakFiles.dat
+│   │       ├── 📄 StrmPaks.dat
+│   │       └── 📄 TrakLkup.dat
+│   ├── 📁 02-cleo
+│   │   └── 📄 NotAllowedToGetInsideHaramPlace.cs
+│   ├── 📁 03-models
+│   │   └── 📁 txd
+│   │       ├── 📄 LOADSCS.txd
+│   │       └── 📄 LOADSUK.txd
+│   ├── 📁 04-modloader
+│   │   └── 📁 IslamicEdit
+│   │       ├── 📁 01-DoorBlock
+│   │       │   ├── 📄 DoorBlock.ipl
+│   │       │   └── 📄 DoorBlock.txt
+│   │       ├── 📁 02-Guns
+│   │       │   ├── 📄 gun_dildo1.dff
+│   │       │   ├── 📄 gun_dildo1.txd
+│   │       │   ├── 📄 gun_dildo2.dff
+│   │       │   ├── 📄 gun_dildo2.txd
+│   │       │   ├── 📄 gun_vibe1.dff
+│   │       │   ├── 📄 gun_vibe1.txd
+│   │       │   ├── 📄 gun_vibe2.dff
+│   │       │   └── 📄 gun_vibe2.txd
+│   │       ├── 📁 03-models
+│   │       │   ├── 📁 01-cutscene
+│   │       │   │   ├── 📄 csbettina.dff
+│   │       │   │   ├── 📄 csbettina.txd
+│   │       │   │   ├── 📄 cscatalina.dff
+│   │       │   │   ├── 📄 cscatalina.txd
+│   │       │   │   ├── 📄 csdanceb.dff
+│   │       │   │   ├── 📄 csdanceb.txd
+│   │       │   │   ├── 📄 csgfprox.dff
+│   │       │   │   ├── 📄 csgfprox.txd
+│   │       │   │   ├── 📄 csho.dff
+│   │       │   │   ├── 📄 csho.txd
+│   │       │   │   ├── 📄 cskendl.dff
+│   │       │   │   ├── 📄 cskendl.txd
+│   │       │   │   ├── 📄 csmaria.dff
+│   │       │   │   ├── 📄 csmaria.txd
+│   │       │   │   ├── 📄 cspro1.dff
+│   │       │   │   ├── 📄 cspro1.txd
+│   │       │   │   ├── 📄 cssuzie.dff
+│   │       │   │   ├── 📄 cssuzie.txd
+│   │       │   │   ├── 📄 gfriend.dff
+│   │       │   │   ├── 📄 gfriend.txd
+│   │       │   │   └── 📄 ss.bat
+│   │       │   ├── 📁 02-gta3.img
+│   │       │   │   ├── 📄 break_bar.txd
+│   │       │   │   ├── 📄 casinoshops1.txd
+│   │       │   │   ├── 📄 CJ_AIRPRT_BAR.dff
+│   │       │   │   ├── 📄 cj_bar.txd
+│   │       │   │   ├── 📄 cs_ry_props.txd
+│   │       │   │   ├── 📄 eastlstr_lae2.txd
+│   │       │   │   ├── 📄 gay_xref.txd
+│   │       │   │   ├── 📄 kb_bandit_U.dff
+│   │       │   │   ├── 📄 lanblokb.txd
+│   │       │   │   ├── 📄 lasground_las2.txd
+│   │       │   │   ├── 📄 lawnabv.txd
+│   │       │   │   ├── 📄 lodcandysign1.dff
+│   │       │   │   ├── 📄 lodvegaswest2.txd
+│   │       │   │   ├── 📄 mainlcawn.txd
+│   │       │   │   ├── 📄 melrose08_lawn.txd
+│   │       │   │   ├── 📄 melrose11_lawn.txd
+│   │       │   │   ├── 📄 pirateship01.txd
+│   │       │   │   ├── 📄 sunset02_law2.txd
+│   │       │   │   ├── 📄 sunset03_law2.txd
+│   │       │   │   ├── 📄 sunstrans_law2.dff
+│   │       │   │   ├── 📄 sunstrans_law2.txd
+│   │       │   │   ├── 📄 vegascowboy1.dff
+│   │       │   │   ├── 📄 vegasnlod1.txd
+│   │       │   │   ├── 📄 vegcandysign1.dff
+│   │       │   │   ├── 📄 vgebillboards.txd
+│   │       │   │   ├── 📄 vgnfremnt2.txd
+│   │       │   │   ├── 📄 vgnfremntsgn.txd
+│   │       │   │   ├── 📄 vgnlowbild.txd
+│   │       │   │   └── 📄 vgsssignage03.txd
+│   │       │   ├── 📁 03-gta_int.img
+│   │       │   │   ├── 📄 carlspics.txd
+│   │       │   │   ├── 📄 chnsaw1.dff
+│   │       │   │   ├── 📄 cj_bar2.txd
+│   │       │   │   ├── 📄 cj_sex.txd
+│   │       │   │   ├── 📄 CJ_SEX_COUNTER.dff
+│   │       │   │   ├── 📄 CJ_SEX_COUNTER03.dff
+│   │       │   │   ├── 📄 CJ_SEX_COUNTER2.dff
+│   │       │   │   ├── 📄 CJ_sex_dildo.dff
+│   │       │   │   ├── 📄 CJ_SEX_SHELF_1.dff
+│   │       │   │   ├── 📄 CJ_SEX_SHELF_2.dff
+│   │       │   │   ├── 📄 CJ_SEX_SHELF_3.dff
+│   │       │   │   ├── 📄 CJ_SEX_V_RACK.dff
+│   │       │   │   ├── 📄 CJ_SEX_VIDEO_1.dff
+│   │       │   │   ├── 📄 CJ_SEX_VIDEO_2.dff
+│   │       │   │   ├── 📄 DILDO_rack1.dff
+│   │       │   │   ├── 📄 DILDO_rack2.dff
+│   │       │   │   ├── 📄 gb_books01.txd
+│   │       │   │   ├── 📄 gb_magazines01.txd
+│   │       │   │   ├── 📄 genintintsex.txd
+│   │       │   │   ├── 📄 gf1.txd
+│   │       │   │   ├── 📄 int_sex01.dff
+│   │       │   │   ├── 📄 lee_studhall.txd
+│   │       │   │   ├── 📄 picture_frame_clip.txd
+│   │       │   │   ├── 📄 roleplay_rack.dff
+│   │       │   │   ├── 📄 savesfmid.txd
+│   │       │   │   ├── 📄 SEX_1.dff
+│   │       │   │   ├── 📄 SEX_2.dff
+│   │       │   │   ├── 📄 SEX_3.dff
+│   │       │   │   ├── 📄 SEX_SHOP_DET.dff
+│   │       │   │   ├── 📄 SEX_V_RACK.dff
+│   │       │   │   ├── 📄 sexdetail.txd
+│   │       │   │   ├── 📄 svsfsm.txd
+│   │       │   │   ├── 📄 whorebar.txd
+│   │       │   │   └── 📄 whorewallstuff.txd
+│   │       │   └── 📁 04-photo
+│   │       │       ├── 📁 01-cj_bar2
+│   │       │       │   ├── 📄 CJ_nastybar_D.png
+│   │       │       │   ├── 📄 CJ_nastybar_D2.png
+│   │       │       │   ├── 📄 CJ_nastybar_D3.png
+│   │       │       │   ├── 📄 CJ_nastybar_D4-2.png
+│   │       │       │   ├── 📄 CJ_nastybar_D5.png
+│   │       │       │   ├── 📄 CJ_nastybar_D6.png
+│   │       │       │   ├── 📄 Screenshot (248) copy.png
+│   │       │       │   ├── 📄 Screenshot (255).png
+│   │       │       │   ├── 📄 Screenshot (265).png
+│   │       │       │   ├── 📄 Screenshot (266).png
+│   │       │       │   ├── 📄 Screenshot (267).png
+│   │       │       │   ├── 📄 Screenshot (268).png
+│   │       │       │   ├── 📄 Screenshot (269).png
+│   │       │       │   ├── 📄 Screenshot (270).png
+│   │       │       │   ├── 📄 Screenshot (271).png
+│   │       │       │   ├── 📄 Screenshot (272).png
+│   │       │       │   └── 📄 Screenshot (273).png
+│   │       │       ├── 📁 02-cj_s-x
+│   │       │       │   ├── 📄 CJ_PORNO_VIDS.png
+│   │       │       │   ├── 📄 CJ_PORNO_VIDS3.png
+│   │       │       │   ├── 📄 CJ_PORNO_VIDS4.png
+│   │       │       │   ├── 📄 CJ_SEX_SIGN1.png
+│   │       │       │   ├── 📄 gun_dildo1.png
+│   │       │       │   ├── 📄 gun_dildo2.png
+│   │       │       │   ├── 📄 gun_dildo3.png
+│   │       │       │   ├── 📄 gun_dildo4.png
+│   │       │       │   ├── 📄 Screenshot (181).png
+│   │       │       │   ├── 📄 Screenshot (258).png
+│   │       │       │   ├── 📄 Screenshot (259).png
+│   │       │       │   ├── 📄 Screenshot (260).png
+│   │       │       │   └── 📄 Screenshot (261).png
+│   │       │       ├── 📁 03-used
+│   │       │       │   ├── 📄 Screenshot (184) copy.png
+│   │       │       │   ├── 📄 Screenshot (184).png
+│   │       │       │   ├── 📄 Screenshot (199).png
+│   │       │       │   ├── 📄 Screenshot (200).png
+│   │       │       │   ├── 📄 Screenshot (200-1).png
+│   │       │       │   ├── 📄 Screenshot (201).png
+│   │       │       │   ├── 📄 Screenshot (204).png
+│   │       │       │   ├── 📄 Screenshot (206).png
+│   │       │       │   ├── 📄 Screenshot (208).png
+│   │       │       │   ├── 📄 Screenshot 2026-08-27 104622.png
+│   │       │       │   ├── 📄 Screenshot 2026-09-02 210843.png
+│   │       │       │   ├── 📄 Screenshot 2026-09-02 212221.png
+│   │       │       │   ├── 📄 Screenshot 2026-09-03 064424.png
+│   │       │       │   └── 📄 Screenshot 2026-09-03 06442422222.png
+│   │       │       ├── 📄 Scree49.png
+│   │       │       ├── 📄 Screenshot (175).png
+│   │       │       ├── 📄 Screenshot (177) copy.png
+│   │       │       ├── 📄 Screenshot (177) copy2.png
+│   │       │       ├── 📄 Screenshot (177).png
+│   │       │       ├── 📄 Screenshot (178).png
+│   │       │       ├── 📄 Screenshot (181) copy.png
+│   │       │       ├── 📄 Screenshot (181).png
+│   │       │       ├── 📄 Screenshot (182).png
+│   │       │       ├── 📄 Screenshot (200).png
+│   │       │       ├── 📄 Screenshot (202).png
+│   │       │       ├── 📄 Screenshot (203).png
+│   │       │       ├── 📄 Screenshot (205).png
+│   │       │       ├── 📄 Screenshot (207).png
+│   │       │       ├── 📄 Screenshot (249).png
+│   │       │       ├── 📄 Screenshot (250).png
+│   │       │       ├── 📄 Screenshot (251).png
+│   │       │       ├── 📄 Screenshot (252).png
+│   │       │       ├── 📄 Screenshot (253).png
+│   │       │       ├── 📄 Screenshot (254).png
+│   │       │       ├── 📄 Screenshot (256).png
+│   │       │       ├── 📄 Screenshot (257).png
+│   │       │       ├── 📄 Screenshot (258).png
+│   │       │       ├── 📄 Screenshot (259).png
+│   │       │       ├── 📄 Screenshot (260).png
+│   │       │       ├── 📄 Screenshot (261).png
+│   │       │       ├── 📄 Screenshot (262).png
+│   │       │       ├── 📄 Screenshot (263).png
+│   │       │       ├── 📄 Screenshot (264).png
+│   │       │       ├── 📄 Screenshot (274).png
+│   │       │       ├── 📄 Screenshot 2026-08-27 104302.png
+│   │       │       ├── 📄 Screenshot 2026-08-27 134549.png
+│   │       │       └── 📄 tislandshpback_256 copy.png
+│   │       ├── 📁 04-MrBeen-AllWomen
+│   │       │   ├── 📄 bfori.dff
+│   │       │   ├── 📄 bfori.txd
+│   │       │   ├── 📄 bfybe.dff
+│   │       │   ├── 📄 bfybe.txd
+│   │       │   ├── 📄 bfybu.dff
+│   │       │   ├── 📄 bfybu.txd
+│   │       │   ├── 📄 bfypro.dff
+│   │       │   ├── 📄 bfypro.txd
+│   │       │   ├── 📄 bfyri.dff
+│   │       │   ├── 📄 bfyri.txd
+│   │       │   ├── 📄 bfyst.dff
+│   │       │   ├── 📄 bfyst.txd
+│   │       │   ├── 📄 bmybe.dff
+│   │       │   ├── 📄 bmybe.txd
+│   │       │   ├── 📄 bmydj.dff
+│   │       │   ├── 📄 bmydj.txd
+│   │       │   ├── 📄 cat.dff
+│   │       │   ├── 📄 cat.txd
+│   │       │   ├── 📄 copgrl3.dff
+│   │       │   ├── 📄 copgrl3.txd
+│   │       │   ├── 📄 crogrl3.dff
+│   │       │   ├── 📄 crogrl3.txd
+│   │       │   ├── 📄 cwfohb.dff
+│   │       │   ├── 📄 cwfohb.txd
+│   │       │   ├── 📄 cwfyfr1.dff
+│   │       │   ├── 📄 cwfyfr1.txd
+│   │       │   ├── 📄 cwfyfr2.dff
+│   │       │   ├── 📄 cwfyfr2.txd
+│   │       │   ├── 📄 cwfyhb.dff
+│   │       │   ├── 📄 cwfyhb.txd
+│   │       │   ├── 📄 cwmyhb1.dff
+│   │       │   ├── 📄 cwmyhb1.txd
+│   │       │   ├── 📄 dnfolc2.dff
+│   │       │   ├── 📄 dnfolc2.txd
+│   │       │   ├── 📄 dnfylc.dff
+│   │       │   ├── 📄 dnfylc.txd
+│   │       │   ├── 📄 dwfolc.dff
+│   │       │   ├── 📄 dwfolc.txd
+│   │       │   ├── 📄 dwfylc1.dff
+│   │       │   ├── 📄 dwfylc1.txd
+│   │       │   ├── 📄 dwfylc2.dff
+│   │       │   ├── 📄 dwfylc2.txd
+│   │       │   ├── 📄 gangrl3.dff
+│   │       │   ├── 📄 gangrl3.txd
+│   │       │   ├── 📄 gungrl3.dff
+│   │       │   ├── 📄 gungrl3.txd
+│   │       │   ├── 📄 hfori.dff
+│   │       │   ├── 📄 hfori.txd
+│   │       │   ├── 📄 hfost.dff
+│   │       │   ├── 📄 hfost.txd
+│   │       │   ├── 📄 hfybe.dff
+│   │       │   ├── 📄 hfybe.txd
+│   │       │   ├── 📄 hfypro.dff
+│   │       │   ├── 📄 hfypro.txd
+│   │       │   ├── 📄 hfyri.dff
+│   │       │   ├── 📄 hfyri.txd
+│   │       │   ├── 📄 hfyst.dff
+│   │       │   ├── 📄 hfyst.txd
+│   │       │   ├── 📄 hmybe.dff
+│   │       │   ├── 📄 hmybe.txd
+│   │       │   ├── 📄 hmycm.dff
+│   │       │   ├── 📄 hmycm.txd
+│   │       │   ├── 📄 kendl.dff
+│   │       │   ├── 📄 kendl.txd
+│   │       │   ├── 📄 lsv1.dff
+│   │       │   ├── 📄 lsv1.txd
+│   │       │   ├── 📄 male01.dff
+│   │       │   ├── 📄 male01.txd
+│   │       │   ├── 📄 mecgrl3.dff
+│   │       │   ├── 📄 mecgrl3.txd
+│   │       │   ├── 📄 nurgrl3.dff
+│   │       │   ├── 📄 nurgrl3.txd
+│   │       │   ├── 📄 ofori.dff
+│   │       │   ├── 📄 ofori.txd
+│   │       │   ├── 📄 ofost.dff
+│   │       │   ├── 📄 ofost.txd
+│   │       │   ├── 📄 ofyri.dff
+│   │       │   ├── 📄 ofyri.txd
+│   │       │   ├── 📄 ofyst.dff
+│   │       │   ├── 📄 ofyst.txd
+│   │       │   ├── 📄 ogloc.dff
+│   │       │   ├── 📄 ogloc.txd
+│   │       │   ├── 📄 sbfori.dff
+│   │       │   ├── 📄 sbfori.txd
+│   │       │   ├── 📄 sbfost.dff
+│   │       │   ├── 📄 sbfost.txd
+│   │       │   ├── 📄 sbfypro.dff
+│   │       │   ├── 📄 sbfypro.txd
+│   │       │   ├── 📄 sbfyri.dff
+│   │       │   ├── 📄 sbfyri.txd
+│   │       │   ├── 📄 sbfyst.dff
+│   │       │   ├── 📄 sbfyst.txd
+│   │       │   ├── 📄 sbfystr.dff
+│   │       │   ├── 📄 sbfystr.txd
+│   │       │   ├── 📄 sfypro.dff
+│   │       │   ├── 📄 sfypro.txd
+│   │       │   ├── 📄 shfypro.dff
+│   │       │   ├── 📄 shfypro.txd
+│   │       │   ├── 📄 smyst.dff
+│   │       │   ├── 📄 smyst.txd
+│   │       │   ├── 📄 sofori.dff
+│   │       │   ├── 📄 sofori.txd
+│   │       │   ├── 📄 sofost.dff
+│   │       │   ├── 📄 sofost.txd
+│   │       │   ├── 📄 sofybu.dff
+│   │       │   ├── 📄 sofybu.txd
+│   │       │   ├── 📄 sofyri.dff
+│   │       │   ├── 📄 sofyri.txd
+│   │       │   ├── 📄 sofyst.dff
+│   │       │   ├── 📄 sofyst.txd
+│   │       │   ├── 📄 swfopro.dff
+│   │       │   ├── 📄 swfopro.txd
+│   │       │   ├── 📄 swfori.dff
+│   │       │   ├── 📄 swfori.txd
+│   │       │   ├── 📄 swfost.dff
+│   │       │   ├── 📄 swfost.txd
+│   │       │   ├── 📄 swfyri.dff
+│   │       │   ├── 📄 swfyri.txd
+│   │       │   ├── 📄 swfyst.dff
+│   │       │   ├── 📄 swfyst.txd
+│   │       │   ├── 📄 swfystr.dff
+│   │       │   ├── 📄 swfystr.txd
+│   │       │   ├── 📄 swmotr1.dff
+│   │       │   ├── 📄 swmotr1.txd
+│   │       │   ├── 📄 swmotr2.dff
+│   │       │   ├── 📄 swmotr2.txd
+│   │       │   ├── 📄 vbfycrp.dff
+│   │       │   ├── 📄 vbfycrp.txd
+│   │       │   ├── 📄 vbfypro.dff
+│   │       │   ├── 📄 vbfypro.txd
+│   │       │   ├── 📄 vbfyst2.dff
+│   │       │   ├── 📄 vbfyst2.txd
+│   │       │   ├── 📄 vbmybox.dff
+│   │       │   ├── 📄 vbmybox.txd
+│   │       │   ├── 📄 vbmyelv.dff
+│   │       │   ├── 📄 vbmyelv.txd
+│   │       │   ├── 📄 vhfypro.dff
+│   │       │   ├── 📄 vhfypro.txd
+│   │       │   ├── 📄 vhfyst3.dff
+│   │       │   ├── 📄 vhfyst3.txd
+│   │       │   ├── 📄 vhmyelv.dff
+│   │       │   ├── 📄 vhmyelv.txd
+│   │       │   ├── 📄 vimyelv.dff
+│   │       │   ├── 📄 vimyelv.txd
+│   │       │   ├── 📄 vwfycrp.dff
+│   │       │   ├── 📄 vwfycrp.txd
+│   │       │   ├── 📄 vwfypro.dff
+│   │       │   ├── 📄 vwfypro.txd
+│   │       │   ├── 📄 vwfyst1.dff
+│   │       │   ├── 📄 vwfyst1.txd
+│   │       │   ├── 📄 vwfywa2.dff
+│   │       │   ├── 📄 vwfywa2.txd
+│   │       │   ├── 📄 vwfywai.dff
+│   │       │   ├── 📄 vwfywai.txd
+│   │       │   ├── 📄 vwmotr2.dff
+│   │       │   ├── 📄 vwmotr2.txd
+│   │       │   ├── 📄 vwmybox.dff
+│   │       │   ├── 📄 vwmybox.txd
+│   │       │   ├── 📄 wfori.dff
+│   │       │   ├── 📄 wfori.txd
+│   │       │   ├── 📄 wfost.dff
+│   │       │   ├── 📄 wfost.txd
+│   │       │   ├── 📄 wfybe.dff
+│   │       │   ├── 📄 wfybe.txd
+│   │       │   ├── 📄 wfybu.dff
+│   │       │   ├── 📄 wfybu.txd
+│   │       │   ├── 📄 wfyburg.dff
+│   │       │   ├── 📄 wfyburg.txd
+│   │       │   ├── 📄 wfyclot.dff
+│   │       │   ├── 📄 wfyclot.txd
+│   │       │   ├── 📄 wfycrk.dff
+│   │       │   ├── 📄 wfycrk.txd
+│   │       │   ├── 📄 wfyjg.dff
+│   │       │   ├── 📄 wfyjg.txd
+│   │       │   ├── 📄 wfylg.dff
+│   │       │   ├── 📄 wfylg.txd
+│   │       │   ├── 📄 wfypro.dff
+│   │       │   ├── 📄 wfypro.txd
+│   │       │   ├── 📄 wfyri.dff
+│   │       │   ├── 📄 wfyri.txd
+│   │       │   ├── 📄 wfyro.dff
+│   │       │   ├── 📄 wfyro.txd
+│   │       │   ├── 📄 wfysex.dff
+│   │       │   ├── 📄 wfysex.txd
+│   │       │   ├── 📄 wfyst.dff
+│   │       │   ├── 📄 wfyst.txd
+│   │       │   ├── 📄 wfystew.dff
+│   │       │   ├── 📄 wfystew.txd
+│   │       │   ├── 📄 wmybe.dff
+│   │       │   ├── 📄 wmybe.txd
+│   │       │   ├── 📄 wmylg.dff
+│   │       │   ├── 📄 wmylg.txd
+│   │       │   ├── 📄 wmyva2.dff
+│   │       │   └── 📄 wmyva2.txd
+│   │       └── 📁 05-tags
+│   │           └── 📁 gta3.img
+│   │               ├── 📄 tags2_lalae.txd
+│   │               ├── 📄 tags_laazteca.txd
+│   │               ├── 📄 tags_lafront.txd
+│   │               ├── 📄 tags_lakilo.txd
+│   │               ├── 📄 tags_larifa.txd
+│   │               ├── 📄 tags_larollin.txd
+│   │               ├── 📄 tags_laseville.txd
+│   │               ├── 📄 tags_latemple.txd
+│   │               └── 📄 tags_lavagos.txd
+│   └── 📁 05-movies
+│       ├── 📄 GTAtitles.mpg
+│       └── 📄 Logo.mpg
+├── 📁 04-S.A.HQ.S
+│   ├── 📁 01-FEET
+│   │   ├── 📁 01-Bank_001
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 SOUND_005.wav
+│   │   │   ├── 📄 SOUND_006.wav
+│   │   │   ├── 📄 SOUND_007.wav
+│   │   │   ├── 📄 SOUND_008.wav
+│   │   │   └── 📄 SOUND_009.wav
+│   │   ├── 📁 02-Bank_002
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   └── 📄 SOUND_005.wav
+│   │   ├── 📁 03-Bank_003
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   └── 📄 SOUND_005.wav
+│   │   ├── 📁 04-Bank_004
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   └── 📄 SOUND_005.wav
+│   │   ├── 📁 05-Bank_005
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   └── 📄 sound_004.wav
+│   │   ├── 📁 06-Bank_006
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   └── 📄 sound_005.wav
+│   │   └── 📁 07-Bank_007
+│   │       ├── 📄 sound_001.wav
+│   │       ├── 📄 sound_002.wav
+│   │       ├── 📄 sound_003.wav
+│   │       ├── 📄 sound_004.wav
+│   │       └── 📄 sound_005.wav
+│   ├── 📁 02-GENRL
+│   │   ├── 📁 01-bank_001
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 02-bank_002
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 03-bank_003
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   └── 📄 sound_004.wav
+│   │   ├── 📁 04-bank_004
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 05-bank_005
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 06-bank_006
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   └── 📄 sound_004.wav
+│   │   ├── 📁 07-Bank_007
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 08-Bank_010
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 09-Bank_011
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 10-Bank_012
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 11-Bank_015
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 12-Bank_019
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 13-Bank_020
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 14-bank_021
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   ├── 📄 sound_006.wav
+│   │   │   ├── 📄 sound_007.wav
+│   │   │   ├── 📄 sound_008.wav
+│   │   │   ├── 📄 sound_009.wav
+│   │   │   ├── 📄 sound_010.wav
+│   │   │   ├── 📄 sound_011.wav
+│   │   │   ├── 📄 sound_012.wav
+│   │   │   ├── 📄 sound_013.wav
+│   │   │   ├── 📄 sound_014.wav
+│   │   │   ├── 📄 sound_015.wav
+│   │   │   ├── 📄 sound_016.wav
+│   │   │   ├── 📄 sound_017.wav
+│   │   │   ├── 📄 sound_018.wav
+│   │   │   ├── 📄 sound_019.wav
+│   │   │   ├── 📄 sound_020.wav
+│   │   │   ├── 📄 sound_021.wav
+│   │   │   ├── 📄 sound_022.wav
+│   │   │   ├── 📄 SOUND_023.wav
+│   │   │   └── 📄 SOUND_024.wav
+│   │   ├── 📁 15-bank_022
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 16-bank_023
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 17-bank_024
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 18-bank_025
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 19-Bank_026
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 20-Bank_027
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 21-Bank_028
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 22-Bank_029
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 23-Bank_030
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 24-Bank_031
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 25-bank_032
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 26-bank_033
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 SOUND_005.wav
+│   │   │   ├── 📄 SOUND_006.wav
+│   │   │   ├── 📄 SOUND_007.wav
+│   │   │   ├── 📄 SOUND_008.wav
+│   │   │   ├── 📄 SOUND_009.wav
+│   │   │   ├── 📄 SOUND_010.wav
+│   │   │   ├── 📄 SOUND_011.wav
+│   │   │   ├── 📄 SOUND_012.wav
+│   │   │   ├── 📄 SOUND_013.wav
+│   │   │   ├── 📄 SOUND_014.wav
+│   │   │   ├── 📄 SOUND_015.wav
+│   │   │   ├── 📄 SOUND_016.wav
+│   │   │   ├── 📄 SOUND_017.wav
+│   │   │   ├── 📄 SOUND_018.wav
+│   │   │   ├── 📄 SOUND_019.wav
+│   │   │   ├── 📄 SOUND_020.wav
+│   │   │   ├── 📄 SOUND_021.wav
+│   │   │   ├── 📄 SOUND_022.wav
+│   │   │   ├── 📄 SOUND_023.wav
+│   │   │   ├── 📄 SOUND_024.wav
+│   │   │   ├── 📄 SOUND_025.wav
+│   │   │   ├── 📄 SOUND_026.wav
+│   │   │   ├── 📄 SOUND_027.wav
+│   │   │   ├── 📄 SOUND_028.wav
+│   │   │   ├── 📄 SOUND_029.wav
+│   │   │   ├── 📄 SOUND_030.wav
+│   │   │   ├── 📄 SOUND_031.wav
+│   │   │   ├── 📄 SOUND_032.wav
+│   │   │   ├── 📄 SOUND_033.wav
+│   │   │   ├── 📄 SOUND_034.wav
+│   │   │   ├── 📄 SOUND_035.wav
+│   │   │   ├── 📄 SOUND_036.wav
+│   │   │   ├── 📄 SOUND_037.wav
+│   │   │   ├── 📄 SOUND_038.wav
+│   │   │   ├── 📄 SOUND_039.wav
+│   │   │   ├── 📄 SOUND_040.wav
+│   │   │   ├── 📄 SOUND_041.wav
+│   │   │   ├── 📄 SOUND_042.wav
+│   │   │   ├── 📄 SOUND_043.wav
+│   │   │   ├── 📄 SOUND_044.wav
+│   │   │   ├── 📄 SOUND_045.wav
+│   │   │   ├── 📄 SOUND_046.wav
+│   │   │   ├── 📄 SOUND_047.wav
+│   │   │   ├── 📄 sound_048.wav
+│   │   │   ├── 📄 sound_049.wav
+│   │   │   ├── 📄 SOUND_050.wav
+│   │   │   ├── 📄 SOUND_051.wav
+│   │   │   ├── 📄 sound_052.wav
+│   │   │   ├── 📄 sound_053.wav
+│   │   │   ├── 📄 SOUND_054.wav
+│   │   │   ├── 📄 SOUND_055.wav
+│   │   │   ├── 📄 SOUND_056.wav
+│   │   │   ├── 📄 SOUND_057.wav
+│   │   │   ├── 📄 SOUND_058.wav
+│   │   │   ├── 📄 SOUND_059.wav
+│   │   │   ├── 📄 SOUND_060.wav
+│   │   │   ├── 📄 SOUND_061.wav
+│   │   │   ├── 📄 SOUND_062.wav
+│   │   │   ├── 📄 sound_063.WAV
+│   │   │   ├── 📄 sound_064.WAV
+│   │   │   ├── 📄 sound_065.WAV
+│   │   │   ├── 📄 SOUND_066.wav
+│   │   │   ├── 📄 SOUND_067.wav
+│   │   │   ├── 📄 SOUND_068.wav
+│   │   │   ├── 📄 SOUND_069.wav
+│   │   │   ├── 📄 SOUND_070.wav
+│   │   │   ├── 📄 SOUND_071.wav
+│   │   │   └── 📄 SOUND_072.wav
+│   │   ├── 📁 27-Bank_034
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 28-Bank_035
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 29-Bank_038
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   └── 📄 sound_005.wav
+│   │   ├── 📁 30-bank_039
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 31-bank_040
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 32-Bank_041
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 33-Bank_042
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 34-bank_045
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 35-bank_046
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   └── 📄 sound_005.wav
+│   │   ├── 📁 36-bank_047
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 37-bank_048
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 38-bank_051
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 39-bank_052
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 40-Bank_053
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   ├── 📄 sound_006.wav
+│   │   │   ├── 📄 sound_007.wav
+│   │   │   ├── 📄 sound_008.wav
+│   │   │   ├── 📄 SOUND_009.wav
+│   │   │   ├── 📄 sound_010.wav
+│   │   │   ├── 📄 SOUND_011.wav
+│   │   │   ├── 📄 SOUND_012.wav
+│   │   │   ├── 📄 SOUND_013.wav
+│   │   │   ├── 📄 SOUND_014.wav
+│   │   │   ├── 📄 sound_015.wav
+│   │   │   ├── 📄 sound_016.wav
+│   │   │   ├── 📄 sound_017.wav
+│   │   │   ├── 📄 sound_018.wav
+│   │   │   ├── 📄 sound_019.wav
+│   │   │   ├── 📄 sound_020.wav
+│   │   │   ├── 📄 SOUND_021.wav
+│   │   │   ├── 📄 SOUND_022.wav
+│   │   │   ├── 📄 SOUND_023.wav
+│   │   │   ├── 📄 SOUND_024.wav
+│   │   │   ├── 📄 sound_025.wav
+│   │   │   ├── 📄 sound_026.wav
+│   │   │   ├── 📄 sound_027.wav
+│   │   │   ├── 📄 sound_028.wav
+│   │   │   ├── 📄 sound_029.wav
+│   │   │   ├── 📄 sound_030.wav
+│   │   │   └── 📄 sound_031.wav
+│   │   ├── 📁 41-bank_054
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   ├── 📄 sound_006.wav
+│   │   │   ├── 📄 sound_007.wav
+│   │   │   ├── 📄 sound_008.wav
+│   │   │   └── 📄 SOUND_009.wav
+│   │   ├── 📁 42-bank_055
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 43-bank_056
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 44-Bank_057
+│   │   │   └── 📄 sound_001.wav
+│   │   ├── 📁 45-Bank_062
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 46-Bank_063
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   └── 📄 sound_005.wav
+│   │   ├── 📁 47-Bank_064
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 48-Bank_065
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 49-bank_068
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 SOUND_005.wav
+│   │   │   ├── 📄 SOUND_006.wav
+│   │   │   ├── 📄 SOUND_007.wav
+│   │   │   ├── 📄 SOUND_008.wav
+│   │   │   ├── 📄 SOUND_009.wav
+│   │   │   ├── 📄 SOUND_010.wav
+│   │   │   ├── 📄 SOUND_011.wav
+│   │   │   ├── 📄 SOUND_012.wav
+│   │   │   ├── 📄 SOUND_013.wav
+│   │   │   └── 📄 SOUND_014.wav
+│   │   ├── 📁 50-Bank_069
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 51-Bank_070
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 52-Bank_073
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   └── 📄 sound_004.wav
+│   │   ├── 📁 53-Bank_074
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 54-Bank_075
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 55-Bank_076
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 SOUND_005.wav
+│   │   │   ├── 📄 SOUND_006.wav
+│   │   │   ├── 📄 SOUND_007.wav
+│   │   │   └── 📄 SOUND_008.wav
+│   │   ├── 📁 56-Bank_077
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 57-Bank_078
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 58-Bank_079
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   └── 📄 SOUND_004.wav
+│   │   ├── 📁 59-Bank_080
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 60-Bank_081
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 61-Bank_082
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 62-Bank_083
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 63-Bank_086
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 64-Bank_087
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 65-Bank_088
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 66-Bank_089
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 67-Bank_092
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 68-Bank_093
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 69-bank_094
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 70-bank_095
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 71-Bank_096
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 72-Bank_097
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 73-Bank_098
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   └── 📄 SOUND_004.wav
+│   │   ├── 📁 74-bank_099
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 SOUND_005.wav
+│   │   │   ├── 📄 SOUND_006.wav
+│   │   │   ├── 📄 SOUND_007.wav
+│   │   │   ├── 📄 SOUND_008.wav
+│   │   │   ├── 📄 SOUND_009.wav
+│   │   │   ├── 📄 SOUND_010.wav
+│   │   │   ├── 📄 SOUND_011.wav
+│   │   │   ├── 📄 SOUND_012.wav
+│   │   │   ├── 📄 SOUND_013.wav
+│   │   │   ├── 📄 SOUND_014.wav
+│   │   │   ├── 📄 sound_015.wav
+│   │   │   └── 📄 sound_016.wav
+│   │   ├── 📁 75-Bank_100
+│   │   │   └── 📄 sound_001.wav
+│   │   ├── 📁 76-Bank_101
+│   │   │   └── 📄 sound_001.wav
+│   │   ├── 📁 77-Bank_102
+│   │   │   └── 📄 sound_001.wav
+│   │   ├── 📁 78-Bank_106
+│   │   │   └── 📄 SOUND_001.wav
+│   │   ├── 📁 79-bank_107
+│   │   │   └── 📄 sound_001.wav
+│   │   ├── 📁 80-Bank_108
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 81-Bank_109
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 82-Bank_112
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 83-Bank_113
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 84-bank_114
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 85-Bank_118
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 86-Bank_119
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 87-bank_120
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 88-bank_121
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 89-bank_122
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   └── 📄 SOUND_005.wav
+│   │   ├── 📁 90-Bank_125
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   └── 📄 sound_006.wav
+│   │   ├── 📁 91-Bank_126
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   └── 📄 sound_005.wav
+│   │   ├── 📁 92-bank_127
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   └── 📄 sound_006.wav
+│   │   ├── 📁 93-bank_128
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 94-bank_129
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 95-Bank_130
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 SOUND_002.wav
+│   │   ├── 📁 96-Bank_131
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   ├── 📁 97-bank_132
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   ├── 📄 SOUND_003.wav
+│   │   │   ├── 📄 SOUND_004.wav
+│   │   │   ├── 📄 SOUND_005.wav
+│   │   │   ├── 📄 sound_006.wav
+│   │   │   ├── 📄 SOUND_007.wav
+│   │   │   ├── 📄 SOUND_008.wav
+│   │   │   ├── 📄 SOUND_009.wav
+│   │   │   ├── 📄 SOUND_010.wav
+│   │   │   ├── 📄 SOUND_011.wav
+│   │   │   ├── 📄 SOUND_012.wav
+│   │   │   ├── 📄 SOUND_015.wav
+│   │   │   ├── 📄 SOUND_016.wav
+│   │   │   ├── 📄 SOUND_017.wav
+│   │   │   ├── 📄 SOUND_018.wav
+│   │   │   ├── 📄 sound_019.wav
+│   │   │   ├── 📄 SOUND_020.wav
+│   │   │   ├── 📄 SOUND_021.wav
+│   │   │   ├── 📄 SOUND_022.wav
+│   │   │   ├── 📄 SOUND_023.wav
+│   │   │   ├── 📄 SOUND_024.wav
+│   │   │   ├── 📄 SOUND_025.wav
+│   │   │   ├── 📄 SOUND_026.wav
+│   │   │   ├── 📄 SOUND_027.wav
+│   │   │   ├── 📄 SOUND_029.wav
+│   │   │   ├── 📄 SOUND_031.wav
+│   │   │   ├── 📄 SOUND_032.wav
+│   │   │   ├── 📄 SOUND_033.wav
+│   │   │   ├── 📄 SOUND_034.wav
+│   │   │   ├── 📄 SOUND_035.wav
+│   │   │   ├── 📄 SOUND_036.wav
+│   │   │   ├── 📄 SOUND_037.wav
+│   │   │   ├── 📄 SOUND_038.wav
+│   │   │   ├── 📄 SOUND_039.wav
+│   │   │   ├── 📄 SOUND_040.wav
+│   │   │   ├── 📄 SOUND_041.wav
+│   │   │   ├── 📄 SOUND_042.wav
+│   │   │   ├── 📄 SOUND_043.wav
+│   │   │   ├── 📄 SOUND_044.wav
+│   │   │   └── 📄 SOUND_045.wav
+│   │   ├── 📁 98-Bank_133
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 99-Bank_134
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   └── 📄 sound_003.wav
+│   │   ├── 📁 100-Bank_135
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   └── 📄 sound_002.wav
+│   │   ├── 📁 101-Bank_136
+│   │   │   ├── 📄 SOUND_001.wav
+│   │   │   ├── 📄 SOUND_002.wav
+│   │   │   └── 📄 SOUND_003.wav
+│   │   └── 📁 102-bank_137
+│   │       ├── 📄 SOUND_001.wav
+│   │       ├── 📄 SOUND_002.wav
+│   │       ├── 📄 SOUND_003.wav
+│   │       ├── 📄 SOUND_004.wav
+│   │       ├── 📄 SOUND_005.wav
+│   │       ├── 📄 SOUND_006.wav
+│   │       ├── 📄 SOUND_007.wav
+│   │       ├── 📄 SOUND_008.wav
+│   │       ├── 📄 SOUND_009.wav
+│   │       ├── 📄 SOUND_010.wav
+│   │       ├── 📄 SOUND_011.wav
+│   │       ├── 📄 SOUND_012.wav
+│   │       ├── 📄 SOUND_013.wav
+│   │       ├── 📄 SOUND_014.wav
+│   │       ├── 📄 SOUND_015.wav
+│   │       ├── 📄 SOUND_016.wav
+│   │       ├── 📄 SOUND_017.wav
+│   │       ├── 📄 SOUND_018.wav
+│   │       ├── 📄 SOUND_019.wav
+│   │       ├── 📄 sound_020.wav
+│   │       ├── 📄 sound_021.wav
+│   │       ├── 📄 SOUND_022.wav
+│   │       ├── 📄 SOUND_023.wav
+│   │       ├── 📄 SOUND_024.wav
+│   │       ├── 📄 SOUND_025.wav
+│   │       ├── 📄 SOUND_026.wav
+│   │       ├── 📄 sound_027.wav
+│   │       ├── 📄 SOUND_028.wav
+│   │       ├── 📄 SOUND_029.wav
+│   │       ├── 📄 SOUND_030.wav
+│   │       ├── 📄 SOUND_031.wav
+│   │       ├── 📄 SOUND_032.wav
+│   │       ├── 📄 SOUND_033.wav
+│   │       ├── 📄 SOUND_034.wav
+│   │       ├── 📄 SOUND_035.wav
+│   │       ├── 📄 SOUND_036.wav
+│   │       ├── 📄 SOUND_037.wav
+│   │       ├── 📄 SOUND_038.wav
+│   │       ├── 📄 SOUND_039.wav
+│   │       ├── 📄 SOUND_040.wav
+│   │       ├── 📄 SOUND_041.wav
+│   │       ├── 📄 SOUND_042.wav
+│   │       ├── 📄 SOUND_043.wav
+│   │       ├── 📄 SOUND_044.wav
+│   │       ├── 📄 SOUND_045.wav
+│   │       ├── 📄 SOUND_046.wav
+│   │       ├── 📄 SOUND_047.wav
+│   │       ├── 📄 SOUND_048.wav
+│   │       ├── 📄 SOUND_049.wav
+│   │       ├── 📄 SOUND_050.wav
+│   │       ├── 📄 SOUND_051.wav
+│   │       ├── 📄 SOUND_052.wav
+│   │       ├── 📄 SOUND_053.wav
+│   │       ├── 📄 SOUND_054.wav
+│   │       ├── 📄 SOUND_055.wav
+│   │       ├── 📄 SOUND_056.wav
+│   │       ├── 📄 SOUND_057.wav
+│   │       ├── 📄 SOUND_058.wav
+│   │       ├── 📄 SOUND_059.wav
+│   │       ├── 📄 SOUND_060.wav
+│   │       ├── 📄 SOUND_061.wav
+│   │       ├── 📄 SOUND_062.wav
+│   │       ├── 📄 SOUND_063.wav
+│   │       ├── 📄 SOUND_064.wav
+│   │       ├── 📄 SOUND_065.wav
+│   │       ├── 📄 SOUND_066.wav
+│   │       ├── 📄 SOUND_067.wav
+│   │       ├── 📄 SOUND_068.wav
+│   │       ├── 📄 SOUND_069.wav
+│   │       ├── 📄 SOUND_070.wav
+│   │       ├── 📄 SOUND_071.wav
+│   │       ├── 📄 SOUND_072.wav
+│   │       ├── 📄 SOUND_073.wav
+│   │       ├── 📄 SOUND_074.wav
+│   │       ├── 📄 SOUND_075.wav
+│   │       ├── 📄 SOUND_076.wav
+│   │       ├── 📄 SOUND_077.wav
+│   │       ├── 📄 SOUND_078.wav
+│   │       ├── 📄 SOUND_079.wav
+│   │       ├── 📄 SOUND_080.wav
+│   │       ├── 📄 SOUND_081.wav
+│   │       ├── 📄 SOUND_082.wav
+│   │       ├── 📄 SOUND_083.wav
+│   │       ├── 📄 SOUND_084.wav
+│   │       ├── 📄 SOUND_085.wav
+│   │       ├── 📄 SOUND_086.wav
+│   │       ├── 📄 SOUND_087.wav
+│   │       ├── 📄 SOUND_088.wav
+│   │       └── 📄 SOUND_089.wav
+│   ├── 📁 03-PAIN_A
+│   │   ├── 📁 01-Bank_001
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   ├── 📄 sound_006.wav
+│   │   │   ├── 📄 sound_007.wav
+│   │   │   ├── 📄 sound_008.wav
+│   │   │   ├── 📄 sound_009.wav
+│   │   │   ├── 📄 sound_010.wav
+│   │   │   ├── 📄 sound_011.wav
+│   │   │   ├── 📄 sound_012.wav
+│   │   │   ├── 📄 sound_013.wav
+│   │   │   ├── 📄 sound_014.wav
+│   │   │   ├── 📄 sound_015.wav
+│   │   │   ├── 📄 sound_016.wav
+│   │   │   ├── 📄 sound_017.wav
+│   │   │   ├── 📄 sound_018.wav
+│   │   │   ├── 📄 sound_019.wav
+│   │   │   ├── 📄 sound_020.wav
+│   │   │   ├── 📄 sound_021.wav
+│   │   │   ├── 📄 sound_022.wav
+│   │   │   ├── 📄 sound_023.wav
+│   │   │   ├── 📄 sound_024.wav
+│   │   │   ├── 📄 sound_025.wav
+│   │   │   ├── 📄 sound_026.wav
+│   │   │   ├── 📄 sound_027.wav
+│   │   │   ├── 📄 sound_028.wav
+│   │   │   ├── 📄 sound_029.wav
+│   │   │   ├── 📄 sound_030.wav
+│   │   │   ├── 📄 sound_031.wav
+│   │   │   ├── 📄 sound_032.wav
+│   │   │   ├── 📄 sound_033.wav
+│   │   │   ├── 📄 sound_034.wav
+│   │   │   ├── 📄 sound_035.wav
+│   │   │   ├── 📄 sound_036.wav
+│   │   │   ├── 📄 sound_037.wav
+│   │   │   ├── 📄 sound_038.wav
+│   │   │   ├── 📄 sound_039.wav
+│   │   │   ├── 📄 sound_040.wav
+│   │   │   ├── 📄 sound_041.wav
+│   │   │   ├── 📄 sound_042.wav
+│   │   │   ├── 📄 sound_043.wav
+│   │   │   ├── 📄 sound_044.wav
+│   │   │   ├── 📄 sound_045.wav
+│   │   │   ├── 📄 sound_046.wav
+│   │   │   ├── 📄 sound_047.wav
+│   │   │   ├── 📄 sound_048.wav
+│   │   │   ├── 📄 sound_049.wav
+│   │   │   ├── 📄 sound_050.wav
+│   │   │   ├── 📄 sound_051.wav
+│   │   │   ├── 📄 sound_052.wav
+│   │   │   ├── 📄 sound_053.wav
+│   │   │   ├── 📄 sound_054.wav
+│   │   │   ├── 📄 sound_055.wav
+│   │   │   ├── 📄 sound_056.wav
+│   │   │   ├── 📄 sound_057.wav
+│   │   │   ├── 📄 sound_058.wav
+│   │   │   ├── 📄 sound_059.wav
+│   │   │   ├── 📄 sound_060.wav
+│   │   │   ├── 📄 sound_061.wav
+│   │   │   ├── 📄 sound_062.wav
+│   │   │   ├── 📄 sound_063.wav
+│   │   │   ├── 📄 sound_064.wav
+│   │   │   ├── 📄 sound_065.wav
+│   │   │   ├── 📄 sound_066.wav
+│   │   │   ├── 📄 sound_067.wav
+│   │   │   ├── 📄 sound_068.wav
+│   │   │   ├── 📄 sound_069.wav
+│   │   │   ├── 📄 sound_070.wav
+│   │   │   ├── 📄 sound_071.wav
+│   │   │   ├── 📄 sound_072.wav
+│   │   │   ├── 📄 sound_073.wav
+│   │   │   ├── 📄 sound_074.wav
+│   │   │   ├── 📄 sound_075.wav
+│   │   │   ├── 📄 sound_076.wav
+│   │   │   ├── 📄 sound_077.wav
+│   │   │   ├── 📄 sound_078.wav
+│   │   │   ├── 📄 sound_079.wav
+│   │   │   ├── 📄 sound_080.wav
+│   │   │   ├── 📄 sound_081.wav
+│   │   │   ├── 📄 sound_082.wav
+│   │   │   ├── 📄 sound_083.wav
+│   │   │   ├── 📄 sound_084.wav
+│   │   │   ├── 📄 sound_085.wav
+│   │   │   ├── 📄 sound_086.wav
+│   │   │   ├── 📄 sound_087.wav
+│   │   │   ├── 📄 sound_088.wav
+│   │   │   ├── 📄 sound_089.wav
+│   │   │   ├── 📄 sound_090.wav
+│   │   │   ├── 📄 sound_091.wav
+│   │   │   ├── 📄 sound_092.wav
+│   │   │   ├── 📄 sound_093.wav
+│   │   │   ├── 📄 sound_094.wav
+│   │   │   ├── 📄 sound_095.wav
+│   │   │   ├── 📄 sound_096.wav
+│   │   │   ├── 📄 sound_097.wav
+│   │   │   ├── 📄 sound_098.wav
+│   │   │   ├── 📄 sound_099.wav
+│   │   │   ├── 📄 sound_100.wav
+│   │   │   ├── 📄 sound_101.wav
+│   │   │   ├── 📄 sound_102.wav
+│   │   │   ├── 📄 sound_103.wav
+│   │   │   ├── 📄 sound_104.wav
+│   │   │   ├── 📄 sound_105.wav
+│   │   │   ├── 📄 sound_106.wav
+│   │   │   ├── 📄 sound_107.wav
+│   │   │   ├── 📄 sound_108.wav
+│   │   │   ├── 📄 sound_109.wav
+│   │   │   ├── 📄 sound_110.wav
+│   │   │   ├── 📄 sound_111.wav
+│   │   │   ├── 📄 sound_112.wav
+│   │   │   ├── 📄 sound_113.wav
+│   │   │   ├── 📄 sound_114.wav
+│   │   │   ├── 📄 sound_115.wav
+│   │   │   ├── 📄 sound_116.wav
+│   │   │   ├── 📄 sound_117.wav
+│   │   │   ├── 📄 sound_118.wav
+│   │   │   ├── 📄 sound_119.wav
+│   │   │   ├── 📄 sound_120.wav
+│   │   │   ├── 📄 sound_121.wav
+│   │   │   ├── 📄 sound_122.wav
+│   │   │   ├── 📄 sound_123.wav
+│   │   │   ├── 📄 sound_124.wav
+│   │   │   ├── 📄 sound_125.wav
+│   │   │   ├── 📄 sound_126.wav
+│   │   │   ├── 📄 sound_127.wav
+│   │   │   ├── 📄 sound_128.wav
+│   │   │   ├── 📄 sound_129.wav
+│   │   │   ├── 📄 sound_130.wav
+│   │   │   ├── 📄 sound_131.wav
+│   │   │   ├── 📄 sound_132.wav
+│   │   │   ├── 📄 sound_133.wav
+│   │   │   ├── 📄 sound_134.wav
+│   │   │   ├── 📄 sound_135.wav
+│   │   │   ├── 📄 sound_136.wav
+│   │   │   ├── 📄 sound_137.wav
+│   │   │   ├── 📄 sound_138.wav
+│   │   │   ├── 📄 sound_139.wav
+│   │   │   ├── 📄 sound_140.wav
+│   │   │   ├── 📄 sound_141.wav
+│   │   │   ├── 📄 sound_142.wav
+│   │   │   ├── 📄 sound_143.wav
+│   │   │   ├── 📄 sound_144.wav
+│   │   │   ├── 📄 sound_145.wav
+│   │   │   ├── 📄 sound_146.wav
+│   │   │   ├── 📄 sound_147.wav
+│   │   │   ├── 📄 sound_148.wav
+│   │   │   ├── 📄 sound_149.wav
+│   │   │   ├── 📄 sound_150.wav
+│   │   │   ├── 📄 sound_151.wav
+│   │   │   ├── 📄 sound_152.wav
+│   │   │   ├── 📄 sound_153.wav
+│   │   │   ├── 📄 sound_154.wav
+│   │   │   ├── 📄 sound_155.wav
+│   │   │   ├── 📄 sound_156.wav
+│   │   │   ├── 📄 sound_157.wav
+│   │   │   ├── 📄 sound_158.wav
+│   │   │   ├── 📄 sound_159.wav
+│   │   │   ├── 📄 sound_160.wav
+│   │   │   ├── 📄 sound_161.wav
+│   │   │   ├── 📄 sound_162.wav
+│   │   │   ├── 📄 sound_163.wav
+│   │   │   ├── 📄 sound_164.wav
+│   │   │   ├── 📄 sound_165.wav
+│   │   │   ├── 📄 sound_166.wav
+│   │   │   ├── 📄 sound_167.wav
+│   │   │   ├── 📄 sound_168.wav
+│   │   │   └── 📄 sound_169.wav
+│   │   ├── 📁 02-Bank_002
+│   │   │   ├── 📄 sound_001.wav
+│   │   │   ├── 📄 sound_002.wav
+│   │   │   ├── 📄 sound_003.wav
+│   │   │   ├── 📄 sound_004.wav
+│   │   │   ├── 📄 sound_005.wav
+│   │   │   ├── 📄 sound_006.wav
+│   │   │   ├── 📄 sound_007.wav
+│   │   │   ├── 📄 sound_008.wav
+│   │   │   ├── 📄 sound_009.wav
+│   │   │   ├── 📄 sound_010.wav
+│   │   │   ├── 📄 sound_011.wav
+│   │   │   ├── 📄 sound_012.wav
+│   │   │   ├── 📄 sound_013.wav
+│   │   │   ├── 📄 sound_014.wav
+│   │   │   ├── 📄 sound_015.wav
+│   │   │   ├── 📄 sound_016.wav
+│   │   │   ├── 📄 sound_017.wav
+│   │   │   ├── 📄 sound_018.wav
+│   │   │   ├── 📄 sound_019.wav
+│   │   │   ├── 📄 sound_020.wav
+│   │   │   ├── 📄 sound_021.wav
+│   │   │   ├── 📄 sound_022.wav
+│   │   │   ├── 📄 sound_023.wav
+│   │   │   ├── 📄 sound_024.wav
+│   │   │   ├── 📄 sound_025.wav
+│   │   │   ├── 📄 SOUND_026.wav
+│   │   │   ├── 📄 SOUND_027.wav
+│   │   │   ├── 📄 SOUND_028.wav
+│   │   │   ├── 📄 SOUND_029.wav
+│   │   │   ├── 📄 SOUND_030.wav
+│   │   │   ├── 📄 SOUND_031.wav
+│   │   │   ├── 📄 SOUND_032.wav
+│   │   │   ├── 📄 SOUND_033.wav
+│   │   │   ├── 📄 SOUND_034.wav
+│   │   │   ├── 📄 SOUND_035.wav
+│   │   │   ├── 📄 SOUND_036.wav
+│   │   │   ├── 📄 SOUND_037.wav
+│   │   │   ├── 📄 SOUND_038.wav
+│   │   │   ├── 📄 SOUND_039.wav
+│   │   │   ├── 📄 SOUND_040.wav
+│   │   │   ├── 📄 SOUND_041.wav
+│   │   │   ├── 📄 SOUND_042.wav
+│   │   │   ├── 📄 SOUND_043.wav
+│   │   │   ├── 📄 SOUND_044.wav
+│   │   │   ├── 📄 SOUND_045.wav
+│   │   │   ├── 📄 SOUND_046.wav
+│   │   │   ├── 📄 sound_047.wav
+│   │   │   ├── 📄 sound_048.wav
+│   │   │   ├── 📄 sound_049.wav
+│   │   │   ├── 📄 sound_050.wav
+│   │   │   ├── 📄 sound_051.wav
+│   │   │   ├── 📄 sound_052.wav
+│   │   │   ├── 📄 sound_053.wav
+│   │   │   ├── 📄 sound_054.wav
+│   │   │   ├── 📄 sound_055.wav
+│   │   │   ├── 📄 sound_056.wav
+│   │   │   ├── 📄 sound_057.wav
+│   │   │   ├── 📄 sound_058.wav
+│   │   │   ├── 📄 sound_059.wav
+│   │   │   ├── 📄 sound_060.wav
+│   │   │   ├── 📄 sound_061.wav
+│   │   │   ├── 📄 sound_062.wav
+│   │   │   ├── 📄 sound_063.wav
+│   │   │   ├── 📄 sound_064.wav
+│   │   │   ├── 📄 sound_065.wav
+│   │   │   ├── 📄 sound_066.wav
+│   │   │   ├── 📄 sound_067.wav
+│   │   │   ├── 📄 sound_068.wav
+│   │   │   ├── 📄 sound_069.wav
+│   │   │   ├── 📄 sound_070.wav
+│   │   │   ├── 📄 sound_071.wav
+│   │   │   ├── 📄 sound_072.wav
+│   │   │   ├── 📄 sound_073.wav
+│   │   │   ├── 📄 sound_074.wav
+│   │   │   ├── 📄 sound_075.wav
+│   │   │   ├── 📄 sound_076.wav
+│   │   │   ├── 📄 sound_077.wav
+│   │   │   ├── 📄 sound_078.wav
+│   │   │   ├── 📄 sound_079.wav
+│   │   │   ├── 📄 sound_080.wav
+│   │   │   ├── 📄 sound_081.wav
+│   │   │   ├── 📄 sound_082.wav
+│   │   │   ├── 📄 sound_083.wav
+│   │   │   ├── 📄 sound_084.wav
+│   │   │   ├── 📄 sound_085.wav
+│   │   │   ├── 📄 sound_086.wav
+│   │   │   ├── 📄 sound_087.wav
+│   │   │   ├── 📄 sound_088.wav
+│   │   │   ├── 📄 sound_089.wav
+│   │   │   ├── 📄 sound_090.wav
+│   │   │   ├── 📄 sound_091.wav
+│   │   │   ├── 📄 sound_092.wav
+│   │   │   ├── 📄 sound_093.wav
+│   │   │   ├── 📄 sound_094.wav
+│   │   │   ├── 📄 sound_095.wav
+│   │   │   ├── 📄 sound_096.wav
+│   │   │   ├── 📄 sound_097.wav
+│   │   │   ├── 📄 sound_098.wav
+│   │   │   ├── 📄 sound_099.wav
+│   │   │   ├── 📄 sound_100.wav
+│   │   │   ├── 📄 sound_101.wav
+│   │   │   ├── 📄 sound_102.wav
+│   │   │   ├── 📄 sound_103.wav
+│   │   │   ├── 📄 sound_104.wav
+│   │   │   ├── 📄 sound_105.wav
+│   │   │   ├── 📄 sound_106.wav
+│   │   │   ├── 📄 sound_107.wav
+│   │   │   ├── 📄 sound_108.wav
+│   │   │   ├── 📄 sound_109.wav
+│   │   │   ├── 📄 sound_110.wav
+│   │   │   ├── 📄 sound_111.wav
+│   │   │   ├── 📄 sound_112.wav
+│   │   │   ├── 📄 sound_113.wav
+│   │   │   ├── 📄 sound_114.wav
+│   │   │   ├── 📄 sound_115.wav
+│   │   │   ├── 📄 sound_116.wav
+│   │   │   ├── 📄 sound_117.wav
+│   │   │   ├── 📄 sound_118.wav
+│   │   │   ├── 📄 sound_119.wav
+│   │   │   ├── 📄 sound_120.wav
+│   │   │   ├── 📄 sound_121.wav
+│   │   │   ├── 📄 sound_122.wav
+│   │   │   ├── 📄 sound_123.wav
+│   │   │   ├── 📄 sound_124.wav
+│   │   │   ├── 📄 sound_125.wav
+│   │   │   ├── 📄 sound_126.wav
+│   │   │   ├── 📄 sound_127.wav
+│   │   │   ├── 📄 sound_128.wav
+│   │   │   ├── 📄 sound_129.wav
+│   │   │   ├── 📄 sound_130.wav
+│   │   │   └── 📄 sound_131.wav
+│   │   └── 📁 03-Bank_003
+│   │       ├── 📄 sound_001.wav
+│   │       ├── 📄 sound_002.wav
+│   │       ├── 📄 sound_003.wav
+│   │       ├── 📄 sound_004.wav
+│   │       ├── 📄 sound_005.wav
+│   │       ├── 📄 sound_006.wav
+│   │       ├── 📄 sound_007.wav
+│   │       ├── 📄 sound_008.wav
+│   │       ├── 📄 sound_009.wav
+│   │       ├── 📄 sound_010.wav
+│   │       ├── 📄 sound_011.wav
+│   │       ├── 📄 sound_012.wav
+│   │       ├── 📄 sound_013.wav
+│   │       ├── 📄 sound_014.wav
+│   │       ├── 📄 sound_015.wav
+│   │       ├── 📄 sound_016.wav
+│   │       ├── 📄 sound_017.wav
+│   │       ├── 📄 sound_018.wav
+│   │       ├── 📄 sound_019.wav
+│   │       ├── 📄 sound_020.wav
+│   │       ├── 📄 sound_021.wav
+│   │       ├── 📄 sound_022.wav
+│   │       ├── 📄 sound_023.wav
+│   │       ├── 📄 sound_024.wav
+│   │       ├── 📄 sound_025.wav
+│   │       ├── 📄 sound_026.wav
+│   │       ├── 📄 sound_027.wav
+│   │       ├── 📄 sound_028.wav
+│   │       ├── 📄 sound_029.wav
+│   │       ├── 📄 sound_030.wav
+│   │       ├── 📄 sound_031.wav
+│   │       ├── 📄 sound_032.wav
+│   │       ├── 📄 sound_033.wav
+│   │       ├── 📄 sound_034.wav
+│   │       ├── 📄 sound_035.wav
+│   │       ├── 📄 sound_036.wav
+│   │       ├── 📄 sound_037.wav
+│   │       ├── 📄 sound_038.wav
+│   │       ├── 📄 sound_039.wav
+│   │       ├── 📄 sound_040.wav
+│   │       ├── 📄 sound_041.wav
+│   │       ├── 📄 sound_042.wav
+│   │       ├── 📄 sound_043.wav
+│   │       ├── 📄 sound_044.wav
+│   │       ├── 📄 sound_045.wav
+│   │       ├── 📄 sound_046.wav
+│   │       ├── 📄 sound_047.wav
+│   │       ├── 📄 sound_048.wav
+│   │       ├── 📄 sound_049.wav
+│   │       ├── 📄 sound_050.wav
+│   │       ├── 📄 sound_051.wav
+│   │       ├── 📄 sound_052.wav
+│   │       ├── 📄 sound_053.wav
+│   │       ├── 📄 sound_054.wav
+│   │       ├── 📄 sound_055.wav
+│   │       ├── 📄 sound_056.wav
+│   │       ├── 📄 sound_057.wav
+│   │       ├── 📄 sound_058.wav
+│   │       ├── 📄 sound_059.wav
+│   │       ├── 📄 sound_060.wav
+│   │       ├── 📄 sound_061.wav
+│   │       ├── 📄 sound_062.wav
+│   │       ├── 📄 sound_063.wav
+│   │       ├── 📄 sound_064.wav
+│   │       ├── 📄 sound_065.wav
+│   │       ├── 📄 sound_066.wav
+│   │       ├── 📄 sound_067.wav
+│   │       ├── 📄 sound_068.wav
+│   │       ├── 📄 sound_069.wav
+│   │       ├── 📄 sound_070.wav
+│   │       ├── 📄 sound_071.wav
+│   │       ├── 📄 sound_072.wav
+│   │       ├── 📄 sound_073.wav
+│   │       ├── 📄 sound_074.wav
+│   │       ├── 📄 sound_075.wav
+│   │       ├── 📄 sound_076.wav
+│   │       ├── 📄 sound_077.wav
+│   │       ├── 📄 sound_078.wav
+│   │       ├── 📄 sound_079.wav
+│   │       ├── 📄 sound_080.wav
+│   │       ├── 📄 sound_081.wav
+│   │       ├── 📄 sound_082.wav
+│   │       ├── 📄 sound_083.wav
+│   │       ├── 📄 sound_084.wav
+│   │       ├── 📄 sound_085.wav
+│   │       ├── 📄 sound_086.wav
+│   │       ├── 📄 sound_087.wav
+│   │       ├── 📄 sound_088.wav
+│   │       ├── 📄 sound_089.wav
+│   │       ├── 📄 sound_090.wav
+│   │       ├── 📄 sound_091.wav
+│   │       ├── 📄 sound_092.wav
+│   │       ├── 📄 sound_093.wav
+│   │       ├── 📄 sound_094.wav
+│   │       ├── 📄 sound_095.wav
+│   │       ├── 📄 sound_096.wav
+│   │       ├── 📄 sound_097.wav
+│   │       ├── 📄 sound_098.wav
+│   │       ├── 📄 sound_099.wav
+│   │       ├── 📄 sound_100.wav
+│   │       └── 📄 sound_101.wav
+│   └── 📁 04-SCRIPT
+│       ├── 📁 01-bank_001
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   ├── 📄 sound_004.wav
+│       │   ├── 📄 sound_005.wav
+│       │   ├── 📄 sound_006.wav
+│       │   ├── 📄 sound_007.wav
+│       │   ├── 📄 sound_008.wav
+│       │   ├── 📄 sound_009.wav
+│       │   ├── 📄 sound_010.wav
+│       │   ├── 📄 sound_011.wav
+│       │   ├── 📄 sound_012.wav
+│       │   ├── 📄 sound_013.wav
+│       │   ├── 📄 sound_014.wav
+│       │   ├── 📄 sound_015.wav
+│       │   ├── 📄 sound_016.wav
+│       │   ├── 📄 sound_017.wav
+│       │   ├── 📄 sound_018.wav
+│       │   ├── 📄 sound_019.wav
+│       │   ├── 📄 sound_020.wav
+│       │   ├── 📄 sound_021.wav
+│       │   ├── 📄 sound_022.wav
+│       │   ├── 📄 sound_023.wav
+│       │   ├── 📄 sound_024.wav
+│       │   ├── 📄 sound_025.wav
+│       │   ├── 📄 sound_026.wav
+│       │   ├── 📄 sound_027.wav
+│       │   ├── 📄 sound_028.wav
+│       │   ├── 📄 sound_029.wav
+│       │   ├── 📄 sound_030.wav
+│       │   ├── 📄 sound_031.wav
+│       │   ├── 📄 sound_032.wav
+│       │   ├── 📄 sound_033.wav
+│       │   ├── 📄 sound_034.wav
+│       │   ├── 📄 sound_035.wav
+│       │   ├── 📄 sound_036.wav
+│       │   ├── 📄 sound_037.wav
+│       │   ├── 📄 sound_038.wav
+│       │   ├── 📄 sound_039.wav
+│       │   ├── 📄 sound_040.wav
+│       │   ├── 📄 sound_041.wav
+│       │   ├── 📄 sound_042.wav
+│       │   ├── 📄 sound_043.wav
+│       │   ├── 📄 sound_044.wav
+│       │   ├── 📄 sound_045.wav
+│       │   ├── 📄 sound_046.wav
+│       │   ├── 📄 sound_047.wav
+│       │   ├── 📄 sound_048.wav
+│       │   ├── 📄 sound_049.wav
+│       │   ├── 📄 sound_050.wav
+│       │   ├── 📄 sound_051.wav
+│       │   ├── 📄 sound_052.wav
+│       │   ├── 📄 sound_053.wav
+│       │   ├── 📄 sound_054.wav
+│       │   ├── 📄 sound_055.wav
+│       │   ├── 📄 sound_056.wav
+│       │   ├── 📄 sound_057.wav
+│       │   ├── 📄 sound_058.wav
+│       │   ├── 📄 sound_059.wav
+│       │   ├── 📄 sound_060.wav
+│       │   ├── 📄 sound_061.wav
+│       │   ├── 📄 sound_062.wav
+│       │   ├── 📄 sound_063.wav
+│       │   ├── 📄 sound_064.wav
+│       │   ├── 📄 sound_065.wav
+│       │   ├── 📄 sound_066.wav
+│       │   ├── 📄 sound_067.wav
+│       │   ├── 📄 sound_068.wav
+│       │   ├── 📄 sound_069.wav
+│       │   ├── 📄 sound_070.wav
+│       │   ├── 📄 sound_071.wav
+│       │   ├── 📄 sound_072.wav
+│       │   ├── 📄 sound_073.wav
+│       │   ├── 📄 sound_074.wav
+│       │   ├── 📄 sound_075.wav
+│       │   ├── 📄 sound_076.wav
+│       │   ├── 📄 sound_077.wav
+│       │   ├── 📄 sound_078.wav
+│       │   ├── 📄 sound_079.wav
+│       │   ├── 📄 sound_080.wav
+│       │   ├── 📄 sound_081.wav
+│       │   ├── 📄 sound_082.wav
+│       │   ├── 📄 sound_083.wav
+│       │   ├── 📄 sound_084.wav
+│       │   ├── 📄 sound_085.wav
+│       │   ├── 📄 sound_086.wav
+│       │   ├── 📄 sound_087.wav
+│       │   ├── 📄 sound_088.wav
+│       │   ├── 📄 sound_089.wav
+│       │   ├── 📄 sound_090.wav
+│       │   ├── 📄 sound_091.wav
+│       │   ├── 📄 sound_092.wav
+│       │   ├── 📄 sound_093.wav
+│       │   ├── 📄 sound_094.wav
+│       │   ├── 📄 sound_095.wav
+│       │   ├── 📄 sound_096.wav
+│       │   ├── 📄 sound_097.wav
+│       │   ├── 📄 sound_098.wav
+│       │   ├── 📄 sound_099.wav
+│       │   ├── 📄 sound_100.wav
+│       │   ├── 📄 sound_101.wav
+│       │   ├── 📄 sound_102.wav
+│       │   ├── 📄 sound_103.wav
+│       │   ├── 📄 sound_104.wav
+│       │   ├── 📄 sound_105.wav
+│       │   ├── 📄 sound_106.wav
+│       │   ├── 📄 sound_107.wav
+│       │   ├── 📄 sound_108.wav
+│       │   ├── 📄 sound_109.wav
+│       │   ├── 📄 sound_110.wav
+│       │   ├── 📄 sound_111.wav
+│       │   ├── 📄 sound_112.wav
+│       │   ├── 📄 sound_113.wav
+│       │   ├── 📄 sound_114.wav
+│       │   ├── 📄 sound_115.wav
+│       │   ├── 📄 sound_116.wav
+│       │   ├── 📄 sound_117.wav
+│       │   ├── 📄 sound_118.wav
+│       │   ├── 📄 sound_119.wav
+│       │   ├── 📄 sound_120.wav
+│       │   ├── 📄 sound_121.wav
+│       │   ├── 📄 sound_122.wav
+│       │   ├── 📄 sound_123.wav
+│       │   ├── 📄 sound_124.wav
+│       │   ├── 📄 sound_125.wav
+│       │   ├── 📄 sound_126.wav
+│       │   ├── 📄 sound_127.wav
+│       │   ├── 📄 sound_128.wav
+│       │   ├── 📄 sound_129.wav
+│       │   ├── 📄 sound_130.wav
+│       │   ├── 📄 sound_131.wav
+│       │   ├── 📄 sound_132.wav
+│       │   ├── 📄 sound_133.wav
+│       │   ├── 📄 sound_134.wav
+│       │   ├── 📄 sound_135.wav
+│       │   ├── 📄 sound_136.wav
+│       │   ├── 📄 sound_137.wav
+│       │   ├── 📄 sound_138.wav
+│       │   ├── 📄 sound_139.wav
+│       │   ├── 📄 sound_140.wav
+│       │   ├── 📄 sound_141.wav
+│       │   ├── 📄 sound_142.wav
+│       │   ├── 📄 sound_143.wav
+│       │   ├── 📄 sound_144.wav
+│       │   ├── 📄 sound_145.wav
+│       │   ├── 📄 sound_146.wav
+│       │   ├── 📄 sound_147.wav
+│       │   ├── 📄 sound_148.wav
+│       │   ├── 📄 sound_149.wav
+│       │   ├── 📄 sound_150.wav
+│       │   ├── 📄 sound_151.wav
+│       │   ├── 📄 sound_152.wav
+│       │   ├── 📄 sound_153.wav
+│       │   ├── 📄 sound_154.wav
+│       │   ├── 📄 sound_155.wav
+│       │   ├── 📄 sound_156.wav
+│       │   ├── 📄 sound_157.wav
+│       │   ├── 📄 sound_158.wav
+│       │   ├── 📄 sound_159.wav
+│       │   ├── 📄 sound_160.wav
+│       │   ├── 📄 sound_161.wav
+│       │   ├── 📄 sound_162.wav
+│       │   ├── 📄 sound_163.wav
+│       │   └── 📄 sound_164.wav
+│       ├── 📁 02-bank_002
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   ├── 📄 sound_004.wav
+│       │   ├── 📄 sound_005.wav
+│       │   ├── 📄 sound_006.wav
+│       │   ├── 📄 sound_007.wav
+│       │   ├── 📄 sound_008.wav
+│       │   ├── 📄 sound_009.wav
+│       │   ├── 📄 sound_010.wav
+│       │   ├── 📄 sound_011.wav
+│       │   ├── 📄 sound_012.wav
+│       │   ├── 📄 sound_013.wav
+│       │   ├── 📄 sound_014.wav
+│       │   └── 📄 sound_015.wav
+│       ├── 📁 03-bank_003
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   ├── 📄 sound_004.wav
+│       │   └── 📄 sound_005.wav
+│       ├── 📁 04-bank_004
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_005.wav
+│       │   ├── 📄 sound_006.wav
+│       │   ├── 📄 sound_008.wav
+│       │   └── 📄 sound_009.wav
+│       ├── 📁 05-bank_005
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   ├── 📄 sound_004.wav
+│       │   ├── 📄 sound_005.wav
+│       │   ├── 📄 sound_006.wav
+│       │   ├── 📄 sound_008.wav
+│       │   ├── 📄 sound_009.wav
+│       │   ├── 📄 sound_010.wav
+│       │   └── 📄 sound_011.wav
+│       ├── 📁 06-bank_006
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   ├── 📄 sound_006.wav
+│       │   ├── 📄 sound_007.wav
+│       │   ├── 📄 sound_010.wav
+│       │   ├── 📄 sound_011.wav
+│       │   ├── 📄 sound_012.wav
+│       │   ├── 📄 sound_013.wav
+│       │   ├── 📄 sound_018.wav
+│       │   ├── 📄 sound_019.wav
+│       │   ├── 📄 sound_020.wav
+│       │   ├── 📄 sound_021.wav
+│       │   ├── 📄 sound_022.wav
+│       │   ├── 📄 sound_025.wav
+│       │   ├── 📄 sound_026.wav
+│       │   ├── 📄 sound_028.wav
+│       │   ├── 📄 sound_029.wav
+│       │   ├── 📄 sound_032.wav
+│       │   ├── 📄 sound_033.wav
+│       │   ├── 📄 sound_034.wav
+│       │   ├── 📄 sound_035.wav
+│       │   ├── 📄 sound_036.wav
+│       │   ├── 📄 sound_037.wav
+│       │   ├── 📄 sound_038.wav
+│       │   ├── 📄 sound_039.wav
+│       │   ├── 📄 sound_040.wav
+│       │   ├── 📄 sound_041.wav
+│       │   ├── 📄 sound_042.wav
+│       │   ├── 📄 sound_043.wav
+│       │   ├── 📄 sound_044.wav
+│       │   ├── 📄 sound_046.wav
+│       │   ├── 📄 sound_047.wav
+│       │   ├── 📄 sound_048.wav
+│       │   ├── 📄 sound_049.wav
+│       │   ├── 📄 sound_050.wav
+│       │   ├── 📄 sound_051.wav
+│       │   ├── 📄 sound_052.wav
+│       │   ├── 📄 sound_053.wav
+│       │   ├── 📄 sound_054.wav
+│       │   ├── 📄 sound_055.wav
+│       │   ├── 📄 sound_056.wav
+│       │   ├── 📄 sound_057.wav
+│       │   └── 📄 sound_058.wav
+│       ├── 📁 07-Bank_007
+│       │   ├── 📄 sound_001.wav
+│       │   └── 📄 sound_002.wav
+│       ├── 📁 08-Bank_013
+│       │   └── 📄 sound_001.wav
+│       ├── 📁 09-Bank_014
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   └── 📄 sound_004.wav
+│       ├── 📁 10-Bank_164
+│       │   ├── 📄 sound_001.wav
+│       │   ├── 📄 sound_002.wav
+│       │   ├── 📄 sound_003.wav
+│       │   ├── 📄 sound_004.wav
+│       │   ├── 📄 sound_005.wav
+│       │   ├── 📄 sound_006.wav
+│       │   └── 📄 sound_007.wav
+│       ├── 📁 11-Bank_191
+│       │   └── 📄 sound_001.wav
+│       ├── 📁 12-Bank_205
+│       │   └── 📄 sound_002.wav
+│       └── 📄 POLICE SCANNER.png
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 157
+فایل‌ها: 1668

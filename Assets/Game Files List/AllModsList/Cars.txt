@@ -1,0 +1,972 @@
+📁 Cars
+
+├── 📁 01-206
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 sentinel.dff
+│   └── 📄 sentinel.txd
+├── 📁 02-207
+│   ├── 📄 club.dff
+│   ├── 📄 club.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 03-405
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 premier.dff
+│   └── 📄 premier.txd
+├── 📁 04-405 GLX 2000
+│   ├── 📄 clover.dff
+│   ├── 📄 clover.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 05-405 glx shoti
+│   ├── 📄 config.json
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 gallery4.jpg
+│   ├── 📄 Readme.txt.txt
+│   ├── 📄 washing.dff
+│   └── 📄 washing.txd
+├── 📁 06-405 shoti
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 gallery4.jpg
+│   ├── 📄 merit.dff
+│   └── 📄 merit.txd
+├── 📁 07-405 shoti kurd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 gallery4.jpg
+│   ├── 📄 merit.dff
+│   └── 📄 merit.txd
+├── 📁 08-405 silver M-T
+│   ├── 📄 gallery5.jpg
+│   ├── 📄 gallery6.jpg
+│   ├── 📄 gallery7.jpg
+│   ├── 📄 gallery8.jpg
+│   ├── 📄 sultan.dff
+│   └── 📄 sultan.txd
+├── 📁 09-bmw-m3g80
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 supergt.dff
+│   ├── 📄 supergt.txd
+│   └── 📄 прописи.txt
+├── 📁 10-Calasca Baby
+│   ├── 📄 caddy.dff
+│   ├── 📄 caddy.txd
+│   ├── 📄 Gallery1.jpg
+│   ├── 📄 Gallery2.jpg
+│   ├── 📄 Gallery3.jpg
+│   ├── 📄 Gallery4.jpg
+│   └── 📄 Read Me.txt
+├── 📁 11-dena-plus
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 merit.dff
+│   └── 📄 merit.txd
+├── 📁 12-ferrari-2014
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 turismo.dff
+│   └── 📄 turismo.txd
+├── 📁 13-ferrari-tron
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 hotrina.dff
+│   └── 📄 hotrina.txd
+├── 📁 14-Flipper Car FF6
+│   ├── 📄 bfinject.dff
+│   ├── 📄 bfinject.txd
+│   ├── 📄 flipper.jpg
+│   ├── 📄 Screenshot (230).png
+│   └── 📄 Screenshot (231).png
+├── 📁 15-FunnyPackCar
+│   ├── 📁 01-Copy and Paste this in Data folder
+│   │   ├── 📄 cargrp.dat
+│   │   └── 📄 carmods.dat
+│   ├── 📁 02-Funny Cars
+│   │   ├── 📄 greenwoo.dff
+│   │   ├── 📄 greenwoo.txd
+│   │   ├── 📄 hotring.dff
+│   │   ├── 📄 hotring.txd
+│   │   ├── 📄 hydra.dff
+│   │   ├── 📄 hydra.txd
+│   │   ├── 📄 merit.dff
+│   │   ├── 📄 merit.txd
+│   │   ├── 📄 sentinel.dff
+│   │   └── 📄 sentinel.txd
+│   └── 📁 03-Screenshots
+│       ├── 📄 1.jpg
+│       ├── 📄 2.jpg
+│       ├── 📄 3.jpg
+│       ├── 📄 4.jpg
+│       └── 📄 5.jpg
+├── 📁 16-GTA-V Car light pack for GTA SA
+│   ├── 📁 01-cleo
+│   │   ├── 📄 adder.cs
+│   │   ├── 📄 cheats.cs
+│   │   ├── 📄 club.cs
+│   │   ├── 📄 club.txt
+│   │   ├── 📄 glendale.cs
+│   │   ├── 📄 glendale.txt
+│   │   ├── 📄 HotringAfterburner.cs
+│   │   ├── 📄 HotringAfterburner.txt
+│   │   ├── 📄 HotringMachinegun.cs
+│   │   ├── 📄 HotringMachinegun.txt
+│   │   ├── 📄 HotringMissile.cs
+│   │   ├── 📄 HotringMissile.txt
+│   │   ├── 📄 manana.cs
+│   │   ├── 📄 manana.txt
+│   │   ├── 📄 minigun.mp3
+│   │   ├── 📄 my car.txt
+│   │   ├── 📄 OffSet_Scheme.PNG
+│   │   ├── 📄 prototipo.cs
+│   │   ├── 📄 prototipo.txt
+│   │   ├── 📄 rhinotracks.cs
+│   │   ├── 📄 ScramjetMissile.cs
+│   │   ├── 📄 ScramjetMissile.txt
+│   │   ├── 📄 supergt.cs
+│   │   ├── 📄 supergt.txt
+│   │   └── 📄 turretedstretchmingun.cs
+│   ├── 📁 02-data
+│   │   ├── 📄 admiral.dff
+│   │   ├── 📄 admiral.txd
+│   │   ├── 📄 alpha.dff
+│   │   ├── 📄 alpha.txd
+│   │   ├── 📄 alpha1.txd
+│   │   ├── 📄 alpha2.txd
+│   │   ├── 📄 alpha3.txd
+│   │   ├── 📄 alpha4.txd
+│   │   ├── 📄 bandito.dff
+│   │   ├── 📄 bandito.txd
+│   │   ├── 📄 banshee.dff
+│   │   ├── 📄 banshee.txd
+│   │   ├── 📄 banshee1.txd
+│   │   ├── 📄 banshee2.txd
+│   │   ├── 📄 banshee3.txd
+│   │   ├── 📄 banshee4.txd
+│   │   ├── 📄 bf400.dff
+│   │   ├── 📄 bf400.txd
+│   │   ├── 📄 bf4001.txd
+│   │   ├── 📄 bf4002.txd
+│   │   ├── 📄 bf4003.txd
+│   │   ├── 📄 blade.txd
+│   │   ├── 📄 bravura.dff
+│   │   ├── 📄 bravura.txd
+│   │   ├── 📄 buccanee.dff
+│   │   ├── 📄 buccanee.txd
+│   │   ├── 📄 buffalo.dff
+│   │   ├── 📄 buffalo.txd
+│   │   ├── 📄 buffalo1.txd
+│   │   ├── 📄 bullet.dff
+│   │   ├── 📄 bullet.txd
+│   │   ├── 📄 cabbie.dff
+│   │   ├── 📄 cabbie.txd
+│   │   ├── 📄 cadrona.dff
+│   │   ├── 📄 cadrona.txd
+│   │   ├── 📄 carcols.dat
+│   │   ├── 📄 cargrp.dat
+│   │   ├── 📄 carmods.dat
+│   │   ├── 📄 cheetah.dff
+│   │   ├── 📄 cheetah.txd
+│   │   ├── 📄 club.dff
+│   │   ├── 📄 club.txd
+│   │   ├── 📄 comet.dff
+│   │   ├── 📄 comet.txd
+│   │   ├── 📄 comet1.txd
+│   │   ├── 📄 comet2.txd
+│   │   ├── 📄 comet3.txd
+│   │   ├── 📄 comet4.txd
+│   │   ├── 📄 copcarla.dff
+│   │   ├── 📄 copcarla.txd
+│   │   ├── 📄 copcarru.dff
+│   │   ├── 📄 copcarru.txd
+│   │   ├── 📄 copcarsf.dff
+│   │   ├── 📄 copcarsf.txd
+│   │   ├── 📄 copcarvg.dff
+│   │   ├── 📄 copcarvg.txd
+│   │   ├── 📄 elegant.dff
+│   │   ├── 📄 elegant.txd
+│   │   ├── 📄 elegy.dff
+│   │   ├── 📄 elegy.txd
+│   │   ├── 📄 emperor.dff
+│   │   ├── 📄 emperor.txd
+│   │   ├── 📄 emperor1.txd
+│   │   ├── 📄 emperor2.txd
+│   │   ├── 📄 emperor3.txd
+│   │   ├── 📄 emperor4.txd
+│   │   ├── 📄 firetruk.dff
+│   │   ├── 📄 firetruk.txd
+│   │   ├── 📄 flash.dff
+│   │   ├── 📄 flash.txd
+│   │   ├── 📄 glendale.dff
+│   │   ├── 📄 glendale.txd
+│   │   ├── 📄 greenwoo.dff
+│   │   ├── 📄 greenwoo.txd
+│   │   ├── 📄 handling.cfg
+│   │   ├── 📄 hermes.dff
+│   │   ├── 📄 hermes.txd
+│   │   ├── 📄 hotrina.dff
+│   │   ├── 📄 hotrina.txd
+│   │   ├── 📄 hotrinb.dff
+│   │   ├── 📄 hotrinb.txd
+│   │   ├── 📄 hotring.dff
+│   │   ├── 📄 hotring.txd
+│   │   ├── 📄 hotring1.txd
+│   │   ├── 📄 hotring2.txd
+│   │   ├── 📄 hotring3.txd
+│   │   ├── 📄 hotring4.txd
+│   │   ├── 📄 huntley.dff
+│   │   ├── 📄 huntley.txd
+│   │   ├── 📄 hydra.dff
+│   │   ├── 📄 hydra.txd
+│   │   ├── 📄 infernus.dff
+│   │   ├── 📄 infernus.txd
+│   │   ├── 📄 infernus1.txd
+│   │   ├── 📄 infernus2.txd
+│   │   ├── 📄 infernus3.txd
+│   │   ├── 📄 infernus4.txd
+│   │   ├── 📄 jester.dff
+│   │   ├── 📄 jester.txd
+│   │   ├── 📄 jester1.txd
+│   │   ├── 📄 landstal.dff
+│   │   ├── 📄 landstal.txd
+│   │   ├── 📄 majestic.dff
+│   │   ├── 📄 majestic.txd
+│   │   ├── 📄 manana.dff
+│   │   ├── 📄 manana.txd
+│   │   ├── 📄 merit.dff
+│   │   ├── 📄 merit.txd
+│   │   ├── 📄 merit1.txd
+│   │   ├── 📄 merit2.txd
+│   │   ├── 📄 merit3.txd
+│   │   ├── 📄 merit4.txd
+│   │   ├── 📄 mesa.dff
+│   │   ├── 📄 mesa.txd
+│   │   ├── 📄 monster.txd
+│   │   ├── 📄 monstera.dff
+│   │   ├── 📄 nebula.dff
+│   │   ├── 📄 nebula.txd
+│   │   ├── 📄 pcj600.dff
+│   │   ├── 📄 pcj600.txd
+│   │   ├── 📄 peren.dff
+│   │   ├── 📄 peren.txd
+│   │   ├── 📄 peren1.txd
+│   │   ├── 📄 peren2.txd
+│   │   ├── 📄 peren3.txd
+│   │   ├── 📄 peren4.txd
+│   │   ├── 📄 peren5.txd
+│   │   ├── 📄 phoenix.dff
+│   │   ├── 📄 phoenix.txd
+│   │   ├── 📄 picador.dff
+│   │   ├── 📄 picador.txd
+│   │   ├── 📄 pizzaboy.dff
+│   │   ├── 📄 pizzaboy.txd
+│   │   ├── 📄 previon.dff
+│   │   ├── 📄 previon.txd
+│   │   ├── 📄 primo.dff
+│   │   ├── 📄 primo.txd
+│   │   ├── 📄 racnher.dff
+│   │   ├── 📄 rancher.txd
+│   │   ├── 📄 rancher1.txd
+│   │   ├── 📄 rancher2.txd
+│   │   ├── 📄 rancher3.txd
+│   │   ├── 📄 rancher4.txd
+│   │   ├── 📄 regina.dff
+│   │   ├── 📄 regina.txd
+│   │   ├── 📄 regina1.txd
+│   │   ├── 📄 regina2.txd
+│   │   ├── 📄 regina3.txd
+│   │   ├── 📄 regina4.txd
+│   │   ├── 📄 regina5.txd
+│   │   ├── 📄 rhino.dff
+│   │   ├── 📄 rhino.txd
+│   │   ├── 📄 rhino1.txd
+│   │   ├── 📄 rhino2.txd
+│   │   ├── 📄 rhino3.txd
+│   │   ├── 📄 rhino4.txd
+│   │   ├── 📄 rhino5.txd
+│   │   ├── 📄 sabre.dff
+│   │   ├── 📄 sabre.txd
+│   │   ├── 📄 sentinel.dff
+│   │   ├── 📄 sentinel.txd
+│   │   ├── 📄 slamvan.dff
+│   │   ├── 📄 slamvan.txd
+│   │   ├── 📄 stafford.dff
+│   │   ├── 📄 stafford.txd
+│   │   ├── 📄 stafford1.txd
+│   │   ├── 📄 stafford2.txd
+│   │   ├── 📄 stafford3.txd
+│   │   ├── 📄 stafford4.txd
+│   │   ├── 📄 stallion.dff
+│   │   ├── 📄 stallion.txd
+│   │   ├── 📄 stratum.dff
+│   │   ├── 📄 stratum.txd
+│   │   ├── 📄 supergt.dff
+│   │   ├── 📄 supergt.txd
+│   │   ├── 📄 supergt1.txd
+│   │   ├── 📄 supergt2.txd
+│   │   ├── 📄 supergt3.txd
+│   │   ├── 📄 supergt4.txd
+│   │   ├── 📄 tahoma.dff
+│   │   ├── 📄 tahoma.txd
+│   │   ├── 📄 taxi.dff
+│   │   ├── 📄 taxi.txd
+│   │   ├── 📄 turismo.dff
+│   │   ├── 📄 turismo.txd
+│   │   ├── 📄 turismo1.txd
+│   │   ├── 📄 turismo2.txd
+│   │   ├── 📄 turismo3.txd
+│   │   ├── 📄 turismo4.txd
+│   │   ├── 📄 uranus.dff
+│   │   ├── 📄 uranus.txd
+│   │   ├── 📄 uranus1.txd
+│   │   ├── 📄 uranus2.txd
+│   │   ├── 📄 uranus3.txd
+│   │   ├── 📄 uranus4.txd
+│   │   ├── 📄 vehicles.ide
+│   │   ├── 📄 virgo.dff
+│   │   ├── 📄 virgo.txd
+│   │   ├── 📄 voodoo.dff
+│   │   ├── 📄 voodoo.txd
+│   │   ├── 📄 voodoo1.txd
+│   │   ├── 📄 voodoo2.txd
+│   │   ├── 📄 washing.dff
+│   │   ├── 📄 washing.txd
+│   │   ├── 📄 windsor.dff
+│   │   ├── 📄 windsor.txd
+│   │   ├── 📄 windsor1.txd
+│   │   ├── 📄 windsor2.txd
+│   │   ├── 📄 windsor3.txd
+│   │   ├── 📄 windsor4.txd
+│   │   ├── 📄 zr350.dff
+│   │   └── 📄 zr350.txd
+│   ├── 📁 03-models
+│   │   ├── 📄 admiral.dff
+│   │   ├── 📄 admiral.txd
+│   │   ├── 📄 alpha.dff
+│   │   ├── 📄 alpha.txd
+│   │   ├── 📄 alpha1.txd
+│   │   ├── 📄 alpha2.txd
+│   │   ├── 📄 alpha3.txd
+│   │   ├── 📄 alpha4.txd
+│   │   ├── 📄 bandito.dff
+│   │   ├── 📄 bandito.txd
+│   │   ├── 📄 banshee.dff
+│   │   ├── 📄 banshee.txd
+│   │   ├── 📄 banshee1.txd
+│   │   ├── 📄 banshee2.txd
+│   │   ├── 📄 banshee3.txd
+│   │   ├── 📄 banshee4.txd
+│   │   ├── 📄 bf400.dff
+│   │   ├── 📄 bf400.txd
+│   │   ├── 📄 bf4001.txd
+│   │   ├── 📄 bf4002.txd
+│   │   ├── 📄 bf4003.txd
+│   │   ├── 📄 blade.txd
+│   │   ├── 📄 bravura.dff
+│   │   ├── 📄 bravura.txd
+│   │   ├── 📄 buccanee.dff
+│   │   ├── 📄 buccanee.txd
+│   │   ├── 📄 buffalo.dff
+│   │   ├── 📄 buffalo.txd
+│   │   ├── 📄 buffalo1.txd
+│   │   ├── 📄 bullet.dff
+│   │   ├── 📄 bullet.txd
+│   │   ├── 📄 cabbie.dff
+│   │   ├── 📄 cabbie.txd
+│   │   ├── 📄 cadrona.dff
+│   │   ├── 📄 cadrona.txd
+│   │   ├── 📄 cheetah.dff
+│   │   ├── 📄 cheetah.txd
+│   │   ├── 📄 club.dff
+│   │   ├── 📄 club.txd
+│   │   ├── 📄 comet.dff
+│   │   ├── 📄 comet.txd
+│   │   ├── 📄 comet1.txd
+│   │   ├── 📄 comet2.txd
+│   │   ├── 📄 comet3.txd
+│   │   ├── 📄 comet4.txd
+│   │   ├── 📄 copcarla.dff
+│   │   ├── 📄 copcarla.txd
+│   │   ├── 📄 copcarru.dff
+│   │   ├── 📄 copcarru.txd
+│   │   ├── 📄 copcarsf.dff
+│   │   ├── 📄 copcarsf.txd
+│   │   ├── 📄 copcarvg.dff
+│   │   ├── 📄 copcarvg.txd
+│   │   ├── 📄 elegant.dff
+│   │   ├── 📄 elegant.txd
+│   │   ├── 📄 elegy.dff
+│   │   ├── 📄 elegy.txd
+│   │   ├── 📄 emperor.dff
+│   │   ├── 📄 emperor.txd
+│   │   ├── 📄 emperor1.txd
+│   │   ├── 📄 emperor2.txd
+│   │   ├── 📄 emperor3.txd
+│   │   ├── 📄 emperor4.txd
+│   │   ├── 📄 firetruk.dff
+│   │   ├── 📄 firetruk.txd
+│   │   ├── 📄 flash.dff
+│   │   ├── 📄 flash.txd
+│   │   ├── 📄 glendale.dff
+│   │   ├── 📄 glendale.txd
+│   │   ├── 📄 greenwoo.dff
+│   │   ├── 📄 greenwoo.txd
+│   │   ├── 📄 hermes.dff
+│   │   ├── 📄 hermes.txd
+│   │   ├── 📄 hotrina.dff
+│   │   ├── 📄 hotrina.txd
+│   │   ├── 📄 hotrinb.dff
+│   │   ├── 📄 hotrinb.txd
+│   │   ├── 📄 hotring.dff
+│   │   ├── 📄 hotring.txd
+│   │   ├── 📄 hotring1.txd
+│   │   ├── 📄 hotring2.txd
+│   │   ├── 📄 hotring3.txd
+│   │   ├── 📄 hotring4.txd
+│   │   ├── 📄 huntley.dff
+│   │   ├── 📄 huntley.txd
+│   │   ├── 📄 hydra.dff
+│   │   ├── 📄 hydra.txd
+│   │   ├── 📄 infernus.dff
+│   │   ├── 📄 infernus.txd
+│   │   ├── 📄 infernus1.txd
+│   │   ├── 📄 infernus2.txd
+│   │   ├── 📄 infernus3.txd
+│   │   ├── 📄 infernus4.txd
+│   │   ├── 📄 jester.dff
+│   │   ├── 📄 jester.txd
+│   │   ├── 📄 jester1.txd
+│   │   ├── 📄 landstal.dff
+│   │   ├── 📄 landstal.txd
+│   │   ├── 📄 majestic.dff
+│   │   ├── 📄 majestic.txd
+│   │   ├── 📄 manana.dff
+│   │   ├── 📄 manana.txd
+│   │   ├── 📄 merit.dff
+│   │   ├── 📄 merit.txd
+│   │   ├── 📄 merit1.txd
+│   │   ├── 📄 merit2.txd
+│   │   ├── 📄 merit3.txd
+│   │   ├── 📄 merit4.txd
+│   │   ├── 📄 mesa.dff
+│   │   ├── 📄 mesa.txd
+│   │   ├── 📄 monster.txd
+│   │   ├── 📄 monstera.dff
+│   │   ├── 📄 nebula.dff
+│   │   ├── 📄 nebula.txd
+│   │   ├── 📄 pcj600.dff
+│   │   ├── 📄 pcj600.txd
+│   │   ├── 📄 peren.dff
+│   │   ├── 📄 peren.txd
+│   │   ├── 📄 peren1.txd
+│   │   ├── 📄 peren2.txd
+│   │   ├── 📄 peren3.txd
+│   │   ├── 📄 peren4.txd
+│   │   ├── 📄 peren5.txd
+│   │   ├── 📄 phoenix.dff
+│   │   ├── 📄 phoenix.txd
+│   │   ├── 📄 picador.dff
+│   │   ├── 📄 picador.txd
+│   │   ├── 📄 pizzaboy.dff
+│   │   ├── 📄 pizzaboy.txd
+│   │   ├── 📄 previon.dff
+│   │   ├── 📄 previon.txd
+│   │   ├── 📄 primo.dff
+│   │   ├── 📄 primo.txd
+│   │   ├── 📄 racnher.dff
+│   │   ├── 📄 rancher.txd
+│   │   ├── 📄 rancher1.txd
+│   │   ├── 📄 rancher2.txd
+│   │   ├── 📄 rancher3.txd
+│   │   ├── 📄 rancher4.txd
+│   │   ├── 📄 regina.dff
+│   │   ├── 📄 regina.txd
+│   │   ├── 📄 regina1.txd
+│   │   ├── 📄 regina2.txd
+│   │   ├── 📄 regina3.txd
+│   │   ├── 📄 regina4.txd
+│   │   ├── 📄 regina5.txd
+│   │   ├── 📄 rhino.dff
+│   │   ├── 📄 rhino.txd
+│   │   ├── 📄 rhino1.txd
+│   │   ├── 📄 rhino2.txd
+│   │   ├── 📄 rhino3.txd
+│   │   ├── 📄 rhino4.txd
+│   │   ├── 📄 rhino5.txd
+│   │   ├── 📄 sabre.dff
+│   │   ├── 📄 sabre.txd
+│   │   ├── 📄 sentinel.dff
+│   │   ├── 📄 sentinel.txd
+│   │   ├── 📄 slamvan.dff
+│   │   ├── 📄 slamvan.txd
+│   │   ├── 📄 stafford.dff
+│   │   ├── 📄 stafford.txd
+│   │   ├── 📄 stafford1.txd
+│   │   ├── 📄 stafford2.txd
+│   │   ├── 📄 stafford3.txd
+│   │   ├── 📄 stafford4.txd
+│   │   ├── 📄 stallion.dff
+│   │   ├── 📄 stallion.txd
+│   │   ├── 📄 stratum.dff
+│   │   ├── 📄 stratum.txd
+│   │   ├── 📄 supergt.dff
+│   │   ├── 📄 supergt.txd
+│   │   ├── 📄 supergt1.txd
+│   │   ├── 📄 supergt2.txd
+│   │   ├── 📄 supergt3.txd
+│   │   ├── 📄 supergt4.txd
+│   │   ├── 📄 tahoma.dff
+│   │   ├── 📄 tahoma.txd
+│   │   ├── 📄 taxi.dff
+│   │   ├── 📄 taxi.txd
+│   │   ├── 📄 turismo.dff
+│   │   ├── 📄 turismo.txd
+│   │   ├── 📄 turismo1.txd
+│   │   ├── 📄 turismo2.txd
+│   │   ├── 📄 turismo3.txd
+│   │   ├── 📄 turismo4.txd
+│   │   ├── 📄 uranus.dff
+│   │   ├── 📄 uranus.txd
+│   │   ├── 📄 uranus1.txd
+│   │   ├── 📄 uranus2.txd
+│   │   ├── 📄 uranus3.txd
+│   │   ├── 📄 uranus4.txd
+│   │   ├── 📄 virgo.dff
+│   │   ├── 📄 virgo.txd
+│   │   ├── 📄 voodoo.dff
+│   │   ├── 📄 voodoo.txd
+│   │   ├── 📄 voodoo1.txd
+│   │   ├── 📄 voodoo2.txd
+│   │   ├── 📄 washing.dff
+│   │   ├── 📄 washing.txd
+│   │   ├── 📄 windsor.dff
+│   │   ├── 📄 windsor.txd
+│   │   ├── 📄 windsor1.txd
+│   │   ├── 📄 windsor2.txd
+│   │   ├── 📄 windsor3.txd
+│   │   ├── 📄 windsor4.txd
+│   │   ├── 📄 zr350.dff
+│   │   └── 📄 zr350.txd
+│   └── 📄 Read ME.txt
+├── 📁 17-HorseCar
+│   ├── 📁 gta3.img
+│   │   ├── 📁 Cavalo Branco
+│   │   │   └── 📄 sweeper.txd
+│   │   ├── 📄 sweeper.dff
+│   │   └── 📄 sweeper.txd
+│   └── 📄 cargrp.dat
+├── 📁 18-lamborghini
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 infernus.dff
+│   ├── 📄 infernus.txd
+│   ├── 📄 Infernus1.txd
+│   ├── 📄 Infernus2.txd
+│   ├── 📄 Infernus3.txd
+│   └── 📄 Infernus4.txd
+├── 📁 19-lamborghini-2
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 hotring.dff
+│   └── 📄 hotring.txd
+├── 📁 20-lamborghini-gtav
+│   ├── 📄 bullet.dff
+│   ├── 📄 bullet.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 21-lamborghini-nice
+│   ├── 📄 buffalo.dff
+│   ├── 📄 buffalo.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 22-lamborghini_aventador
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 zr350.dff
+│   └── 📄 zr350.txd
+├── 📁 23-mercedes-benz-dena
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 primo.dff
+│   └── 📄 primo.txd
+├── 📁 24-nissan zamyad
+│   ├── 📄 1621755637225.png
+│   ├── 📄 BMW_plate.png
+│   ├── 📄 cherag.png
+│   ├── 📄 gray.png
+│   ├── 📄 grey.png
+│   ├── 📄 NeisanShevelet.png
+│   ├── 📄 picador.dff
+│   ├── 📄 picador.txd
+│   ├── 📄 plastic.png
+│   └── 📄 vehicle_generic_tyrewallblack.png
+├── 📁 25-nissan-gt-r35
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 phoenix.dff
+│   └── 📄 phoenix.txd
+├── 📁 26-pars
+│   ├── 📄 elegant.dff
+│   ├── 📄 elegant.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 27-pars elx shoti
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 gallery4.jpg
+│   ├── 📄 merit.dff
+│   └── 📄 merit.txd
+├── 📁 28-pars shooti
+│   ├── 📄 alpha.dff
+│   └── 📄 alpha.txd
+├── 📁 29-pars-shooti
+│   ├── 📄 elegant.dff
+│   ├── 📄 elegant.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   └── 📄 gallery4.jpg
+├── 📁 30-paykan-classic
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 sabre.dff
+│   └── 📄 sabre.txd
+├── 📁 31-Pers ELX
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 hotrinb.dff
+│   └── 📄 hotrinb.txd
+├── 📁 32-persian-car-pack
+│   ├── 📁 01-persian-car-pack
+│   │   ├── 📄 admiral.dff
+│   │   ├── 📄 admiral.txd
+│   │   ├── 📄 alpha.dff
+│   │   ├── 📄 alpha.txd
+│   │   ├── 📄 artict1.dff
+│   │   ├── 📄 artict1.txd
+│   │   ├── 📄 artict2.dff
+│   │   ├── 📄 artict2.txd
+│   │   ├── 📄 blistac.dff
+│   │   ├── 📄 blistac.txd
+│   │   ├── 📄 bobcat.dff
+│   │   ├── 📄 bobcat.txd
+│   │   ├── 📄 Bravura.dff
+│   │   ├── 📄 Bravura.txd
+│   │   ├── 📄 cabbie.dff
+│   │   ├── 📄 cabbie.txd
+│   │   ├── 📄 cadrona.dff
+│   │   ├── 📄 cadrona.txd
+│   │   ├── 📄 club.dff
+│   │   ├── 📄 club.txd
+│   │   ├── 📄 copcarru.dff
+│   │   ├── 📄 copcarru.txd
+│   │   ├── 📄 dft30.dff
+│   │   ├── 📄 dft30.txd
+│   │   ├── 📄 Elegant.dff
+│   │   ├── 📄 Elegant.txd
+│   │   ├── 📄 elegy.dff
+│   │   ├── 📄 elegy.txd
+│   │   ├── 📄 Emperor.dff
+│   │   ├── 📄 Emperor.txd
+│   │   ├── 📄 Euros.dff
+│   │   ├── 📄 Euros.txd
+│   │   ├── 📄 feltzer.dff
+│   │   ├── 📄 feltzer.txd
+│   │   ├── 📄 flash.dff
+│   │   ├── 📄 flash.txd
+│   │   ├── 📄 fortune.dff
+│   │   ├── 📄 fortune.txd
+│   │   ├── 📄 Glendale.dff
+│   │   ├── 📄 Glendale.txd
+│   │   ├── 📄 Greenwoo.dff
+│   │   ├── 📄 Greenwoo.txd
+│   │   ├── 📄 huntley.dff
+│   │   ├── 📄 huntley.txd
+│   │   ├── 📄 infernus.dff
+│   │   ├── 📄 infernus.txd
+│   │   ├── 📄 Intruder.dff
+│   │   ├── 📄 Intruder.txd
+│   │   ├── 📄 landstal.dff
+│   │   ├── 📄 landstal.txd
+│   │   ├── 📄 linerun.dff
+│   │   ├── 📄 linerun.txd
+│   │   ├── 📄 majestic.dff
+│   │   ├── 📄 majestic.txd
+│   │   ├── 📄 manana.dff
+│   │   ├── 📄 manana.txd
+│   │   ├── 📄 merit.dff
+│   │   ├── 📄 merit.txd
+│   │   ├── 📄 moonbeam.dff
+│   │   ├── 📄 moonbeam.txd
+│   │   ├── 📄 nebula.dff
+│   │   ├── 📄 nebula.txd
+│   │   ├── 📄 Picador.dff
+│   │   ├── 📄 Picador.txd
+│   │   ├── 📄 premier.dff
+│   │   ├── 📄 premier.txd
+│   │   ├── 📄 primo.dff
+│   │   ├── 📄 primo.txd
+│   │   ├── 📄 rdtrain.dff
+│   │   ├── 📄 rdtrain.txd
+│   │   ├── 📄 Regina.dff
+│   │   ├── 📄 Regina.txd
+│   │   ├── 📄 sadler.dff
+│   │   ├── 📄 sadler.txd
+│   │   ├── 📄 sentinel.dff
+│   │   ├── 📄 sentinel.txd
+│   │   ├── 📄 Solair.dff
+│   │   ├── 📄 Solair.txd
+│   │   ├── 📄 Stafford.dff
+│   │   ├── 📄 Stafford.txd
+│   │   ├── 📄 stratum.dff
+│   │   ├── 📄 stratum.txd
+│   │   ├── 📄 sultan.dff
+│   │   ├── 📄 sultan.txd
+│   │   ├── 📄 Sunrise.dff
+│   │   ├── 📄 Sunrise.txd
+│   │   ├── 📄 supergt.dff
+│   │   ├── 📄 supergt.txd
+│   │   ├── 📄 tahoma.dff
+│   │   ├── 📄 tahoma.txd
+│   │   ├── 📄 taxi.dff
+│   │   ├── 📄 taxi.txd
+│   │   ├── 📄 uranus.dff
+│   │   ├── 📄 uranus.txd
+│   │   ├── 📄 utility.dff
+│   │   ├── 📄 utility.txd
+│   │   ├── 📄 Vincent.dff
+│   │   ├── 📄 Vincent.txd
+│   │   ├── 📄 Willard.dff
+│   │   ├── 📄 Willard.txd
+│   │   ├── 📄 yosemite.dff
+│   │   └── 📄 yosemite.txd
+│   └── 📁 02-screen
+│       ├── 📄 AAA.jpg
+│       ├── 📄 admiral_front.jpg
+│       ├── 📄 admiral_rear.jpg
+│       ├── 📄 alpha_front.jpg
+│       ├── 📄 alpha_rear.jpg
+│       ├── 📄 artict1_front.jpg
+│       ├── 📄 artict1_rear.jpg
+│       ├── 📄 artict2_front.jpg
+│       ├── 📄 artict2_rear.jpg
+│       ├── 📄 blistac_front.jpg
+│       ├── 📄 blistac_rear.jpg
+│       ├── 📄 bobcat_front.jpg
+│       ├── 📄 bobcat_rear.jpg
+│       ├── 📄 Bravura_front.jpg
+│       ├── 📄 Bravura_rear.jpg
+│       ├── 📄 cabbie_front.jpg
+│       ├── 📄 cabbie_rear.jpg
+│       ├── 📄 cadrona_front.jpg
+│       ├── 📄 cadrona_rear.jpg
+│       ├── 📄 club_front.jpg
+│       ├── 📄 club_rear.jpg
+│       ├── 📄 copcarru_front.jpg
+│       ├── 📄 copcarru_rear.jpg
+│       ├── 📄 dft30_front.jpg
+│       ├── 📄 dft30_rear.jpg
+│       ├── 📄 Elegant_front.jpg
+│       ├── 📄 Elegant_rear.jpg
+│       ├── 📄 elegy_front.jpg
+│       ├── 📄 elegy_rear.jpg
+│       ├── 📄 Emperor_front.jpg
+│       ├── 📄 Emperor_rear.jpg
+│       ├── 📄 Euros_front.jpg
+│       ├── 📄 Euros_rear.jpg
+│       ├── 📄 feltzer_front.jpg
+│       ├── 📄 feltzer_rear.jpg
+│       ├── 📄 flash_front.jpg
+│       ├── 📄 flash_rear.jpg
+│       ├── 📄 fortune_front.jpg
+│       ├── 📄 fortune_rear.jpg
+│       ├── 📄 Glendale_front.jpg
+│       ├── 📄 Glendale_rear.jpg
+│       ├── 📄 Greenwoo_front.jpg
+│       ├── 📄 Greenwoo_rear.jpg
+│       ├── 📄 huntley_front.jpg
+│       ├── 📄 huntley_rear.jpg
+│       ├── 📄 infernus_front.jpg
+│       ├── 📄 infernus_rear.jpg
+│       ├── 📄 Intruder_front.jpg
+│       ├── 📄 Intruder_rear.jpg
+│       ├── 📄 landstal_front.jpg
+│       ├── 📄 landstal_rear.jpg
+│       ├── 📄 linerun_front.jpg
+│       ├── 📄 linerun_rear.jpg
+│       ├── 📄 majestic_front.jpg
+│       ├── 📄 majestic_rear.jpg
+│       ├── 📄 manana_front.jpg
+│       ├── 📄 manana_rear.jpg
+│       ├── 📄 merit_front.jpg
+│       ├── 📄 merit_rear.jpg
+│       ├── 📄 moonbeam_front.jpg
+│       ├── 📄 moonbeam_rear.jpg
+│       ├── 📄 nebula_front.jpg
+│       ├── 📄 nebula_rear.jpg
+│       ├── 📄 Picador_front.jpg
+│       ├── 📄 Picador_rear.jpg
+│       ├── 📄 premier_front.jpg
+│       ├── 📄 premier_rear.jpg
+│       ├── 📄 primo_front.jpg
+│       ├── 📄 primo_rear.jpg
+│       ├── 📄 rdtrain_front.jpg
+│       ├── 📄 rdtrain_rear.jpg
+│       ├── 📄 Regina_front.jpg
+│       ├── 📄 Regina_rear.jpg
+│       ├── 📄 sadler_front.jpg
+│       ├── 📄 sadler_rear.jpg
+│       ├── 📄 sentinel_front.jpg
+│       ├── 📄 sentinel_rear.jpg
+│       ├── 📄 Solair_front.jpg
+│       ├── 📄 Solair_rear.jpg
+│       ├── 📄 Stafford_front.jpg
+│       ├── 📄 Stafford_rear.jpg
+│       ├── 📄 stratum_front.jpg
+│       ├── 📄 stratum_rear.jpg
+│       ├── 📄 sultan_front.jpg
+│       ├── 📄 sultan_rear.jpg
+│       ├── 📄 Sunrise_front.jpg
+│       ├── 📄 Sunrise_rear.jpg
+│       ├── 📄 supergt_front.jpg
+│       ├── 📄 supergt_rear.jpg
+│       ├── 📄 tahoma_front.jpg
+│       ├── 📄 tahoma_rear.jpg
+│       ├── 📄 taxi_front.jpg
+│       ├── 📄 taxi_rear.jpg
+│       ├── 📄 uranus_front.jpg
+│       ├── 📄 uranus_rear.jpg
+│       ├── 📄 utility_front.jpg
+│       ├── 📄 utility_rear.jpg
+│       ├── 📄 Vincent_front.jpg
+│       ├── 📄 Vincent_rear.jpg
+│       ├── 📄 Willard_front.jpg
+│       ├── 📄 Willard_rear.jpg
+│       ├── 📄 yosemite_front.jpg
+│       └── 📄 yosemite_rear.jpg
+├── 📁 33-peugeot-206
+│   ├── 📄 admiral.dff
+│   ├── 📄 admiral.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 34-peugeot-207
+│   ├── 📄 blistac.dff
+│   ├── 📄 blistac.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 35-peugeot-405-glx
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 readme.txt
+│   ├── 📄 sultan.dff
+│   └── 📄 sultan.txd
+├── 📁 36-peugeot-pars-shooti
+│   ├── 📄 alpha.dff
+│   ├── 📄 alpha.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   └── 📄 gallery4.jpg
+├── 📁 37-Peykan Amiro
+│   ├── 📄 admiral.dff
+│   ├── 📄 admiral.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 Peykan GTA0020.ir 1.jpg
+│   ├── 📄 Peykan Gta0020.ir 2.jpg
+│   ├── 📄 Screenshot 10.12.2013 10-04-55-234.jpg
+│   └── 📄 Screenshot 10.12.2013 10-06-39-562.jpg
+├── 📁 38-Pride 132
+│   ├── 📄 admiral.dff
+│   ├── 📄 admiral.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 39-pride-131
+│   ├── 📄 alpha.dff
+│   ├── 📄 alpha.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 40-Real Monster Truck
+│   ├── 📁 01-cleo
+│   │   └── 📄 real_monster.cs
+│   ├── 📁 02-modloader
+│   │   ├── 📁 real monster
+│   │   │   ├── 📄 monster.dff
+│   │   │   └── 📄 monster.txd
+│   │   ├── 📄 monster.dff
+│   │   └── 📄 monster.txd
+│   ├── 📄 gallery8.jpg
+│   ├── 📄 gallery9.jpg
+│   └── 📄 ReadME.txt
+├── 📁 41-Saipa Tiba
+│   ├── 📄 greenwoo.dff
+│   ├── 📄 greenwoo.txd
+│   ├── 📄 Screenshot (110).png
+│   ├── 📄 Screenshot (111).png
+│   └── 📄 Screenshot (112).png
+├── 📁 42-samand
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 premier.dff
+│   └── 📄 premier.txd
+├── 📁 43-samand-soren
+│   ├── 📄 elegant.dff
+│   ├── 📄 elegant.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 44-shahin
+│   ├── 📄 elegy.dff
+│   ├── 📄 elegy.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 45-yamaha-yzf-r6
+│   ├── 📁 Modloader
+│   │   ├── 📁 01-Anims
+│   │   │   └── 📄 bikes.ifp
+│   │   ├── 📁 02-Yamaha R6 RM
+│   │   │   ├── 📄 fcr900.dff
+│   │   │   ├── 📄 fcr900.txd
+│   │   │   └── 📄 setting.txt
+│   │   ├── 📄 gallery1.jpg
+│   │   └── 📄 gallery2.jpg
+│   └── 📄 Petunjuk.txt
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 61
+فایل‌ها: 905

@@ -1,0 +1,21 @@
+📁 Plane And Chopper
+
+├── 📁 01-Ghalosha Parande
+│   ├── 📄 dodo.dff
+│   ├── 📄 dodo.txd
+│   ├── 📄 gallery211.jpg
+│   ├── 📄 gallery212.jpg
+│   ├── 📄 gallery213.jpg
+│   ├── 📄 gallery214.jpg
+│   ├── 📄 gallery215.jpg
+│   └── 📄 Screenshot (232).png
+├── 📁 02-long chapper
+│   ├── 📄 gallery1275.jpg
+│   ├── 📄 gallery1276.jpg
+│   ├── 📄 maverick.dff
+│   └── 📄 maverick.txd
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 2
+فایل‌ها: 13

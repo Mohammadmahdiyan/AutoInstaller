@@ -1,0 +1,29 @@
+📁 Edit
+
+├── 📁 picture
+│   ├── 📁 origi
+│   │   ├── 📄 back.png
+│   │   ├── 📄 front.png
+│   │   └── 📄 grenadeicon.png
+│   ├── 📄 100real.jpg
+│   ├── 📄 100real.png
+│   ├── 📄 10real.jpg
+│   ├── 📄 coca.png
+│   ├── 📄 doghAabAli.png
+│   ├── 📄 doghAlise.png
+│   ├── 📄 papsi.png
+│   ├── 📄 pocoBack.png
+│   ├── 📄 pocoBack2.png
+│   ├── 📄 pocoFront.png
+│   ├── 📄 zamzamBlack.png
+│   ├── 📄 zamzamOrange.png
+│   └── 📄 لیموناد-شیشه.png
+├── 📄 empty.dff
+├── 📄 islamic_door_block.cs
+├── 📄 islamic_door_block.txt
+├── 📄 LibraryTree.txt
+└── 📄 sanny.exe - Shortcut.lnk
+
+────────────────────────────
+پوشه‌ها: 2
+فایل‌ها: 21

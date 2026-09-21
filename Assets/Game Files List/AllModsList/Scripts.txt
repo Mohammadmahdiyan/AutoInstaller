@@ -1,0 +1,2016 @@
+📁 Scripts
+
+├── 📁 01-A1-MyReqFiles
+│   ├── 📁 Essentials
+│   │   ├── 📁 01-CLEO
+│   │   │   ├── 📄 CLEO+.cleo
+│   │   │   ├── 📄 FileSystemOperations.cleo
+│   │   │   ├── 📄 IniFiles.cleo
+│   │   │   ├── 📄 IntOperations.cleo
+│   │   │   ├── 📄 memory2048.cs
+│   │   │   └── 📄 RZL-Trainer.cs
+│   │   ├── 📁 02-data
+│   │   │   └── 📁 fonts
+│   │   │       ├── 📄 fp_font.dat
+│   │   │       └── 📄 fp_font.txd
+│   │   ├── 📁 03-models
+│   │   │   └── 📄 FirstPerson.txd
+│   │   ├── 📁 04-modloader
+│   │   │   ├── 📁 01-.data
+│   │   │   │   ├── 📁 01-licenses
+│   │   │   │   │   ├── 📄 boost.txt
+│   │   │   │   │   ├── 📄 cereal.txt
+│   │   │   │   │   ├── 📄 tinympl.txt
+│   │   │   │   │   └── 📄 utf8-cpp.txt
+│   │   │   │   ├── 📁 02-plugins
+│   │   │   │   │   └── 📁 gta3
+│   │   │   │   │       ├── 📄 std.asi.dll
+│   │   │   │   │       ├── 📄 std.asi.md
+│   │   │   │   │       ├── 📄 std.bank.dll
+│   │   │   │   │       ├── 📄 std.bank.md
+│   │   │   │   │       ├── 📄 std.data.dll
+│   │   │   │   │       ├── 📄 std.data.md
+│   │   │   │   │       ├── 📄 std.fx.dll
+│   │   │   │   │       ├── 📄 std.fx.md
+│   │   │   │   │       ├── 📄 std.movies.dll
+│   │   │   │   │       ├── 📄 std.movies.md
+│   │   │   │   │       ├── 📄 std.scm.dll
+│   │   │   │   │       ├── 📄 std.scm.md
+│   │   │   │   │       ├── 📄 std.sprites.dll
+│   │   │   │   │       ├── 📄 std.sprites.md
+│   │   │   │   │       ├── 📄 std.stream.dll
+│   │   │   │   │       ├── 📄 std.stream.md
+│   │   │   │   │       ├── 📄 std.text.dll
+│   │   │   │   │       ├── 📄 std.text.md
+│   │   │   │   │       ├── 📄 std.tracks.dll
+│   │   │   │   │       └── 📄 std.tracks.md
+│   │   │   │   ├── 📁 03-text
+│   │   │   │   │   ├── 📁 01-1033
+│   │   │   │   │   │   └── 📄 menu.fxt
+│   │   │   │   │   ├── 📁 02-1046
+│   │   │   │   │   │   └── 📄 menu.fxt
+│   │   │   │   │   └── 📁 03-2070
+│   │   │   │   │       └── 📄 menu.fxt
+│   │   │   │   ├── 📄 CHANGELOG.md
+│   │   │   │   ├── 📄 Command Line Arguments.md
+│   │   │   │   ├── 📄 Leia-me.md
+│   │   │   │   ├── 📄 Profiles.md
+│   │   │   │   └── 📄 Readme.md
+│   │   │   └── 📁 02-_ESSENTIALS
+│   │   │       ├── 📁 01-FramerateVigilante
+│   │   │       │   ├── 📄 Framerate Vigilante.url
+│   │   │       │   ├── 📄 FramerateVigilante.ini
+│   │   │       │   └── 📄 FramerateVigilante.SA.asi
+│   │   │       ├── 📁 02-Open Limit Adjuster
+│   │   │       │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   │   │       │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   │       ├── 📁 03-RepairGTA
+│   │   │       │   ├── 📄 RepairGTA.SA.asi
+│   │   │       │   └── 📄 RepairGTA.url
+│   │   │       ├── 📁 04-RunDLL32 Fix
+│   │   │       │   ├── 📄 RunDLL32 Fix.url
+│   │   │       │   └── 📄 rundll32exefix.asi
+│   │   │       ├── 📁 05-SilentPatch
+│   │   │       │   ├── 📄 SilentPatch.url
+│   │   │       │   ├── 📄 SilentPatchSA.asi
+│   │   │       │   └── 📄 SilentPatchSA.ini
+│   │   │       ├── 📁 06-Widescreen Fix by ThirteenAG
+│   │   │       │   ├── 📄 GTASA.WidescreenFix.asi
+│   │   │       │   ├── 📄 GTASA.WidescreenFix.ini
+│   │   │       │   └── 📄 Widescreen Fix.url
+│   │   │       └── 📁 07-Windowed Mode
+│   │   │           ├── 📄 III.VC.SA.WindowedMode.asi
+│   │   │           └── 📄 III.VC.SA.WindowedMode.ini
+│   │   ├── 📄 _noDEP.asi
+│   │   ├── 📄 bass.dll
+│   │   ├── 📄 CLEO.asi
+│   │   ├── 📄 CrashInfo.ini
+│   │   ├── 📄 CrashInfo.SA.asi
+│   │   ├── 📄 CrashList.txt
+│   │   ├── 📄 DINPUT8.DLL
+│   │   ├── 📄 Essentials (Readme - EN).txt
+│   │   ├── 📄 Essentials Pack.url
+│   │   ├── 📄 FirstPerson.cfg
+│   │   ├── 📄 FirstPerson.sp
+│   │   ├── 📄 gta_sa.pdb
+│   │   ├── 📄 GUI.fp
+│   │   ├── 📄 Hooks.asi
+│   │   ├── 📄 libcurl.dll
+│   │   ├── 📄 modloader.asi
+│   │   ├── 📄 msvcr100d.dll
+│   │   ├── 📄 vorbisFile.dll
+│   │   ├── 📄 vorbisHooked.dll
+│   │   └── 📄 zlib1.dll
+│   ├── 📄 config.json
+│   └── 📄 Essentials (Readme - EN).txt
+├── 📁 02-Anti Crash
+│   ├── 📄 Readme.txt
+│   └── 📄 startup_RUN_AS_ADMIN.bat
+├── 📁 03-Asiloader
+│   ├── 📁 01-advanced_plugin_management_example
+│   │   └── 📄 settings.ini
+│   ├── 📁 02-scripts
+│   │   └── 📄 global.ini
+│   ├── 📄 ReadMe.txt
+│   ├── 📄 vorbisFile.dll
+│   └── 📄 vorbisHooked.dll
+├── 📁 04-Camhack fix for windows7
+│   ├── 📁 01-Windows Seven
+│   │   ├── 📄 dx7vb.dll
+│   │   └── 📄 dx8vb.dll
+│   ├── 📁 02-Windows7 x64
+│   │   └── 📄 dx8vb.dll
+│   └── 📄 ReadMe.txt
+├── 📁 05-CLEO
+│   ├── 📁 01-Cleo v1.1.3 obnovlenie ot 15.05.23
+│   │   ├── 📁 01-(for developers)
+│   │   │   ├── 📁 01-gta3script
+│   │   │   │   ├── 📄 CLEO+ gta3sc xml.txt
+│   │   │   │   ├── 📄 CLEO+ test script (infos).txt
+│   │   │   │   └── 📄 CLEO+ test script.cs
+│   │   │   ├── 📁 02-Sanny Builder
+│   │   │   │   ├── 📄 CLEO+ sanny builder - opcodes_txt.txt
+│   │   │   │   └── 📄 CLEO+ sanny builder - sascm_ini.txt
+│   │   │   ├── 📄 How to create scripts with CLEO+.url
+│   │   │   └── 📄 SCRLog (updated).url
+│   │   ├── 📁 02-CLEO
+│   │   │   └── 📄 CLEO+.cleo
+│   │   └── 📄 Readme (or die).txt
+│   ├── 📁 02-CLEO4
+│   │   ├── 📁 01-cleo
+│   │   │   ├── 📄 FileSystemOperations.cleo
+│   │   │   ├── 📄 IniFiles.cleo
+│   │   │   └── 📄 IntOperations.cleo
+│   │   ├── 📁 02-cleo_readme
+│   │   │   ├── 📄 ASI Loader ReadMe.txt
+│   │   │   ├── 📄 CHANGELOG.md
+│   │   │   └── 📄 README.md
+│   │   ├── 📁 03-cleo_sdk
+│   │   │   ├── 📁 demo_plugins
+│   │   │   │   ├── 📁 01-FileSystemOperations
+│   │   │   │   │   └── 📁 FileSystemOperations
+│   │   │   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   │   │   ├── 📁 02-IniFiles
+│   │   │   │   │   └── 📁 IniFiles
+│   │   │   │   │       ├── 📄 IniFiles.cpp
+│   │   │   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   │   │   └── 📁 03-IntOperations
+│   │   │   │       └── 📁 IntOperations
+│   │   │   │           ├── 📄 IntOperations.cpp
+│   │   │   │           ├── 📄 IntOperations.vcxproj
+│   │   │   │           └── 📄 IntOperations.vcxproj.filters
+│   │   │   ├── 📄 CLEO.h
+│   │   │   └── 📄 CLEO.lib
+│   │   ├── 📁 04-scripts
+│   │   │   └── 📄 global.ini
+│   │   ├── 📄 bass.dll
+│   │   ├── 📄 cleo.asi
+│   │   ├── 📄 vorbisFile.dll
+│   │   └── 📄 vorbisHooked.dll
+│   ├── 📁 03-CLEO4 (v4.1.1.30f)
+│   │   ├── 📁 CLEO
+│   │   │   ├── 📄 FileSystemOperations.cleo
+│   │   │   ├── 📄 IniFiles.cleo
+│   │   │   └── 📄 IntOperations.cleo
+│   │   ├── 📄 bass.dll
+│   │   ├── 📄 CLEO.asi
+│   │   ├── 📄 vorbisFile.dll
+│   │   └── 📄 vorbisHooked.dll
+│   └── 📁 04-CleoPlus
+│       ├── 📁 cleo
+│       │   └── 📄 CLEOPlus.cleo
+│       ├── 📄 readme-de.txt
+│       ├── 📄 readme-en.txt
+│       └── 📄 readme-ru.txt
+├── 📁 06-CrashInfo
+│   ├── 📄 CrashInfo.ini
+│   ├── 📄 CrashInfo.SA.asi
+│   ├── 📄 CrashList.txt
+│   ├── 📄 gta_sa.pdb
+│   ├── 📄 libcurl.dll
+│   └── 📄 zlib1.dll
+├── 📁 07-Dinput8
+│   ├── 📄 DINPUT8.DLL
+│   └── 📄 Readme.txt
+├── 📁 08-DYOM
+│   ├── 📁 01-Dyom IX Addon TR Yama By Eren Unal Fix v3
+│   │   └── 📁 Dyom IX Addon TR Yama By Eren Unal Fix v3
+│   │       └── 📄 text.gxt
+│   ├── 📁 02-Dyom ix v5.5
+│   │   ├── 📁 01-DYOM
+│   │   │   └── 📁 GTA San Andreas User Files
+│   │   │       └── 📁 MPACK
+│   │   │           └── 📁 MPACK8
+│   │   │               ├── 📄 mpack.dat
+│   │   │               ├── 📄 scr.scm
+│   │   │               ├── 📄 script.img
+│   │   │               ├── 📄 text.gxt
+│   │   │               └── 📄 text.ini
+│   │   ├── 📁 02-GTA San Andreas
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   ├── 📄 FileSystemOperations.cleo
+│   │   │   │   ├── 📄 IniFiles.cleo
+│   │   │   │   └── 📄 IntOperations.cleo
+│   │   │   ├── 📁 02-cleo_readme
+│   │   │   │   ├── 📄 ASI Loader ReadMe.txt
+│   │   │   │   ├── 📄 CHANGELOG.md
+│   │   │   │   └── 📄 README.md
+│   │   │   ├── 📁 03-cleo_sdk
+│   │   │   │   ├── 📁 demo_plugins
+│   │   │   │   │   ├── 📁 01-FileSystemOperations
+│   │   │   │   │   │   └── 📁 FileSystemOperations
+│   │   │   │   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │   │   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │   │   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   │   │   │   ├── 📁 02-IniFiles
+│   │   │   │   │   │   └── 📁 IniFiles
+│   │   │   │   │   │       ├── 📄 IniFiles.cpp
+│   │   │   │   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │   │   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   │   │   │   └── 📁 03-IntOperations
+│   │   │   │   │       └── 📁 IntOperations
+│   │   │   │   │           ├── 📄 IntOperations.cpp
+│   │   │   │   │           ├── 📄 IntOperations.vcxproj
+│   │   │   │   │           └── 📄 IntOperations.vcxproj.filters
+│   │   │   │   ├── 📄 CLEO.h
+│   │   │   │   └── 📄 CLEO.lib
+│   │   │   ├── 📁 04-data
+│   │   │   │   ├── 📁 Paths
+│   │   │   │   │   └── 📄 gtasa_tracks_config.dat
+│   │   │   │   ├── 📄 cheatStrings.dat
+│   │   │   │   ├── 📄 gtasa_melee_config.dat
+│   │   │   │   ├── 📄 gtasa_radarBlipSpriteFilenames.dat
+│   │   │   │   ├── 📄 gtasa_trainTypeCarriages.dat
+│   │   │   │   ├── 📄 gtasa_vehicleAudioSettings.cfg
+│   │   │   │   ├── 📄 gtasa_weapon_config.dat
+│   │   │   │   └── 📄 model_special_features.dat
+│   │   │   ├── 📁 05-models
+│   │   │   │   └── 📄 cutscene.img
+│   │   │   ├── 📁 06-scripts
+│   │   │   │   └── 📄 global.ini
+│   │   │   ├── 📄 $fastman92limitAdjuster.asi
+│   │   │   ├── 📄 $fastman92limitAdjuster.lib
+│   │   │   ├── 📄 bass.dll
+│   │   │   ├── 📄 cleo.asi
+│   │   │   ├── 📄 DllTricks.dll
+│   │   │   ├── 📄 fastman92limitAdjuster_GTASA.ini
+│   │   │   ├── 📄 vorbisFile.dll
+│   │   │   ├── 📄 vorbisHooked.dll
+│   │   │   └── 📄 zlib1.dll
+│   │   └── 📄 README.txt
+│   ├── 📁 03-Dyom v1.6
+│   │   └── 📁 CLEO
+│   │       ├── 📁 DYOM# [Data]
+│   │       │   ├── 📁 languages
+│   │       │   │   └── 📄 translation.txt
+│   │       │   ├── 📄 Data.ini
+│   │       │   └── 📄 Settings.ini
+│   │       └── 📄 DYOM#.cs
+│   ├── 📁 04-DYOM v8.1
+│   │   ├── 📁 MPACK
+│   │   │   └── 📁 MPACK5
+│   │   │       ├── 📄 mpack.dat
+│   │   │       ├── 📄 scr.scm
+│   │   │       ├── 📄 script.img
+│   │   │       └── 📄 text.gxt
+│   │   ├── 📄 dyom80_release_notes.txt
+│   │   └── 📄 readme.txt
+│   ├── 📁 05-DYOM v8.2
+│   │   ├── 📁 GTA San Andreas User Files
+│   │   │   └── 📁 MPACK
+│   │   │       └── 📁 MPACK6
+│   │   │           ├── 📄 mpack.dat
+│   │   │           ├── 📄 scr.scm
+│   │   │           ├── 📄 script.img
+│   │   │           └── 📄 text.gxt
+│   │   └── 📄 readme.txt
+│   └── 📁 06-DYOM v8.2 Zargame
+│       ├── 📁 MPACK
+│       │   └── 📁 MPACK5
+│       │       ├── 📄 mpack.dat
+│       │       ├── 📄 scr.scm
+│       │       ├── 📄 script.img
+│       │       └── 📄 text.gxt
+│       ├── 📄 DYOM For GTA Sa(zargame.ir).jpg
+│       ├── 📄 dyom80_release_notes.txt
+│       └── 📄 readme.txt
+├── 📁 09-FastMan
+│   ├── 📁 01-documentation
+│   │   ├── 📁 01-paths
+│   │   │   └── 📁 GTA San Andreas
+│   │   │       ├── 📄 path_grid_12000.txt
+│   │   │       ├── 📄 path_grid_24000.txt
+│   │   │       ├── 📄 path_grid_48000.txt
+│   │   │       └── 📄 path_grid_6000.txt
+│   │   ├── 📁 02-radar
+│   │   │   └── 📁 GTA San Andreas
+│   │   │       ├── 📄 radar_grid_12000.txt
+│   │   │       ├── 📄 radar_grid_24000.txt
+│   │   │       ├── 📄 radar_grid_48000.txt
+│   │   │       └── 📄 radar_grid_6000.txt
+│   │   └── 📄 SupportedVersions.txt
+│   ├── 📁 02-files
+│   │   ├── 📁 01-files
+│   │   │   ├── 📁 01-additional_files
+│   │   │   │   ├── 📁 01-Bully_SE
+│   │   │   │   │   └── 📁 Objects
+│   │   │   │   │       └── 📄 bully_scholarship_edition_not_prop_id_ranges.dat
+│   │   │   │   ├── 📁 02-GTA_EFLC
+│   │   │   │   │   ├── 📁 01-TBoGT
+│   │   │   │   │   │   └── 📁 pc
+│   │   │   │   │   │       └── 📁 audio
+│   │   │   │   │   │           └── 📁 config
+│   │   │   │   │   │               └── 📄 TBoGT_vehicleAudioSettings.ini
+│   │   │   │   │   ├── 📁 02-TLAD
+│   │   │   │   │   │   └── 📁 pc
+│   │   │   │   │   │       └── 📁 audio
+│   │   │   │   │   │           └── 📁 config
+│   │   │   │   │   │               └── 📄 TLAD_vehicleAudioSettings.ini
+│   │   │   │   │   └── 📄 Info.txt
+│   │   │   │   ├── 📁 03-GTA_IV
+│   │   │   │   │   ├── 📁 01-common
+│   │   │   │   │   │   └── 📁 data
+│   │   │   │   │   │       └── 📄 gtaiv_trainTypeCarriages.dat
+│   │   │   │   │   ├── 📁 02-FXT
+│   │   │   │   │   │   └── 📄 vehicles.fxt
+│   │   │   │   │   └── 📁 03-pc
+│   │   │   │   │       └── 📁 audio
+│   │   │   │   │           └── 📁 Config
+│   │   │   │   │               ├── 📄 addedVehicleAudioSettings.ini
+│   │   │   │   │               └── 📄 gtaiv_vehicleAudioSettings.ini
+│   │   │   │   ├── 📁 04-GTA_SA
+│   │   │   │   │   └── 📁 data
+│   │   │   │   │       ├── 📁 Paths
+│   │   │   │   │       │   └── 📄 gtasa_tracks_config.dat
+│   │   │   │   │       ├── 📄 cheatStrings.dat
+│   │   │   │   │       ├── 📄 gtasa_melee_config.dat
+│   │   │   │   │       ├── 📄 gtasa_radarBlipSpriteFilenames.dat
+│   │   │   │   │       ├── 📄 gtasa_trainTypeCarriages.dat
+│   │   │   │   │       ├── 📄 gtasa_vehicleAudioSettings.cfg
+│   │   │   │   │       ├── 📄 gtasa_weapon_config.dat
+│   │   │   │   │       └── 📄 model_special_features.dat
+│   │   │   │   ├── 📁 05-GTA_V
+│   │   │   │   │   └── 📁 FXT
+│   │   │   │   │       └── 📄 vehicles.fxt
+│   │   │   │   └── 📁 06-GTA_VC
+│   │   │   │       └── 📁 data
+│   │   │   │           └── 📄 vehicleAudioSettings.cfg
+│   │   │   └── 📁 02-libraries
+│   │   │       ├── 📁 01-WIN_X64
+│   │   │       │   ├── 📄 $fastman92limitAdjuster.asi
+│   │   │       │   ├── 📄 $fastman92limitAdjuster.lib
+│   │   │       │   └── 📄 MinHook.x64.dll
+│   │   │       └── 📁 02-WIN_X86
+│   │   │           ├── 📄 $fastman92limitAdjuster.asi
+│   │   │           ├── 📄 $fastman92limitAdjuster.lib
+│   │   │           ├── 📄 DllTricks.dll
+│   │   │           ├── 📄 MinHook.x86.dll
+│   │   │           └── 📄 zlib1.dll
+│   │   ├── 📁 02-tools
+│   │   │   ├── 📁 01-7za
+│   │   │   │   ├── 📄 7za.dll
+│   │   │   │   └── 📄 7zxa.dll
+│   │   │   └── 📁 02-apksigner
+│   │   │       └── 📁 key
+│   │   │           └── 📄 Readme.txt
+│   │   ├── 📄 AdbWinApi.dll
+│   │   ├── 📄 AdbWinUsbApi.dll
+│   │   ├── 📄 AndroidPluginDeploymentSolution_configuration.ini
+│   │   ├── 📄 DotNetZip.dll
+│   │   └── 📄 INIFileParser.dll
+│   ├── 📁 03-source code
+│   │   ├── 📁 01-fastman92 include
+│   │   │   ├── 📁 01-Android
+│   │   │   │   └── 📄 preferedUnorderedMap.h
+│   │   │   ├── 📁 02-Array
+│   │   │   │   ├── 📄 binary_search.h
+│   │   │   │   └── 📄 countof.h
+│   │   │   ├── 📁 03-Assembly
+│   │   │   │   ├── 📄 eInstructionSet.h
+│   │   │   │   └── 📄 UsefulMacros.h
+│   │   │   ├── 📁 04-Collectible
+│   │   │   │   ├── 📄 CCollectible.cpp
+│   │   │   │   ├── 📄 CCollectible.h
+│   │   │   │   ├── 📄 CollectibleFileReader.cpp
+│   │   │   │   └── 📄 CollectibleFileReader.h
+│   │   │   ├── 📁 05-CPU
+│   │   │   │   └── 📄 x86.h
+│   │   │   ├── 📁 06-DllTricks
+│   │   │   │   ├── 📁 WIN_X64
+│   │   │   │   │   └── 📄 DllTricks.lib
+│   │   │   │   ├── 📄 DllTricks.dll
+│   │   │   │   └── 📄 DllTricks.h
+│   │   │   ├── 📁 07-DynamicTypes
+│   │   │   │   ├── 📄 DynamicEnumeration.h
+│   │   │   │   ├── 📄 DynamicStructure.cpp
+│   │   │   │   ├── 📄 DynamicStructure.h
+│   │   │   │   └── 📄 DynamicStructureCompilerBugNoticed.h
+│   │   │   ├── 📁 08-ELF
+│   │   │   │   ├── 📄 CDyn.h
+│   │   │   │   ├── 📄 CHeader.h
+│   │   │   │   ├── 📄 CPhdr.h
+│   │   │   │   ├── 📄 CRel.cpp
+│   │   │   │   ├── 📄 CRel.h
+│   │   │   │   ├── 📄 CShdr.h
+│   │   │   │   ├── 📄 CSym.cpp
+│   │   │   │   ├── 📄 CSym.h
+│   │   │   │   ├── 📄 elf-em.h
+│   │   │   │   ├── 📄 elf.h
+│   │   │   │   ├── 📄 ELF_manager.cpp
+│   │   │   │   └── 📄 ELF_manager.h
+│   │   │   ├── 📁 09-Endianness
+│   │   │   │   └── 📄 Endianness.h
+│   │   │   ├── 📁 10-Exception
+│   │   │   │   ├── 📄 exception.cpp
+│   │   │   │   └── 📄 exception.h
+│   │   │   ├── 📁 11-GameText
+│   │   │   │   ├── 📄 GTASA_font_pattern.txt
+│   │   │   │   ├── 📄 GXT.cpp
+│   │   │   │   └── 📄 GXT.h
+│   │   │   ├── 📁 12-HashFinding
+│   │   │   │   ├── 📄 CDictionaryHashFinder.cpp
+│   │   │   │   ├── 📄 CDictionaryHashFinder.h
+│   │   │   │   ├── 📄 CPermutationProcessor.cpp
+│   │   │   │   ├── 📄 CPermutationProcessor.h
+│   │   │   │   ├── 📄 CRainbowTablePermutation.h
+│   │   │   │   └── 📄 HashFinder.h
+│   │   │   ├── 📁 13-Hashing
+│   │   │   │   ├── 📄 BullyScholarschipEdition_Hash.cpp
+│   │   │   │   ├── 📄 BullyScholarschipEdition_Hash.h
+│   │   │   │   ├── 📄 CalculateHashUsingGameAlgorithm.cpp
+│   │   │   │   ├── 📄 CalculateHashUsingGameAlgorithm.h
+│   │   │   │   ├── 📄 CHashListLoader.cpp
+│   │   │   │   ├── 📄 CHashListLoader.h
+│   │   │   │   ├── 📄 GTAIV_CRC32.cpp
+│   │   │   │   ├── 📄 GTAIV_CRC32.h
+│   │   │   │   ├── 📄 GTASA_CRC32.cpp
+│   │   │   │   ├── 📄 GTASA_CRC32.h
+│   │   │   │   └── 📄 Hashing.h
+│   │   │   ├── 📁 14-IDE_IPL
+│   │   │   │   ├── 📁 01-IDE
+│   │   │   │   │   ├── 📄 CModel3commonElements.cpp
+│   │   │   │   │   ├── 📄 CModel3commonElements.h
+│   │   │   │   │   ├── 📄 CModelAccessory.h
+│   │   │   │   │   ├── 📄 CModelBaseInfo.h
+│   │   │   │   │   ├── 📄 CModelCash.h
+│   │   │   │   │   ├── 📄 CModelCloth.h
+│   │   │   │   │   ├── 📄 CModelItem.h
+│   │   │   │   │   ├── 📄 CModelObject.cpp
+│   │   │   │   │   ├── 📄 CModelObject.h
+│   │   │   │   │   ├── 📄 CModelPath.h
+│   │   │   │   │   ├── 📄 CModelPed.cpp
+│   │   │   │   │   ├── 📄 CModelPed.h
+│   │   │   │   │   ├── 📄 CModelPropAnimation.cpp
+│   │   │   │   │   ├── 📄 CModelPropAnimation.h
+│   │   │   │   │   ├── 📄 CModelScnd.h
+│   │   │   │   │   ├── 📄 CModeltem.h
+│   │   │   │   │   ├── 📄 CModelTimedObject.cpp
+│   │   │   │   │   ├── 📄 CModelTimedObject.h
+│   │   │   │   │   ├── 📄 CModelTXDparent.cpp
+│   │   │   │   │   ├── 📄 CModelTXDparent.h
+│   │   │   │   │   ├── 📄 CModelVehicle.cpp
+│   │   │   │   │   ├── 📄 CModelVehicle.h
+│   │   │   │   │   ├── 📄 CModelWeapon.cpp
+│   │   │   │   │   ├── 📄 CModelWeapon.h
+│   │   │   │   │   ├── 📄 IDEfileReader.cpp
+│   │   │   │   │   └── 📄 IDEfileReader.h
+│   │   │   │   ├── 📁 02-IPL
+│   │   │   │   │   ├── 📄 CPlacementBaseInfo.h
+│   │   │   │   │   ├── 📄 CPlacementBlok.cpp
+│   │   │   │   │   ├── 📄 CPlacementBlok.h
+│   │   │   │   │   ├── 📄 CPlacementCarGenerator.cpp
+│   │   │   │   │   ├── 📄 CPlacementCarGenerator.h
+│   │   │   │   │   ├── 📄 CPlacementGarage.cpp
+│   │   │   │   │   ├── 📄 CPlacementGarage.h
+│   │   │   │   │   ├── 📄 CPlacementLink.cpp
+│   │   │   │   │   ├── 📄 CPlacementLink.h
+│   │   │   │   │   ├── 📄 CPlacementLodm.cpp
+│   │   │   │   │   ├── 📄 CPlacementLodm.h
+│   │   │   │   │   ├── 📄 CPlacementMapZone.cpp
+│   │   │   │   │   ├── 📄 CPlacementMapZone.h
+│   │   │   │   │   ├── 📄 CPlacementMlo.cpp
+│   │   │   │   │   ├── 📄 CPlacementMlo.h
+│   │   │   │   │   ├── 📄 CPlacementObjectInstance.cpp
+│   │   │   │   │   ├── 📄 CPlacementObjectInstance.h
+│   │   │   │   │   ├── 📄 CPlacementObjectInstanceSpec.cpp
+│   │   │   │   │   ├── 📄 CPlacementObjectInstanceSpec.h
+│   │   │   │   │   ├── 📄 CPlacementOcclusion.cpp
+│   │   │   │   │   ├── 📄 CPlacementOcclusion.h
+│   │   │   │   │   ├── 📄 CPlacementPerm.cpp
+│   │   │   │   │   ├── 📄 CPlacementPerm.h
+│   │   │   │   │   ├── 📄 CPlacementPois.cpp
+│   │   │   │   │   ├── 📄 CPlacementPois.h
+│   │   │   │   │   ├── 📄 CPlacementPont.cpp
+│   │   │   │   │   ├── 📄 CPlacementPont.h
+│   │   │   │   │   ├── 📄 CPlacementProjectileInstance.cpp
+│   │   │   │   │   ├── 📄 CPlacementProjectileInstance.h
+│   │   │   │   │   ├── 📄 CPlacementProp.cpp
+│   │   │   │   │   ├── 📄 CPlacementProp.h
+│   │   │   │   │   ├── 📄 CPlacementRail.cpp
+│   │   │   │   │   ├── 📄 CPlacementRail.h
+│   │   │   │   │   ├── 📄 CPlacementSlow.cpp
+│   │   │   │   │   ├── 📄 CPlacementSlow.h
+│   │   │   │   │   ├── 📄 CPlacementTimecycleModifier.cpp
+│   │   │   │   │   ├── 📄 CPlacementTimecycleModifier.h
+│   │   │   │   │   ├── 📄 CPlacementTrigger.cpp
+│   │   │   │   │   ├── 📄 CPlacementTrigger.h
+│   │   │   │   │   ├── 📄 CPlacementVehicleNode.cpp
+│   │   │   │   │   ├── 📄 CPlacementVehicleNode.h
+│   │   │   │   │   ├── 📄 CPlacementWithModel.cpp
+│   │   │   │   │   ├── 📄 CPlacementWithModel.h
+│   │   │   │   │   ├── 📄 CPlacementZone.cpp
+│   │   │   │   │   ├── 📄 CPlacementZone.h
+│   │   │   │   │   ├── 📄 IPLfileReader.cpp
+│   │   │   │   │   ├── 📄 IPLfileReader.h
+│   │   │   │   │   └── 📄 IPLstructures.h
+│   │   │   │   ├── 📄 CIPLorIDEentryBaseInfo.cpp
+│   │   │   │   ├── 📄 CIPLorIDEentryBaseInfo.h
+│   │   │   │   ├── 📄 CModel2dEffect.cpp
+│   │   │   │   ├── 📄 CModel2dEffect.h
+│   │   │   │   ├── 📄 IPLorIDEfileReader.cpp
+│   │   │   │   └── 📄 IPLorIDEfileReaderEx.h
+│   │   │   ├── 📁 15-IMG
+│   │   │   │   └── 📄 IMGstructures.h
+│   │   │   ├── 📁 16-IniReader
+│   │   │   │   ├── 📁 inih
+│   │   │   │   │   ├── 📁 cpp
+│   │   │   │   │   │   ├── 📄 INIReader.cpp
+│   │   │   │   │   │   └── 📄 INIReader.h
+│   │   │   │   │   └── 📄 ini.h
+│   │   │   │   ├── 📄 CIniReader.cpp
+│   │   │   │   └── 📄 CIniReader.h
+│   │   │   ├── 📁 17-LanguageTest
+│   │   │   │   └── 📄 Identifiers.h
+│   │   │   ├── 📁 18-Library
+│   │   │   │   ├── 📄 Library.cpp
+│   │   │   │   └── 📄 Library.h
+│   │   │   ├── 📁 19-lz4
+│   │   │   │   ├── 📁 01-cmake_unofficial
+│   │   │   │   │   └── 📄 CMakeLists.txt
+│   │   │   │   ├── 📁 02-examples
+│   │   │   │   │   ├── 📄 blockStreaming_doubleBuffer.md
+│   │   │   │   │   ├── 📄 blockStreaming_lineByLine.md
+│   │   │   │   │   ├── 📄 README.md
+│   │   │   │   │   └── 📄 streaming_api_basics.md
+│   │   │   │   ├── 📁 03-lib
+│   │   │   │   │   ├── 📄 lz4.h
+│   │   │   │   │   ├── 📄 lz4frame.h
+│   │   │   │   │   ├── 📄 lz4frame_static.h
+│   │   │   │   │   ├── 📄 lz4hc.h
+│   │   │   │   │   ├── 📄 README.md
+│   │   │   │   │   └── 📄 xxhash.h
+│   │   │   │   ├── 📁 04-programs
+│   │   │   │   │   ├── 📄 bench.h
+│   │   │   │   │   ├── 📄 datagen.h
+│   │   │   │   │   └── 📄 lz4io.h
+│   │   │   │   ├── 📁 05-visual
+│   │   │   │   │   └── 📁 2012
+│   │   │   │   │       ├── 📁 01-datagen
+│   │   │   │   │       │   ├── 📄 datagen.vcxproj
+│   │   │   │   │       │   └── 📄 datagen.vcxproj.filters
+│   │   │   │   │       ├── 📁 02-frametest
+│   │   │   │   │       │   ├── 📄 frametest.vcxproj
+│   │   │   │   │       │   └── 📄 frametest.vcxproj.filters
+│   │   │   │   │       ├── 📁 03-fullbench
+│   │   │   │   │       │   ├── 📄 fullbench.vcxproj
+│   │   │   │   │       │   └── 📄 fullbench.vcxproj.filters
+│   │   │   │   │       ├── 📁 04-fuzzer
+│   │   │   │   │       │   ├── 📄 fuzzer.vcxproj
+│   │   │   │   │       │   └── 📄 fuzzer.vcxproj.filters
+│   │   │   │   │       └── 📁 05-lz4
+│   │   │   │   │           ├── 📄 lz4.vcxproj
+│   │   │   │   │           └── 📄 lz4.vcxproj.filters
+│   │   │   │   ├── 📄 lz4_Block_format.md
+│   │   │   │   ├── 📄 lz4_Frame_format.md
+│   │   │   │   └── 📄 README.md
+│   │   │   ├── 📁 20-Math
+│   │   │   │   ├── 📄 CSarrus.cpp
+│   │   │   │   └── 📄 CSarrus.h
+│   │   │   ├── 📁 21-MemoryAccess
+│   │   │   │   ├── 📄 CMemoryAccess.cpp
+│   │   │   │   ├── 📄 CMemoryAccess.h
+│   │   │   │   ├── 📄 CMemoryAccessWithinCurrentProcess.cpp
+│   │   │   │   └── 📄 CMemoryAccessWithinCurrentProcess.h
+│   │   │   ├── 📁 22-MemoryAddressCalculator
+│   │   │   │   ├── 📄 CMemoryAddressCalculator.cpp
+│   │   │   │   └── 📄 CMemoryAddressCalculator.h
+│   │   │   ├── 📁 23-MemoryPermission
+│   │   │   │   ├── 📄 MemoryPermission.cpp
+│   │   │   │   └── 📄 MemoryPermission.h
+│   │   │   ├── 📁 24-MemoryScanner
+│   │   │   │   ├── 📄 CMemoryScanner.cpp
+│   │   │   │   └── 📄 CMemoryScanner.h
+│   │   │   ├── 📁 25-MinHook
+│   │   │   │   ├── 📁 01-include
+│   │   │   │   │   └── 📄 MinHook.h
+│   │   │   │   └── 📁 02-lib
+│   │   │   │       ├── 📄 MinHook.x64.lib
+│   │   │   │       └── 📄 MinHook.x86.lib
+│   │   │   ├── 📁 26-MultiPlatformSupport
+│   │   │   │   ├── 📄 PlatformGeneralisation.h
+│   │   │   │   ├── 📄 PragmaWarningPop.h
+│   │   │   │   ├── 📄 PragmaWarningPush.h
+│   │   │   │   ├── 📄 PreprocessorConstantTest.cpp
+│   │   │   │   └── 📄 Time.h
+│   │   │   ├── 📁 27-SCM
+│   │   │   │   ├── 📄 CSCMSimpleCompiler.cpp
+│   │   │   │   ├── 📄 CSCMSimpleCompiler.h
+│   │   │   │   ├── 📄 eArgumentStuff.h
+│   │   │   │   ├── 📄 eCommandName.h
+│   │   │   │   ├── 📄 SCM_defs.cpp
+│   │   │   │   └── 📄 SCM_defs.h
+│   │   │   ├── 📁 28-SectionFile
+│   │   │   │   ├── 📄 BinarySectionFile.h
+│   │   │   │   ├── 📄 CSectionFileElementBase.cpp
+│   │   │   │   ├── 📄 CSectionFileElementBase.h
+│   │   │   │   ├── 📄 CSectionFileElementBaseEx.cpp
+│   │   │   │   ├── 📄 CSectionFileElementBaseEx.h
+│   │   │   │   ├── 📄 CSectionFileReader.cpp
+│   │   │   │   ├── 📄 CSectionFileReader.h
+│   │   │   │   ├── 📄 CSectionFileReaderEx.cpp
+│   │   │   │   ├── 📄 CSectionFileReaderEx.h
+│   │   │   │   ├── 📄 CSectionFileSectionOfData.cpp
+│   │   │   │   └── 📄 CSectionFileSectionOfData.h
+│   │   │   ├── 📁 29-Sequence
+│   │   │   │   └── 📄 Sequence.h
+│   │   │   ├── 📁 30-URL
+│   │   │   │   ├── 📄 url.cpp
+│   │   │   │   └── 📄 url.h
+│   │   │   ├── 📁 31-XML
+│   │   │   │   └── 📁 RapidXML
+│   │   │   │       └── 📄 license.txt
+│   │   │   ├── 📁 32-zlib
+│   │   │   │   ├── 📁 01-include
+│   │   │   │   │   ├── 📄 zconf.h
+│   │   │   │   │   └── 📄 zlib.h
+│   │   │   │   └── 📁 02-lib
+│   │   │   │       └── 📄 zdll.lib
+│   │   │   ├── 📄 Assertions.h
+│   │   │   ├── 📄 BitwiseOperation.h
+│   │   │   ├── 📄 ByteUnits.h
+│   │   │   ├── 📄 CBox.h
+│   │   │   ├── 📄 CBox2D.h
+│   │   │   ├── 📄 CListOfUniqueFiles.cpp
+│   │   │   ├── 📄 CListOfUniqueFiles.h
+│   │   │   ├── 📄 CompressedBox.h
+│   │   │   ├── 📄 CompressedVector.h
+│   │   │   ├── 📄 CQuaternion.h
+│   │   │   ├── 📄 CRGBA.h
+│   │   │   ├── 📄 CVector.h
+│   │   │   ├── 📄 CVector2D.h
+│   │   │   ├── 📄 eGame.cpp
+│   │   │   ├── 📄 eGame.h
+│   │   │   ├── 📄 enumMemberNamePair.h
+│   │   │   ├── 📄 EnumOperators.h
+│   │   │   ├── 📄 fileIO.cpp
+│   │   │   ├── 📄 fileIO.h
+│   │   │   ├── 📄 GMemFile.cpp
+│   │   │   ├── 📄 GMemFile.h
+│   │   │   ├── 📄 Info.txt
+│   │   │   ├── 📄 PathStructures.h
+│   │   │   ├── 📄 ptr_vector.h
+│   │   │   └── 📄 StrLexStuff.h
+│   │   ├── 📁 02-fastman92 limit adjuster
+│   │   │   ├── 📁 01-Dev INI files
+│   │   │   │   ├── 📄 fastman92limitAdjuster_BullyScholarship_dev.ini
+│   │   │   │   ├── 📄 fastman92limitAdjuster_GTACTW_dev.ini
+│   │   │   │   ├── 📄 fastman92limitAdjuster_GTAIII_dev.ini
+│   │   │   │   ├── 📄 fastman92limitAdjuster_GTAIV_dev.ini
+│   │   │   │   ├── 📄 fastman92limitAdjuster_GTALCS_dev.ini
+│   │   │   │   ├── 📄 fastman92limitAdjuster_GTASA_dev.ini
+│   │   │   │   ├── 📄 fastman92limitAdjuster_GTAV_dev.ini
+│   │   │   │   └── 📄 fastman92limitAdjuster_GTAVC_dev.ini
+│   │   │   ├── 📁 02-fastman92 limit adjuster
+│   │   │   │   ├── 📁 Source files
+│   │   │   │   │   ├── 📁 01-Core
+│   │   │   │   │   │   ├── 📁 Configuration
+│   │   │   │   │   │   │   ├── 📄 Configuration.cpp
+│   │   │   │   │   │   │   ├── 📄 Configuration.h
+│   │   │   │   │   │   │   ├── 📄 CSVfile.cpp
+│   │   │   │   │   │   │   ├── 📄 CSVfile.h
+│   │   │   │   │   │   │   ├── 📄 HTMLfile.cpp
+│   │   │   │   │   │   │   ├── 📄 HTMLfile.h
+│   │   │   │   │   │   │   ├── 📄 TextFile.cpp
+│   │   │   │   │   │   │   ├── 📄 TextFile.h
+│   │   │   │   │   │   │   ├── 📄 XMLexcelFile.cpp
+│   │   │   │   │   │   │   └── 📄 XMLexcelFile.h
+│   │   │   │   │   │   ├── 📄 CGenericLogStorage.cpp
+│   │   │   │   │   │   ├── 📄 CGenericLogStorage.h
+│   │   │   │   │   │   ├── 📄 CLimitAdjusterModule.cpp
+│   │   │   │   │   │   ├── 📄 CLimitAdjusterModule.h
+│   │   │   │   │   │   ├── 📄 CPatch.cpp
+│   │   │   │   │   │   ├── 📄 CPatch.h
+│   │   │   │   │   │   ├── 📄 CPUmath.cpp
+│   │   │   │   │   │   ├── 📄 CPUmath.h
+│   │   │   │   │   │   ├── 📄 dllmain.cpp
+│   │   │   │   │   │   ├── 📄 DynamicAssert.cpp
+│   │   │   │   │   │   ├── 📄 DynamicAssert.h
+│   │   │   │   │   │   ├── 📄 eGameVersion.cpp
+│   │   │   │   │   │   ├── 📄 eGameVersion.h
+│   │   │   │   │   │   ├── 📄 eX86registerNum.h
+│   │   │   │   │   │   ├── 📄 Exports.cpp
+│   │   │   │   │   │   ├── 📄 FormattedOutput.cpp
+│   │   │   │   │   │   ├── 📄 FormattedOutput.h
+│   │   │   │   │   │   ├── 📄 GetObjectMadeOfString.h
+│   │   │   │   │   │   ├── 📄 GTASA_CRC32.cpp
+│   │   │   │   │   │   ├── 📄 GTASA_CRC32.h
+│   │   │   │   │   │   ├── 📄 LimitAdjuster.cpp
+│   │   │   │   │   │   ├── 📄 LimitAdjuster.h
+│   │   │   │   │   │   ├── 📄 MemoryAllocation.cpp
+│   │   │   │   │   │   ├── 📄 MemoryAllocation.h
+│   │   │   │   │   │   ├── 📄 MemoryCall.h
+│   │   │   │   │   │   ├── 📄 ProjectConstants.cpp
+│   │   │   │   │   │   ├── 📄 ProjectConstants.h
+│   │   │   │   │   │   ├── 📄 ProjectConstantsGenerated.h
+│   │   │   │   │   │   ├── 📄 StringFunctions.h
+│   │   │   │   │   │   ├── 📄 Text.cpp
+│   │   │   │   │   │   ├── 📄 tHashPair.h
+│   │   │   │   │   │   ├── 📄 tLimitDefinition.h
+│   │   │   │   │   │   └── 📄 UsefulMacros.h
+│   │   │   │   │   ├── 📁 02-detours
+│   │   │   │   │   │   ├── 📁 lib.X86
+│   │   │   │   │   │   │   ├── 📄 detours.lib
+│   │   │   │   │   │   │   └── 📄 syelog.lib
+│   │   │   │   │   │   ├── 📄 creatwth.cpp
+│   │   │   │   │   │   ├── 📄 detours.cpp
+│   │   │   │   │   │   ├── 📄 detours.h
+│   │   │   │   │   │   ├── 📄 detver.h
+│   │   │   │   │   │   ├── 📄 disasm.cpp
+│   │   │   │   │   │   ├── 📄 image.cpp
+│   │   │   │   │   │   ├── 📄 modules.cpp
+│   │   │   │   │   │   └── 📄 uimports.cpp
+│   │   │   │   │   ├── 📁 03-ForOtherProjects
+│   │   │   │   │   │   ├── 📁 01-Common
+│   │   │   │   │   │   │   ├── 📄 CdDirectory.h
+│   │   │   │   │   │   │   ├── 📄 common.h
+│   │   │   │   │   │   │   └── 📄 CValueExtension.h
+│   │   │   │   │   │   ├── 📁 02-FLA_not_required
+│   │   │   │   │   │   │   ├── 📄 IDaccess.cpp
+│   │   │   │   │   │   │   ├── 📄 IDaccess.h
+│   │   │   │   │   │   │   ├── 📄 Main.cpp
+│   │   │   │   │   │   │   └── 📄 Main.h
+│   │   │   │   │   │   └── 📁 03-FLA_required
+│   │   │   │   │   │       └── 📄 Exports.h
+│   │   │   │   │   ├── 📁 04-GameStructures
+│   │   │   │   │   │   ├── 📁 01-Rockstar Games
+│   │   │   │   │   │   │   ├── 📄 CAnimGroup.h
+│   │   │   │   │   │   │   ├── 📄 CBaseModelInfo.h
+│   │   │   │   │   │   │   ├── 📄 CCamera.cpp
+│   │   │   │   │   │   │   ├── 📄 CCamera.h
+│   │   │   │   │   │   │   ├── 📄 CCollisionFile.h
+│   │   │   │   │   │   │   ├── 📄 CColModel.h
+│   │   │   │   │   │   │   ├── 📄 CCoronas.cpp
+│   │   │   │   │   │   │   ├── 📄 CCoronas.h
+│   │   │   │   │   │   │   ├── 📄 CEntity.cpp
+│   │   │   │   │   │   │   ├── 📄 CEntity.h
+│   │   │   │   │   │   │   ├── 📄 CFileID.h
+│   │   │   │   │   │   │   ├── 📄 CFileMgr.cpp
+│   │   │   │   │   │   │   ├── 📄 CFileMgr.h
+│   │   │   │   │   │   │   ├── 📄 CFont.cpp
+│   │   │   │   │   │   │   ├── 📄 CFont.h
+│   │   │   │   │   │   │   ├── 📄 CGenericGameStorage.cpp
+│   │   │   │   │   │   │   ├── 📄 CGenericGameStorage.h
+│   │   │   │   │   │   │   ├── 📄 CIplFile.h
+│   │   │   │   │   │   │   ├── 📄 CKeyGen.cpp
+│   │   │   │   │   │   │   ├── 📄 CKeyGen.h
+│   │   │   │   │   │   │   ├── 📄 CMemoryMgr.cpp
+│   │   │   │   │   │   │   ├── 📄 CMemoryMgr.h
+│   │   │   │   │   │   │   ├── 📄 CModelInfo.cpp
+│   │   │   │   │   │   │   ├── 📄 CModelInfo.h
+│   │   │   │   │   │   │   ├── 📄 CollisionLink.h
+│   │   │   │   │   │   │   ├── 📄 CPad.cpp
+│   │   │   │   │   │   │   ├── 📄 CPad.h
+│   │   │   │   │   │   │   ├── 📄 CPed.h
+│   │   │   │   │   │   │   ├── 📄 CPointLights.cpp
+│   │   │   │   │   │   │   ├── 📄 CPointLights.h
+│   │   │   │   │   │   │   ├── 📄 CPool.h
+│   │   │   │   │   │   │   ├── 📄 CPtrNodeDoubleLink.h
+│   │   │   │   │   │   │   ├── 📄 CPtrNodeSingleLink.h
+│   │   │   │   │   │   │   ├── 📄 CReference.h
+│   │   │   │   │   │   │   ├── 📄 CRegisteredCorona.h
+│   │   │   │   │   │   │   ├── 📄 CRunningScript.cpp
+│   │   │   │   │   │   │   ├── 📄 CRunningScript.h
+│   │   │   │   │   │   │   ├── 📄 CSceneEdit.cpp
+│   │   │   │   │   │   │   ├── 📄 CSceneEdit.h
+│   │   │   │   │   │   │   ├── 📄 CSphere.h
+│   │   │   │   │   │   │   ├── 📄 CStreaming.cpp
+│   │   │   │   │   │   │   ├── 📄 CStreaming.h
+│   │   │   │   │   │   │   ├── 📄 CStreamingInfo.h
+│   │   │   │   │   │   │   ├── 📄 CText.cpp
+│   │   │   │   │   │   │   ├── 📄 CText.h
+│   │   │   │   │   │   │   ├── 📄 CTimer.cpp
+│   │   │   │   │   │   │   ├── 📄 CTimer.h
+│   │   │   │   │   │   │   ├── 📄 cTransmission.h
+│   │   │   │   │   │   │   ├── 📄 CUnlimitedStore.h
+│   │   │   │   │   │   │   ├── 📄 CVehicle.h
+│   │   │   │   │   │   │   ├── 📄 CVehicleRecordingFileInfo.h
+│   │   │   │   │   │   │   ├── 📄 CWorld.cpp
+│   │   │   │   │   │   │   ├── 📄 CWorld.h
+│   │   │   │   │   │   │   ├── 📄 eEntityType.h
+│   │   │   │   │   │   │   ├── 📄 eIplFile.h
+│   │   │   │   │   │   │   ├── 📄 eModelID.h
+│   │   │   │   │   │   │   ├── 📄 ePedType.h
+│   │   │   │   │   │   │   ├── 📄 eVehHandlingID.h
+│   │   │   │   │   │   │   ├── 📄 eVehicleFlags.h
+│   │   │   │   │   │   │   ├── 📄 functions.cpp
+│   │   │   │   │   │   │   ├── 📄 functions.h
+│   │   │   │   │   │   │   ├── 📄 GameSystem.cpp
+│   │   │   │   │   │   │   ├── 📄 GameSystem.h
+│   │   │   │   │   │   │   ├── 📄 HandlingExtendedStructs.cpp
+│   │   │   │   │   │   │   ├── 📄 HandlingExtendedStructs.h
+│   │   │   │   │   │   │   ├── 📄 IDstructures.h
+│   │   │   │   │   │   │   ├── 📄 Renderware.cpp
+│   │   │   │   │   │   │   ├── 📄 Renderware.h
+│   │   │   │   │   │   │   ├── 📄 RwStream.cpp
+│   │   │   │   │   │   │   ├── 📄 RwStream.h
+│   │   │   │   │   │   │   ├── 📄 RwV3D.h
+│   │   │   │   │   │   │   ├── 📄 TextureDatabase.cpp
+│   │   │   │   │   │   │   ├── 📄 TextureDatabase.h
+│   │   │   │   │   │   │   ├── 📄 tHandlingData.h
+│   │   │   │   │   │   │   ├── 📄 tTransmissionGear.h
+│   │   │   │   │   │   │   └── 📄 TxdDef.h
+│   │   │   │   │   │   ├── 📁 02-WarMedia
+│   │   │   │   │   │   │   ├── 📄 OSArray.h
+│   │   │   │   │   │   │   ├── 📄 OSFile.cpp
+│   │   │   │   │   │   │   ├── 📄 OSFile.h
+│   │   │   │   │   │   │   ├── 📄 OSMutex.cpp
+│   │   │   │   │   │   │   ├── 📄 OSMutex.h
+│   │   │   │   │   │   │   ├── 📄 ZIP.cpp
+│   │   │   │   │   │   │   ├── 📄 ZIP.h
+│   │   │   │   │   │   │   ├── 📄 ZIPFile.cpp
+│   │   │   │   │   │   │   └── 📄 ZIPFile.h
+│   │   │   │   │   │   ├── 📄 CMemoryAllocationByApp.cpp
+│   │   │   │   │   │   └── 📄 CMemoryAllocationByApp.h
+│   │   │   │   │   ├── 📁 05-Modules
+│   │   │   │   │   │   ├── 📁 01-FileIDlimit
+│   │   │   │   │   │   │   ├── 📁 01-GTA SA 1.0 US HOODLUM WIN_X86
+│   │   │   │   │   │   │   │   ├── 📄 GTASA_ID_access_functions.h
+│   │   │   │   │   │   │   │   ├── 📄 GTASA_ID_access_patches.h
+│   │   │   │   │   │   │   │   └── 📄 GTASA_int32_base_movsx_patches.h
+│   │   │   │   │   │   │   ├── 📁 02-GTA SA 2.0 ANDROID_ARMEABI_V7A
+│   │   │   │   │   │   │   │   ├── 📄 changes.cpp
+│   │   │   │   │   │   │   │   └── 📄 functions.cpp
+│   │   │   │   │   │   │   └── 📁 03-GTA SA 2.11.32 ANDROID_ARM64_V8A
+│   │   │   │   │   │   │       ├── 📄 changes.cpp
+│   │   │   │   │   │   │       └── 📄 functions.cpp
+│   │   │   │   │   │   ├── 📁 02-PathsMapSize
+│   │   │   │   │   │   │   └── 📁 GTA SA 2.0 ANDROID_ARMEABI_V7A
+│   │   │   │   │   │   │       ├── 📄 changes.cpp
+│   │   │   │   │   │   │       └── 📄 functions.cpp
+│   │   │   │   │   │   ├── 📁 03-PathsMapSizeDebugging
+│   │   │   │   │   │   │   └── 📁 GTA SA 2.0 ANDROID_ARMEABI_V7A
+│   │   │   │   │   │   │       ├── 📄 changes.cpp
+│   │   │   │   │   │   │       └── 📄 functions.cpp
+│   │   │   │   │   │   ├── 📁 04-WaterMapSizeLimits
+│   │   │   │   │   │   │   └── 📁 GTA SA 2.0 ANDROID_ARMEABI_V7A
+│   │   │   │   │   │   │       ├── 📄 changes.cpp
+│   │   │   │   │   │   │       └── 📄 functions.cpp
+│   │   │   │   │   │   ├── 📁 05-WorldSectorLimits
+│   │   │   │   │   │   │   └── 📁 GTA SA 2.0 ANDROID_ARMEABI_V7A
+│   │   │   │   │   │   │       ├── 📄 changes.cpp
+│   │   │   │   │   │   │       └── 📄 functions.cpp
+│   │   │   │   │   │   ├── 📄 BringBackTextureArchives.cpp
+│   │   │   │   │   │   ├── 📄 BringBackTextureArchives.h
+│   │   │   │   │   │   ├── 📄 CarGeneratorsLimit.cpp
+│   │   │   │   │   │   ├── 📄 CarGeneratorsLimit.h
+│   │   │   │   │   │   ├── 📄 CargrpLimit.cpp
+│   │   │   │   │   │   ├── 📄 CargrpLimit.h
+│   │   │   │   │   │   ├── 📄 CHashStringLoader.cpp
+│   │   │   │   │   │   ├── 📄 CHashStringLoader.h
+│   │   │   │   │   │   ├── 📄 CheatStringLoader.cpp
+│   │   │   │   │   │   ├── 📄 CheatStringLoader.h
+│   │   │   │   │   │   ├── 📄 CoordinateMover.cpp
+│   │   │   │   │   │   ├── 📄 CoordinateMover.h
+│   │   │   │   │   │   ├── 📄 CStreamingDebug.cpp
+│   │   │   │   │   │   ├── 📄 CStreamingDebug.h
+│   │   │   │   │   │   ├── 📄 CTest.cpp
+│   │   │   │   │   │   ├── 📄 CTest.h
+│   │   │   │   │   │   ├── 📄 CThePluginPatches.cpp
+│   │   │   │   │   │   ├── 📄 CThePluginPatches.h
+│   │   │   │   │   │   ├── 📄 CUpdateChecker.cpp
+│   │   │   │   │   │   ├── 📄 CUpdateChecker.h
+│   │   │   │   │   │   ├── 📄 CVehicleAudioLoader.cpp
+│   │   │   │   │   │   ├── 📄 CVehicleAudioLoader.h
+│   │   │   │   │   │   ├── 📄 Debugging.cpp
+│   │   │   │   │   │   ├── 📄 Debugging.h
+│   │   │   │   │   │   ├── 📄 DebugOutput.cpp
+│   │   │   │   │   │   ├── 📄 DebugOutput.h
+│   │   │   │   │   │   ├── 📄 Directory limits.cpp
+│   │   │   │   │   │   ├── 📄 Directory limits.h
+│   │   │   │   │   │   ├── 📄 DynamicLimits.cpp
+│   │   │   │   │   │   ├── 📄 DynamicLimits.h
+│   │   │   │   │   │   ├── 📄 ErrorReporting.cpp
+│   │   │   │   │   │   ├── 📄 ErrorReporting.h
+│   │   │   │   │   │   ├── 📄 ExecutableCode.cpp
+│   │   │   │   │   │   ├── 📄 ExecutableCode.h
+│   │   │   │   │   │   ├── 📄 FileIDlimit.cpp
+│   │   │   │   │   │   ├── 📄 FileIDlimit.h
+│   │   │   │   │   │   ├── 📄 FileLoader_LoadLevel_hooks.cpp
+│   │   │   │   │   │   ├── 📄 FileLoader_LoadLevel_hooks.h
+│   │   │   │   │   │   ├── 📄 FileTypeManager.cpp
+│   │   │   │   │   │   ├── 📄 FileTypeManager.h
+│   │   │   │   │   │   ├── 📄 FXTloader.cpp
+│   │   │   │   │   │   ├── 📄 FXTloader.h
+│   │   │   │   │   │   ├── 📄 GameText.cpp
+│   │   │   │   │   │   ├── 📄 GameText.h
+│   │   │   │   │   │   ├── 📄 GlobalExceptionHandler.cpp
+│   │   │   │   │   │   ├── 📄 GlobalExceptionHandler.h
+│   │   │   │   │   │   ├── 📄 HandlingCfgLimits.cpp
+│   │   │   │   │   │   ├── 📄 HandlingCfgLimits.h
+│   │   │   │   │   │   ├── 📄 IDEsectionLimits.cpp
+│   │   │   │   │   │   ├── 📄 IDEsectionLimits.h
+│   │   │   │   │   │   ├── 📄 InlinedCodeRemoving.cpp
+│   │   │   │   │   │   ├── 📄 InlinedCodeRemoving.h
+│   │   │   │   │   │   ├── 📄 IPLsectionLimits.cpp
+│   │   │   │   │   │   ├── 📄 IPLsectionLimits.h
+│   │   │   │   │   │   ├── 📄 IslandLimits.cpp
+│   │   │   │   │   │   ├── 📄 IslandLimits.h
+│   │   │   │   │   │   ├── 📄 LoadingScreenFontHooks.cpp
+│   │   │   │   │   │   ├── 📄 LoadingScreenFontHooks.h
+│   │   │   │   │   │   ├── 📄 MapLimits.cpp
+│   │   │   │   │   │   ├── 📄 MapLimits.h
+│   │   │   │   │   │   ├── 📄 ModelSpecialFeatures.cpp
+│   │   │   │   │   │   ├── 📄 ModelSpecialFeatures.h
+│   │   │   │   │   │   ├── 📄 NotApropIDrangeLoader.cpp
+│   │   │   │   │   │   ├── 📄 NotApropIDrangeLoader.h
+│   │   │   │   │   │   ├── 📄 Options.cpp
+│   │   │   │   │   │   ├── 📄 Options.h
+│   │   │   │   │   │   ├── 📄 OtherLimits.cpp
+│   │   │   │   │   │   ├── 📄 OtherLimits.h
+│   │   │   │   │   │   ├── 📄 PedgrpLimit.cpp
+│   │   │   │   │   │   ├── 📄 PedgrpLimit.h
+│   │   │   │   │   │   ├── 📄 PlayerLimits.h
+│   │   │   │   │   │   ├── 📄 ProcessEntryPointCodeExecution.cpp
+│   │   │   │   │   │   ├── 📄 ProcessEntryPointCodeExecution.h
+│   │   │   │   │   │   ├── 📄 RadarBlipSpriteFilenameLoader.cpp
+│   │   │   │   │   │   ├── 📄 RadarBlipSpriteFilenameLoader.h
+│   │   │   │   │   │   ├── 📄 RendererLimits.cpp
+│   │   │   │   │   │   ├── 📄 RendererLimits.h
+│   │   │   │   │   │   ├── 📄 Restarts.cpp
+│   │   │   │   │   │   ├── 📄 Restarts.h
+│   │   │   │   │   │   ├── 📄 RoadBloxBetterLoader.cpp
+│   │   │   │   │   │   ├── 📄 RoadBloxBetterLoader.h
+│   │   │   │   │   │   ├── 📄 SaveOfVariableLength.cpp
+│   │   │   │   │   │   ├── 📄 SaveOfVariableLength.h
+│   │   │   │   │   │   ├── 📄 SCMlimits.cpp
+│   │   │   │   │   │   ├── 📄 SCMlimits.h
+│   │   │   │   │   │   ├── 📄 ShadowLimits.cpp
+│   │   │   │   │   │   ├── 📄 ShadowLimits.h
+│   │   │   │   │   │   ├── 📄 SpecialLimits.cpp
+│   │   │   │   │   │   ├── 📄 SpecialLimits.h
+│   │   │   │   │   │   ├── 📄 StreamingLimits.cpp
+│   │   │   │   │   │   ├── 📄 StreamingLimits.h
+│   │   │   │   │   │   ├── 📄 StructureExtension.cpp
+│   │   │   │   │   │   ├── 📄 StructureExtension.h
+│   │   │   │   │   │   ├── 📄 TrainTypeCarriagesLoader.cpp
+│   │   │   │   │   │   ├── 📄 TrainTypeCarriagesLoader.h
+│   │   │   │   │   │   ├── 📄 VehicleSpecialFeatures.cpp
+│   │   │   │   │   │   ├── 📄 VehicleSpecialFeatures.h
+│   │   │   │   │   │   ├── 📄 VehicleUpgradeLimits.cpp
+│   │   │   │   │   │   ├── 📄 VehicleUpgradeLimits.h
+│   │   │   │   │   │   ├── 📄 VisibilityLimits.cpp
+│   │   │   │   │   │   ├── 📄 VisibilityLimits.h
+│   │   │   │   │   │   ├── 📄 WaterLimits.cpp
+│   │   │   │   │   │   ├── 📄 WaterLimits.h
+│   │   │   │   │   │   ├── 📄 WeaponLimits.cpp
+│   │   │   │   │   │   ├── 📄 WeaponLimits.h
+│   │   │   │   │   │   ├── 📄 WindowedMode.cpp
+│   │   │   │   │   │   └── 📄 WindowedMode.h
+│   │   │   │   │   ├── 📁 06-resources
+│   │   │   │   │   │   ├── 📄 btn_donateCC_LG.bmp
+│   │   │   │   │   │   ├── 📄 crashHandlerMusic.wav
+│   │   │   │   │   │   ├── 📄 fastman92LA1.bmp
+│   │   │   │   │   │   ├── 📄 IMG_20180730_135948.bmp
+│   │   │   │   │   │   ├── 📄 IMG_20190802_140509.bmp
+│   │   │   │   │   │   ├── 📄 promo_illustration.bmp
+│   │   │   │   │   │   └── 📄 resource.h
+│   │   │   │   │   └── 📄 cloc-listOfFiles.txt
+│   │   │   │   ├── 📄 cloc.bat
+│   │   │   │   ├── 📄 fastman92 limit adjuster.vcxproj
+│   │   │   │   ├── 📄 fastman92 limit adjuster.vcxproj.filters
+│   │   │   │   ├── 📄 fastman92 limit adjuster.vcxproj.user
+│   │   │   │   ├── 📄 rc.command.1.tlog
+│   │   │   │   ├── 📄 ReadMe.txt
+│   │   │   │   ├── 📄 stdafx.h
+│   │   │   │   └── 📄 targetver.h
+│   │   │   ├── 📁 03-fastman92 limit adjuster external loader
+│   │   │   │   ├── 📄 dllmain.cpp
+│   │   │   │   ├── 📄 fastman92 limit adjuster external loader.vcxproj
+│   │   │   │   ├── 📄 fastman92 limit adjuster external loader.vcxproj.filters
+│   │   │   │   ├── 📄 fastman92 limit adjuster external loader.vcxproj.user
+│   │   │   │   ├── 📄 ReadMe.txt
+│   │   │   │   └── 📄 targetver.h
+│   │   │   ├── 📁 04-fastman92 plugin loader
+│   │   │   │   ├── 📁 ForOtherProjects
+│   │   │   │   │   ├── 📄 Exports.h
+│   │   │   │   │   └── 📄 PluginLoaderExports.h
+│   │   │   │   ├── 📄 dllmain.cpp
+│   │   │   │   ├── 📄 fastman92 plugin loader.vcxproj
+│   │   │   │   ├── 📄 fastman92 plugin loader.vcxproj.filters
+│   │   │   │   ├── 📄 fastman92 plugin loader.vcxproj.user
+│   │   │   │   ├── 📄 Loader.cpp
+│   │   │   │   ├── 📄 Loader.h
+│   │   │   │   ├── 📄 Log.cpp
+│   │   │   │   ├── 📄 Log.h
+│   │   │   │   ├── 📄 ProjectConstants.cpp
+│   │   │   │   ├── 📄 ReadMe.txt
+│   │   │   │   └── 📄 targetver.h
+│   │   │   ├── 📁 05-Redirect INI files
+│   │   │   │   ├── 📁 01-Development
+│   │   │   │   │   ├── 📄 fastman92limitAdjuster_BullyScholarship_dev.ini
+│   │   │   │   │   ├── 📄 fastman92limitAdjuster_GTAIII_dev.ini
+│   │   │   │   │   ├── 📄 fastman92limitAdjuster_GTAIV_dev.ini
+│   │   │   │   │   ├── 📄 fastman92limitAdjuster_GTASA_dev.ini
+│   │   │   │   │   ├── 📄 fastman92limitAdjuster_GTAV_dev.ini
+│   │   │   │   │   └── 📄 fastman92limitAdjuster_GTAVC_dev.ini
+│   │   │   │   └── 📁 02-Normal
+│   │   │   │       ├── 📄 fastman92limitAdjuster_BullyScholarship.ini
+│   │   │   │       ├── 📄 fastman92limitAdjuster_GTAIII.ini
+│   │   │   │       ├── 📄 fastman92limitAdjuster_GTAIV.ini
+│   │   │   │       ├── 📄 fastman92limitAdjuster_GTASA.ini
+│   │   │   │       ├── 📄 fastman92limitAdjuster_GTAV.ini
+│   │   │   │       └── 📄 fastman92limitAdjuster_GTAVC.ini
+│   │   │   ├── 📄 CleanOutput.bat
+│   │   │   └── 📄 CleanTemporaryFiles.bat
+│   │   └── 📁 03-Sample plugin for Android app
+│   │       └── 📁 Sample plugin for Android app
+│   │           ├── 📁 01-ARM64
+│   │           │   └── 📁 Release
+│   │           │       ├── 📁 Sample p.397b11fd.tlog
+│   │           │       │   ├── 📄 Cl.items.tlog
+│   │           │       │   ├── 📄 clang.command.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangCompile.read.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangCompile.write.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangLink.read.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangLink.write.1.tlog
+│   │           │       │   └── 📄 Sample plugin for Android app.write.1u.tlog
+│   │           │       ├── 📄 libpluginSample.Build.CppClean.log
+│   │           │       ├── 📄 Sample plugin for Android app.log
+│   │           │       └── 📄 Sample plugin for Android app.vcxproj.FileListAbsolute.txt
+│   │           ├── 📁 02-x64
+│   │           │   └── 📁 Release
+│   │           │       ├── 📁 Sample p.397b11fd.tlog
+│   │           │       │   ├── 📄 clang.command.1.tlog
+│   │           │       │   ├── 📄 clang.read.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangCompile.read.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangCompile.write.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangLink.read.1.tlog
+│   │           │       │   ├── 📄 Microsoft.Build.CPPTasks.ClangLink.write.1.tlog
+│   │           │       │   └── 📄 Sample plugin for Android app.write.1u.tlog
+│   │           │       └── 📄 Sample plugin for Android app.log
+│   │           ├── 📄 CPatch.cpp
+│   │           ├── 📄 CPatch.h
+│   │           ├── 📄 dllmain.cpp
+│   │           ├── 📄 dllmain.h
+│   │           ├── 📄 pch.h
+│   │           ├── 📄 Sample plugin for Android app.vcxproj
+│   │           ├── 📄 Sample plugin for Android app.vcxproj.filters
+│   │           └── 📄 Sample plugin for Android app.vcxproj.user
+│   ├── 📁 04-used_by_author_of_the_fla_only
+│   │   ├── 📄 Info.txt
+│   │   ├── 📄 prepareForRelease.bat
+│   │   └── 📄 setVariables.bat
+│   ├── 📄 fastman92LA1_1024.png
+│   ├── 📄 promo.jpg
+│   ├── 📄 Readme_full_English.txt
+│   └── 📄 Readme_short_Italian.txt
+├── 📁 10-FramerateVigilante
+│   ├── 📁 FramerateVigilante
+│   │   ├── 📄 FramerateVigilante.ini
+│   │   └── 📄 FramerateVigilante.SA.asi
+│   └── 📄 Readme (or die).txt
+├── 📁 11-III.VC.SA.LimitAdjuster
+│   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   └── 📄 III.VC.SA.LimitAdjuster.ini
+├── 📁 12-LagAndCrashFix
+│   ├── 📁 01-cleo
+│   │   ├── 📄 60 FPS.cs
+│   │   ├── 📄 FileSystemOperations.cleo
+│   │   ├── 📄 FPS-BOOST.cs
+│   │   ├── 📄 FPSUnlock.cs
+│   │   ├── 📄 IniFiles.cleo
+│   │   ├── 📄 IntOperations.cleo
+│   │   └── 📄 Memory 4GB.cs
+│   ├── 📁 02-cleo_readme
+│   │   ├── 📄 ASI Loader ReadMe.txt
+│   │   ├── 📄 CHANGELOG.md
+│   │   └── 📄 README.md
+│   ├── 📁 03-cleo_sdk
+│   │   ├── 📁 demo_plugins
+│   │   │   ├── 📁 01-FileSystemOperations
+│   │   │   │   └── 📁 FileSystemOperations
+│   │   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   │   ├── 📁 02-IniFiles
+│   │   │   │   └── 📁 IniFiles
+│   │   │   │       ├── 📄 IniFiles.cpp
+│   │   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   │   └── 📁 03-IntOperations
+│   │   │       └── 📁 IntOperations
+│   │   │           ├── 📄 IntOperations.cpp
+│   │   │           ├── 📄 IntOperations.vcxproj
+│   │   │           └── 📄 IntOperations.vcxproj.filters
+│   │   ├── 📄 CLEO.h
+│   │   └── 📄 CLEO.lib
+│   ├── 📁 04-scripts
+│   │   └── 📄 global.ini
+│   ├── 📄 _Fixed Lag And Crash.txt
+│   ├── 📄 bass.dll
+│   ├── 📄 cleo.asi
+│   ├── 📄 MixSets.asi
+│   ├── 📄 MixSets.ini
+│   ├── 📄 Readme Or Die.txt
+│   ├── 📄 SAMPFUNCS.asi
+│   ├── 📄 SilentPatchSA.asi
+│   ├── 📄 SilentPatchSA.ini
+│   ├── 📄 vorbisFile.dll
+│   └── 📄 vorbisHooked.dll
+├── 📁 13-Memfix
+│   ├── 📁 01-MB-Ram512
+│   │   └── 📄 memory512.cs
+│   ├── 📁 02-Ram1
+│   │   └── 📄 memory1024.cs
+│   ├── 📁 03-Ram16
+│   │   └── 📄 memory2048.cs
+│   ├── 📁 04-Ram2
+│   │   └── 📄 MemFix.cs
+│   ├── 📁 05-Ram4
+│   │   └── 📄 Memory 4GB.cs
+│   └── 📁 06-Ram8
+│       └── 📄 Memory 8GB.cs
+├── 📁 14-Missions marker
+│   └── 📄 Desktop.zip
+├── 📁 15-MixSets
+│   ├── 📁 01-(settings)
+│   │   ├── 📁 01-All disabled
+│   │   │   ├── 📄 How is this.txt
+│   │   │   └── 📄 MixSets.ini
+│   │   ├── 📁 02-Fixes (DEFAULT)
+│   │   │   ├── 📄 How is this.txt
+│   │   │   └── 📄 MixSets.ini
+│   │   └── 📁 03-Fixes + Improvements + Densities
+│   │       ├── 📄 How is this.txt
+│   │       └── 📄 MixSets.ini
+│   ├── 📁 02-modloader
+│   │   └── 📁 _ESSENTIALS
+│   │       └── 📁 MixSets
+│   │           ├── 📄 MixSets.asi
+│   │           └── 📄 MixSets.ini
+│   ├── 📄 password = mixmods.com.br.txt
+│   └── 📄 Readme (or die).txt
+├── 📁 16-Modloader
+│   ├── 📁 modloader
+│   │   └── 📁 .data
+│   │       ├── 📁 01-licenses
+│   │       │   ├── 📄 boost.txt
+│   │       │   ├── 📄 cereal.txt
+│   │       │   ├── 📄 tinympl.txt
+│   │       │   └── 📄 utf8-cpp.txt
+│   │       ├── 📁 02-plugins
+│   │       │   └── 📁 gta3
+│   │       │       ├── 📄 std.asi.dll
+│   │       │       ├── 📄 std.asi.md
+│   │       │       ├── 📄 std.bank.dll
+│   │       │       ├── 📄 std.bank.md
+│   │       │       ├── 📄 std.data.dll
+│   │       │       ├── 📄 std.data.md
+│   │       │       ├── 📄 std.fx.dll
+│   │       │       ├── 📄 std.fx.md
+│   │       │       ├── 📄 std.movies.dll
+│   │       │       ├── 📄 std.movies.md
+│   │       │       ├── 📄 std.scm.dll
+│   │       │       ├── 📄 std.scm.md
+│   │       │       ├── 📄 std.sprites.dll
+│   │       │       ├── 📄 std.sprites.md
+│   │       │       ├── 📄 std.stream.dll
+│   │       │       ├── 📄 std.stream.md
+│   │       │       ├── 📄 std.text.dll
+│   │       │       ├── 📄 std.text.md
+│   │       │       ├── 📄 std.tracks.dll
+│   │       │       └── 📄 std.tracks.md
+│   │       ├── 📁 03-text
+│   │       │   └── 📁 1033
+│   │       │       └── 📄 menu.fxt
+│   │       ├── 📄 CHANGELOG.md
+│   │       ├── 📄 Command Line Arguments.md
+│   │       ├── 📄 Leia-me.md
+│   │       ├── 📄 Profiles.md
+│   │       └── 📄 Readme.md
+│   └── 📄 modloader.asi
+├── 📁 17-Mouse fixed
+│   ├── 📄 DINPUT8.DLL
+│   └── 📄 readme.txt
+├── 📁 18-Open Limit Adjuster
+│   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   ├── 📄 III.VC.SA.LimitAdjuster.ini
+│   └── 📄 readme.txt
+├── 📁 19-Open_Limit_Adjuster v1.5.9
+│   ├── 📁 01-(settings)
+│   │   ├── 📁 01-(III)
+│   │   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   ├── 📁 02-(SA)
+│   │   │   ├── 📁 01-(Project2DFX)
+│   │   │   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   │   ├── 📁 02-(SAMP + Project2DFX)
+│   │   │   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   │   └── 📁 03-(SAMP)
+│   │   │       └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   └── 📁 03-(VC)
+│   │       └── 📄 III.VC.SA.LimitAdjuster.ini
+│   ├── 📁 02-Open Limit Adjuster
+│   │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   ├── 📄 Leiame (ou morra).txt
+│   └── 📄 Readme (or die).txt
+├── 📁 20-ReqFiles(ESS)
+│   ├── 📁 01-(ESSENTIALS README)
+│   │   ├── 📄 _ Primeiros passos - First steps.url
+│   │   ├── 📄 CLEO (Leiame - PT).txt
+│   │   ├── 📄 CLEO (Readme - EN).txt
+│   │   ├── 📄 CLEO+ (Leiame - PT).txt
+│   │   ├── 📄 CLEO+ (Readme - EN).txt
+│   │   ├── 📄 CLEO+.url
+│   │   ├── 📄 CLEO.url
+│   │   ├── 📄 CrashInfo (Leiame - EN).txt
+│   │   ├── 📄 CrashInfo (Leiame - PT).txt
+│   │   ├── 📄 CrashInfo.url
+│   │   ├── 📄 EXE 1.0 US Hoodlum (Leiame - PT).txt
+│   │   ├── 📄 EXE 1.0 US Hoodlum (Readme - EN).txt
+│   │   ├── 📄 Framerate Vigilante (Leiame - PT).txt
+│   │   ├── 📄 Framerate Vigilante (Readme - EN).txt
+│   │   ├── 📄 Framerate Vigilante.url
+│   │   ├── 📄 ModLoader (Leiame - PT).txt
+│   │   ├── 📄 ModLoader (Readme - EN).txt
+│   │   ├── 📄 ModLoader.url
+│   │   ├── 📄 NoDEP (Leiame - PT).txt
+│   │   ├── 📄 NoDEP (Readme - EN).txt
+│   │   ├── 📄 NoDEP.url
+│   │   ├── 📄 RepairGTA (Leiame - PT).txt
+│   │   ├── 📄 RepairGTA (Readme - EN).txt
+│   │   ├── 📄 RepairGTA.url
+│   │   ├── 📄 RunDLL32 Fix.url
+│   │   ├── 📄 Silent ASI Loader (Readme - EN).txt
+│   │   ├── 📄 Silent ASI Loader.url
+│   │   ├── 📄 SilentPatch (Leiame - PT).txt
+│   │   ├── 📄 SilentPatch (Readme - EN).txt
+│   │   ├── 📄 SilentPatch.url
+│   │   ├── 📄 Widescreen Fix by ThirteenAG (Leiame - PT).txt
+│   │   ├── 📄 Widescreen Fix by ThirteenAG (Readme - EN).txt
+│   │   ├── 📄 Widescreen Fix.url
+│   │   ├── 📄 Windowed Mode (Leiame - PT).txt
+│   │   ├── 📄 Windowed Mode (Readme - EN).txt
+│   │   └── 📄 Windowed Mode.url
+│   ├── 📁 02-(fix dependencies)
+│   │   ├── 📁 (remove GameUX)
+│   │   │   ├── 📄 gameux_delet.bat
+│   │   │   ├── 📄 Leiame (ou morra).txt
+│   │   │   └── 📄 Readme (or die).txt
+│   │   └── 📄 Redistributables, DirectX etc.url
+│   ├── 📁 03-CLEO
+│   │   ├── 📄 CLEO+.cleo
+│   │   ├── 📄 FileSystemOperations.cleo
+│   │   ├── 📄 IniFiles.cleo
+│   │   └── 📄 IntOperations.cleo
+│   ├── 📁 04-modloader
+│   │   ├── 📁 01-.data
+│   │   │   ├── 📁 01-licenses
+│   │   │   │   ├── 📄 boost.txt
+│   │   │   │   ├── 📄 cereal.txt
+│   │   │   │   ├── 📄 tinympl.txt
+│   │   │   │   └── 📄 utf8-cpp.txt
+│   │   │   ├── 📁 02-plugins
+│   │   │   │   └── 📁 gta3
+│   │   │   │       ├── 📄 std.asi.dll
+│   │   │   │       ├── 📄 std.asi.md
+│   │   │   │       ├── 📄 std.bank.dll
+│   │   │   │       ├── 📄 std.bank.md
+│   │   │   │       ├── 📄 std.data.dll
+│   │   │   │       ├── 📄 std.data.md
+│   │   │   │       ├── 📄 std.fx.dll
+│   │   │   │       ├── 📄 std.fx.md
+│   │   │   │       ├── 📄 std.movies.dll
+│   │   │   │       ├── 📄 std.movies.md
+│   │   │   │       ├── 📄 std.scm.dll
+│   │   │   │       ├── 📄 std.scm.md
+│   │   │   │       ├── 📄 std.sprites.dll
+│   │   │   │       ├── 📄 std.sprites.md
+│   │   │   │       ├── 📄 std.stream.dll
+│   │   │   │       ├── 📄 std.stream.md
+│   │   │   │       ├── 📄 std.text.dll
+│   │   │   │       ├── 📄 std.text.md
+│   │   │   │       ├── 📄 std.tracks.dll
+│   │   │   │       └── 📄 std.tracks.md
+│   │   │   ├── 📁 03-text
+│   │   │   │   ├── 📁 01-1033
+│   │   │   │   │   └── 📄 menu.fxt
+│   │   │   │   ├── 📁 02-1046
+│   │   │   │   │   └── 📄 menu.fxt
+│   │   │   │   └── 📁 03-2070
+│   │   │   │       └── 📄 menu.fxt
+│   │   │   ├── 📄 CHANGELOG.md
+│   │   │   ├── 📄 Command Line Arguments.md
+│   │   │   ├── 📄 Leia-me.md
+│   │   │   ├── 📄 Profiles.md
+│   │   │   └── 📄 Readme.md
+│   │   └── 📁 02-_ESSENTIALS
+│   │       ├── 📁 01-FramerateVigilante
+│   │       │   ├── 📄 Framerate Vigilante.url
+│   │       │   ├── 📄 FramerateVigilante.ini
+│   │       │   └── 📄 FramerateVigilante.SA.asi
+│   │       ├── 📁 02-RepairGTA
+│   │       │   ├── 📄 RepairGTA.SA.asi
+│   │       │   └── 📄 RepairGTA.url
+│   │       ├── 📁 03-RunDLL32 Fix
+│   │       │   ├── 📄 RunDLL32 Fix.url
+│   │       │   └── 📄 rundll32exefix.asi
+│   │       ├── 📁 04-SilentPatch
+│   │       │   ├── 📄 SilentPatch.url
+│   │       │   ├── 📄 SilentPatchSA.asi
+│   │       │   └── 📄 SilentPatchSA.ini
+│   │       ├── 📁 05-Widescreen Fix by ThirteenAG
+│   │       │   ├── 📄 GTASA.WidescreenFix.asi
+│   │       │   ├── 📄 GTASA.WidescreenFix.ini
+│   │       │   └── 📄 Widescreen Fix.url
+│   │       └── 📁 06-Windowed Mode
+│   │           ├── 📄 III.VC.SA.WindowedMode.asi
+│   │           └── 📄 III.VC.SA.WindowedMode.ini
+│   ├── 📄 _noDEP.asi
+│   ├── 📄 bass.dll
+│   ├── 📄 CLEO.asi
+│   ├── 📄 CrashInfo.ini
+│   ├── 📄 CrashInfo.SA.asi
+│   ├── 📄 CrashList.txt
+│   ├── 📄 Essentials (Leiame - PT).txt
+│   ├── 📄 Essentials (Readme - EN).txt
+│   ├── 📄 Essentials Pack.url
+│   ├── 📄 gta_sa.pdb
+│   ├── 📄 libcurl.dll
+│   ├── 📄 modloader.asi
+│   ├── 📄 vorbisFile.dll
+│   ├── 📄 vorbisHooked.dll
+│   └── 📄 zlib1.dll
+├── 📁 21-Required_Files
+│   ├── 📁 01-cleo
+│   │   ├── 📁 cleo_text
+│   │   │   ├── 📄 cheat.fxt
+│   │   │   └── 📄 VehicleSpawngxt.fxt
+│   │   ├── 📄 amazingscreen.cs
+│   │   ├── 📄 cheats.cs
+│   │   ├── 📄 FileSystemOperations.cleo
+│   │   ├── 📄 IniFiles.cleo
+│   │   ├── 📄 IntOperations.cleo
+│   │   ├── 📄 memory2048.cs
+│   │   ├── 📄 SmoothCameraWork.fxt
+│   │   ├── 📄 SmoothCameraWork_Ver05.cs
+│   │   ├── 📄 SmoothCameraWork_Ver05.txt
+│   │   └── 📄 VehicleSpawner.cs
+│   ├── 📁 02-modloader
+│   │   └── 📁 .data
+│   │       ├── 📁 01-licenses
+│   │       │   ├── 📄 boost.txt
+│   │       │   ├── 📄 cereal.txt
+│   │       │   ├── 📄 tinympl.txt
+│   │       │   └── 📄 utf8-cpp.txt
+│   │       ├── 📁 02-plugins
+│   │       │   └── 📁 gta3
+│   │       │       ├── 📄 std.asi.dll
+│   │       │       ├── 📄 std.asi.md
+│   │       │       ├── 📄 std.bank.dll
+│   │       │       ├── 📄 std.bank.md
+│   │       │       ├── 📄 std.data.dll
+│   │       │       ├── 📄 std.data.md
+│   │       │       ├── 📄 std.fx.dll
+│   │       │       ├── 📄 std.fx.md
+│   │       │       ├── 📄 std.movies.dll
+│   │       │       ├── 📄 std.movies.md
+│   │       │       ├── 📄 std.scm.dll
+│   │       │       ├── 📄 std.scm.md
+│   │       │       ├── 📄 std.sprites.dll
+│   │       │       ├── 📄 std.sprites.md
+│   │       │       ├── 📄 std.stream.dll
+│   │       │       ├── 📄 std.stream.md
+│   │       │       ├── 📄 std.text.dll
+│   │       │       ├── 📄 std.text.md
+│   │       │       ├── 📄 std.tracks.dll
+│   │       │       └── 📄 std.tracks.md
+│   │       ├── 📁 03-text
+│   │       │   └── 📁 1033
+│   │       │       └── 📄 menu.fxt
+│   │       ├── 📄 CHANGELOG.md
+│   │       ├── 📄 Command Line Arguments.md
+│   │       ├── 📄 Leia-me.md
+│   │       ├── 📄 Profiles.md
+│   │       └── 📄 Readme.md
+│   ├── 📁 03-scripts
+│   │   └── 📄 global.ini
+│   ├── 📄 bass.dll
+│   ├── 📄 CLEO Changes.txt
+│   ├── 📄 CLEO.asi
+│   ├── 📄 modloader.asi
+│   ├── 📄 sa_widescreenfix_lite.asi
+│   ├── 📄 sadisplayresolutions.asi
+│   ├── 📄 startup_SP.bat
+│   ├── 📄 vorbisFile.dll
+│   └── 📄 vorbisHooked.dll
+├── 📁 22-SannyBuilder-v4.2.0
+│   ├── 📁 01-data
+│   │   ├── 📁 01-gta3
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   ├── 📄 SCM.INI
+│   │   │   ├── 📄 stripped.txt
+│   │   │   └── 📄 templates.txt
+│   │   ├── 📁 02-gta3_sbl
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 gta3.json
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 stripped.txt
+│   │   │   └── 📄 templates.txt
+│   │   ├── 📁 03-lcs
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 default.ide
+│   │   │   ├── 📄 ENGLISH.GXT
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 lcs.json
+│   │   │   ├── 📄 LCSSCM.INI
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   └── 📄 templates.txt
+│   │   ├── 📁 04-lcs_mobile
+│   │   │   └── 📄 CustomVariables.ini
+│   │   ├── 📁 05-sa
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomArrays.ini
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   ├── 📄 SASCM.CLEO+.ini
+│   │   │   ├── 📄 SASCM.CLEO.ini
+│   │   │   ├── 📄 SASCM.Clipboard.ini
+│   │   │   ├── 📄 SASCM.INI
+│   │   │   ├── 📄 SASCM.NewOpcodes.ini
+│   │   │   ├── 📄 stripped.txt
+│   │   │   └── 📄 templates.txt
+│   │   ├── 📁 06-sa_mobile
+│   │   │   ├── 📄 american.gxt
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 custom.dat
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 default.ide
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   ├── 📄 peds.ide
+│   │   │   ├── 📄 sa_mobile.json
+│   │   │   ├── 📄 SASCM.CLEO.ini
+│   │   │   ├── 📄 SASCM.ini
+│   │   │   ├── 📄 SASCM.Mobile.ini
+│   │   │   ├── 📄 templates.txt
+│   │   │   ├── 📄 veh_mods.ide
+│   │   │   └── 📄 vehicles.ide
+│   │   ├── 📁 07-sa_ps2
+│   │   │   ├── 📄 extensions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   └── 📄 SASCM.PS2.INI
+│   │   ├── 📁 08-sa_sbl
+│   │   │   ├── 📁 stripped scm
+│   │   │   │   ├── 📄 main.scm
+│   │   │   │   ├── 📄 main.txt
+│   │   │   │   └── 📄 script.img
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomArrays.ini
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 sa.json
+│   │   │   └── 📄 templates.txt
+│   │   ├── 📁 09-sa_sbl_sf
+│   │   │   ├── 📄 default_extensions.txt
+│   │   │   └── 📄 sf.fix.json
+│   │   ├── 📁 10-sa_v2
+│   │   │   └── 📄 CustomLabels.ini
+│   │   ├── 📁 11-vc
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   ├── 📄 stripped.txt
+│   │   │   ├── 📄 templates.txt
+│   │   │   ├── 📄 VCSCM.CLEO.ini
+│   │   │   └── 📄 VCSCM.INI
+│   │   ├── 📁 12-vc_mobile
+│   │   │   ├── 📁 data
+│   │   │   │   ├── 📁 maps
+│   │   │   │   │   ├── 📁 01-airport
+│   │   │   │   │   │   └── 📄 airport.ide
+│   │   │   │   │   ├── 📁 02-airportN
+│   │   │   │   │   │   └── 📄 airportN.ide
+│   │   │   │   │   ├── 📁 03-bank
+│   │   │   │   │   │   └── 📄 bank.ide
+│   │   │   │   │   ├── 📁 04-bar
+│   │   │   │   │   │   └── 📄 bar.ide
+│   │   │   │   │   ├── 📁 05-bridge
+│   │   │   │   │   │   └── 📄 bridge.ide
+│   │   │   │   │   ├── 📁 06-cisland
+│   │   │   │   │   │   └── 📄 cisland.ide
+│   │   │   │   │   ├── 📁 07-club
+│   │   │   │   │   │   └── 📄 club.ide
+│   │   │   │   │   ├── 📁 08-concerth
+│   │   │   │   │   │   └── 📄 concerth.ide
+│   │   │   │   │   ├── 📁 09-docks
+│   │   │   │   │   │   └── 📄 docks.ide
+│   │   │   │   │   ├── 📁 10-downtown
+│   │   │   │   │   │   └── 📄 downtown.ide
+│   │   │   │   │   ├── 📁 11-downtows
+│   │   │   │   │   │   └── 📄 downtows.ide
+│   │   │   │   │   ├── 📁 12-golf
+│   │   │   │   │   │   └── 📄 golf.ide
+│   │   │   │   │   ├── 📁 13-haiti
+│   │   │   │   │   │   └── 📄 haiti.ide
+│   │   │   │   │   ├── 📁 14-haitiN
+│   │   │   │   │   │   └── 📄 haitiN.ide
+│   │   │   │   │   ├── 📁 15-hotel
+│   │   │   │   │   │   └── 📄 hotel.ide
+│   │   │   │   │   ├── 📁 16-islandsf
+│   │   │   │   │   │   └── 📄 islandsf.ide
+│   │   │   │   │   ├── 📁 17-lawyers
+│   │   │   │   │   │   └── 📄 lawyers.ide
+│   │   │   │   │   ├── 📁 18-littleha
+│   │   │   │   │   │   └── 📄 littleha.ide
+│   │   │   │   │   ├── 📁 19-mall
+│   │   │   │   │   │   └── 📄 mall.ide
+│   │   │   │   │   ├── 📁 20-mansion
+│   │   │   │   │   │   └── 📄 mansion.ide
+│   │   │   │   │   ├── 📁 21-nbeach
+│   │   │   │   │   │   └── 📄 nbeach.ide
+│   │   │   │   │   ├── 📁 22-nbeachbt
+│   │   │   │   │   │   └── 📄 nbeachbt.ide
+│   │   │   │   │   ├── 📁 23-nbeachw
+│   │   │   │   │   │   └── 📄 nbeachw.ide
+│   │   │   │   │   ├── 📁 24-oceandn
+│   │   │   │   │   │   └── 📄 oceandN.ide
+│   │   │   │   │   ├── 📁 25-oceandrv
+│   │   │   │   │   │   └── 📄 oceandrv.ide
+│   │   │   │   │   ├── 📁 26-stadint
+│   │   │   │   │   │   └── 📄 stadint.ide
+│   │   │   │   │   ├── 📁 27-starisl
+│   │   │   │   │   │   └── 📄 starisl.ide
+│   │   │   │   │   ├── 📁 28-stripclb
+│   │   │   │   │   │   └── 📄 stripclb.ide
+│   │   │   │   │   ├── 📁 29-washintn
+│   │   │   │   │   │   └── 📄 washintn.ide
+│   │   │   │   │   ├── 📁 30-washints
+│   │   │   │   │   │   └── 📄 washints.ide
+│   │   │   │   │   ├── 📁 31-yacht
+│   │   │   │   │   │   └── 📄 yacht.ide
+│   │   │   │   │   └── 📄 generic.ide
+│   │   │   │   ├── 📄 default.dat
+│   │   │   │   ├── 📄 default.ide
+│   │   │   │   └── 📄 gta_vc.dat
+│   │   │   ├── 📄 american.gxt
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   ├── 📄 templates.txt
+│   │   │   ├── 📄 vc_mobile.json
+│   │   │   ├── 📄 VCSCM.CLEO.ini
+│   │   │   ├── 📄 VCSCM.INI
+│   │   │   └── 📄 VCSCM.Mobile.ini
+│   │   ├── 📁 13-vc_sbl
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 enums.txt
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 stripped.txt
+│   │   │   ├── 📄 templates.txt
+│   │   │   └── 📄 vc.json
+│   │   ├── 📁 14-vcs_ps2
+│   │   │   ├── 📄 CustomArrays.ini
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 ENGLISH.GXT
+│   │   │   ├── 📄 missions.txt
+│   │   │   └── 📄 opcodes.txt
+│   │   ├── 📁 15-vcs_psp
+│   │   │   ├── 📄 constants.txt
+│   │   │   ├── 📄 CustomArrays.ini
+│   │   │   ├── 📄 CustomLabels.ini
+│   │   │   ├── 📄 CustomVariables.ini
+│   │   │   ├── 📄 default.ide
+│   │   │   ├── 📄 ENGLISH.GXT
+│   │   │   ├── 📄 keywords.txt
+│   │   │   ├── 📄 missions.txt
+│   │   │   ├── 📄 opcodes.txt
+│   │   │   ├── 📄 templates.txt
+│   │   │   ├── 📄 vcs.json
+│   │   │   └── 📄 VCSSCM.INI
+│   │   ├── 📄 compiler.ini
+│   │   ├── 📄 keywords.ini
+│   │   ├── 📄 settings.ini
+│   │   └── 📄 templates.txt
+│   ├── 📁 02-help
+│   │   ├── 📁 01-examples
+│   │   │   ├── 📄 Audio_Demo.txt
+│   │   │   ├── 📄 Check_CLEO_Version.txt
+│   │   │   ├── 📄 CLEO_Sound_Button.txt
+│   │   │   ├── 📄 Color_Blend.txt
+│   │   │   ├── 📄 Free_ID_Lister.txt
+│   │   │   ├── 📄 Homie_Help.txt
+│   │   │   ├── 📄 Limits_Info.txt
+│   │   │   ├── 📄 Mission_Trigger.txt
+│   │   │   ├── 📄 Pickup_Shirt.txt
+│   │   │   ├── 📄 Screen_Drawing.txt
+│   │   │   ├── 📄 Skin_Selector.txt
+│   │   │   ├── 📄 Sounds_Browser.txt
+│   │   │   ├── 📄 Train_Spawner.txt
+│   │   │   └── 📄 Vehicle_Flags.txt
+│   │   ├── 📁 02-files
+│   │   │   ├── 📁 01-examples
+│   │   │   │   ├── 📄 CustomMission.txt
+│   │   │   │   ├── 📄 otbhook.txt
+│   │   │   │   ├── 📄 showsavescreen.txt
+│   │   │   │   ├── 📄 test_example.txt
+│   │   │   │   └── 📄 VCCam.txt
+│   │   │   ├── 📁 02-img
+│   │   │   │   ├── 📁 01-gta3
+│   │   │   │   │   ├── 📁 01-radar
+│   │   │   │   │   │   ├── 📄 asuka.png
+│   │   │   │   │   │   ├── 📄 bomb.png
+│   │   │   │   │   │   ├── 📄 catalina.png
+│   │   │   │   │   │   ├── 📄 centre.png
+│   │   │   │   │   │   ├── 📄 copcar.png
+│   │   │   │   │   │   ├── 📄 don.png
+│   │   │   │   │   │   ├── 📄 dot.png
+│   │   │   │   │   │   ├── 📄 eight.png
+│   │   │   │   │   │   ├── 📄 el.png
+│   │   │   │   │   │   ├── 📄 ice.png
+│   │   │   │   │   │   ├── 📄 joey.png
+│   │   │   │   │   │   ├── 📄 kenji.png
+│   │   │   │   │   │   ├── 📄 liz.png
+│   │   │   │   │   │   ├── 📄 luigi.png
+│   │   │   │   │   │   ├── 📄 north.png
+│   │   │   │   │   │   ├── 📄 ray.png
+│   │   │   │   │   │   ├── 📄 sal.png
+│   │   │   │   │   │   ├── 📄 save.png
+│   │   │   │   │   │   ├── 📄 spray.png
+│   │   │   │   │   │   ├── 📄 tony.png
+│   │   │   │   │   │   └── 📄 weapon.png
+│   │   │   │   │   └── 📁 02-weather
+│   │   │   │   │       ├── 📄 III_Weather-0.jpg
+│   │   │   │   │       ├── 📄 III_Weather-1.jpg
+│   │   │   │   │       ├── 📄 III_Weather-2.jpg
+│   │   │   │   │       └── 📄 III_Weather-3.jpg
+│   │   │   │   ├── 📁 02-sa
+│   │   │   │   │   ├── 📁 01-tatoo
+│   │   │   │   │   │   ├── 📄 10ls.png
+│   │   │   │   │   │   ├── 📄 10ls2.png
+│   │   │   │   │   │   ├── 📄 10ls3.png
+│   │   │   │   │   │   ├── 📄 10ls4.png
+│   │   │   │   │   │   ├── 📄 10ls5.png
+│   │   │   │   │   │   ├── 📄 10og.png
+│   │   │   │   │   │   ├── 📄 10weed.png
+│   │   │   │   │   │   ├── 📄 11dice.png
+│   │   │   │   │   │   ├── 📄 11dice2.png
+│   │   │   │   │   │   ├── 📄 11ggift.png
+│   │   │   │   │   │   ├── 📄 11grov2.png
+│   │   │   │   │   │   ├── 📄 11grov3.png
+│   │   │   │   │   │   ├── 📄 11grove.png
+│   │   │   │   │   │   ├── 📄 11jail.png
+│   │   │   │   │   │   ├── 📄 12angel.png
+│   │   │   │   │   │   ├── 📄 12bndit.png
+│   │   │   │   │   │   ├── 📄 12cross.png
+│   │   │   │   │   │   ├── 📄 12dager.png
+│   │   │   │   │   │   ├── 📄 12maybr.png
+│   │   │   │   │   │   ├── 📄 12myfac.png
+│   │   │   │   │   │   ├── 📄 4rip.png
+│   │   │   │   │   │   ├── 📄 4spider.png
+│   │   │   │   │   │   ├── 📄 4weed.png
+│   │   │   │   │   │   ├── 📄 5cross.png
+│   │   │   │   │   │   ├── 📄 5cross2.png
+│   │   │   │   │   │   ├── 📄 5cross3.png
+│   │   │   │   │   │   ├── 📄 5gun.png
+│   │   │   │   │   │   ├── 📄 6africa.png
+│   │   │   │   │   │   ├── 📄 6aztec.png
+│   │   │   │   │   │   ├── 📄 6clown.png
+│   │   │   │   │   │   ├── 📄 6crown.png
+│   │   │   │   │   │   ├── 📄 7cross.png
+│   │   │   │   │   │   ├── 📄 7cross2.png
+│   │   │   │   │   │   ├── 📄 7cross3.png
+│   │   │   │   │   │   ├── 📄 7mary.png
+│   │   │   │   │   │   ├── 📄 8gun.png
+│   │   │   │   │   │   ├── 📄 8poker.png
+│   │   │   │   │   │   ├── 📄 8sa.png
+│   │   │   │   │   │   ├── 📄 8sa2.png
+│   │   │   │   │   │   ├── 📄 8sa3.png
+│   │   │   │   │   │   ├── 📄 8santos.png
+│   │   │   │   │   │   ├── 📄 8westsd.png
+│   │   │   │   │   │   ├── 📄 9bullt.png
+│   │   │   │   │   │   ├── 📄 9crown.png
+│   │   │   │   │   │   ├── 📄 9gun.png
+│   │   │   │   │   │   ├── 📄 9gun2.png
+│   │   │   │   │   │   ├── 📄 9homby.png
+│   │   │   │   │   │   └── 📄 9rasta.png
+│   │   │   │   │   └── 📁 02-weapon
+│   │   │   │   │       ├── 📄 ak47icon.png
+│   │   │   │   │       ├── 📄 baticon.png
+│   │   │   │   │       ├── 📄 bombicona.png
+│   │   │   │   │       ├── 📄 BRASSKNUCKLEicon.png
+│   │   │   │   │       ├── 📄 Cameraicon.png
+│   │   │   │   │       ├── 📄 cellphoneicon.png
+│   │   │   │   │       ├── 📄 chnsawicon.png
+│   │   │   │   │       ├── 📄 chromegunicon.png
+│   │   │   │   │       ├── 📄 colt45icon.png
+│   │   │   │   │       ├── 📄 cuntgunicon.png
+│   │   │   │   │       ├── 📄 desert_eagleicon.png
+│   │   │   │   │       ├── 📄 fire_exicon.png
+│   │   │   │   │       ├── 📄 fist.png
+│   │   │   │   │       ├── 📄 flameicon.png
+│   │   │   │   │       ├── 📄 floweraicon.png
+│   │   │   │   │       ├── 📄 golfclubicon.png
+│   │   │   │   │       ├── 📄 grenadeicon.png
+│   │   │   │   │       ├── 📄 gun_caneicon.png
+│   │   │   │   │       ├── 📄 gun_dildo1icon.png
+│   │   │   │   │       ├── 📄 gun_dildo2icon.png
+│   │   │   │   │       ├── 📄 gun_paraIcon.png
+│   │   │   │   │       ├── 📄 gun_vibe1icon.png
+│   │   │   │   │       ├── 📄 gun_vibe2icon.png
+│   │   │   │   │       ├── 📄 heatseekicon.png
+│   │   │   │   │       ├── 📄 irgogglesicon.png
+│   │   │   │   │       ├── 📄 jetpackicon.png
+│   │   │   │   │       ├── 📄 katanaicon.png
+│   │   │   │   │       ├── 📄 knifecuricon.png
+│   │   │   │   │       ├── 📄 M4icon.png
+│   │   │   │   │       ├── 📄 micro_uziicon.png
+│   │   │   │   │       ├── 📄 minigunicon.png
+│   │   │   │   │       ├── 📄 molotovicon.png
+│   │   │   │   │       ├── 📄 mp5lngicon.png
+│   │   │   │   │       ├── 📄 nitestickicon.png
+│   │   │   │   │       ├── 📄 poolcueicon.png
+│   │   │   │   │       ├── 📄 rocketlaicon.png
+│   │   │   │   │       ├── 📄 satchelicon.png
+│   │   │   │   │       ├── 📄 sawnofficon.png
+│   │   │   │   │       ├── 📄 shotgspaicon.png
+│   │   │   │   │       ├── 📄 shovelicon.png
+│   │   │   │   │       ├── 📄 silencedicon.png
+│   │   │   │   │       ├── 📄 skateboardIcon.png
+│   │   │   │   │       ├── 📄 SNIPERicon.png
+│   │   │   │   │       ├── 📄 SPRAYCANicon.png
+│   │   │   │   │       ├── 📄 TearGasicon.png
+│   │   │   │   │       └── 📄 tec9icon.png
+│   │   │   │   ├── 📁 03-sa_mobile
+│   │   │   │   │   └── 📁 widget
+│   │   │   │   │       ├── 📄 accelerate.png
+│   │   │   │   │       ├── 📄 accelerate_solo.png
+│   │   │   │   │       ├── 📄 AmmunationAccept.png
+│   │   │   │   │       ├── 📄 ArcadeBlackReleased.png
+│   │   │   │   │       ├── 📄 ArcadeButton_ExitUp.png
+│   │   │   │   │       ├── 📄 ArcadeButton_ResetUp.png
+│   │   │   │   │       ├── 📄 ArcadeGreenReleased.png
+│   │   │   │   │       ├── 📄 ArcadeJoystick_Knob.png
+│   │   │   │   │       ├── 📄 ArcadeJoystick_Knob_orange.png
+│   │   │   │   │       ├── 📄 ArcadeJoystick_Knob_Teal.png
+│   │   │   │   │       ├── 📄 ArcadeJoystick_Knob_white.png
+│   │   │   │   │       ├── 📄 ArcadeRedReleased.png
+│   │   │   │   │       ├── 📄 ArcadeYellowReleased.png
+│   │   │   │   │       ├── 📄 armoricon.png
+│   │   │   │   │       ├── 📄 Arrow.png
+│   │   │   │   │       ├── 📄 ArrowLeft.png
+│   │   │   │   │       ├── 📄 ArrowRight.png
+│   │   │   │   │       ├── 📄 BarberAccept.png
+│   │   │   │   │       ├── 📄 basketball_shoot.png
+│   │   │   │   │       ├── 📄 basketball_trick.png
+│   │   │   │   │       ├── 📄 BJContinue.png
+│   │   │   │   │       ├── 📄 BJDouble.png
+│   │   │   │   │       ├── 📄 BJHit.png
+│   │   │   │   │       ├── 📄 BJQuit.png
+│   │   │   │   │       ├── 📄 BJSplit.png
+│   │   │   │   │       ├── 📄 BJStand.png
+│   │   │   │   │       ├── 📄 BlueArrow.png
+│   │   │   │   │       ├── 📄 brake.png
+│   │   │   │   │       ├── 📄 brassknuckle.png
+│   │   │   │   │       ├── 📄 cam-toggle.png
+│   │   │   │   │       ├── 📄 CarModsAccept.png
+│   │   │   │   │       ├── 📄 ClothesAccept.png
+│   │   │   │   │       ├── 📄 crane_down.png
+│   │   │   │   │       ├── 📄 crane_release.png
+│   │   │   │   │       ├── 📄 crane_up.png
+│   │   │   │   │       ├── 📄 crouch.png
+│   │   │   │   │       ├── 📄 drop_item.png
+│   │   │   │   │       ├── 📄 fadeinbox.png
+│   │   │   │   │       ├── 📄 FistBump.png
+│   │   │   │   │       ├── 📄 flamethrower.png
+│   │   │   │   │       ├── 📄 GangBackground.png
+│   │   │   │   │       ├── 📄 Gift.png
+│   │   │   │   │       ├── 📄 goggles.png
+│   │   │   │   │       ├── 📄 GreenArrow.png
+│   │   │   │   │       ├── 📄 GymAccept.png
+│   │   │   │   │       ├── 📄 handbrake.png
+│   │   │   │   │       ├── 📄 HoldButton.png
+│   │   │   │   │       ├── 📄 horn.png
+│   │   │   │   │       ├── 📄 hud_bat.png
+│   │   │   │   │       ├── 📄 hud_bicycle.png
+│   │   │   │   │       ├── 📄 hud_bike.png
+│   │   │   │   │       ├── 📄 hud_boat.png
+│   │   │   │   │       ├── 📄 hud_bomb.png
+│   │   │   │   │       ├── 📄 hud_burnout.png
+│   │   │   │   │       ├── 📄 hud_buy.png
+│   │   │   │   │       ├── 📄 hud_camera.png
+│   │   │   │   │       ├── 📄 hud_cane.png
+│   │   │   │   │       ├── 📄 hud_car.png
+│   │   │   │   │       ├── 📄 hud_Cellphone.png
+│   │   │   │   │       ├── 📄 hud_chainsaw.png
+│   │   │   │   │       ├── 📄 hud_check.png
+│   │   │   │   │       ├── 📄 hud_chopper.png
+│   │   │   │   │       ├── 📄 hud_crouch.png
+│   │   │   │   │       ├── 📄 hud_dance.png
+│   │   │   │   │       ├── 📄 hud_dance_alt.png
+│   │   │   │   │       ├── 📄 hud_detonator.png
+│   │   │   │   │       ├── 📄 hud_dildo1.png
+│   │   │   │   │       ├── 📄 hud_dildo2.png
+│   │   │   │   │       ├── 📄 hud_dive.png
+│   │   │   │   │       ├── 📄 hud_drop_jetpack.png
+│   │   │   │   │       ├── 📄 hud_extinguisher.png
+│   │   │   │   │       ├── 📄 hud_flowers.png
+│   │   │   │   │       ├── 📄 hud_golfclub.png
+│   │   │   │   │       ├── 📄 hud_katana.png
+│   │   │   │   │       ├── 📄 hud_knife.png
+│   │   │   │   │       ├── 📄 hud_left.png
+│   │   │   │   │       ├── 📄 hud_lockon.png
+│   │   │   │   │       ├── 📄 hud_magnet.png
+│   │   │   │   │       ├── 📄 hud_minus.png
+│   │   │   │   │       ├── 📄 hud_monstertruck.png
+│   │   │   │   │       ├── 📄 hud_nightstick.png
+│   │   │   │   │       ├── 📄 hud_nitro.png
+│   │   │   │   │       ├── 📄 hud_parachute.png
+│   │   │   │   │       ├── 📄 hud_plane.png
+│   │   │   │   │       ├── 📄 hud_plus.png
+│   │   │   │   │       ├── 📄 hud_pool.png
+│   │   │   │   │       ├── 📄 hud_poolcue.png
+│   │   │   │   │       ├── 📄 hud_right.png
+│   │   │   │   │       ├── 📄 hud_rockets.png
+│   │   │   │   │       ├── 📄 hud_spraycan.png
+│   │   │   │   │       ├── 📄 hud_stinger.png
+│   │   │   │   │       ├── 📄 hud_swapgun.png
+│   │   │   │   │       ├── 📄 hud_swim.png
+│   │   │   │   │       ├── 📄 hud_tank_left.png
+│   │   │   │   │       ├── 📄 hud_tank_right.png
+│   │   │   │   │       ├── 📄 hud_teargas.png
+│   │   │   │   │       ├── 📄 hud_throw.png
+│   │   │   │   │       ├── 📄 hud_trailer.png
+│   │   │   │   │       ├── 📄 hud_train.png
+│   │   │   │   │       ├── 📄 hud_wheelie.png
+│   │   │   │   │       ├── 📄 hud_x.png
+│   │   │   │   │       ├── 📄 hydraulicCar.png
+│   │   │   │   │       ├── 📄 kiss.png
+│   │   │   │   │       ├── 📄 leftshoot.png
+│   │   │   │   │       ├── 📄 LetsGoHand.png
+│   │   │   │   │       ├── 📄 lock.png
+│   │   │   │   │       ├── 📄 menu_back.png
+│   │   │   │   │       ├── 📄 menu_down.png
+│   │   │   │   │       ├── 📄 menu_up.png
+│   │   │   │   │       ├── 📄 mission_start.png
+│   │   │   │   │       ├── 📄 No.png
+│   │   │   │   │       ├── 📄 PokerButton.png
+│   │   │   │   │       ├── 📄 punch.png
+│   │   │   │   │       ├── 📄 radiostation.png
+│   │   │   │   │       ├── 📄 RedArrow.png
+│   │   │   │   │       ├── 📄 shoot.png
+│   │   │   │   │       ├── 📄 shovel.png
+│   │   │   │   │       ├── 📄 sprint.png
+│   │   │   │   │       ├── 📄 StopHand.png
+│   │   │   │   │       ├── 📄 StoreBuy.png
+│   │   │   │   │       ├── 📄 SwipeArrow.png
+│   │   │   │   │       ├── 📄 TattooAccept.png
+│   │   │   │   │       ├── 📄 TouchFinger.png
+│   │   │   │   │       ├── 📄 TVArrow_Left.png
+│   │   │   │   │       ├── 📄 TVArrow_LeftPressed.png
+│   │   │   │   │       ├── 📄 TVArrow_Right.png
+│   │   │   │   │       ├── 📄 TVArrow_RightPressed.png
+│   │   │   │   │       ├── 📄 TVButton.png
+│   │   │   │   │       ├── 📄 WhiteCircle.png
+│   │   │   │   │       ├── 📄 YellowArrow.png
+│   │   │   │   │       └── 📄 Yes.png
+│   │   │   │   ├── 📄 dm-baseline.png
+│   │   │   │   ├── 📄 dm-outline.png
+│   │   │   │   ├── 📄 folder.png
+│   │   │   │   ├── 📄 page.png
+│   │   │   │   └── 📄 topic.png
+│   │   │   └── 📁 03-template
+│   │   │       ├── 📄 external_script[0].txt
+│   │   │       ├── 📄 external_script[1].txt
+│   │   │       ├── 📄 external_script[2].txt
+│   │   │       ├── 📄 external_script[3].txt
+│   │   │       └── 📄 external_script[4].txt
+│   │   └── 📁 03-tutorials
+│   │       └── 📄 Sanny Builder 4 Tutorial.url
+│   ├── 📁 03-lang
+│   │   ├── 📄 armenian.ini
+│   │   ├── 📄 chinese.ini
+│   │   ├── 📄 czech.ini
+│   │   ├── 📄 dutch.ini
+│   │   ├── 📄 english.ini
+│   │   ├── 📄 finnish.ini
+│   │   ├── 📄 french.ini
+│   │   ├── 📄 german.ini
+│   │   ├── 📄 hungarian.ini
+│   │   ├── 📄 indonesian.ini
+│   │   ├── 📄 italian.ini
+│   │   ├── 📄 korean.ini
+│   │   ├── 📄 polish.ini
+│   │   ├── 📄 portuguese.ini
+│   │   ├── 📄 romanian.ini
+│   │   ├── 📄 russian.ini
+│   │   ├── 📄 spanish.ini
+│   │   ├── 📄 turkish.ini
+│   │   └── 📄 ukrainian.ini
+│   ├── 📁 04-lib
+│   │   ├── 📄 common.dll
+│   │   ├── 📄 CoordsManager.dll
+│   │   ├── 📄 core.dll
+│   │   ├── 📄 sand.dll
+│   │   └── 📄 ssc.dll
+│   ├── 📁 05-themes
+│   │   ├── 📄 classic-dark.ini
+│   │   ├── 📄 classic.ini
+│   │   ├── 📄 cloudy-grey-by-vital.ini
+│   │   ├── 📄 dark-by-vital.ini
+│   │   ├── 📄 dark-orange.ini
+│   │   ├── 📄 dark.ini
+│   │   ├── 📄 gb-blue.ini
+│   │   ├── 📄 icy-blue-by-vital.ini
+│   │   ├── 📄 material-bold-dark.ini
+│   │   ├── 📄 material-dark.ini
+│   │   ├── 📄 material-dracula-fest.ini
+│   │   ├── 📄 material-dracula.ini
+│   │   ├── 📄 material-drive.ini
+│   │   ├── 📄 material-free-day.ini
+│   │   ├── 📄 material-glacier.ini
+│   │   ├── 📄 material-light.ini
+│   │   ├── 📄 material-monokai-soda.ini
+│   │   ├── 📄 material-monokai.ini
+│   │   ├── 📄 material-nodejs.ini
+│   │   ├── 📄 material-one-dark.ini
+│   │   ├── 📄 material-today.ini
+│   │   ├── 📄 monochrome-blue.ini
+│   │   ├── 📄 monochrome-cyan.ini
+│   │   ├── 📄 monochrome-green.ini
+│   │   ├── 📄 monochrome-magenta.ini
+│   │   ├── 📄 monochrome-red.ini
+│   │   ├── 📄 monochrome-yellow.ini
+│   │   ├── 📄 neo-dark.ini
+│   │   ├── 📄 neon-dark-by-vital.ini
+│   │   ├── 📄 night-blue-by-vital.ini
+│   │   ├── 📄 notebook-by-vital.ini
+│   │   ├── 📄 papyrus-by-vital.ini
+│   │   ├── 📄 ubuntu-terminal.ini
+│   │   ├── 📄 vs-code-dark-modern-by-vital.ini
+│   │   ├── 📄 vs-dark.ini
+│   │   └── 📄 vs-light-blue.ini
+│   ├── 📁 06-tools
+│   │   ├── 📁 01-CLEO+ plugin
+│   │   │   ├── 📄 CLEO+.cleo
+│   │   │   └── 📄 Readme.txt
+│   │   ├── 📁 02-SCRLog 2020
+│   │   │   ├── 📄 Readme_by_Junior_Djjr.txt
+│   │   │   ├── 📄 Readme_by_LINK2012.txt
+│   │   │   ├── 📄 scrlog.asi
+│   │   │   └── 📄 scrlog.ini
+│   │   └── 📄 Add yours.txt
+│   ├── 📄 core.log
+│   ├── 📄 debugger.log
+│   └── 📄 EULA.txt
+├── 📁 23-SilentPatch_v1-1
+│   ├── 📄 ReadMe.txt
+│   ├── 📄 SilentPatchSA.asi
+│   └── 📄 SilentPatchSA.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 386
+فایل‌ها: 1624

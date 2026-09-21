@@ -1,0 +1,275 @@
+📁 Trains
+
+├── 📁 01-RZL Triner v4
+│   ├── 📁 Manual
+│   │   └── 📁 cleo
+│   │       └── 📄 RZL-Trainer.cs
+│   ├── 📄 _Cover RZL-Trainer.png
+│   ├── 📄 change.log
+│   ├── 📄 how to use.txt
+│   ├── 📄 LibertyCity.Ru.url
+│   └── 📄 readme!!!.txt
+├── 📁 02-RZL Triner v5.0.1
+│   ├── 📁 Cleo
+│   │   └── 📄 RZL-Trainer.cs
+│   ├── 📄 _change.log
+│   ├── 📄 _how to use.txt
+│   ├── 📄 _readme!!!.txt
+│   └── 📄 Hide Menu.txt
+├── 📁 03-Simple Cheat Menu V.5
+│   ├── 📁 01-Alvian9xpro
+│   │   ├── 📄 Read me for Cheats.txt
+│   │   └── 📄 Whats New On Cheat Menu.txt
+│   └── 📁 02-Cleo
+│       ├── 📁 cleo_text
+│       │   └── 📄 cheats.fxt
+│       ├── 📄 Cheats.cs
+│       └── 📄 Cheats.ini
+├── 📁 04-ZMenu
+│   ├── 📁 01-if not using CLEO
+│   │   └── 📄 bass.dll
+│   ├── 📁 02-ZMenuAssets
+│   │   ├── 📁 01-debug
+│   │   │   ├── 📄 green.png
+│   │   │   ├── 📄 red.png
+│   │   │   └── 📄 white.png
+│   │   ├── 📁 02-emotes
+│   │   │   ├── 📄 4House.png
+│   │   │   ├── 📄 5Head.png
+│   │   │   ├── 📄 Clueless.png
+│   │   │   ├── 📄 Gayge.png
+│   │   │   ├── 📄 Kapp.png
+│   │   │   ├── 📄 Kappa.png
+│   │   │   ├── 📄 KEKW.png
+│   │   │   ├── 📄 LULW.png
+│   │   │   ├── 📄 Madge.png
+│   │   │   ├── 📄 monkaS.png
+│   │   │   ├── 📄 monkaW.png
+│   │   │   ├── 📄 ok.png
+│   │   │   ├── 📄 OMEGALUL.png
+│   │   │   ├── 📄 peepoHappy.png
+│   │   │   ├── 📄 Pega.png
+│   │   │   ├── 📄 Pepega.png
+│   │   │   ├── 📄 PepegaChat.png
+│   │   │   ├── 📄 PepegaChat2.png
+│   │   │   ├── 📄 PepoG.png
+│   │   │   ├── 📄 POGGERS.png
+│   │   │   ├── 📄 Prayge.png
+│   │   │   ├── 📄 Sadge.png
+│   │   │   ├── 📄 Shruge.png
+│   │   │   ├── 📄 SpawnExtremeGrieferJesus.png
+│   │   │   ├── 📄 StreamerDoesntKnow.png
+│   │   │   ├── 📄 StreamerDoesntKnow10.png
+│   │   │   ├── 📄 StreamerDoesntKnow11.png
+│   │   │   ├── 📄 StreamerDoesntKnow2.png
+│   │   │   ├── 📄 StreamerDoesntKnow3.png
+│   │   │   ├── 📄 StreamerDoesntKnow4.png
+│   │   │   ├── 📄 StreamerDoesntKnow5.png
+│   │   │   ├── 📄 StreamerDoesntKnow6.png
+│   │   │   ├── 📄 StreamerDoesntKnow7.png
+│   │   │   ├── 📄 StreamerDoesntKnow8.png
+│   │   │   ├── 📄 StreamerDoesntKnow9.png
+│   │   │   ├── 📄 Susge.png
+│   │   │   ├── 📄 WICKED.png
+│   │   │   ├── 📄 Widega.png
+│   │   │   ├── 📄 widepeepoHappy.png
+│   │   │   ├── 📄 xdd.png
+│   │   │   ├── 📄 xddx.png
+│   │   │   └── 📄 YEP.png
+│   │   ├── 📁 03-gh
+│   │   │   ├── 📄 freebird.mp3
+│   │   │   ├── 📄 fretboard.png
+│   │   │   ├── 📄 fretboard2.png
+│   │   │   ├── 📄 fretboard3.png
+│   │   │   ├── 📄 OMEGALUL.png
+│   │   │   ├── 📄 OMEGALUL_mask.png
+│   │   │   ├── 📄 OMEGALUL_pressed.png
+│   │   │   ├── 📄 Pepega.png
+│   │   │   ├── 📄 Pepega_halo.png
+│   │   │   ├── 📄 Pepega_mask.png
+│   │   │   ├── 📄 Pepga.png
+│   │   │   ├── 📄 songs.ini
+│   │   │   └── 📄 strutter.mp3
+│   │   ├── 📁 04-hl1
+│   │   │   ├── 📄 pl_dirt1.wav
+│   │   │   ├── 📄 pl_dirt2.wav
+│   │   │   ├── 📄 pl_dirt3.wav
+│   │   │   ├── 📄 pl_dirt4.wav
+│   │   │   ├── 📄 pl_duct1.wav
+│   │   │   ├── 📄 pl_duct2.wav
+│   │   │   ├── 📄 pl_duct3.wav
+│   │   │   ├── 📄 pl_duct4.wav
+│   │   │   ├── 📄 pl_fallpain1.wav
+│   │   │   ├── 📄 pl_grate1.wav
+│   │   │   ├── 📄 pl_grate2.wav
+│   │   │   ├── 📄 pl_grate3.wav
+│   │   │   ├── 📄 pl_grate4.wav
+│   │   │   ├── 📄 pl_ladder1.wav
+│   │   │   ├── 📄 pl_ladder2.wav
+│   │   │   ├── 📄 pl_ladder3.wav
+│   │   │   ├── 📄 pl_ladder4.wav
+│   │   │   ├── 📄 pl_metal1.wav
+│   │   │   ├── 📄 pl_metal2.wav
+│   │   │   ├── 📄 pl_metal3.wav
+│   │   │   ├── 📄 pl_metal4.wav
+│   │   │   ├── 📄 pl_pain2.wav
+│   │   │   ├── 📄 pl_pain4.wav
+│   │   │   ├── 📄 pl_pain5.wav
+│   │   │   ├── 📄 pl_pain6.wav
+│   │   │   ├── 📄 pl_pain7.wav
+│   │   │   ├── 📄 pl_shell1.wav
+│   │   │   ├── 📄 pl_shell2.wav
+│   │   │   ├── 📄 pl_shell3.wav
+│   │   │   ├── 📄 pl_slosh1.wav
+│   │   │   ├── 📄 pl_slosh2.wav
+│   │   │   ├── 📄 pl_slosh3.wav
+│   │   │   ├── 📄 pl_slosh4.wav
+│   │   │   ├── 📄 pl_step1.wav
+│   │   │   ├── 📄 pl_step2.wav
+│   │   │   ├── 📄 pl_step3.wav
+│   │   │   ├── 📄 pl_step4.wav
+│   │   │   ├── 📄 pl_swim1.wav
+│   │   │   ├── 📄 pl_swim2.wav
+│   │   │   ├── 📄 pl_swim3.wav
+│   │   │   ├── 📄 pl_swim4.wav
+│   │   │   ├── 📄 pl_tile1.wav
+│   │   │   ├── 📄 pl_tile2.wav
+│   │   │   ├── 📄 pl_tile3.wav
+│   │   │   ├── 📄 pl_tile4.wav
+│   │   │   ├── 📄 pl_tile5.wav
+│   │   │   ├── 📄 pl_wade1.wav
+│   │   │   ├── 📄 pl_wade2.wav
+│   │   │   ├── 📄 pl_wade3.wav
+│   │   │   └── 📄 pl_wade4.wav
+│   │   ├── 📁 05-hl2
+│   │   │   ├── 📄 chainlink1.wav
+│   │   │   ├── 📄 chainlink2.wav
+│   │   │   ├── 📄 chainlink3.wav
+│   │   │   ├── 📄 chainlink4.wav
+│   │   │   ├── 📄 concrete1.wav
+│   │   │   ├── 📄 concrete2.wav
+│   │   │   ├── 📄 concrete3.wav
+│   │   │   ├── 📄 concrete4.wav
+│   │   │   ├── 📄 dirt1.wav
+│   │   │   ├── 📄 dirt2.wav
+│   │   │   ├── 📄 dirt3.wav
+│   │   │   ├── 📄 dirt4.wav
+│   │   │   ├── 📄 duct1.wav
+│   │   │   ├── 📄 duct2.wav
+│   │   │   ├── 📄 duct3.wav
+│   │   │   ├── 📄 duct4.wav
+│   │   │   ├── 📄 grass1.wav
+│   │   │   ├── 📄 grass2.wav
+│   │   │   ├── 📄 grass3.wav
+│   │   │   ├── 📄 grass4.wav
+│   │   │   ├── 📄 gravel1.wav
+│   │   │   ├── 📄 gravel2.wav
+│   │   │   ├── 📄 gravel3.wav
+│   │   │   ├── 📄 gravel4.wav
+│   │   │   ├── 📄 ladder1.wav
+│   │   │   ├── 📄 ladder2.wav
+│   │   │   ├── 📄 ladder3.wav
+│   │   │   ├── 📄 ladder4.wav
+│   │   │   ├── 📄 metal1.wav
+│   │   │   ├── 📄 metal2.wav
+│   │   │   ├── 📄 metal3.wav
+│   │   │   ├── 📄 metal4.wav
+│   │   │   ├── 📄 metalgrate1.wav
+│   │   │   ├── 📄 metalgrate2.wav
+│   │   │   ├── 📄 metalgrate3.wav
+│   │   │   ├── 📄 metalgrate4.wav
+│   │   │   ├── 📄 mud1.wav
+│   │   │   ├── 📄 mud2.wav
+│   │   │   ├── 📄 mud3.wav
+│   │   │   ├── 📄 mud4.wav
+│   │   │   ├── 📄 pl_fallpain1.wav
+│   │   │   ├── 📄 pl_fallpain2.wav
+│   │   │   ├── 📄 sand1.wav
+│   │   │   ├── 📄 sand2.wav
+│   │   │   ├── 📄 sand3.wav
+│   │   │   ├── 📄 sand4.wav
+│   │   │   ├── 📄 slosh1.wav
+│   │   │   ├── 📄 slosh2.wav
+│   │   │   ├── 📄 slosh3.wav
+│   │   │   ├── 📄 slosh4.wav
+│   │   │   ├── 📄 tile1.wav
+│   │   │   ├── 📄 tile2.wav
+│   │   │   ├── 📄 tile3.wav
+│   │   │   ├── 📄 tile4.wav
+│   │   │   ├── 📄 wade1.wav
+│   │   │   ├── 📄 wade2.wav
+│   │   │   ├── 📄 wade3.wav
+│   │   │   ├── 📄 wade4.wav
+│   │   │   ├── 📄 wade5.wav
+│   │   │   ├── 📄 wade6.wav
+│   │   │   ├── 📄 wade7.wav
+│   │   │   ├── 📄 wade8.wav
+│   │   │   ├── 📄 wood1.wav
+│   │   │   ├── 📄 wood2.wav
+│   │   │   ├── 📄 wood3.wav
+│   │   │   ├── 📄 wood4.wav
+│   │   │   ├── 📄 woodpanel1.wav
+│   │   │   ├── 📄 woodpanel2.wav
+│   │   │   ├── 📄 woodpanel3.wav
+│   │   │   └── 📄 woodpanel4.wav
+│   │   ├── 📄 boowomp.mp3
+│   │   ├── 📄 circumflex.mp3
+│   │   ├── 📄 gigachad.png
+│   │   ├── 📄 jesus.mp3
+│   │   ├── 📄 jesus2.mp3
+│   │   ├── 📄 lift.mp3
+│   │   ├── 📄 mcm2launch.mp3
+│   │   ├── 📄 missing.png
+│   │   ├── 📄 morb.png
+│   │   ├── 📄 pepega.png
+│   │   ├── 📄 pickgen.wav
+│   │   ├── 📄 pickup.png
+│   │   ├── 📄 pickup.wav
+│   │   ├── 📄 puttbang.wav
+│   │   ├── 📄 rroad.png
+│   │   ├── 📄 rv_target.png
+│   │   ├── 📄 rv_target_pickup.png
+│   │   ├── 📄 rv_target_shockwave.png
+│   │   ├── 📄 rv_target_star.png
+│   │   ├── 📄 rv_target_turbo.png
+│   │   ├── 📄 shockfire.wav
+│   │   ├── 📄 shootingstars.mp3
+│   │   ├── 📄 starfire.wav
+│   │   ├── 📄 table.mp3
+│   │   ├── 📄 targetArea1.jpg
+│   │   ├── 📄 targetArea2.jpg
+│   │   ├── 📄 targetArea3.jpg
+│   │   ├── 📄 targetArea4.jpg
+│   │   ├── 📄 tobecontinued.mp3
+│   │   ├── 📄 tobecontinued.png
+│   │   ├── 📄 truck.mp3
+│   │   ├── 📄 turbo.wav
+│   │   ├── 📄 unaware1.png
+│   │   ├── 📄 unaware10.png
+│   │   ├── 📄 unaware11.png
+│   │   ├── 📄 unaware2.png
+│   │   ├── 📄 unaware3.png
+│   │   ├── 📄 unaware4.png
+│   │   ├── 📄 unaware5.png
+│   │   ├── 📄 unaware6.png
+│   │   ├── 📄 unaware7.png
+│   │   ├── 📄 unaware8.png
+│   │   ├── 📄 unaware9.png
+│   │   ├── 📄 updown.mp3
+│   │   ├── 📄 wide.mp3
+│   │   ├── 📄 wino.mp3
+│   │   └── 📄 zpatch.mp3
+│   ├── 📄 assimp-vc141-mt.dll
+│   ├── 📄 pugixml.dll
+│   ├── 📄 zlib1.dll
+│   ├── 📄 ZMenuSA.asi
+│   ├── 📄 ZMenuSA.ini
+│   └── 📄 zmods_twitch.dll
+├── 📄 desktop.ini
+├── 📄 file_10934246.mp4
+├── 📄 file_10934441.mp4
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 17
+فایل‌ها: 252

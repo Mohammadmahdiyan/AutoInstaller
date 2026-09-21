@@ -1,0 +1,1493 @@
+📁 Maps
+
+├── 📁 01-GTA V Texture
+│   ├── 📄 a51_ext.txd
+│   ├── 📄 airoads_las.txd
+│   ├── 📄 airport2.txd
+│   ├── 📄 airport_las.txd
+│   ├── 📄 airportroads_sfse.txd
+│   ├── 📄 airprtrunway_las.txd
+│   ├── 📄 backroad_sfs.txd
+│   ├── 📄 barrio1_lae.txd
+│   ├── 📄 barrio1_lae2.txd
+│   ├── 📄 bendytunnel_sfse.txd
+│   ├── 📄 break_f_w.txd
+│   ├── 📄 burnsground.txd
+│   ├── 📄 carshow_sfse.txd
+│   ├── 📄 ce_ground01.txd
+│   ├── 📄 ce_ground02.txd
+│   ├── 📄 ce_ground03.txd
+│   ├── 📄 ce_ground04.txd
+│   ├── 📄 ce_ground05.txd
+│   ├── 📄 ce_ground08.txd
+│   ├── 📄 ce_ground11.txd
+│   ├── 📄 ce_ground12.txd
+│   ├── 📄 ce_ground13.txd
+│   ├── 📄 ce_ground14.txd
+│   ├── 📄 ce_traintrack1.txd
+│   ├── 📄 ce_traintrack2.txd
+│   ├── 📄 chateau_lawn.txd
+│   ├── 📄 chicano10_lae.txd
+│   ├── 📄 civic03_lan.txd
+│   ├── 📄 cn_nwbrigstuff.txd
+│   ├── 📄 coast_las2.txd
+│   ├── 📄 comedbarrio1_la.txd
+│   ├── 📄 comedhos1_la.txd
+│   ├── 📄 compapart_la.txd
+│   ├── 📄 compomark_lae2.txd
+│   ├── 📄 contachou1_lae2.txd
+│   ├── 📄 coochieghous.txd
+│   ├── 📄 cs_coast.txd
+│   ├── 📄 cs_ebridge.txd
+│   ├── 📄 cs_forest.txd
+│   ├── 📄 cs_mountain.txd
+│   ├── 📄 cs_roads.txd
+│   ├── 📄 cs_town.txd
+│   ├── 📄 ctscene_las.txd
+│   ├── 📄 cunte1_lahills.txd
+│   ├── 📄 cunte_wires.txd
+│   ├── 📄 cunteroads1.txd
+│   ├── 📄 cunteroads2.txd
+│   ├── 📄 cunteroads3.txd
+│   ├── 📄 cunteroads4.txd
+│   ├── 📄 cunteroads5.txd
+│   ├── 📄 cunteroads6.txd
+│   ├── 📄 cuntwland.txd
+│   ├── 📄 cuntwlandcarparks.txd
+│   ├── 📄 cuntwlandcent.txd
+│   ├── 📄 cuntwlandse.txd
+│   ├── 📄 cuntwlandwest.txd
+│   ├── 📄 cuntwroad.txd
+│   ├── 📄 cuntwtunnel.txd
+│   ├── 📄 cw_road.txd
+│   ├── 📄 des_cen.txd
+│   ├── 📄 des_ebridge.txd
+│   ├── 📄 des_n.txd
+│   ├── 📄 des_nbridge.txd
+│   ├── 📄 des_ne.txd
+│   ├── 📄 des_nw.txd
+│   ├── 📄 des_nw2.txd
+│   ├── 📄 des_quarry.txd
+│   ├── 📄 des_s.txd
+│   ├── 📄 des_se1.txd
+│   ├── 📄 des_se2.txd
+│   ├── 📄 des_se3.txd
+│   ├── 📄 des_se4.txd
+│   ├── 📄 des_stownw.txd
+│   ├── 📄 des_sw.txd
+│   ├── 📄 des_trainstuff.txd
+│   ├── 📄 des_wdam.txd
+│   ├── 📄 desert.txd
+│   ├── 📄 desn2_alphabits.txd
+│   ├── 📄 desn_desert.txd
+│   ├── 📄 desn_trainstuff.txd
+│   ├── 📄 dockroad_sfse.txd
+│   ├── 📄 docks2_las2-ahi.txd
+│   ├── 📄 docks2_las2.txd
+│   ├── 📄 docks_las2.txd
+│   ├── 📄 eastbeach09_lae2.txd
+│   ├── 📄 eastbeach2a_lae2.txd
+│   ├── 📄 eastbeach8_lae2.txd
+│   ├── 📄 easthills_lahills.txd
+│   ├── 📄 eastls1_lae2.txd
+│   ├── 📄 eastls1b_lae2.txd
+│   ├── 📄 eastls3_lae2.txd
+│   ├── 📄 eastlstr_lae2.txd
+│   ├── 📄 excalibur.txd
+│   ├── 📄 fosterroads_sfse.txd
+│   ├── 📄 freeway2_las.txd
+│   ├── 📄 freeway2_las2.txd
+│   ├── 📄 freeway2_sfs.txd
+│   ├── 📄 freeway_las.txd
+│   ├── 📄 freeway_sfs.txd
+│   ├── 📄 freeways2_sfse.txd
+│   ├── 📄 freeways3_sfse.txd
+│   ├── 📄 freeways_sfse.txd
+│   ├── 📄 furniture_lae2.txd
+│   ├── 📄 gangblok1_lae2.txd
+│   ├── 📄 ganghouse1_lax.txd
+│   ├── 📄 ganton01_lae2.txd
+│   ├── 📄 ganton02_lae2.txd
+│   ├── 📄 genroads_sfse.txd
+│   ├── 📄 ggbridge_sfn.txd
+│   ├── 📄 glenpark1_lae.txd
+│   ├── 📄 glenpark1x_lae.txd
+│   ├── 📄 glenpark6_lae.txd
+│   ├── 📄 glenpark6d_lae.txd
+│   ├── 📄 glenpark7_lae.txd
+│   ├── 📄 goldengate_sfw.txd
+│   ├── 📄 golftunnel_sfs.txd
+│   ├── 📄 graffiti_lan01.txd
+│   ├── 📄 griffobs_las.txd
+│   ├── 📄 ground4_las.txd
+│   ├── 📄 gta_proc_bush.txd
+│   ├── 📄 gta_tree_boak.txd
+│   ├── 📄 gta_tree_palm.txd
+│   ├── 📄 highway_sfn.txd
+│   ├── 📄 hillcliff_lahills.txd
+│   ├── 📄 hobos_lawn.txd
+│   ├── 📄 hospital_lae.txd
+│   ├── 📄 hotelback_sfs.txd
+│   ├── 📄 hub_alpha.txd
+│   ├── 📄 idlewood3_lae.txd
+│   ├── 📄 idlewood46_lae.txd
+│   ├── 📄 idlewood6_detail.txd
+│   ├── 📄 idlewood6_lae.txd
+│   ├── 📄 idlewood6_tr.txd
+│   ├── 📄 IM_LAI_VEG.txd
+│   ├── 📄 inglewood01_lax.txd
+│   ├── 📄 jeffers4_lae.txd
+│   ├── 📄 jeffers4_laeU HERE!.txd
+│   ├── 📄 jeffers5a_lae.txd
+│   ├── 📄 lae2bridge.txd
+│   ├── 📄 lae2grnd.txd
+│   ├── 📄 lae2newtempbx.txd
+│   ├── 📄 lae2roads.txd
+│   ├── 📄 lae2roadscoast.txd
+│   ├── 📄 lae2roadshub.txd
+│   ├── 📄 laealpha.txd
+│   ├── 📄 laeroads.txd
+│   ├── 📄 laeroads2s.txd
+│   ├── 📄 lahills_lod.txd
+│   ├── 📄 lahillsa_lod.txd
+│   ├── 📄 lahillsa_lodw.txd
+│   ├── 📄 lahillsground4.txd
+│   ├── 📄 lahillsground4cye.txd
+│   ├── 📄 lahillsgrounds.txd
+│   ├── 📄 lahillsla_roads.txd
+│   ├── 📄 lahillslaroads.txd
+│   ├── 📄 lahillsroads6.txd
+│   ├── 📄 lahillsroadscoast.txd
+│   ├── 📄 lan2freeway.txd
+│   ├── 📄 landcoast_lae2.txd
+│   ├── 📄 landhub.txd
+│   ├── 📄 landlae2.txd
+│   ├── 📄 landlae2b.txd
+│   ├── 📄 landlae2c.txd
+│   ├── 📄 lanroad.txd
+│   ├── 📄 lasground2_las2.txd
+│   ├── 📄 lasground_las2.txd
+│   ├── 📄 lasraodnshops.txd
+│   ├── 📄 lasroads_las.txd
+│   ├── 📄 lasroads_las2.txd
+│   ├── 📄 law2_roadsb.txd
+│   ├── 📄 lod2lae1.txd
+│   ├── 📄 losflor4_lae2.txd
+│   ├── 📄 macpark1tr_lae.txd
+│   ├── 📄 motel_lae.txd
+│   ├── 📄 mountainsfs.txd
+│   ├── 📄 mountroads_sfse.txd
+│   ├── 📄 mullho03_lahills.txd
+│   ├── 📄 mullho03a_lahills.txd
+│   ├── 📄 mullho05_lahills.txd
+│   ├── 📄 navyroad_sfse.txd
+│   ├── 📄 oldfreeway_sfse.txd
+│   ├── 📄 parktunnel_sfs.txd
+│   ├── 📄 paynspray_lae.txd
+│   ├── 📄 piera_law2.txd
+│   ├── 📄 pierb_law2.txd
+│   ├── 📄 pierc_law2.txd
+│   ├── 📄 pinkcarpark_sfs.txd
+│   ├── 📄 projects_la.txd
+│   ├── 📄 railbridge_sfse.txd
+│   ├── 📄 railtracklae.txd
+│   ├── 📄 railtunn1_law2.txd
+│   ├── 📄 railway_las.txd
+│   ├── 📄 railwaycuntw.txd
+│   ├── 📄 richman02_lahills.txd
+│   ├── 📄 road2sfe.txd
+│   ├── 📄 roadbridge_sfse.txd
+│   ├── 📄 roadlan2.txd
+│   ├── 📄 roads_cunte.txd
+│   ├── 📄 roads_lahills.txd
+│   ├── 📄 roads_law.txd
+│   ├── 📄 roads_lawn.txd
+│   ├── 📄 roads_sfs.txd
+│   ├── 📄 roads_tunnellahills.txd
+│   ├── 📄 roadsanfranse.txd
+│   ├── 📄 roadsfe.txd
+│   ├── 📄 roadslahills.txd
+│   ├── 📄 sanfrantrains.txd
+│   ├── 📄 sfn_roadssfn.txd
+│   ├── 📄 sfn_sfn.txd
+│   ├── 📄 sfsroads.txd
+│   ├── 📄 shop_doors2.txd
+│   ├── 📄 silconland_sfse.txd
+│   ├── 📄 sjmpalmbigpv.dff
+│   ├── 📄 stadjunct_sfse.txd
+│   ├── 📄 stapl.txd
+│   ├── 📄 stationtunnel.txd
+│   ├── 📄 stormd_fill.txd
+│   ├── 📄 stormdra1_lae.txd
+│   ├── 📄 stormdrain.txd
+│   ├── 📄 stormdrain_las2.txd
+│   ├── 📄 sunsetbittyu.txd
+│   ├── 📄 sv_ground_sfs.txd
+│   ├── 📄 tags2_lalae.txd
+│   ├── 📄 tags_laazteca.txd
+│   ├── 📄 tags_lakilo.txd
+│   ├── 📄 tags_larollin.txd
+│   ├── 📄 tags_latemple.txd
+│   ├── 📄 tags_lavagos.txd
+│   ├── 📄 templae2land.txd
+│   ├── 📄 tempstuff_lae.txd
+│   ├── 📄 traincross.txd
+│   ├── 📄 traindocks_sfse.txd
+│   ├── 📄 traingen_sfse.txd
+│   ├── 📄 trainplatform_sfse.txd
+│   ├── 📄 traintrack_las.txd
+│   ├── 📄 traintrack_las2.txd
+│   ├── 📄 traintunnel1_sfse.txd
+│   ├── 📄 traintunnel2_sfse.txd
+│   ├── 📄 tramstatsfw.txd
+│   ├── 📄 tunnel_law.txd
+│   ├── 📄 tunnel_sfe.txd
+│   ├── 📄 veg_bevtree1.dff
+│   ├── 📄 veg_palm02.dff
+│   ├── 📄 veg_palm04.dff
+│   ├── 📄 vgnground.txd
+│   ├── 📄 vgnground2.txd
+│   ├── 📄 vgnground3.txd
+│   ├── 📄 vgnrailroad.txd
+│   ├── 📄 vgsehighways.txd
+│   ├── 📄 vgseroads.txd
+│   ├── 📄 vgsnhighway.txd
+│   ├── 📄 vgsrailroad.txd
+│   ├── 📄 vgssdrtyroads.txd
+│   ├── 📄 vgsshiways.txd
+│   ├── 📄 vgssroads.txd
+│   ├── 📄 vgwestground.txd
+│   ├── 📄 vgwestrailrd.txd
+│   ├── 📄 vgwstdirtyrd.txd
+│   ├── 📄 vgwsthiway1.txd
+│   ├── 📄 wiresetc2_las.txd
+│   ├── 📄 wiresetc_las.txd
+│   └── 📄 wiresetc_las2.txd
+├── 📁 02-GTA V Texture Light
+│   ├── 📄 airoads_las.txd
+│   ├── 📄 airport2.txd
+│   ├── 📄 airport3_las.txd
+│   ├── 📄 airport_las.txd
+│   ├── 📄 airprtrunway_las.txd
+│   ├── 📄 ammu_lan2.txd
+│   ├── 📄 barrio1_lae.txd
+│   ├── 📄 beach_las.txd
+│   ├── 📄 beacliff_law2.txd
+│   ├── 📄 bev_law2.txd
+│   ├── 📄 billbrd01_lan2.txd
+│   ├── 📄 ce_ground01.txd
+│   ├── 📄 ce_ground02.txd
+│   ├── 📄 ce_ground03.txd
+│   ├── 📄 ce_ground04.txd
+│   ├── 📄 ce_ground05.txd
+│   ├── 📄 ce_ground07.txd
+│   ├── 📄 ce_ground08.txd
+│   ├── 📄 ce_ground09.txd
+│   ├── 📄 ce_ground10.txd
+│   ├── 📄 chateau_lawn.txd
+│   ├── 📄 civic03_lan.txd
+│   ├── 📄 coast_las2.txd
+│   ├── 📄 councl_law2.txd
+│   ├── 📄 cs_mountain.txd
+│   ├── 📄 cs_roads01.dff
+│   ├── 📄 cuntclub_law2.txd
+│   ├── 📄 cunte1_lahills.txd
+│   ├── 📄 cunte_wires.txd
+│   ├── 📄 cunteroads1.txd
+│   ├── 📄 cunteroads2.txd
+│   ├── 📄 cunteroads3.txd
+│   ├── 📄 cunteroads4.txd
+│   ├── 📄 cunteroads5.txd
+│   ├── 📄 cunteroads6.txd
+│   ├── 📄 docg01_lahills.txd
+│   ├── 📄 docks2_las2.txd
+│   ├── 📄 docks_las2.txd
+│   ├── 📄 freeway2_las.txd
+│   ├── 📄 freeway2_las2.txd
+│   ├── 📄 freeway_las.txd
+│   ├── 📄 ganton02_lae2.txd
+│   ├── 📄 glenpark1x_lae.txd
+│   ├── 📄 griffobs_las.txd
+│   ├── 📄 ground4_las.txd
+│   ├── 📄 hospital_lawn.txd
+│   ├── 📄 hub_alpha.txd
+│   ├── 📄 HW_2Roads_LAI.txd
+│   ├── 📄 HW_Roads_LAI.txd
+│   ├── 📄 idlewood6_detail.txd
+│   ├── 📄 IM_Damaged_LAI.txd
+│   ├── 📄 IM_LAI_Signs.txd
+│   ├── 📄 IM_Road_LAI.txd
+│   ├── 📄 IM_Star_LAI.txd
+│   ├── 📄 INV_Road.txd
+│   ├── 📄 jeffers4_laeU HERE!.txd
+│   ├── 📄 lae2roads.txd
+│   ├── 📄 lae2roadscoast.txd
+│   ├── 📄 lae2roadshub.txd
+│   ├── 📄 laeroads.txd
+│   ├── 📄 laeroads2s.txd
+│   ├── 📄 lahillsground4.txd
+│   ├── 📄 lahillsground4cye.txd
+│   ├── 📄 lahillsgrounds.txd
+│   ├── 📄 lahillsla_roads.txd
+│   ├── 📄 lahillslaroads.txd
+│   ├── 📄 lahillsroads6.txd
+│   ├── 📄 lahillsroadscoast.txd
+│   ├── 📄 lan2freeway.txd
+│   ├── 📄 lanbloke.txd
+│   ├── 📄 lanroad.txd
+│   ├── 📄 lasground2_las2.txd
+│   ├── 📄 lasground_las2.txd
+│   ├── 📄 lasraodnshops.txd
+│   ├── 📄 lasroads_las.txd
+│   ├── 📄 lasroads_las2.txd
+│   ├── 📄 law2_roadLAI.txd
+│   ├── 📄 law2_roadsb.txd
+│   ├── 📄 law_beach1.txd
+│   ├── 📄 law_beach2.txd
+│   ├── 📄 libhelipad_lan2.txd
+│   ├── 📄 lodvinesign1_cunte.dff
+│   ├── 📄 mainlcawn.txd
+│   ├── 📄 melrose08_lawn.txd
+│   ├── 📄 melrosetr_lawn.txd
+│   ├── 📄 mulhouslahills.txd
+│   ├── 📄 mullho03_lahills.txd
+│   ├── 📄 mullho03a_lahills.txd
+│   ├── 📄 mullho05_lahills.txd
+│   ├── 📄 pershingsq1_lan.dff
+│   ├── 📄 pershingsq2_lan.dff
+│   ├── 📄 piera_law2.txd
+│   ├── 📄 pierb_law2.txd
+│   ├── 📄 pierc_law2.txd
+│   ├── 📄 Road_B_LAI.txd
+│   ├── 📄 Road_M_LAI.txd
+│   ├── 📄 roadlan2.txd
+│   ├── 📄 roads_cunte.txd
+│   ├── 📄 roads_lahills.txd
+│   ├── 📄 roads_law.txd
+│   ├── 📄 roads_lawn.txd
+│   ├── 📄 roads_tunnellahills.txd
+│   ├── 📄 roadslahills.txd
+│   ├── 📄 rodeo01_law2.txd
+│   ├── 📄 rodeo03_law2.dff
+│   ├── 📄 rodeo05_law2.txd
+│   ├── 📄 rodeoprk_law2.txd
+│   ├── 📄 sancliff02_law2.txd
+│   ├── 📄 sancliff_law2.txd
+│   ├── 📄 santamonhus.txd
+│   ├── 📄 santamonicalaw2.txd
+│   ├── 📄 santamonicalaw2a.txd
+│   ├── 📄 skyscr1_lan2.txd
+│   ├── 📄 skyscrap2_lan2.txd
+│   ├── 📄 skyscrap3_lan2.txd
+│   ├── 📄 stadium_lae2.txd
+│   ├── 📄 stapl.txd
+│   ├── 📄 stolenbuild02.txd
+│   ├── 📄 stormdrain.txd
+│   ├── 📄 stormdrain_las2.txd
+│   ├── 📄 streetlamp2.dff
+│   ├── 📄 sunrise02_lawn.txd
+│   ├── 📄 sunrise09_lawn.txd
+│   ├── 📄 sunrise11_lawn.txd
+│   ├── 📄 sunset01_lawn.txd
+│   ├── 📄 sunset02_law2.dff
+│   ├── 📄 tvstudio_law2.txd
+│   └── 📄 vinesign1_cunte01.dff
+├── 📁 03-hd 3 city
+│   └── 📁 Calles
+│       ├── 📁 01-LS
+│       │   ├── 📄 airoads_las.txd
+│       │   ├── 📄 airport2.txd
+│       │   ├── 📄 airport_las.txd
+│       │   ├── 📄 airprtrunway_las.txd
+│       │   ├── 📄 barrio1_lae.txd
+│       │   ├── 📄 civic03_lan.txd
+│       │   ├── 📄 coast_las2.txd
+│       │   ├── 📄 cs_ebridge.txd
+│       │   ├── 📄 cs_roads.txd
+│       │   ├── 📄 cunteroads1.txd
+│       │   ├── 📄 cunteroads2.txd
+│       │   ├── 📄 cunteroads3.txd
+│       │   ├── 📄 cunteroads4.txd
+│       │   ├── 📄 cunteroads5.txd
+│       │   ├── 📄 cunteroads6.txd
+│       │   ├── 📄 cuntwroad.txd
+│       │   ├── 📄 des_ebridge.txd
+│       │   ├── 📄 docks2_las2-ahi.txd
+│       │   ├── 📄 docks2_las2.txd
+│       │   ├── 📄 docks_las2.txd
+│       │   ├── 📄 freeway2_las.txd
+│       │   ├── 📄 freeway2_las2.txd
+│       │   ├── 📄 freeway_las.txd
+│       │   ├── 📄 goldengate_sfw.txd
+│       │   ├── 📄 griffobs_las.txd
+│       │   ├── 📄 ground4_las.txd
+│       │   ├── 📄 idlewood6_detail.txd
+│       │   ├── 📄 jeffers4_lae.txd
+│       │   ├── 📄 jeffers5a_lae.txd
+│       │   ├── 📄 lae2roads.txd
+│       │   ├── 📄 lae2roadscoast.txd
+│       │   ├── 📄 lae2roadshub.txd
+│       │   ├── 📄 laeroads.txd
+│       │   ├── 📄 laeroads2s.txd
+│       │   ├── 📄 lahillsground4.txd
+│       │   ├── 📄 lahillsla_roads.txd
+│       │   ├── 📄 lahillslaroads.txd
+│       │   ├── 📄 lahillsroads6.txd
+│       │   ├── 📄 lahillsroadscoast.txd
+│       │   ├── 📄 lan2freeway.txd
+│       │   ├── 📄 lanroad.txd
+│       │   ├── 📄 lasground2_las2.txd
+│       │   ├── 📄 lasground_las2.txd
+│       │   ├── 📄 lasraodnshops.txd
+│       │   ├── 📄 lasroads_las.txd
+│       │   ├── 📄 lasroads_las2.txd
+│       │   ├── 📄 law2_roadsb.txd
+│       │   ├── 📄 mountroads_sfse.txd
+│       │   ├── 📄 mullho03_lahills.txd
+│       │   ├── 📄 mullho05_lahills.txd
+│       │   ├── 📄 piera_law2.txd
+│       │   ├── 📄 pierb_law2.txd
+│       │   ├── 📄 pierc_law2.txd
+│       │   ├── 📄 roadlan2.txd
+│       │   ├── 📄 roads_cunte.txd
+│       │   ├── 📄 roads_lahills.txd
+│       │   ├── 📄 roads_law.txd
+│       │   ├── 📄 roads_lawn.txd
+│       │   ├── 📄 roads_tunnellahills.txd
+│       │   ├── 📄 roadslahills.txd
+│       │   ├── 📄 stapl.txd
+│       │   ├── 📄 stormdrain_las2.txd
+│       │   └── 📄 vgssdrtyroads.txd
+│       ├── 📁 02-LV
+│       │   ├── 📄 a51_ext.txd
+│       │   ├── 📄 cn_nwbrigstuff.txd
+│       │   ├── 📄 des_cen.txd
+│       │   ├── 📄 des_n.txd
+│       │   ├── 📄 des_nbridge.txd
+│       │   ├── 📄 des_ne.txd
+│       │   ├── 📄 des_nw.txd
+│       │   ├── 📄 des_nw2.txd
+│       │   ├── 📄 des_s.txd
+│       │   ├── 📄 des_se1.txd
+│       │   ├── 📄 des_se2.txd
+│       │   ├── 📄 des_se3.txd
+│       │   ├── 📄 des_se4.txd
+│       │   ├── 📄 des_stownw.txd
+│       │   ├── 📄 des_sw.txd
+│       │   ├── 📄 des_wdam.txd
+│       │   ├── 📄 desn2_alphabits.txd
+│       │   ├── 📄 excalibur.txd
+│       │   ├── 📄 ggbridge_sfn.txd
+│       │   ├── 📄 highway_sfn.txd
+│       │   ├── 📄 sfn_roadssfn.txd
+│       │   ├── 📄 vgnground.txd
+│       │   ├── 📄 vgnground2.txd
+│       │   ├── 📄 vgnground3.txd
+│       │   ├── 📄 vgsehighways.txd
+│       │   ├── 📄 vgseroads.txd
+│       │   ├── 📄 vgsnhighway.txd
+│       │   ├── 📄 vgsshiways.txd
+│       │   ├── 📄 vgssroads.txd
+│       │   ├── 📄 vgwestground.txd
+│       │   ├── 📄 vgwstdirtyrd.txd
+│       │   └── 📄 vgwsthiway1.txd
+│       └── 📁 03-SF
+│           ├── 📄 airportroads_sfse.txd
+│           ├── 📄 backroad_sfs.txd
+│           ├── 📄 bendytunnel_sfse.txd
+│           ├── 📄 cuntwland.txd
+│           ├── 📄 cuntwtunnel.txd
+│           ├── 📄 cw_road.txd
+│           ├── 📄 dockroad_sfse.txd
+│           ├── 📄 fosterroads_sfse.txd
+│           ├── 📄 freeway2_sfs.txd
+│           ├── 📄 freeway_sfs.txd
+│           ├── 📄 freeways2_sfse.txd
+│           ├── 📄 freeways3_sfse.txd
+│           ├── 📄 freeways_sfse.txd
+│           ├── 📄 genroads_sfse.txd
+│           ├── 📄 golftunnel_sfs.txd
+│           ├── 📄 hotelback_sfs.txd
+│           ├── 📄 navyroad_sfse.txd
+│           ├── 📄 oldfreeway_sfse.txd
+│           ├── 📄 parktunnel_sfs.txd
+│           ├── 📄 pinkcarpark_sfs.txd
+│           ├── 📄 road2sfe.txd
+│           ├── 📄 roadbridge_sfse.txd
+│           ├── 📄 roads_sfs.txd
+│           ├── 📄 roadsanfranse.txd
+│           ├── 📄 roadsfe.txd
+│           ├── 📄 sanfranfreeway.txd
+│           ├── 📄 sfsroads.txd
+│           ├── 📄 silconland_sfse.txd
+│           ├── 📄 stadjunct_sfse.txd
+│           ├── 📄 sv_ground_sfs.txd
+│           ├── 📄 tramstatsfw.txd
+│           └── 📄 tunnel_sfe.txd
+├── 📁 04-HD all road citys
+│   └── 📁 modloader
+│       └── 📁 hd all city roads
+│           ├── 📄 a51.txd
+│           ├── 📄 a51_ext.txd
+│           ├── 📄 a51_undergrnd.txd
+│           ├── 📄 airoads_las.txd
+│           ├── 📄 airport2.txd
+│           ├── 📄 airport_las.txd
+│           ├── 📄 airportcpark_sfse.txd
+│           ├── 📄 airportgnd_sfse.txd
+│           ├── 📄 airportroads_sfse.txd
+│           ├── 📄 airprtrunway_las.txd
+│           ├── 📄 ammu_lan2.txd
+│           ├── 📄 archbrij.txd
+│           ├── 📄 backroad_sfs.txd
+│           ├── 📄 ballys02.txd
+│           ├── 📄 barrierblk.txd
+│           ├── 📄 barrio1_lae.txd
+│           ├── 📄 barrio1_lae2.txd
+│           ├── 📄 baseballground_sfs.txd
+│           ├── 📄 bballcpark1.txd
+│           ├── 📄 beach_las2.txd
+│           ├── 📄 beach_sfs.txd
+│           ├── 📄 beafron2_law2.txd
+│           ├── 📄 bendytunnel_sfse.txd
+│           ├── 📄 bigboxtemp1.txd
+│           ├── 📄 bombshop_las.txd
+│           ├── 📄 bombshop_sfe.txd
+│           ├── 📄 buildblk555.txd
+│           ├── 📄 burnsground.txd
+│           ├── 📄 canalsg_law.txd
+│           ├── 📄 carimpound_sfe.txd
+│           ├── 📄 carpark3_lvs.txd
+│           ├── 📄 carpark_sfe.txd
+│           ├── 📄 carparkssfn.txd
+│           ├── 📄 carshow_sfse.txd
+│           ├── 📄 carter_mainmap.txd
+│           ├── 📄 casnorylgrnd.txd
+│           ├── 📄 ce_burbhouse.txd
+│           ├── 📄 ce_ground02.txd
+│           ├── 📄 ce_ground03.txd
+│           ├── 📄 ce_ground08.txd
+│           ├── 📄 ce_ground09.txd
+│           ├── 📄 ce_ground12.txd
+│           ├── 📄 ce_loadbay.txd
+│           ├── 📄 ce_lod_01.txd
+│           ├── 📄 ce_lod_02.txd
+│           ├── 📄 ce_lod_03.txd
+│           ├── 📄 ce_lod_04.txd
+│           ├── 📄 ce_lod_05.txd
+│           ├── 📄 ce_lod_07.txd
+│           ├── 📄 ce_railbridge.txd
+│           ├── 📄 cemetery_law.txd
+│           ├── 📄 ci_studio.txd
+│           ├── 📄 ci_studio5.txd
+│           ├── 📄 civic01_lan.txd
+│           ├── 📄 civic03_lan.txd
+│           ├── 📄 civic04_lan.txd
+│           ├── 📄 civic06_lan.txd
+│           ├── 📄 cj_airprt.txd
+│           ├── 📄 cn_nwbrigstuff.txd
+│           ├── 📄 coast_apts.txd
+│           ├── 📄 coast_las2.txd
+│           ├── 📄 col_wallx.txd
+│           ├── 📄 comedbarrio1_la.txd
+│           ├── 📄 compomark_lae2.txd
+│           ├── 📄 con_stuff.txd
+│           ├── 📄 contachou1_lae2.txd
+│           ├── 📄 countryclbgnd_sfs.txd
+│           ├── 📄 countryclbtnis_sfs.txd
+│           ├── 📄 cranes_dyn2.txd
+│           ├── 📄 crparkgm_lan2.txd
+│           ├── 📄 cs_ebridge.txd
+│           ├── 📄 cs_forest.txd
+│           ├── 📄 cs_lod.txd
+│           ├── 📄 cs_mountain.txd
+│           ├── 📄 cs_roads.txd
+│           ├── 📄 cs_town.txd
+│           ├── 📄 cs_wbridge.txd
+│           ├── 📄 cunte_blockammo.txd
+│           ├── 📄 cunte_wires.txd
+│           ├── 📄 cunteroads1.txd
+│           ├── 📄 cunteroads2.txd
+│           ├── 📄 cunteroads3.txd
+│           ├── 📄 cunteroads4.txd
+│           ├── 📄 cunteroads5.txd
+│           ├── 📄 cunteroads6.txd
+│           ├── 📄 cunts_gunclub.txd
+│           ├── 📄 cuntwbtxcs_t.txd
+│           ├── 📄 cuntwbtzzcs_t.txd
+│           ├── 📄 cuntwland.txd
+│           ├── 📄 cuntwlandse.txd
+│           ├── 📄 cuntwlandwest.txd
+│           ├── 📄 cuntwroad.txd
+│           ├── 📄 cuntwshopscs_t.txd
+│           ├── 📄 cuntwtunnel.txd
+│           ├── 📄 cw2_cinemablockcs_t.txd
+│           ├── 📄 cw2_photoblockcs_t.txd
+│           ├── 📄 cw2_storesnstuff.txd
+│           ├── 📄 cw_motel2cs_t.txd
+│           ├── 📄 cw_road.txd
+│           ├── 📄 cw_truckstopcs_t.txd
+│           ├── 📄 cxref_desert.txd
+│           ├── 📄 des_bighus.txd
+│           ├── 📄 des_cen.txd
+│           ├── 📄 des_dinerw.txd
+│           ├── 📄 des_ebridge.txd
+│           ├── 📄 des_n.txd
+│           ├── 📄 des_nbridge.txd
+│           ├── 📄 des_ne.txd
+│           ├── 📄 des_nw.txd
+│           ├── 📄 des_nw2.txd
+│           ├── 📄 des_quarrybelts.txd
+│           ├── 📄 des_quarrybits.txd
+│           ├── 📄 des_quarrycrane.txd
+│           ├── 📄 des_ranch.txd
+│           ├── 📄 des_s.txd
+│           ├── 📄 des_se1.txd
+│           ├── 📄 des_se2.txd
+│           ├── 📄 des_se3.txd
+│           ├── 📄 des_se4.txd
+│           ├── 📄 des_steakhouse.txd
+│           ├── 📄 des_stownw.txd
+│           ├── 📄 des_sw.txd
+│           ├── 📄 des_telescopestuff.txd
+│           ├── 📄 des_trainstuff.txd
+│           ├── 📄 des_ufoinn.txd
+│           ├── 📄 des_wdam.txd
+│           ├── 📄 des_wgarage.txd
+│           ├── 📄 desertmisc.txd
+│           ├── 📄 desertroads.txd
+│           ├── 📄 desn2_alphabits.txd
+│           ├── 📄 desn2_roadbloks.txd
+│           ├── 📄 desn_decocafe.txd
+│           ├── 📄 desn_truckstop.txd
+│           ├── 📄 dingbat01_la.txd
+│           ├── 📄 dockroad_sfse.txd
+│           ├── 📄 docks2_las2.txd
+│           ├── 📄 docks2_sfse.txd
+│           ├── 📄 docks_las2.txd
+│           ├── 📄 donut_sfw.txd
+│           ├── 📄 drivingschool_sfse.txd
+│           ├── 📄 ealod_law2.txd
+│           ├── 📄 eastbeach2a_lae2.txd
+│           ├── 📄 eastbeach8_lae2.txd
+│           ├── 📄 eastls4_lae2.txd
+│           ├── 📄 ebeachcineblok.txd
+│           ├── 📄 excalibur.txd
+│           ├── 📄 exclibrland.txd
+│           ├── 📄 fctrygrnd01.txd
+│           ├── 📄 fedmint_sfs.txd
+│           ├── 📄 fighot.txd
+│           ├── 📄 filmstud.txd
+│           ├── 📄 firehouse_sfse.txd
+│           ├── 📄 fosterroads_sfse.txd
+│           ├── 📄 freeway2_las.txd
+│           ├── 📄 freeway2_las2.txd
+│           ├── 📄 freeway2_sfs.txd
+│           ├── 📄 freeway_las.txd
+│           ├── 📄 freeway_sfs.txd
+│           ├── 📄 freeways2_sfse.txd
+│           ├── 📄 freeways3_sfse.txd
+│           ├── 📄 freeways_sfse.txd
+│           ├── 📄 furniture_lae2.txd
+│           ├── 📄 gb_laroads.txd
+│           ├── 📄 genroads_sfse.txd
+│           ├── 📄 ggbridge_sfn.txd
+│           ├── 📄 glenpark1x_lae.txd
+│           ├── 📄 goldengate_sfw.txd
+│           ├── 📄 golftunnel_sfs.txd
+│           ├── 📄 griffobs_las.txd
+│           ├── 📄 ground2_las2.txd
+│           ├── 📄 ground3_las.txd
+│           ├── 📄 ground4_las.txd
+│           ├── 📄 ground5_las.txd
+│           ├── 📄 ground_las2.txd
+│           ├── 📄 groundbit_sfse.txd
+│           ├── 📄 gymblok2_lae2.txd
+│           ├── 📄 hashblock3_sfs.txd
+│           ├── 📄 highway_sfn.txd
+│           ├── 📄 hillcliff_lahills.txd
+│           ├── 📄 hillhousex_la10_12.txd
+│           ├── 📄 hillhousex_la9.txd
+│           ├── 📄 hospital_lae.txd
+│           ├── 📄 hotelback_sfs.txd
+│           ├── 📄 hub_alpha.txd
+│           ├── 📄 idlewood3_lae.txd
+│           ├── 📄 idlewood46_lae.txd
+│           ├── 📄 idlewood6_detail.txd
+│           ├── 📄 idlewood6_lae.txd
+│           ├── 📄 immcrax.txd
+│           ├── 📄 indust1.txd
+│           ├── 📄 industry3_las2.txd
+│           ├── 📄 jeffers4_lae.txd
+│           ├── 📄 kbgarage_las.txd
+│           ├── 📄 lae2bigblock.txd
+│           ├── 📄 lae2bridge.txd
+│           ├── 📄 lae2grnd.txd
+│           ├── 📄 lae2roads.txd
+│           ├── 📄 lae2roadscoast.txd
+│           ├── 📄 lae2roadshub.txd
+│           ├── 📄 lae2tempshit.txd
+│           ├── 📄 laeroads.txd
+│           ├── 📄 laeroads2s.txd
+│           ├── 📄 lahills_lod.txd
+│           ├── 📄 lahills_safe1.txd
+│           ├── 📄 lahillsa_lod.txd
+│           ├── 📄 lahillsa_lodw.txd
+│           ├── 📄 lahillsgrounds.txd
+│           ├── 📄 lahillsla_roads.txd
+│           ├── 📄 lahillslaroads.txd
+│           ├── 📄 lahillsroads6.txd
+│           ├── 📄 lahillsroadscoast.txd
+│           ├── 📄 lan2freeway.txd
+│           ├── 📄 lanblokb2.txd
+│           ├── 📄 lanblokc.txd
+│           ├── 📄 lanbloke.txd
+│           ├── 📄 lanbloki.txd
+│           ├── 📄 landhub.txd
+│           ├── 📄 landlae2.txd
+│           ├── 📄 landlae2b.txd
+│           ├── 📄 landlae2c.txd
+│           ├── 📄 landsfw.txd
+│           ├── 📄 lanlacmab_lan2.txd
+│           ├── 📄 lanlod.txd
+│           ├── 📄 lanpolicecp.txd
+│           ├── 📄 lanriver.txd
+│           ├── 📄 lanroad.txd
+│           ├── 📄 laroadsigcunt.txd
+│           ├── 📄 lasground2_las2.txd
+│           ├── 📄 lasground_las2.txd
+│           ├── 📄 lashops1_las2.txd
+│           ├── 📄 lashops1b_las2.txd
+│           ├── 📄 lashops6_las2.txd
+│           ├── 📄 lashops93_las2.txd
+│           ├── 📄 lasraodnshops.txd
+│           ├── 📄 lasroads_las.txd
+│           ├── 📄 lasroads_las2.txd
+│           ├── 📄 law2_roadsb.txd
+│           ├── 📄 law_beach1.txd
+│           ├── 📄 lawland2.txd
+│           ├── 📄 lawnlodbig.txd
+│           ├── 📄 lawnstripm.txd
+│           ├── 📄 lawwhitebuilds.txd
+│           ├── 📄 libertyfar.txd
+│           ├── 📄 libertyhi.txd
+│           ├── 📄 lod2_las.txd
+│           ├── 📄 lod2_sfe.txd
+│           ├── 📄 lod2lae1.txd
+│           ├── 📄 lod3_las.txd
+│           ├── 📄 lod3_sfe.txd
+│           ├── 📄 lod4_sfe.txd
+│           ├── 📄 lod4sfw.txd
+│           ├── 📄 lod5_sfe.txd
+│           ├── 📄 lod5sfw.txd
+│           ├── 📄 lod6_sfe.txd
+│           ├── 📄 lod6sfw.txd
+│           ├── 📄 lod7_sfe.txd
+│           ├── 📄 lod7sfw.txd
+│           ├── 📄 lod8sfw.txd
+│           ├── 📄 lod9sfw.txd
+│           ├── 📄 lod_a_law.txd
+│           ├── 📄 lod_cn2_stown.txd
+│           ├── 📄 lod_countn2.txd
+│           ├── 📄 lod_countryn.txd
+│           ├── 📄 lod_lan2.txd
+│           ├── 📄 lod_las2.txd
+│           ├── 📄 lod_mount_sfs.txd
+│           ├── 📄 lod_sfe.txd
+│           ├── 📄 lod_sfs1.txd
+│           ├── 📄 lod_sfs2.txd
+│           ├── 📄 lod_sfs3.txd
+│           ├── 📄 lod_sfs4.txd
+│           ├── 📄 lod_sfs5.txd
+│           ├── 📄 lod_sfs6.txd
+│           ├── 📄 lod_sfse.txd
+│           ├── 📄 lod_sfse2.txd
+│           ├── 📄 lod_sfse3.txd
+│           ├── 📄 lod_sfse69.txd
+│           ├── 📄 lodchem.txd
+│           ├── 📄 lodcunty.txd
+│           ├── 📄 loddsfn_sfn.txd
+│           ├── 📄 lodhuge_lan2.txd
+│           ├── 📄 lodlawnland.txd
+│           ├── 📄 lodlawnsmall.txd
+│           ├── 📄 lodsfn.txd
+│           ├── 📄 lodtnsfn.txd
+│           ├── 📄 lodvegassvehse5.txd
+│           ├── 📄 lodvegaswest1.txd
+│           ├── 📄 lodvegaswest2.txd
+│           ├── 📄 lodvegaswest3.txd
+│           ├── 📄 lodvegaswest4.txd
+│           ├── 📄 lodvgsslod.txd
+│           ├── 📄 lodvgsslod01.txd
+│           ├── 📄 lodvgsslod02.txd
+│           ├── 📄 lodvgswestout.txd
+│           ├── 📄 lodvgwstcoast.txd
+│           ├── 📄 luxorpillar1.txd
+│           ├── 📄 melrose03_lawn.txd
+│           ├── 📄 melrose05_lawn.txd
+│           ├── 📄 miragecasino1.txd
+│           ├── 📄 mountainsfs.txd
+│           ├── 📄 mountroads_sfse.txd
+│           ├── 📄 mullho03_lahills.txd
+│           ├── 📄 mullho03a_lahills.txd
+│           ├── 📄 mullho05_lahills.txd
+│           ├── 📄 navyroad_sfse.txd
+│           ├── 📄 newstuff_sfn.txd
+│           ├── 📄 nicepark_sfe.txd
+│           ├── 📄 officeground.txd
+│           ├── 📄 oldfreeway_sfse.txd
+│           ├── 📄 parktunnel_sfs.txd
+│           ├── 📄 paynspray_lae.txd
+│           ├── 📄 piera_law2.txd
+│           ├── 📄 pierb_law2.txd
+│           ├── 📄 pierc_law2.txd
+│           ├── 📄 pinkcarpark_sfs.txd
+│           ├── 📄 queensparks_sfs.txd
+│           ├── 📄 railtracklae.txd
+│           ├── 📄 railway_las.txd
+│           ├── 📄 refinery.txd
+│           ├── 📄 resicarpark.txd
+│           ├── 📄 richman04_lahills.txd
+│           ├── 📄 road2sfe.txd
+│           ├── 📄 roadblkx.txd
+│           ├── 📄 roadbridge_sfse.txd
+│           ├── 📄 roadlan2.txd
+│           ├── 📄 roads_cunte.txd
+│           ├── 📄 roads_lahills.txd
+│           ├── 📄 roads_law.txd
+│           ├── 📄 roads_lawn.txd
+│           ├── 📄 roads_sfs.txd
+│           ├── 📄 roads_tunnellahills.txd
+│           ├── 📄 roadsanfranse.txd
+│           ├── 📄 roadsfe.txd
+│           ├── 📄 roadslahills.txd
+│           ├── 📄 rodeo01_law2.txd
+│           ├── 📄 rodeo02_law2.txd
+│           ├── 📄 rodeo03_law2.txd
+│           ├── 📄 rodeo05_law2.txd
+│           ├── 📄 sandcastle.txd
+│           ├── 📄 sanfranfreeway.txd
+│           ├── 📄 sanfranroads.txd
+│           ├── 📄 santamonicalaw2.txd
+│           ├── 📄 santamonicalaw2a.txd
+│           ├── 📄 santamopollaw2.txd
+│           ├── 📄 satdish.txd
+│           ├── 📄 sf_roads.txd
+│           ├── 📄 sfn_roadssfn.txd
+│           ├── 📄 sfn_sfn.txd
+│           ├── 📄 sfsroads.txd
+│           ├── 📄 sfsroadshotel.txd
+│           ├── 📄 shamcpark.txd
+│           ├── 📄 shopliquor_las.txd
+│           ├── 📄 silconland_sfse.txd
+│           ├── 📄 sjmla_las.txd
+│           ├── 📄 skyscrap2_lan2.txd
+│           ├── 📄 skyscrap_sfse.txd
+│           ├── 📄 smallertxd.txd
+│           ├── 📄 stadbridge_sfs.txd
+│           ├── 📄 stadiumground_sfse.txd
+│           ├── 📄 stadjunct_sfse.txd
+│           ├── 📄 stapl.txd
+│           ├── 📄 stormdrain.txd
+│           ├── 📄 stormdrain_las2.txd
+│           ├── 📄 stuff2_sfn.txd
+│           ├── 📄 subpen1_sfse.txd
+│           ├── 📄 sunset01_law2.txd
+│           ├── 📄 sunset02_law2.txd
+│           ├── 📄 sunset1_lan2.txd
+│           ├── 📄 sunset1alp_lan2.txd
+│           ├── 📄 sunsetbittyu.txd
+│           ├── 📄 sv_ground_sfs.txd
+│           ├── 📄 sw_apartflat5.txd
+│           ├── 📄 sw_apartments.txd
+│           ├── 📄 sw_brewery.txd
+│           ├── 📄 sw_diner1.txd
+│           ├── 📄 sw_fact01.txd
+│           ├── 📄 sw_fact02alt.txd
+│           ├── 📄 sw_farm1.txd
+│           ├── 📄 sw_poorhouse.txd
+│           ├── 📄 sw_railbridge1.txd
+│           ├── 📄 sw_ware01.txd
+│           ├── 📄 templae2land.txd
+│           ├── 📄 temproadtxd.txd
+│           ├── 📄 tikigrass.txd
+│           ├── 📄 traindocks_sfse.txd
+│           ├── 📄 traintrack_las.txd
+│           ├── 📄 traintrack_las2.txd
+│           ├── 📄 tramstatsfw.txd
+│           ├── 📄 trnstnground.txd
+│           ├── 📄 tunnel_sfe.txd
+│           ├── 📄 tvtower_sfs.txd
+│           ├── 📄 union_las.txd
+│           ├── 📄 vegasaircon.txd
+│           ├── 📄 vegascourtbld.txd
+│           ├── 📄 vegaselod1.txd
+│           ├── 📄 vegaselod2.txd
+│           ├── 📄 vegaselod3.txd
+│           ├── 📄 vegasemulticar.txd
+│           ├── 📄 vegashiways.txd
+│           ├── 📄 vegasnlod1.txd
+│           ├── 📄 vegasnlod2.txd
+│           ├── 📄 vegasnlod3.txd
+│           ├── 📄 vegasnlod4.txd
+│           ├── 📄 vegasroads.txd
+│           ├── 📄 vegass_jetty.txd
+│           ├── 📄 vegassland62.txd
+│           ├── 📄 vegastemp1.txd
+│           ├── 📄 venicegb02_law.txd
+│           ├── 📄 vgnabatoir.txd
+│           ├── 📄 vgncoast.txd
+│           ├── 📄 vgndwntwn1.txd
+│           ├── 📄 vgnfremntsgn.txd
+│           ├── 📄 vgngebuild.txd
+│           ├── 📄 vgnground.txd
+│           ├── 📄 vgnground2.txd
+│           ├── 📄 vgnground3.txd
+│           ├── 📄 vgnplantgen.txd
+│           ├── 📄 vgnpwrmainbld.txd
+│           ├── 📄 vgnpwroutbld1.txd
+│           ├── 📄 vgnpwroutbld2.txd
+│           ├── 📄 vgnrailbrdge.txd
+│           ├── 📄 vgnrailroad.txd
+│           ├── 📄 vgnretail3.txd
+│           ├── 📄 vgnshamcpark.txd
+│           ├── 📄 vgs_stadium.txd
+│           ├── 📄 vgse24hr.txd
+│           ├── 📄 vgsecarshow.txd
+│           ├── 📄 vgsecnstrct01.txd
+│           ├── 📄 vgsehighways.txd
+│           ├── 📄 vgseland.txd
+│           ├── 📄 vgseroads.txd
+│           ├── 📄 vgshpground.txd
+│           ├── 📄 vgsmotelgrnd.txd
+│           ├── 📄 vgsncircon.txd
+│           ├── 📄 vgsnhighway.txd
+│           ├── 📄 vgspumphse.txd
+│           ├── 📄 vgsroadbridge.txd
+│           ├── 📄 vgssairport.txd
+│           ├── 📄 vgssairport02.txd
+│           ├── 📄 vgssdrtyroads.txd
+│           ├── 📄 vgsshiways.txd
+│           ├── 📄 vgsshospshop.txd
+│           ├── 📄 vgssland.txd
+│           ├── 📄 vgssland01.txd
+│           ├── 📄 vgssland03.txd
+│           ├── 📄 vgssmulticarprk.txd
+│           ├── 📄 vgssroads.txd
+│           ├── 📄 vgwestground.txd
+│           ├── 📄 vgwstdirtyrd.txd
+│           ├── 📄 vgwsthiway1.txd
+│           ├── 📄 vinewood01_lahills.txd
+│           ├── 📄 w_town2cs_t.txd
+│           ├── 📄 w_town3cs_t.txd
+│           ├── 📄 w_towncs_t.txd
+│           ├── 📄 warehus_las2.txd
+│           ├── 📄 wasteland_las2.txd
+│           ├── 📄 wiresetc2_las.txd
+│           ├── 📄 wiresetc_las.txd
+│           ├── 📄 wiresetc_las2.txd
+│           └── 📄 xenon_sfse.txd
+├── 📁 05-Khalifa Tower
+│   ├── 📁 01-data
+│   │   └── 📁 maps
+│   │       └── 📁 vegas
+│   │           ├── 📄 vegasE.ide
+│   │           └── 📄 vegasE.IPL
+│   ├── 📁 02-modloader
+│   │   └── 📁 KhalifaTower
+│   │       ├── 📄 lodhuge_lan2.txd
+│   │       └── 📄 skyscr1_lan2.txd
+│   ├── 📄 gta_sa 2012-03-03 10-34-55-53.jpg
+│   ├── 📄 Khalifa Tower 哈利法塔.jpg
+│   └── 📄 Read Me (说明).txt
+├── 📁 06-mechet
+│   ├── 📁 01-CLEO
+│   │   └── 📄 sholat1.cs
+│   ├── 📁 02-data
+│   │   └── 📁 maps
+│   │       └── 📁 LA
+│   │           ├── 📄 lae.ide
+│   │           └── 📄 lae.ipl
+│   └── 📁 03-modloader
+│       └── 📁 mechet
+│           ├── 📄 barrio1_lae.txd
+│           ├── 📄 carwashalphas_lae.dff
+│           ├── 📄 laepetrol1a.dff
+│           ├── 📄 shalat.ifp
+│           ├── 📄 washgaspump.dff
+│           └── 📄 wshxrefpump.txd
+├── 📁 07-Mini pack object gta v
+│   ├── 📁 object gta v
+│   │   ├── 📄 blackbag2.dff
+│   │   ├── 📄 boxes.txd
+│   │   ├── 📄 cardboardbox.dff
+│   │   ├── 📄 cj_bins2.txd
+│   │   ├── 📄 cj_dump2_low.dff
+│   │   ├── 📄 drubish.txd
+│   │   ├── 📄 dump1.dff
+│   │   ├── 📄 dynbuket.txd
+│   │   ├── 📄 dynhydrent.txd
+│   │   └── 📄 fire_hydrant.dff
+│   └── 📄 config.json
+├── 📁 08-Radar like gta v
+│   ├── 📁 01-gta3.img
+│   │   ├── 📄 radar00.txd
+│   │   ├── 📄 radar01.txd
+│   │   ├── 📄 radar02.txd
+│   │   ├── 📄 radar03.txd
+│   │   ├── 📄 radar04.txd
+│   │   ├── 📄 radar05.txd
+│   │   ├── 📄 radar06.txd
+│   │   ├── 📄 radar07.txd
+│   │   ├── 📄 radar08.txd
+│   │   ├── 📄 radar09.txd
+│   │   ├── 📄 radar10.txd
+│   │   ├── 📄 radar100.txd
+│   │   ├── 📄 radar101.txd
+│   │   ├── 📄 radar102.txd
+│   │   ├── 📄 radar103.txd
+│   │   ├── 📄 radar104.txd
+│   │   ├── 📄 radar105.txd
+│   │   ├── 📄 radar106.txd
+│   │   ├── 📄 radar107.txd
+│   │   ├── 📄 radar108.txd
+│   │   ├── 📄 radar109.txd
+│   │   ├── 📄 radar11.txd
+│   │   ├── 📄 radar110.txd
+│   │   ├── 📄 radar111.txd
+│   │   ├── 📄 radar112.txd
+│   │   ├── 📄 radar113.txd
+│   │   ├── 📄 radar114.txd
+│   │   ├── 📄 radar115.txd
+│   │   ├── 📄 radar116.txd
+│   │   ├── 📄 radar117.txd
+│   │   ├── 📄 radar118.txd
+│   │   ├── 📄 radar119.txd
+│   │   ├── 📄 radar12.txd
+│   │   ├── 📄 radar120.txd
+│   │   ├── 📄 radar121.txd
+│   │   ├── 📄 radar122.txd
+│   │   ├── 📄 radar123.txd
+│   │   ├── 📄 radar124.txd
+│   │   ├── 📄 radar125.txd
+│   │   ├── 📄 radar126.txd
+│   │   ├── 📄 radar127.txd
+│   │   ├── 📄 radar128.txd
+│   │   ├── 📄 radar129.txd
+│   │   ├── 📄 radar13.txd
+│   │   ├── 📄 radar130.txd
+│   │   ├── 📄 radar131.txd
+│   │   ├── 📄 radar132.txd
+│   │   ├── 📄 radar133.txd
+│   │   ├── 📄 radar134.txd
+│   │   ├── 📄 radar135.txd
+│   │   ├── 📄 radar136.txd
+│   │   ├── 📄 radar137.txd
+│   │   ├── 📄 radar138.txd
+│   │   ├── 📄 radar139.txd
+│   │   ├── 📄 radar14.txd
+│   │   ├── 📄 radar140.txd
+│   │   ├── 📄 radar141.txd
+│   │   ├── 📄 radar142.txd
+│   │   ├── 📄 radar143.txd
+│   │   ├── 📄 radar15.txd
+│   │   ├── 📄 radar16.txd
+│   │   ├── 📄 radar17.txd
+│   │   ├── 📄 radar18.txd
+│   │   ├── 📄 radar19.txd
+│   │   ├── 📄 radar20.txd
+│   │   ├── 📄 radar21.txd
+│   │   ├── 📄 radar22.txd
+│   │   ├── 📄 radar23.txd
+│   │   ├── 📄 radar24.txd
+│   │   ├── 📄 radar25.txd
+│   │   ├── 📄 radar26.txd
+│   │   ├── 📄 radar27.txd
+│   │   ├── 📄 radar28.txd
+│   │   ├── 📄 radar29.txd
+│   │   ├── 📄 radar30.txd
+│   │   ├── 📄 radar31.txd
+│   │   ├── 📄 radar32.txd
+│   │   ├── 📄 radar33.txd
+│   │   ├── 📄 radar34.txd
+│   │   ├── 📄 radar35.txd
+│   │   ├── 📄 radar36.txd
+│   │   ├── 📄 radar37.txd
+│   │   ├── 📄 radar38.txd
+│   │   ├── 📄 radar39.txd
+│   │   ├── 📄 radar40.txd
+│   │   ├── 📄 radar41.txd
+│   │   ├── 📄 radar42.txd
+│   │   ├── 📄 radar43.txd
+│   │   ├── 📄 radar44.txd
+│   │   ├── 📄 radar45.txd
+│   │   ├── 📄 radar46.txd
+│   │   ├── 📄 radar47.txd
+│   │   ├── 📄 radar48.txd
+│   │   ├── 📄 radar49.txd
+│   │   ├── 📄 radar50.txd
+│   │   ├── 📄 radar51.txd
+│   │   ├── 📄 radar52.txd
+│   │   ├── 📄 radar53.txd
+│   │   ├── 📄 radar54.txd
+│   │   ├── 📄 radar55.txd
+│   │   ├── 📄 radar56.txd
+│   │   ├── 📄 radar57.txd
+│   │   ├── 📄 radar58.txd
+│   │   ├── 📄 radar59.txd
+│   │   ├── 📄 radar60.txd
+│   │   ├── 📄 radar61.txd
+│   │   ├── 📄 radar62.txd
+│   │   ├── 📄 radar63.txd
+│   │   ├── 📄 radar64.txd
+│   │   ├── 📄 radar65.txd
+│   │   ├── 📄 radar66.txd
+│   │   ├── 📄 radar67.txd
+│   │   ├── 📄 radar68.txd
+│   │   ├── 📄 radar69.txd
+│   │   ├── 📄 radar70.txd
+│   │   ├── 📄 radar71.txd
+│   │   ├── 📄 radar72.txd
+│   │   ├── 📄 radar73.txd
+│   │   ├── 📄 radar74.txd
+│   │   ├── 📄 radar75.txd
+│   │   ├── 📄 radar76.txd
+│   │   ├── 📄 radar77.txd
+│   │   ├── 📄 radar78.txd
+│   │   ├── 📄 radar79.txd
+│   │   ├── 📄 radar80.txd
+│   │   ├── 📄 radar81.txd
+│   │   ├── 📄 radar82.txd
+│   │   ├── 📄 radar83.txd
+│   │   ├── 📄 radar84.txd
+│   │   ├── 📄 radar85.txd
+│   │   ├── 📄 radar86.txd
+│   │   ├── 📄 radar87.txd
+│   │   ├── 📄 radar88.txd
+│   │   ├── 📄 radar89.txd
+│   │   ├── 📄 radar90.txd
+│   │   ├── 📄 radar91.txd
+│   │   ├── 📄 radar92.txd
+│   │   ├── 📄 radar93.txd
+│   │   ├── 📄 radar94.txd
+│   │   ├── 📄 radar95.txd
+│   │   ├── 📄 radar96.txd
+│   │   ├── 📄 radar97.txd
+│   │   ├── 📄 radar98.txd
+│   │   └── 📄 radar99.txd
+│   ├── 📁 02-pics
+│   │   ├── 📄 1.jpg
+│   │   ├── 📄 2.jpg
+│   │   ├── 📄 3.jpg
+│   │   ├── 📄 4.jpg
+│   │   ├── 📄 5.jpg
+│   │   ├── 📄 6.jpg
+│   │   └── 📄 7.jpg
+│   ├── 📄 promo.png
+│   └── 📄 Readme.txt
+├── 📁 09-Urbanize_12-25_Final_realtic pepole
+│   ├── 📁 01-(extras)
+│   │   ├── 📁 01-(additional planes)
+│   │   │   ├── 📁 01-(LS)
+│   │   │   │   └── 📁 CLEO
+│   │   │   │       └── 📁 Urbanize
+│   │   │   │           └── 📁 SA
+│   │   │   │               └── 📄 Additional Plane LS.dat
+│   │   │   ├── 📁 02-(LV)
+│   │   │   │   └── 📁 CLEO
+│   │   │   │       └── 📁 Urbanize
+│   │   │   │           └── 📁 SA
+│   │   │   │               └── 📄 Additional Plane LV.dat
+│   │   │   ├── 📁 03-(SF)
+│   │   │   │   └── 📁 CLEO
+│   │   │   │       └── 📁 Urbanize
+│   │   │   │           └── 📁 SA
+│   │   │   │               └── 📄 Additional Plane SF.dat
+│   │   │   └── 📄 .Notes.txt
+│   │   ├── 📁 02-(GTA V Bahama Mama)
+│   │   │   └── 📁 CLEO
+│   │   │       └── 📁 Urbanize
+│   │   │           └── 📁 IN
+│   │   │               ├── 📄 XBAMA Infos.txt
+│   │   │               ├── 📄 XBAMA.cs
+│   │   │               └── 📄 XBAMA.dat
+│   │   └── 📁 03-(HD umbrella)
+│   │       └── 📁 CLEO
+│   │           └── 📁 Urbanize
+│   │               └── 📁 _Props
+│   │                   └── 📄 urb_umbrella_1.dff
+│   ├── 📁 02-(settings)
+│   │   ├── 📁 01- Low
+│   │   │   └── 📁 CLEO
+│   │   │       └── 📁 Urbanize
+│   │   │           └── 📄 Urbanize.ini
+│   │   ├── 📁 02- Medium (default)
+│   │   │   └── 📁 CLEO
+│   │   │       └── 📁 Urbanize
+│   │   │           └── 📄 Urbanize.ini
+│   │   └── 📁 03- High
+│   │       └── 📁 CLEO
+│   │           └── 📁 Urbanize
+│   │               └── 📄 Urbanize.ini
+│   ├── 📁 03-CLEO
+│   │   └── 📁 Urbanize
+│   │       ├── 📁 01-_Audio
+│   │       │   └── 📄 breakdance.wav
+│   │       ├── 📁 02-_Models
+│   │       │   ├── 📄 _Default Objects.dat
+│   │       │   ├── 📄 _Default Peds.dat
+│   │       │   └── 📄 _Default Vehicles.dat
+│   │       ├── 📁 03-_Props
+│   │       │   ├── 📄 basket_berries.dff
+│   │       │   ├── 📄 basket_walnuts.dff
+│   │       │   ├── 📄 briquettesBag1.dff
+│   │       │   ├── 📄 broom1.dff
+│   │       │   ├── 📄 fruit_basket.dff
+│   │       │   ├── 📄 hammer1.dff
+│   │       │   ├── 📄 magazine1.dff
+│   │       │   ├── 📄 newspaper1.dff
+│   │       │   ├── 📄 payphone.dff
+│   │       │   ├── 📄 urb_backpack_1.dff
+│   │       │   ├── 📄 urb_backpack_1a.txd
+│   │       │   ├── 📄 urb_backpack_1b.txd
+│   │       │   ├── 📄 urb_cooler_box_1.dff
+│   │       │   ├── 📄 urb_cooler_box_1a.txd
+│   │       │   ├── 📄 urb_cooler_box_1b.txd
+│   │       │   ├── 📄 urb_cooler_box_1c.txd
+│   │       │   ├── 📄 urb_stool_1.dff
+│   │       │   ├── 📄 urb_stool_1a.txd
+│   │       │   ├── 📄 urb_stool_1b.txd
+│   │       │   ├── 📄 urb_umbrella_1.dff
+│   │       │   ├── 📄 urb_umbrella_1a.txd
+│   │       │   ├── 📄 urb_umbrella_1b.txd
+│   │       │   ├── 📄 urb_umbrella_1c.txd
+│   │       │   ├── 📄 urb_umbrella_1d.txd
+│   │       │   ├── 📄 urb_umbrella_1e.txd
+│   │       │   ├── 📄 Urbanize.txd
+│   │       │   └── 📄 watering_can.dff
+│   │       ├── 📁 04-CS
+│   │       │   ├── 📄 APBAI.cs
+│   │       │   ├── 📄 APHSP.cs
+│   │       │   ├── 📄 APNGS.cs
+│   │       │   ├── 📄 APPDP.cs
+│   │       │   ├── 📄 APTRP.cs
+│   │       │   ├── 📄 BAR69.cs
+│   │       │   ├── 📄 BCNHL.cs
+│   │       │   ├── 📄 BOBBK.cs
+│   │       │   ├── 📄 CSTLS.cs
+│   │       │   ├── 📄 DLBAR.cs
+│   │       │   ├── 📄 DLPDP.cs
+│   │       │   ├── 📄 EBFRM.cs
+│   │       │   ├── 📄 EBTRP.cs
+│   │       │   ├── 📄 FLBEC.cs
+│   │       │   ├── 📄 FLEI1.cs
+│   │       │   ├── 📄 FLNFN.cs
+│   │       │   ├── 📄 FLNGS.cs
+│   │       │   ├── 📄 FLNR1.cs
+│   │       │   ├── 📄 FLNTR.cs
+│   │       │   ├── 📄 FLWHS.cs
+│   │       │   ├── 📄 HLTOP.cs
+│   │       │   ├── 📄 HLTPC.cs
+│   │       │   ├── 📄 MCHB1.cs
+│   │       │   ├── 📄 MCHTP.cs
+│   │       │   ├── 📄 MGHSP.cs
+│   │       │   ├── 📄 MGOGS.cs
+│   │       │   ├── 📄 PACEM.cs
+│   │       │   ├── 📄 PALO1.cs
+│   │       │   ├── 📄 PALOF.cs
+│   │       │   ├── 📄 PANO1.cs
+│   │       │   ├── 📄 PANO2.cs
+│   │       │   ├── 📄 RCRST.cs
+│   │       │   ├── 📄 TFARM.cs
+│   │       │   ├── 📄 TFARM_Mission.cm
+│   │       │   └── 📄 WHTGS.cs
+│   │       ├── 📁 05-DE
+│   │       │   ├── 📄 ARA69.cs
+│   │       │   ├── 📄 ARA69_Mission.cm
+│   │       │   ├── 📄 BAYS1.cs
+│   │       │   ├── 📄 BAYS2.cs
+│   │       │   ├── 📄 BAYSS.cs
+│   │       │   ├── 📄 BAYV1.cs
+│   │       │   ├── 📄 BCRHT.cs
+│   │       │   ├── 📄 BGEAR.cs
+│   │       │   ├── 📄 DEAMM.cs
+│   │       │   ├── 📄 DEDNT.cs
+│   │       │   ├── 📄 EQBGS.cs
+│   │       │   ├── 📄 EQHSP.cs
+│   │       │   ├── 📄 EQNOR.cs
+│   │       │   ├── 📄 EQPDP.cs
+│   │       │   ├── 📄 FCHSP.cs
+│   │       │   ├── 📄 FCPDP.cs
+│   │       │   ├── 📄 FORT1.cs
+│   │       │   ├── 📄 FTCF1.cs
+│   │       │   ├── 📄 FTCF2.cs
+│   │       │   ├── 📄 GCRST.cs
+│   │       │   ├── 📄 LPBAR.cs
+│   │       │   ├── 📄 LPTRP.cs
+│   │       │   ├── 📄 OILF1.cs
+│   │       │   ├── 📄 OILF2.cs
+│   │       │   ├── 📄 OILF3.cs
+│   │       │   ├── 📄 PAYA1.cs
+│   │       │   ├── 📄 TIRHS.cs
+│   │       │   └── 📄 VORCH.cs
+│   │       ├── 📁 06-IN
+│   │       │   ├── 📄 IALHA.cs
+│   │       │   ├── 📄 IFOOD.cs
+│   │       │   ├── 📄 IGANB.cs
+│   │       │   ├── 📄 ISFSC.cs
+│   │       │   └── 📄 ISWEP.cs
+│   │       ├── 📁 07-LS
+│   │       │   ├── 📄 AIRPL.cs
+│   │       │   ├── 📄 AIRPP.cs
+│   │       │   ├── 📄 ALHAM.cs
+│   │       │   ├── 📄 BEGGN.cs
+│   │       │   ├── 📄 BEGWF.cs
+│   │       │   ├── 📄 DCTBL.cs
+│   │       │   ├── 📄 ELBAR.cs
+│   │       │   ├── 📄 ELCOR.cs
+│   │       │   ├── 📄 GANT1.cs
+│   │       │   ├── 📄 GLNPN.cs
+│   │       │   ├── 📄 GLNPS.cs
+│   │       │   ├── 📄 GNBAR.cs
+│   │       │   ├── 📄 GNBK1.cs
+│   │       │   ├── 📄 GROVE.cs
+│   │       │   ├── 📄 GYMSM.cs
+│   │       │   ├── 📄 HOBOS.cs
+│   │       │   ├── 📄 IDLGS.cs
+│   │       │   ├── 📄 LASC1.cs
+│   │       │   ├── 📄 LSCEM.cs
+│   │       │   ├── 📄 LSCT1.cs
+│   │       │   ├── 📄 LSDNT.cs
+│   │       │   ├── 📄 LSFST.cs
+│   │       │   ├── 📄 LSHS2.cs
+│   │       │   ├── 📄 LSHSP.cs
+│   │       │   ├── 📄 LSOBS.cs
+│   │       │   ├── 📄 LSPDP.cs
+│   │       │   ├── 📄 PERSH.cs
+│   │       │   ├── 📄 PORT1.cs
+│   │       │   ├── 📄 PORT2.cs
+│   │       │   ├── 📄 PORT3.cs
+│   │       │   ├── 📄 PORT4.cs
+│   │       │   ├── 📄 PORT5.cs
+│   │       │   ├── 📄 PORT6.cs
+│   │       │   ├── 📄 PORT7.cs
+│   │       │   ├── 📄 PORT8.cs
+│   │       │   ├── 📄 RAMDB.cs
+│   │       │   ├── 📄 ROBOI.cs
+│   │       │   ├── 📄 SMBCE.cs
+│   │       │   ├── 📄 SMBCW.cs
+│   │       │   ├── 📄 SMPR1.cs
+│   │       │   ├── 📄 SMPR2.cs
+│   │       │   ├── 📄 SMVND.cs
+│   │       │   └── 📄 VERST.cs
+│   │       ├── 📁 08-LV
+│   │       │   ├── 📄 AIRPV.cs
+│   │       │   ├── 📄 BLKFC.cs
+│   │       │   ├── 📄 KACC1.cs
+│   │       │   ├── 📄 LVCT1.cs
+│   │       │   ├── 📄 LVCT2.cs
+│   │       │   ├── 📄 LVFST.cs
+│   │       │   ├── 📄 LVHSP.cs
+│   │       │   ├── 📄 LVPDP.cs
+│   │       │   ├── 📄 LVSCH.cs
+│   │       │   ├── 📄 PIMPF.cs
+│   │       │   ├── 📄 PMDLV.cs
+│   │       │   ├── 📄 RANPI.cs
+│   │       │   ├── 📄 ROCAE.cs
+│   │       │   ├── 📄 ROKPI.cs
+│   │       │   ├── 📄 TPSWA.cs
+│   │       │   ├── 📄 VISAG.cs
+│   │       │   └── 📄 VROCK.cs
+│   │       ├── 📁 09-NODE
+│   │       │   ├── 📄 CHAT1.cs
+│   │       │   └── 📄 SWEEP.cs
+│   │       ├── 📁 10-OBJ
+│   │       │   ├── 📄 BENCH.cs
+│   │       │   ├── 📄 BUYFD.cs
+│   │       │   ├── 📄 LOUG1.cs
+│   │       │   ├── 📄 PHONE.cs
+│   │       │   ├── 📄 STAL1.cs
+│   │       │   ├── 📄 TABL1.cs
+│   │       │   └── 📄 TELSC.cs
+│   │       ├── 📁 11-PED
+│   │       │   ├── 📄 BEGA1.cs
+│   │       │   ├── 📄 LEAN1.cs
+│   │       │   └── 📄 UMBRL.cs
+│   │       ├── 📁 12-SA
+│   │       │   ├── 📄 AIRPL.cs
+│   │       │   ├── 📄 APCRW.cs
+│   │       │   ├── 📄 BALCO.cs
+│   │       │   ├── 📄 BASKT.cs
+│   │       │   ├── 📄 BCHPT.cs
+│   │       │   ├── 📄 BCHPT_Mission.cm
+│   │       │   ├── 📄 BDANC.cs
+│   │       │   ├── 📄 BEACH.cs
+│   │       │   ├── 📄 BEGGN.cs
+│   │       │   ├── 📄 CAREP.cs
+│   │       │   ├── 📄 CHFFR.cs
+│   │       │   ├── 📄 DPGRG.cs
+│   │       │   ├── 📄 GANGM.cs
+│   │       │   ├── 📄 GASST.cs
+│   │       │   ├── 📄 GRPMT.cs
+│   │       │   ├── 📄 GUARD.cs
+│   │       │   ├── 📄 HELIS.cs
+│   │       │   ├── 📄 HUNTR.cs
+│   │       │   ├── 📄 OFFRD.cs
+│   │       │   ├── 📄 PATRL.cs
+│   │       │   ├── 📄 QUEU1.cs
+│   │       │   ├── 📄 RTAXI.cs
+│   │       │   ├── 📄 SWEEL.cs
+│   │       │   └── 📄 VUNLD.cs
+│   │       ├── 📁 13-SF
+│   │       │   ├── 📄 AIRPS.cs
+│   │       │   ├── 📄 GARC1.cs
+│   │       │   ├── 📄 ISL69.cs
+│   │       │   ├── 📄 MISHL.cs
+│   │       │   ├── 📄 OCENP.cs
+│   │       │   ├── 📄 OCFTP.cs
+│   │       │   ├── 📄 PIE69.cs
+│   │       │   ├── 📄 SFCHR.cs
+│   │       │   ├── 📄 SFCT1.cs
+│   │       │   ├── 📄 SFDPL.cs
+│   │       │   ├── 📄 SFFST.cs
+│   │       │   ├── 📄 SFHSP.cs
+│   │       │   ├── 📄 SFMKT.cs
+│   │       │   ├── 📄 SFPDP.cs
+│   │       │   └── 📄 SFTRS.cs
+│   │       ├── 📄 Support me on Patreon.url
+│   │       ├── 📄 Urbanize (lastest version) - MixMods.url
+│   │       ├── 📄 Urbanize - Root.cs
+│   │       ├── 📄 Urbanize.dat
+│   │       └── 📄 Urbanize.ini
+│   ├── 📁 04-modloader
+│   │   └── 📁 Urbanize
+│   │       ├── 📁 01-gta3img
+│   │       │   └── 📄 djjr_urbanize.ifp
+│   │       ├── 📁 02-Map
+│   │       │   ├── 📄 Loader.txt
+│   │       │   ├── 📄 Urbanize - AirConds.ipl
+│   │       │   ├── 📄 Urbanize - Benches.ipl
+│   │       │   ├── 📄 Urbanize - Bins.ipl
+│   │       │   ├── 📄 Urbanize - Boxes.ipl
+│   │       │   ├── 📄 Urbanize - Chairs.ipl
+│   │       │   ├── 📄 Urbanize - Fences.ipl
+│   │       │   ├── 📄 Urbanize - Garbage.ipl
+│   │       │   ├── 📄 Urbanize - Lights.ipl
+│   │       │   ├── 📄 Urbanize - Mails.ipl
+│   │       │   ├── 📄 Urbanize - Roofs.ipl
+│   │       │   ├── 📄 Urbanize - Street Side.ipl
+│   │       │   ├── 📄 Urbanize - Vases.ipl
+│   │       │   └── 📄 Urbanize.ipl
+│   │       ├── 📄 Urbanize (Junior_Djjr).asi
+│   │       ├── 📄 Urbanize (lastest version) - MixMods.url
+│   │       └── 📄 Urbanize (lastest version) - Patreon.url
+│   ├── 📄 Leiame (ou morra).txt
+│   ├── 📄 License.txt
+│   ├── 📄 Patreon.url
+│   └── 📄 Readme (or die).txt
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 80
+فایل‌ها: 1407

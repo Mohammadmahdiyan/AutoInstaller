@@ -1,0 +1,173 @@
+📁 Motorbikes
+
+├── 📁 01-apachi
+│   ├── 📁 Apachi
+│   │   ├── 📄 bikes.ifp
+│   │   ├── 📄 nrg500.dff
+│   │   ├── 📄 nrg500.txd
+│   │   └── 📄 sett.txt
+│   ├── 📄 gallery1.jpg
+│   └── 📄 gallery2.jpg
+├── 📁 02-BMW S1000RR
+│   ├── 📄 bf400.dff
+│   ├── 📄 bf400.txd
+│   ├── 📄 gallery1.jpg
+│   └── 📄 gallery2.jpg
+├── 📁 03-BurgerBike
+│   ├── 📄 Burger Bike [Random Cars V3 Previem].png
+│   ├── 📄 Burger1.jpg
+│   ├── 📄 Burger2.jpg
+│   ├── 📄 Burger3.jpg
+│   ├── 📄 Burger4.jpg
+│   ├── 📄 Burger5.jpg
+│   ├── 📄 Burger6.jpg
+│   ├── 📄 freeway.dff
+│   ├── 📄 freeway.txd
+│   └── 📄 Readme.txt
+├── 📁 04-Cow Bike
+│   ├── 📁 01-Cow Bike
+│   │   ├── 📄 nrg500.dff
+│   │   └── 📄 nrg500.txd
+│   ├── 📁 02-Screenshots
+│   │   ├── 📄 Screenshot 2.1.2021 17-17-45-475.jpg
+│   │   ├── 📄 Screenshot 2.1.2021 17-17-51-177.jpg
+│   │   ├── 📄 Screenshot 2.1.2021 17-17-58-407.jpg
+│   │   ├── 📄 Screenshot 2.1.2021 17-18-03-331.jpg
+│   │   ├── 📄 Screenshot 2.1.2021 17-18-08-388.jpg
+│   │   ├── 📄 Screenshot 2.1.2021 17-18-13-362.jpg
+│   │   ├── 📄 Screenshot 2.1.2021 17-18-18-898.jpg
+│   │   └── 📄 Screenshot 2.1.2021 17-18-30-735.jpg
+│   ├── 📄 config.json
+│   └── 📄 Readme.txt
+├── 📁 05-Cucumber-v1
+│   ├── 📄 freeway.dff
+│   ├── 📄 freeway.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   └── 📄 oguranim.ifp
+├── 📁 06-halazone
+│   ├── 📄 faggio.dff
+│   ├── 📄 faggio.txd
+│   ├── 📄 gallery6.jpg
+│   └── 📄 gallery7.jpg
+├── 📁 07-Honda 125 Iight
+│   ├── 📄 Honda 125 Irani(zargame.ir).jpg
+│   ├── 📄 pcj600.dff
+│   └── 📄 pcj600.txd
+├── 📁 08-Honda CB 1300cc Special
+│   ├── 📁 01-Honda CB 1300cc
+│   │   ├── 📄 fcr900.dff
+│   │   └── 📄 fcr900.txd
+│   └── 📁 02-Screenshot
+│       ├── 📄 1 cb.bmp
+│       ├── 📄 2 cb.bmp
+│       ├── 📄 3 cb.bmp
+│       ├── 📄 gallery1.jpg
+│       └── 📄 gallery2.jpg
+├── 📁 09-Honda CB1300
+│   ├── 📄 fcr900.dff
+│   ├── 📄 fcr900.txd
+│   ├── 📄 gallery1.jpg
+│   └── 📄 gallery2.jpg
+├── 📁 10-HONDA CBR 1000RR FIREBLADE SP
+│   ├── 📁 01-IFP
+│   │   └── 📄 bikes.ifp
+│   ├── 📁 02-TEXTURES
+│   │   └── 📄 template.png
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 sett.txt
+│   ├── 📄 wayfarer.dff
+│   └── 📄 wayfarer.txd
+├── 📁 11-Honda CG125
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 pcj600.dff
+│   └── 📄 pcj600.txd
+├── 📁 12-honda-cbx400f
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 nrg500.dff
+│   └── 📄 nrg500.txd
+├── 📁 13-honda-cg-125-classic
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 pcj600.dff
+│   ├── 📄 pcj600.txd
+│   └── 📄 readme.txt
+├── 📁 14-honda-cg-125-pcj600
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 pcj600.dff
+│   └── 📄 pcj600.txd
+├── 📁 15-honda-cg-125-wayfarer
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 wayfarer.dff
+│   └── 📄 wayfarer.txd
+├── 📁 16-kawasaki-ninja
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 nrg500.dff
+│   └── 📄 nrg500.txd
+├── 📁 17-KTM
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 sanchez.dff
+│   └── 📄 sanchez.txd
+├── 📁 18-oneCharkh
+│   ├── 📁 01-one charkh
+│   │   ├── 📄 bmx.dff
+│   │   └── 📄 bmx.txd
+│   ├── 📁 02-Preview stuff
+│   │   ├── 📄 talk.jpg
+│   │   └── 📄 unicycle.jpg
+│   ├── 📄 1.jpg
+│   ├── 📄 2.jpg
+│   ├── 📄 gallery527.jpg
+│   ├── 📄 gallery8.jpg
+│   ├── 📄 gallery9.jpg
+│   ├── 📄 LibertyCity.Ru.url
+│   └── 📄 Unicycle Install Readme.txt
+├── 📁 19-Pack HONDA 125
+│   ├── 📄 bf400.dff
+│   ├── 📄 bf400.txd
+│   ├── 📄 fcr900.dff
+│   ├── 📄 fcr900.txd
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.png
+│   ├── 📄 nrg500.dff
+│   ├── 📄 nrg500.txd
+│   ├── 📄 pcj600.dff
+│   ├── 📄 pcj600.txd
+│   ├── 📄 wayfarer.dff
+│   └── 📄 wayfarer.txd
+├── 📁 20-Shopping Car
+│   ├── 📄 nrg500.dff
+│   ├── 📄 nrg500.txd
+│   └── 📄 screen copy.png
+├── 📁 21-T-Rex Bike
+│   ├── 📁 01-Screenshots
+│   │   ├── 📄 Screenshot 13.1.2021 19-08-36-628.jpg
+│   │   ├── 📄 Screenshot 13.1.2021 19-08-44-718.jpg
+│   │   ├── 📄 Screenshot 13.1.2021 19-08-54-35.jpg
+│   │   ├── 📄 Screenshot 13.1.2021 19-09-05-490.jpg
+│   │   ├── 📄 Screenshot 13.1.2021 19-09-11-476.jpg
+│   │   └── 📄 Screenshot 13.1.2021 19-09-16-351.jpg
+│   ├── 📁 02-T-REX bike
+│   │   ├── 📄 bf400.dff
+│   │   └── 📄 bf400.txd
+│   └── 📄 Read me.txt
+├── 📁 22-WC
+│   ├── 📄 bf400.dff
+│   ├── 📄 bf400.txd
+│   ├── 📄 gallery4.jpg
+│   └── 📄 gallery5.jpg
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 33
+فایل‌ها: 134

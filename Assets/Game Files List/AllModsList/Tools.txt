@@ -1,0 +1,468 @@
+📁 Tools
+
+├── 📁 01-(.cfg) Editor
+│   ├── 📄 Readme-20.05.2019.txt
+│   ├── 📄 read¼Ñ¡n.txt
+│   └── 📄 screen.jpg
+├── 📁 02-(.dat) Editor
+│   ├── 📄 Readme-20.01.2020.txt
+│   ├── 📄 readme_ucce1.0_ENG.txt
+│   └── 📄 readme_ucce1.0_RUS.txt
+├── 📁 03-(.dff) Viewer
+│   ├── 📄 _gta.cz_readme.txt
+│   └── 📄 d3dx9_25.dll
+├── 📁 04-(.gxt) Editor
+│   └── 📄 ReadMe.txt
+├── 📁 05-(.txd and .img) Editor
+│   ├── 📄 GTAINTERFACE.dll
+│   ├── 📄 libsquish.dll
+│   ├── 📄 Readme-20.05.2019.txt
+│   └── 📄 README.TXT
+├── 📁 06-GGMM
+│   ├── 📄 GGMM.txt
+│   └── 📄 GTAINTERFACE.dll
+├── 📁 07-Map editor
+│   ├── 📄 bookmarks.ini
+│   ├── 📄 mingwm10.dll
+│   └── 📄 readme.txt
+├── 📁 08-MEd v0.32 Beta
+│   ├── 📄 msvcp71.dll
+│   ├── 📄 msvcr71.dll
+│   └── 📄 readme.txt
+├── 📁 09-Pack editor
+│   ├── 📁 SA Tools Pack
+│   │   ├── 📁 01-3D Ripper DX 1.8.1
+│   │   │   ├── 📁 01-DOC
+│   │   │   │   ├── 📁 Images
+│   │   │   │   │   ├── 📄 3dr1.jpg
+│   │   │   │   │   ├── 📄 3dr10.jpg
+│   │   │   │   │   ├── 📄 3dr11.jpg
+│   │   │   │   │   ├── 📄 3dr2.jpg
+│   │   │   │   │   ├── 📄 3dr3.jpg
+│   │   │   │   │   ├── 📄 3dr4.jpg
+│   │   │   │   │   ├── 📄 3dr5.jpg
+│   │   │   │   │   ├── 📄 3dr6.jpg
+│   │   │   │   │   ├── 📄 3dr7.jpg
+│   │   │   │   │   ├── 📄 3dr8.jpg
+│   │   │   │   │   └── 📄 3dr9.jpg
+│   │   │   │   ├── 📄 fixes.txt
+│   │   │   │   └── 📄 license.txt
+│   │   │   ├── 📁 02-SRC
+│   │   │   │   └── 📄 VCache.h
+│   │   │   ├── 📄 3DRipperDX.url
+│   │   │   ├── 📄 detoured.dll
+│   │   │   ├── 📄 injector.dll
+│   │   │   ├── 📄 kn3drip.dll
+│   │   │   └── 📄 proxy.dll
+│   │   ├── 📁 02-Alcis Img Editor v1.5
+│   │   │   ├── 📄 mingwm10.dll
+│   │   │   ├── 📄 QtCore4.dll
+│   │   │   ├── 📄 QtGui4.dll
+│   │   │   └── 📄 settings.ini
+│   │   ├── 📁 03-CarSpawner 1.0
+│   │   │   └── 📄 ReadMe.txt
+│   │   ├── 📁 04-CLEO4 (v4.1.1.30f)
+│   │   │   ├── 📁 CLEO
+│   │   │   │   ├── 📄 FileSystemOperations.cleo
+│   │   │   │   ├── 📄 IniFiles.cleo
+│   │   │   │   └── 📄 IntOperations.cleo
+│   │   │   ├── 📄 bass.dll
+│   │   │   ├── 📄 CLEO.asi
+│   │   │   ├── 📄 vorbisFile.dll
+│   │   │   └── 📄 vorbisHooked.dll
+│   │   ├── 📁 05-Collision File Editor II 0.4b
+│   │   │   ├── 📄 materials.ini
+│   │   │   └── 📄 ReadMe.txt
+│   │   ├── 📁 06-G-TXD
+│   │   │   ├── 📁 01-base
+│   │   │   │   ├── 📁 01-clouds
+│   │   │   │   │   ├── 📄 cloud1.bmp
+│   │   │   │   │   ├── 📄 cloud2.bmp
+│   │   │   │   │   ├── 📄 cloud3.bmp
+│   │   │   │   │   ├── 📄 cloudmaskedm.bmp
+│   │   │   │   │   ├── 📄 corona.bmp
+│   │   │   │   │   ├── 📄 coronastar.bmp
+│   │   │   │   │   ├── 📄 moon.bmp
+│   │   │   │   │   └── 📄 moona.bmp
+│   │   │   │   ├── 📁 02-grids
+│   │   │   │   │   ├── 📄 grid_01.dat
+│   │   │   │   │   └── 📄 grid_01_pos.dat
+│   │   │   │   ├── 📁 03-legal
+│   │   │   │   │   └── 📄 G-TXD.txt
+│   │   │   │   └── 📄 sky_dome.dff
+│   │   │   ├── 📁 02-downloads
+│   │   │   │   └── 📄 log.txt
+│   │   │   ├── 📁 03-gui
+│   │   │   │   ├── 📁 ns
+│   │   │   │   │   ├── 📄 check_16x16.png
+│   │   │   │   │   └── 📄 delete2_16x16.png
+│   │   │   │   ├── 📄 3steptxd_icon_16x16.png
+│   │   │   │   ├── 📄 about_16x16.png
+│   │   │   │   ├── 📄 add_16x16.png
+│   │   │   │   ├── 📄 add_alpha_16x16.png
+│   │   │   │   ├── 📄 alpha_16x16.png
+│   │   │   │   ├── 📄 amber-button_16x16.png
+│   │   │   │   ├── 📄 blue-button_16x16.png
+│   │   │   │   ├── 📄 blue_arrow_up_16x16.png
+│   │   │   │   ├── 📄 bullet_triangle_blue.png
+│   │   │   │   ├── 📄 cancel_16x16.png
+│   │   │   │   ├── 📄 check_16x16.png
+│   │   │   │   ├── 📄 clipboard_16x16.png
+│   │   │   │   ├── 📄 close_16x16.png
+│   │   │   │   ├── 📄 colors_16x16.png
+│   │   │   │   ├── 📄 delete_16x16.png
+│   │   │   │   ├── 📄 display_16x16.png
+│   │   │   │   ├── 📄 down_arrow_16x16.png
+│   │   │   │   ├── 📄 duplicate_16x16.png
+│   │   │   │   ├── 📄 edit_name_16x16.png
+│   │   │   │   ├── 📄 enable_edit_16x16.png
+│   │   │   │   ├── 📄 exit_16x16.png
+│   │   │   │   ├── 📄 export2_16x16.png
+│   │   │   │   ├── 📄 export_16x16.png
+│   │   │   │   ├── 📄 export_all_16x16.png
+│   │   │   │   ├── 📄 feedback_16x16.png
+│   │   │   │   ├── 📄 file_info_16x16.png
+│   │   │   │   ├── 📄 files_search_16x16.png
+│   │   │   │   ├── 📄 find_16x16.png
+│   │   │   │   ├── 📄 flag_blue_16x16.png
+│   │   │   │   ├── 📄 flag_red_16x16.png
+│   │   │   │   ├── 📄 flash_16x16.png
+│   │   │   │   ├── 📄 flash_dis_16x16.png
+│   │   │   │   ├── 📄 folder_add_16x16.png
+│   │   │   │   ├── 📄 form_16x16.png
+│   │   │   │   ├── 📄 gray-button_16x16.png
+│   │   │   │   ├── 📄 green-button_16x16.png
+│   │   │   │   ├── 📄 green_arrow_left_16x16.png
+│   │   │   │   ├── 📄 harvest_16x16.png
+│   │   │   │   ├── 📄 help_16x16.png
+│   │   │   │   ├── 📄 img_splash.jpg
+│   │   │   │   ├── 📄 language_16x16.png
+│   │   │   │   ├── 📄 left_right_16x16.png
+│   │   │   │   ├── 📄 logo.png
+│   │   │   │   ├── 📄 logo_old.png
+│   │   │   │   ├── 📄 mint-button_16x16.png
+│   │   │   │   ├── 📄 mipmaps_16x16.png
+│   │   │   │   ├── 📄 move_16x16.png
+│   │   │   │   ├── 📄 new_16x16.png
+│   │   │   │   ├── 📄 pill_16x16.png
+│   │   │   │   ├── 📄 preview_16x16.png
+│   │   │   │   ├── 📄 purple-button_16x16.png
+│   │   │   │   ├── 📄 rebuild_16x16.png
+│   │   │   │   ├── 📄 red-button_16x16.png
+│   │   │   │   ├── 📄 replace_16x16.png
+│   │   │   │   ├── 📄 report_16x16.png
+│   │   │   │   ├── 📄 save_16x16.png
+│   │   │   │   ├── 📄 save_all_16x16.png
+│   │   │   │   ├── 📄 save_as_16x16.png
+│   │   │   │   ├── 📄 save_none_16x16.png
+│   │   │   │   ├── 📄 sort_16x16.png
+│   │   │   │   ├── 📄 stopwatch_16x16.png
+│   │   │   │   ├── 📄 swap_16x16.png
+│   │   │   │   ├── 📄 templates_16x16.png
+│   │   │   │   ├── 📄 texture_16x16.png
+│   │   │   │   ├── 📄 texture_alpha_16x16.png
+│   │   │   │   ├── 📄 tools_16x16.png
+│   │   │   │   ├── 📄 txd_logo.png
+│   │   │   │   ├── 📄 txd_splash.jpg
+│   │   │   │   ├── 📄 txdbuilder_16x16.png
+│   │   │   │   ├── 📄 up_arrow_16x16.png
+│   │   │   │   ├── 📄 up_down_16x16.png
+│   │   │   │   ├── 📄 update_16x16.png
+│   │   │   │   ├── 📄 view_16x16.png
+│   │   │   │   ├── 📄 view_alpha.png
+│   │   │   │   ├── 📄 view_normal.png
+│   │   │   │   ├── 📄 view_texture.png
+│   │   │   │   └── 📄 yellow-button_16x16.png
+│   │   │   ├── 📁 04-language
+│   │   │   │   └── 📁 icons
+│   │   │   │       ├── 📄 english.png
+│   │   │   │       ├── 📄 french.png
+│   │   │   │       ├── 📄 german.png
+│   │   │   │       ├── 📄 russian.png
+│   │   │   │       └── 📄 spanish.png
+│   │   │   ├── 📄 !!READTHIS!!.txt
+│   │   │   ├── 📄 CommonTools.dll
+│   │   │   ├── 📄 DFF.dll
+│   │   │   ├── 📄 DotNetMagic2005.dll
+│   │   │   ├── 📄 Texture List Exporter.rar
+│   │   │   └── 📄 TXD.dll
+│   │   ├── 📁 07-Game Archive Viewer v5.0
+│   │   │   ├── 📁 lang
+│   │   │   │   ├── 📄 eng.bmp
+│   │   │   │   ├── 📄 languages.txt
+│   │   │   │   └── 📄 rus.bmp
+│   │   │   ├── 📄 actdata.dat
+│   │   │   ├── 📄 options.ini
+│   │   │   ├── 📄 readme_eng.txt
+│   │   │   └── 📄 readme_rus.txt
+│   │   ├── 📁 08-GFS 1.1
+│   │   │   ├── 📄 MANUAL.txt
+│   │   │   ├── 📄 metadata-full.ini
+│   │   │   └── 📄 metadata-generic.ini
+│   │   ├── 📁 09-GTA Garage Mod Manager 2.3C
+│   │   │   ├── 📄 GGMM.txt
+│   │   │   ├── 📄 GTAINTERFACE.dll
+│   │   │   └── 📄 ReadMe_RU.txt
+│   │   ├── 📁 10-GTA-SA Crazy IMG Editor 1.0 Final
+│   │   │   └── 📄 GTA-SA_Crazy_IMG_Editor_settings.ini
+│   │   ├── 📁 11-MEd v0.32 Beta
+│   │   │   ├── 📄 MEd.ini
+│   │   │   ├── 📄 msvcp71.dll
+│   │   │   ├── 📄 msvcr71.dll
+│   │   │   └── 📄 readme.txt
+│   │   ├── 📁 12-Non-standard DFF converter
+│   │   │   ├── 📁 source
+│   │   │   │   └── 📄 z2g_dffconverter.cpp
+│   │   │   ├── 📄 ReadMe_ENG.txt
+│   │   │   └── 📄 ReadMe_RU.txt
+│   │   ├── 📁 13-PedEditor 1.0 Ru
+│   │   │   ├── 📄 D3DX9.dll
+│   │   │   ├── 📄 ReadMe.txt
+│   │   │   └── 📄 ReadMe_RU.txt
+│   │   ├── 📁 14-RW Analyze 0.4 Beta
+│   │   │   ├── 📄 ReadMe.txt
+│   │   │   ├── 📄 RW_Secs.ini
+│   │   │   └── 📄 RWAnalyze.ini
+│   │   ├── 📁 15-SA Ammunation Tool
+│   │   │   ├── 📄 language.txt
+│   │   │   ├── 📄 readme_eng.txt
+│   │   │   ├── 📄 readme_hun.txt
+│   │   │   └── 📄 readme_ita.txt
+│   │   ├── 📁 16-SA Handling ED 1.0
+│   │   │   └── 📄 language.ini
+│   │   ├── 📁 17-SA Map Cleaner 0.5 RC1
+│   │   │   ├── 📁 extras
+│   │   │   │   ├── 📄 emptypaths.zip
+│   │   │   │   ├── 📄 main.scm
+│   │   │   │   ├── 📄 main.txt
+│   │   │   │   ├── 📄 testmap.zip
+│   │   │   │   └── 📄 water.dat
+│   │   │   └── 📄 ReadMe.txt
+│   │   ├── 📁 18-San Andreas Audio Toolkit Visual
+│   │   │   ├── 📁 01-copy
+│   │   │   │   └── 📁 TK
+│   │   │   │       └── 📄 stream_import.ini
+│   │   │   ├── 📁 02-saat
+│   │   │   │   ├── 📄 CHANGES.txt
+│   │   │   │   ├── 📄 COPYING.txt
+│   │   │   │   ├── 📄 MANUAL.txt
+│   │   │   │   ├── 📄 metadata-full.ini
+│   │   │   │   └── 📄 metadata-generic.ini
+│   │   │   └── 📄 saat.ini
+│   │   ├── 📁 19-San Andreas Teleport v 3.0 beta
+│   │   │   ├── 📄 height.jpg
+│   │   │   ├── 📄 map.jpg
+│   │   │   ├── 📄 options.ini
+│   │   │   └── 📄 places.ini
+│   │   ├── 📁 20-Sanny Builder 3
+│   │   │   ├── 📁 01-data
+│   │   │   │   ├── 📁 01-gta3
+│   │   │   │   │   ├── 📄 CustomVariables.ini
+│   │   │   │   │   ├── 📄 keywords.txt
+│   │   │   │   │   ├── 📄 opcodes.txt
+│   │   │   │   │   ├── 📄 SCM.INI
+│   │   │   │   │   └── 📄 stripped.txt
+│   │   │   │   ├── 📁 02-lcs
+│   │   │   │   │   ├── 📄 CustomLabels.ini
+│   │   │   │   │   ├── 📄 CustomVariables.ini
+│   │   │   │   │   ├── 📄 ENGLISH.GXT
+│   │   │   │   │   ├── 📄 LCSSCM.INI
+│   │   │   │   │   ├── 📄 models.ide
+│   │   │   │   │   └── 📄 opcodes.txt
+│   │   │   │   ├── 📁 03-sa
+│   │   │   │   │   ├── 📄 CustomArrays.ini
+│   │   │   │   │   ├── 📄 CustomLabels.ini
+│   │   │   │   │   ├── 📄 CustomLabels_v2.ini
+│   │   │   │   │   ├── 📄 CustomVariables.ini
+│   │   │   │   │   ├── 📄 keywords.txt
+│   │   │   │   │   ├── 📄 MB.ini
+│   │   │   │   │   ├── 📄 opcodes.txt
+│   │   │   │   │   ├── 📄 SASCM.INI
+│   │   │   │   │   └── 📄 stripped.txt
+│   │   │   │   ├── 📁 04-vc
+│   │   │   │   │   ├── 📄 CustomVariables.ini
+│   │   │   │   │   ├── 📄 keywords.txt
+│   │   │   │   │   ├── 📄 opcodes.txt
+│   │   │   │   │   ├── 📄 stripped.txt
+│   │   │   │   │   └── 📄 VICESCM.INI
+│   │   │   │   ├── 📁 05-vcs
+│   │   │   │   │   ├── 📄 CustomVariables.ini
+│   │   │   │   │   ├── 📄 ENGLISH.GXT
+│   │   │   │   │   ├── 📄 models.ide
+│   │   │   │   │   ├── 📄 opcodes.txt
+│   │   │   │   │   └── 📄 VCSSCM.INI
+│   │   │   │   ├── 📄 common.dll
+│   │   │   │   ├── 📄 compiler.ini
+│   │   │   │   ├── 📄 GetObjectID.dll
+│   │   │   │   ├── 📄 keywords.ini
+│   │   │   │   └── 📄 macroes.txt
+│   │   │   ├── 📁 02-help
+│   │   │   │   ├── 📁 01-examples
+│   │   │   │   │   ├── 📄 alloc.txt
+│   │   │   │   │   ├── 📄 example 01.txt
+│   │   │   │   │   ├── 📄 example 02.txt
+│   │   │   │   │   └── 📄 MemoryHandling.txt
+│   │   │   │   └── 📁 02-tutorials
+│   │   │   │       ├── 📄 dutch.tutorial II.url
+│   │   │   │       ├── 📄 dutch.tutorial.url
+│   │   │   │       ├── 📄 english.tutorial.part.I.url
+│   │   │   │       ├── 📄 english.tutorial.part.II.url
+│   │   │   │       ├── 📄 german.tutorial.II.url
+│   │   │   │       ├── 📄 german.tutorial.url
+│   │   │   │       ├── 📄 russian.I.rar.url
+│   │   │   │       └── 📄 russian.II.rar.url
+│   │   │   ├── 📁 03-lang
+│   │   │   │   ├── 📄 dutch.ini
+│   │   │   │   ├── 📄 english.ini
+│   │   │   │   ├── 📄 french.ini
+│   │   │   │   ├── 📄 german.ini
+│   │   │   │   ├── 📄 How to translate.txt
+│   │   │   │   ├── 📄 install.ini
+│   │   │   │   ├── 📄 install.txt
+│   │   │   │   ├── 📄 italian.ini
+│   │   │   │   ├── 📄 italian2.ini
+│   │   │   │   ├── 📄 polish.ini
+│   │   │   │   ├── 📄 portuguese.ini
+│   │   │   │   ├── 📄 russian.ini
+│   │   │   │   └── 📄 spanish.ini
+│   │   │   ├── 📁 04-tools
+│   │   │   │   ├── 📁 CLEO3
+│   │   │   │   │   ├── 📁 01-ASI_Loader
+│   │   │   │   │   │   ├── 📄 ReadMe.txt
+│   │   │   │   │   │   ├── 📄 vorbisFile.dll
+│   │   │   │   │   │   └── 📄 vorbishooked.dll
+│   │   │   │   │   ├── 📁 02-cleo_examples
+│   │   │   │   │   │   ├── 📄 CustomMission.cm
+│   │   │   │   │   │   ├── 📄 CustomMission.txt
+│   │   │   │   │   │   ├── 📄 otbhook.cs
+│   │   │   │   │   │   ├── 📄 otbhook.txt
+│   │   │   │   │   │   ├── 📄 respray.cs
+│   │   │   │   │   │   ├── 📄 showsavescreen.cs
+│   │   │   │   │   │   ├── 📄 showsavescreen.txt
+│   │   │   │   │   │   ├── 📄 ShowTextBox.txt
+│   │   │   │   │   │   ├── 📄 test_example.cs
+│   │   │   │   │   │   ├── 📄 test_example.txt
+│   │   │   │   │   │   ├── 📄 VCCam.cs
+│   │   │   │   │   │   └── 📄 VCCam.txt
+│   │   │   │   │   ├── 📁 03-plugins
+│   │   │   │   │   │   ├── 📁 01-gxthook
+│   │   │   │   │   │   │   ├── 📄 GxtHook.cleo
+│   │   │   │   │   │   │   └── 📄 GxtHook_README.txt
+│   │   │   │   │   │   ├── 📁 02-radio
+│   │   │   │   │   │   │   ├── 📄 radio.cleo
+│   │   │   │   │   │   │   ├── 📄 radio.ini
+│   │   │   │   │   │   │   ├── 📄 radio_mod_readme_en.txt
+│   │   │   │   │   │   │   └── 📄 radio_mod_readme_rus.txt
+│   │   │   │   │   │   └── 📁 03-scmlog
+│   │   │   │   │   │       ├── 📄 Readme.txt
+│   │   │   │   │   │       ├── 📄 scmlog.cleo
+│   │   │   │   │   │       └── 📄 scmlog.ini
+│   │   │   │   │   ├── 📄 cleo.asi
+│   │   │   │   │   ├── 📄 cleo_changes.txt
+│   │   │   │   │   ├── 📄 cleo_readme.txt
+│   │   │   │   │   ├── 📄 vorbisFile.dll
+│   │   │   │   │   └── 📄 vorbishooked.dll
+│   │   │   │   └── 📄 Add yours.txt
+│   │   │   └── 📄 SASCM.INI
+│   │   ├── 📁 21-TimecycSAfix
+│   │   │   ├── 📄 borlndmm.dll
+│   │   │   ├── 📄 Config.ini
+│   │   │   └── 📄 Lang.ini
+│   │   ├── 📁 22-TXD Workshop 4.5
+│   │   │   ├── 📄 DXT.DLL
+│   │   │   ├── 📄 GTAINTERFACE.dll
+│   │   │   ├── 📄 libsquish.dll
+│   │   │   ├── 📄 MWDDS.DLL
+│   │   │   └── 📄 README.TXT
+│   │   ├── 📄 SAToolsPack.txt
+│   │   └── 📄 Uninstall SA Tools Pack 2.0.ini
+│   └── 📄 ReadMe.txt
+├── 📁 10-PedEditor 1.0 Ru
+│   ├── 📄 D3DX9.dll
+│   ├── 📄 ReadMe.txt
+│   └── 📄 ReadMe_RU.txt
+├── 📁 11-Radio extractor
+│   ├── 📄 Readme-20.05.2019.txt
+│   ├── 📄 readme_eng.txt
+│   └── 📄 readme_rus.txt
+├── 📁 12-RW Analyze 0.4 Beta
+│   ├── 📄 ReadMe.txt
+│   ├── 📄 RW_Secs.ini
+│   └── 📄 RWAnalyze.ini
+├── 📁 13-rwanalyze_rus
+│   ├── 📄 ReadMe Eng.txt
+│   ├── 📄 ReadMe RUS.txt
+│   ├── 📄 RW_Secs.ini
+│   └── 📄 RWAnalyze.ini
+├── 📁 14-SA Ammunation Tool
+│   ├── 📄 language.txt
+│   ├── 📄 readme_eng.txt
+│   ├── 📄 readme_hun.txt
+│   └── 📄 readme_ita.txt
+├── 📁 15-SAAT
+│   ├── 📁 01-Alci's SAAT GUI FrontEnd 1.0
+│   │   ├── 📄 configuration.ini
+│   │   ├── 📄 fmodex.dll
+│   │   ├── 📄 metadata-full.ini
+│   │   ├── 📄 QtCore4.dll
+│   │   ├── 📄 QtGui4.dll
+│   │   ├── 📄 QtXml4.dll
+│   │   └── 📄 settings.ini
+│   ├── 📁 02-Alci_s_SAAT_GUI_FrontEnd_1.0(zargame.ir)
+│   │   ├── 📄 configuration.ini
+│   │   ├── 📄 fmodex.dll
+│   │   ├── 📄 fmodex_unpacked.dll
+│   │   ├── 📄 Info.ini
+│   │   ├── 📄 metadata-full.ini
+│   │   ├── 📄 QtCore4.dll
+│   │   ├── 📄 QtGui4.dll
+│   │   ├── 📄 QtXml4.dll
+│   │   └── 📄 settings.ini
+│   ├── 📁 03-Fix Save SAAT
+│   │   └── 📄 configuration.ini
+│   ├── 📁 04-GTA-SA-Audio-Editor-main
+│   │   └── 📄 README.md
+│   ├── 📁 05-SAAT 1
+│   │   ├── 📄 configuration.ini
+│   │   ├── 📄 fmodex.dll
+│   │   ├── 📄 metadata-full.ini
+│   │   ├── 📄 QtCore4.dll
+│   │   ├── 📄 QtGui4.dll
+│   │   ├── 📄 QtXml4.dll
+│   │   └── 📄 settings.ini
+│   ├── 📁 06-SAAT 2
+│   │   ├── 📄 configuration.ini
+│   │   ├── 📄 fmodex.dll
+│   │   ├── 📄 metadata-full.ini
+│   │   ├── 📄 QtCore4.dll
+│   │   ├── 📄 QtGui4.dll
+│   │   ├── 📄 QtXml4.dll
+│   │   ├── 📄 SAAT_Visual.exe.lnk
+│   │   └── 📄 settings.ini
+│   ├── 📁 07-Saat.100
+│   │   ├── 📁 01-Rus
+│   │   │   ├── 📁 Скрины
+│   │   │   │   ├── 📄 NoName1.jpg
+│   │   │   │   └── 📄 NoName2.jpg
+│   │   │   └── 📄 saat.ini
+│   │   ├── 📁 02-saat
+│   │   │   ├── 📄 CHANGES.txt
+│   │   │   ├── 📄 COPYING.txt
+│   │   │   ├── 📄 MANUAL.txt
+│   │   │   ├── 📄 metadata-full.ini
+│   │   │   ├── 📄 metadata-generic.ini
+│   │   │   └── 📄 README.txt
+│   │   ├── 📄 saat.ini
+│   │   ├── 📄 Русификация.txt
+│   │   └── 📄 Текстовый документ.txt
+│   └── 📁 08-Streams Editor
+│       ├── 📄 Expressions.txt
+│       ├── 📄 Help.txt
+│       ├── 📄 ReadMe.txt
+│       └── 📄 Stream Editor.exe.manifest
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 86
+فایل‌ها: 376

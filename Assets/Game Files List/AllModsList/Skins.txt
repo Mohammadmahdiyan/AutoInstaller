@@ -1,0 +1,616 @@
+📁 Skins
+
+├── 📁 01-actor-arnold
+│   ├── 📁 Arnold
+│   │   ├── 📄 sbfypro.dff
+│   │   ├── 📄 sbfypro.txd
+│   │   ├── 📄 vbmyelv.dff
+│   │   └── 📄 vbmyelv.txd
+│   ├── 📄 sbfypro-1.png
+│   ├── 📄 sbfypro-2.png
+│   ├── 📄 vbmyelv-1.png
+│   └── 📄 vbmyelv-2.png
+├── 📁 02-actor-batman
+│   ├── 📁 batman
+│   │   ├── 📄 wfysex.dff
+│   │   └── 📄 wfysex.txd
+│   ├── 📄 Screenshot (40).png
+│   └── 📄 Screenshot (41).png
+├── 📁 03-actor-deadpool
+│   ├── 📁 deadpool
+│   │   ├── 📄 wfyburg.dff
+│   │   └── 📄 wfyburg.txd
+│   ├── 📄 Screenshot (48).png
+│   └── 📄 Screenshot (49).png
+├── 📁 04-actor-Eazy e
+│   ├── 📁 Eazy e
+│   │   ├── 📄 hfyri.dff
+│   │   └── 📄 hfyri.txd
+│   ├── 📄 Screenshot (93).png
+│   └── 📄 Screenshot (94).png
+├── 📁 05-actor-ice cube
+│   ├── 📁 ice cube
+│   │   ├── 📄 hfori.dff
+│   │   └── 📄 hfori.txd
+│   ├── 📄 Screenshot (18).png
+│   └── 📄 Screenshot (19).png
+├── 📁 06-actor-John Wick
+│   ├── 📁 John Wick
+│   │   ├── 📄 cwfyfr1.dff
+│   │   └── 📄 cwfyfr1.txd
+│   ├── 📄 Screenshot (85).png
+│   └── 📄 Screenshot (86).png
+├── 📁 07-actor-joker
+│   ├── 📁 Joker
+│   │   ├── 📄 bfybu.dff
+│   │   └── 📄 bfybu.txd
+│   ├── 📄 Screenshot (10).png
+│   └── 📄 Screenshot (11).png
+├── 📁 08-actor-mr bean1
+│   ├── 📁 mr bean
+│   │   ├── 📄 dwfolc.dff
+│   │   └── 📄 dwfolc.txd
+│   ├── 📄 gta_sa 2009-11-18 14-53-40-59.jpg
+│   ├── 📄 Screenshot (134).png
+│   └── 📄 Screenshot (135).png
+├── 📁 09-actor-mr bean2
+│   ├── 📁 01-MrBeen-AllWomen
+│   │   ├── 📄 bfori.dff
+│   │   ├── 📄 bfori.txd
+│   │   ├── 📄 bfybe.dff
+│   │   ├── 📄 bfybe.txd
+│   │   ├── 📄 bfybu.dff
+│   │   ├── 📄 bfybu.txd
+│   │   ├── 📄 bfypro.dff
+│   │   ├── 📄 bfypro.txd
+│   │   ├── 📄 bfyri.dff
+│   │   ├── 📄 bfyri.txd
+│   │   ├── 📄 bfyst.dff
+│   │   ├── 📄 bfyst.txd
+│   │   ├── 📄 bmybe.dff
+│   │   ├── 📄 bmybe.txd
+│   │   ├── 📄 bmydj.dff
+│   │   ├── 📄 bmydj.txd
+│   │   ├── 📄 cat.dff
+│   │   ├── 📄 cat.txd
+│   │   ├── 📄 copgrl3.dff
+│   │   ├── 📄 copgrl3.txd
+│   │   ├── 📄 crogrl3.dff
+│   │   ├── 📄 crogrl3.txd
+│   │   ├── 📄 cwfohb.dff
+│   │   ├── 📄 cwfohb.txd
+│   │   ├── 📄 cwfyfr1.dff
+│   │   ├── 📄 cwfyfr1.txd
+│   │   ├── 📄 cwfyfr2.dff
+│   │   ├── 📄 cwfyfr2.txd
+│   │   ├── 📄 cwfyhb.dff
+│   │   ├── 📄 cwfyhb.txd
+│   │   ├── 📄 cwmyhb1.dff
+│   │   ├── 📄 cwmyhb1.txd
+│   │   ├── 📄 dnfolc2.dff
+│   │   ├── 📄 dnfolc2.txd
+│   │   ├── 📄 dnfylc.dff
+│   │   ├── 📄 dnfylc.txd
+│   │   ├── 📄 dwfolc.dff
+│   │   ├── 📄 dwfolc.txd
+│   │   ├── 📄 dwfylc1.dff
+│   │   ├── 📄 dwfylc1.txd
+│   │   ├── 📄 dwfylc2.dff
+│   │   ├── 📄 dwfylc2.txd
+│   │   ├── 📄 gangrl3.dff
+│   │   ├── 📄 gangrl3.txd
+│   │   ├── 📄 gungrl3.dff
+│   │   ├── 📄 gungrl3.txd
+│   │   ├── 📄 hfori.dff
+│   │   ├── 📄 hfori.txd
+│   │   ├── 📄 hfost.dff
+│   │   ├── 📄 hfost.txd
+│   │   ├── 📄 hfybe.dff
+│   │   ├── 📄 hfybe.txd
+│   │   ├── 📄 hfypro.dff
+│   │   ├── 📄 hfypro.txd
+│   │   ├── 📄 hfyri.dff
+│   │   ├── 📄 hfyri.txd
+│   │   ├── 📄 hfyst.dff
+│   │   ├── 📄 hfyst.txd
+│   │   ├── 📄 hmybe.dff
+│   │   ├── 📄 hmybe.txd
+│   │   ├── 📄 hmycm.dff
+│   │   ├── 📄 hmycm.txd
+│   │   ├── 📄 kendl.dff
+│   │   ├── 📄 kendl.txd
+│   │   ├── 📄 lsv1.dff
+│   │   ├── 📄 lsv1.txd
+│   │   ├── 📄 male01.dff
+│   │   ├── 📄 male01.txd
+│   │   ├── 📄 mecgrl3.dff
+│   │   ├── 📄 mecgrl3.txd
+│   │   ├── 📄 nurgrl3.dff
+│   │   ├── 📄 nurgrl3.txd
+│   │   ├── 📄 ofori.dff
+│   │   ├── 📄 ofori.txd
+│   │   ├── 📄 ofost.dff
+│   │   ├── 📄 ofost.txd
+│   │   ├── 📄 ofyri.dff
+│   │   ├── 📄 ofyri.txd
+│   │   ├── 📄 ofyst.dff
+│   │   ├── 📄 ofyst.txd
+│   │   ├── 📄 ogloc.dff
+│   │   ├── 📄 ogloc.txd
+│   │   ├── 📄 sbfori.dff
+│   │   ├── 📄 sbfori.txd
+│   │   ├── 📄 sbfost.dff
+│   │   ├── 📄 sbfost.txd
+│   │   ├── 📄 sbfypro.dff
+│   │   ├── 📄 sbfypro.txd
+│   │   ├── 📄 sbfyri.dff
+│   │   ├── 📄 sbfyri.txd
+│   │   ├── 📄 sbfyst.dff
+│   │   ├── 📄 sbfyst.txd
+│   │   ├── 📄 sbfystr.dff
+│   │   ├── 📄 sbfystr.txd
+│   │   ├── 📄 sfypro.dff
+│   │   ├── 📄 sfypro.txd
+│   │   ├── 📄 shfypro.dff
+│   │   ├── 📄 shfypro.txd
+│   │   ├── 📄 smyst.dff
+│   │   ├── 📄 smyst.txd
+│   │   ├── 📄 sofori.dff
+│   │   ├── 📄 sofori.txd
+│   │   ├── 📄 sofost.dff
+│   │   ├── 📄 sofost.txd
+│   │   ├── 📄 sofybu.dff
+│   │   ├── 📄 sofybu.txd
+│   │   ├── 📄 sofyri.dff
+│   │   ├── 📄 sofyri.txd
+│   │   ├── 📄 sofyst.dff
+│   │   ├── 📄 sofyst.txd
+│   │   ├── 📄 swfopro.dff
+│   │   ├── 📄 swfopro.txd
+│   │   ├── 📄 swfori.dff
+│   │   ├── 📄 swfori.txd
+│   │   ├── 📄 swfost.dff
+│   │   ├── 📄 swfost.txd
+│   │   ├── 📄 swfyri.dff
+│   │   ├── 📄 swfyri.txd
+│   │   ├── 📄 swfyst.dff
+│   │   ├── 📄 swfyst.txd
+│   │   ├── 📄 swfystr.dff
+│   │   ├── 📄 swfystr.txd
+│   │   ├── 📄 swmotr1.dff
+│   │   ├── 📄 swmotr1.txd
+│   │   ├── 📄 swmotr2.dff
+│   │   ├── 📄 swmotr2.txd
+│   │   ├── 📄 vbfycrp.dff
+│   │   ├── 📄 vbfycrp.txd
+│   │   ├── 📄 vbfypro.dff
+│   │   ├── 📄 vbfypro.txd
+│   │   ├── 📄 vbfyst2.dff
+│   │   ├── 📄 vbfyst2.txd
+│   │   ├── 📄 vbmybox.dff
+│   │   ├── 📄 vbmybox.txd
+│   │   ├── 📄 vbmyelv.dff
+│   │   ├── 📄 vbmyelv.txd
+│   │   ├── 📄 vhfypro.dff
+│   │   ├── 📄 vhfypro.txd
+│   │   ├── 📄 vhfyst3.dff
+│   │   ├── 📄 vhfyst3.txd
+│   │   ├── 📄 vhmyelv.dff
+│   │   ├── 📄 vhmyelv.txd
+│   │   ├── 📄 vimyelv.dff
+│   │   ├── 📄 vimyelv.txd
+│   │   ├── 📄 vwfycrp.dff
+│   │   ├── 📄 vwfycrp.txd
+│   │   ├── 📄 vwfypro.dff
+│   │   ├── 📄 vwfypro.txd
+│   │   ├── 📄 vwfyst1.dff
+│   │   ├── 📄 vwfyst1.txd
+│   │   ├── 📄 vwfywa2.dff
+│   │   ├── 📄 vwfywa2.txd
+│   │   ├── 📄 vwfywai.dff
+│   │   ├── 📄 vwfywai.txd
+│   │   ├── 📄 vwmotr2.dff
+│   │   ├── 📄 vwmotr2.txd
+│   │   ├── 📄 vwmybox.dff
+│   │   ├── 📄 vwmybox.txd
+│   │   ├── 📄 wfori.dff
+│   │   ├── 📄 wfori.txd
+│   │   ├── 📄 wfost.dff
+│   │   ├── 📄 wfost.txd
+│   │   ├── 📄 wfybe.dff
+│   │   ├── 📄 wfybe.txd
+│   │   ├── 📄 wfybu.dff
+│   │   ├── 📄 wfybu.txd
+│   │   ├── 📄 wfyburg.dff
+│   │   ├── 📄 wfyburg.txd
+│   │   ├── 📄 wfyclot.dff
+│   │   ├── 📄 wfyclot.txd
+│   │   ├── 📄 wfycrk.dff
+│   │   ├── 📄 wfycrk.txd
+│   │   ├── 📄 wfyjg.dff
+│   │   ├── 📄 wfyjg.txd
+│   │   ├── 📄 wfylg.dff
+│   │   ├── 📄 wfylg.txd
+│   │   ├── 📄 wfypro.dff
+│   │   ├── 📄 wfypro.txd
+│   │   ├── 📄 wfyri.dff
+│   │   ├── 📄 wfyri.txd
+│   │   ├── 📄 wfyro.dff
+│   │   ├── 📄 wfyro.txd
+│   │   ├── 📄 wfysex.dff
+│   │   ├── 📄 wfysex.txd
+│   │   ├── 📄 wfyst.dff
+│   │   ├── 📄 wfyst.txd
+│   │   ├── 📄 wfystew.dff
+│   │   ├── 📄 wfystew.txd
+│   │   ├── 📄 wmybe.dff
+│   │   ├── 📄 wmybe.txd
+│   │   ├── 📄 wmylg.dff
+│   │   ├── 📄 wmylg.txd
+│   │   ├── 📄 wmyva2.dff
+│   │   └── 📄 wmyva2.txd
+│   ├── 📁 02-MrBeen-BaghiMondeWomen
+│   │   ├── 📄 bfybe.dff
+│   │   ├── 📄 bfybe.txd
+│   │   ├── 📄 bmybe.dff
+│   │   ├── 📄 bmybe.txd
+│   │   ├── 📄 cwfyhb.dff
+│   │   ├── 📄 cwfyhb.txd
+│   │   ├── 📄 dnfolc2.dff
+│   │   ├── 📄 dnfolc2.txd
+│   │   ├── 📄 hfost.dff
+│   │   ├── 📄 hfost.txd
+│   │   ├── 📄 kendl.dff
+│   │   ├── 📄 kendl.txd
+│   │   ├── 📄 lsv1.dff
+│   │   ├── 📄 lsv1.txd
+│   │   ├── 📄 ofori.dff
+│   │   ├── 📄 ofori.txd
+│   │   ├── 📄 ofost.dff
+│   │   ├── 📄 ofost.txd
+│   │   ├── 📄 ogloc.dff
+│   │   ├── 📄 ogloc.txd
+│   │   ├── 📄 sbfost.dff
+│   │   ├── 📄 sbfost.txd
+│   │   ├── 📄 sbfyri.dff
+│   │   ├── 📄 sbfyri.txd
+│   │   ├── 📄 sbfyst.dff
+│   │   ├── 📄 sbfyst.txd
+│   │   ├── 📄 smyst.dff
+│   │   ├── 📄 smyst.txd
+│   │   ├── 📄 sofori.dff
+│   │   ├── 📄 sofori.txd
+│   │   ├── 📄 sofost.dff
+│   │   ├── 📄 sofost.txd
+│   │   ├── 📄 sofybu.dff
+│   │   ├── 📄 sofybu.txd
+│   │   ├── 📄 swfyst.dff
+│   │   ├── 📄 swfyst.txd
+│   │   ├── 📄 swmotr2.dff
+│   │   ├── 📄 swmotr2.txd
+│   │   ├── 📄 vbfycrp.dff
+│   │   ├── 📄 vbfycrp.txd
+│   │   ├── 📄 vhmyelv.dff
+│   │   ├── 📄 vhmyelv.txd
+│   │   ├── 📄 vimyelv.dff
+│   │   ├── 📄 vimyelv.txd
+│   │   ├── 📄 vwfycrp.dff
+│   │   ├── 📄 vwfycrp.txd
+│   │   ├── 📄 vwfywa2.dff
+│   │   ├── 📄 vwfywa2.txd
+│   │   ├── 📄 vwfywai.dff
+│   │   ├── 📄 vwfywai.txd
+│   │   ├── 📄 vwmotr2.dff
+│   │   ├── 📄 vwmotr2.txd
+│   │   ├── 📄 wfori.dff
+│   │   ├── 📄 wfori.txd
+│   │   ├── 📄 wfost.dff
+│   │   ├── 📄 wfost.txd
+│   │   ├── 📄 wfybe.dff
+│   │   ├── 📄 wfybe.txd
+│   │   ├── 📄 wfybu.dff
+│   │   ├── 📄 wfybu.txd
+│   │   ├── 📄 wfyclot.dff
+│   │   ├── 📄 wfyclot.txd
+│   │   ├── 📄 wfycrk.dff
+│   │   ├── 📄 wfycrk.txd
+│   │   ├── 📄 wfypro.dff
+│   │   ├── 📄 wfypro.txd
+│   │   ├── 📄 wfyri.dff
+│   │   ├── 📄 wfyri.txd
+│   │   ├── 📄 wfyst.dff
+│   │   ├── 📄 wfyst.txd
+│   │   ├── 📄 wfystew.dff
+│   │   ├── 📄 wfystew.txd
+│   │   ├── 📄 wmybe.dff
+│   │   ├── 📄 wmybe.txd
+│   │   ├── 📄 wmylg.dff
+│   │   ├── 📄 wmylg.txd
+│   │   ├── 📄 wmyva2.dff
+│   │   └── 📄 wmyva2.txd
+│   ├── 📄 Screenshot (136).png
+│   └── 📄 Screenshot (137).png
+├── 📁 10-actor-rock
+│   ├── 📄 config.json
+│   ├── 📄 Screenshot (29).png
+│   ├── 📄 Screenshot (30).png
+│   ├── 📄 vbmybox.dff
+│   └── 📄 vbmybox.txd
+├── 📁 11-actor-undertaker
+│   ├── 📁 undertaker
+│   │   ├── 📄 sofyst.dff
+│   │   └── 📄 sofyst.txd
+│   ├── 📄 Screenshot (34).png
+│   └── 📄 Screenshot (35).png
+├── 📁 12-actor-vin-dizel
+│   ├── 📁 vin dizel
+│   │   ├── 📄 vwmybox.dff
+│   │   └── 📄 vwmybox.txd
+│   ├── 📄 Screenshot (27).png
+│   └── 📄 Screenshot (28).png
+├── 📁 13-Alien
+│   ├── 📁 Alien
+│   │   ├── 📄 copgrl3.dff
+│   │   └── 📄 copgrl3.txd
+│   ├── 📄 Screenshot (77).png
+│   └── 📄 Screenshot (78).png
+├── 📁 14-Cacasangi
+│   ├── 📁 Cacasangi
+│   │   ├── 📄 swmotr1.dff
+│   │   └── 📄 swmotr1.txd
+│   ├── 📄 Screenshot (87).png
+│   └── 📄 Screenshot (88).png
+├── 📁 15-cartoon-ben-10
+│   ├── 📁 Ben10
+│   │   ├── 📄 ofyst.dff
+│   │   └── 📄 ofyst.txd
+│   ├── 📄 Screenshot (65).png
+│   └── 📄 Screenshot (66).png
+├── 📁 16-cartoon-minion
+│   ├── 📁 Minion
+│   │   ├── 📄 swfost.dff
+│   │   └── 📄 swfost.txd
+│   ├── 📄 Screenshot (62).png
+│   └── 📄 Screenshot (63).png
+├── 📁 17-cartoon-okhtapos
+│   ├── 📁 okhtapos
+│   │   ├── 📄 cwfohb.dff
+│   │   └── 📄 cwfohb.txd
+│   ├── 📄 Screenshot (103).png
+│   └── 📄 Screenshot (104).png
+├── 📁 18-cartoon-panda-kung-fu
+│   ├── 📁 panda kung fu
+│   │   ├── 📄 swfyri.dff
+│   │   └── 📄 swfyri.txd
+│   ├── 📄 Screenshot (60).png
+│   └── 📄 Screenshot (61).png
+├── 📁 19-cartoon-sherak
+│   ├── 📁 Sherak
+│   │   ├── 📄 bfyst.dff
+│   │   └── 📄 bfyst.txd
+│   ├── 📄 Screenshot (16).png
+│   └── 📄 Screenshot (17).png
+├── 📁 20-cartoon-spongebob-mrinvincibubble
+│   ├── 📁 Spongebob
+│   │   ├── 📄 swfopro.dff
+│   │   └── 📄 swfopro.txd
+│   ├── 📄 Screenshot (38).png
+│   └── 📄 Screenshot (39).png
+├── 📁 21-cartoon-tom talk
+│   ├── 📁 Tom Talk
+│   │   ├── 📄 shfypro.dff
+│   │   └── 📄 shfypro.txd
+│   ├── 📄 Screenshot (67).png
+│   └── 📄 Screenshot (68).png
+├── 📁 22-cartoon-TomAndJerryAndDogAndHisSon
+│   ├── 📁 Tom Jerry Pack
+│   │   ├── 📄 vbfyst2.dff
+│   │   ├── 📄 vbfyst2.txd
+│   │   ├── 📄 vhfyst3.dff
+│   │   ├── 📄 vhfyst3.txd
+│   │   ├── 📄 vwfypro.dff
+│   │   ├── 📄 vwfypro.txd
+│   │   ├── 📄 vwfyst1.dff
+│   │   └── 📄 vwfyst1.txd
+│   ├── 📄 vbfyst2-1.png
+│   ├── 📄 vbfyst2-2.png
+│   ├── 📄 vhfyst3-1.png
+│   ├── 📄 vhfyst3-2.png
+│   ├── 📄 vwfypro-1.png
+│   ├── 📄 vwfypro-2.png
+│   ├── 📄 vwfyst-1.png
+│   └── 📄 vwfyst-2.png
+├── 📁 23-Child
+│   ├── 📁 Child
+│   │   ├── 📄 ofyri.dff
+│   │   └── 📄 ofyri.txd
+│   ├── 📄 Screenshot (89).png
+│   └── 📄 Screenshot (90).png
+├── 📁 24-football-mbappe
+│   ├── 📁 Mbappe
+│   │   ├── 📄 wfylg.dff
+│   │   └── 📄 wfylg.txd
+│   ├── 📄 Screenshot (44).png
+│   └── 📄 Screenshot (45).png
+├── 📁 25-football-messi
+│   ├── 📁 Messi
+│   │   ├── 📄 wfyjg.dff
+│   │   └── 📄 wfyjg.txd
+│   ├── 📄 Screenshot (42).png
+│   └── 📄 Screenshot (43).png
+├── 📁 26-football-mohamed-salah
+│   ├── 📁 MohammadSaleh
+│   │   ├── 📄 sbfori.dff
+│   │   └── 📄 sbfori.txd
+│   ├── 📄 Screenshot (55).png
+│   └── 📄 Screenshot (56).png
+├── 📁 27-football-naymar
+│   ├── 📁 Naymar
+│   │   ├── 📄 wfyro.dff
+│   │   └── 📄 wfyro.txd
+│   ├── 📄 Screenshot (46).png
+│   └── 📄 Screenshot (47).png
+├── 📁 28-football-Ronaldu
+│   ├── 📁 Ronaldu
+│   │   ├── 📄 hmybe.dff
+│   │   └── 📄 hmybe.txd
+│   ├── 📄 Screenshot (95).png
+│   └── 📄 Screenshot (96).png
+├── 📁 29-gameActor-3ghosts
+│   ├── 📁 COD Ghosts
+│   │   ├── 📄 bfypro.dff
+│   │   ├── 📄 bfypro.txd
+│   │   ├── 📄 hfybe.dff
+│   │   ├── 📄 hfybe.txd
+│   │   ├── 📄 hfypro.dff
+│   │   └── 📄 hfypro.txd
+│   ├── 📄 bfypro-1.png
+│   ├── 📄 bfypro-2.png
+│   ├── 📄 bfypro-3.png
+│   ├── 📄 hfybe-1.png
+│   ├── 📄 hfybe-2.png
+│   ├── 📄 hfypro-1.png
+│   └── 📄 hfypro-2.png
+├── 📁 30-gameActor-JohnMarton-fromRedDeadReadmption
+│   ├── 📄 hmycm.dff
+│   ├── 📄 hmycm.txd
+│   ├── 📄 Screenshot (224).png
+│   └── 📄 Screenshot (225).png
+├── 📁 31-gameActor-johnsuit
+│   ├── 📄 hfyst.dff
+│   ├── 📄 hfyst.txd
+│   ├── 📄 Screenshot (233).png
+│   └── 📄 Screenshot (234).png
+├── 📁 32-gameActor-Makarov
+│   ├── 📁 Makarov
+│   │   ├── 📄 vhfypro.dff
+│   │   └── 📄 vhfypro.txd
+│   ├── 📄 Screenshot (121).png
+│   └── 📄 Screenshot (122).png
+├── 📁 33-gameActor-MarioAndLuigi
+│   ├── 📁 Mario And Luigi
+│   │   ├── 📄 dwfylc1.dff
+│   │   ├── 📄 dwfylc1.txd
+│   │   ├── 📄 dwfylc2.dff
+│   │   └── 📄 dwfylc2.txd
+│   ├── 📄 dwfylc1-1.png
+│   ├── 📄 dwfylc1-2.png
+│   ├── 📄 dwfylc2-1.png
+│   └── 📄 dwfylc2-2.png
+├── 📁 34-gameActor-sonic
+│   ├── 📄 Screenshot (236).png
+│   ├── 📄 Screenshot (237).png
+│   ├── 📄 sofyri.dff
+│   └── 📄 sofyri.txd
+├── 📁 35-gameActor-subway
+│   ├── 📁 Subway
+│   │   ├── 📄 bfori.dff
+│   │   └── 📄 bfori.txd
+│   ├── 📄 gallery1.jpg
+│   └── 📄 gallery2.jpg
+├── 📁 36-gtaiv-niko
+│   ├── 📁 Niko
+│   │   ├── 📄 copgrl3.dff
+│   │   └── 📄 copgrl3.txd
+│   ├── 📄 Screenshot (83).png
+│   └── 📄 Screenshot (84).png
+├── 📁 37-gtav-franklin
+│   ├── 📁 franklin
+│   │   ├── 📄 crogrl3.dff
+│   │   └── 📄 crogrl3.txd
+│   ├── 📄 Screenshot (79).png
+│   └── 📄 Screenshot (80).png
+├── 📁 38-gtav-franklin-light
+│   ├── 📁 franklin 2
+│   │   ├── 📄 gangrl3.dff
+│   │   └── 📄 gangrl3.txd
+│   ├── 📄 gallery1.jpg
+│   └── 📄 gallery2.jpg
+├── 📁 39-gtav-michael
+│   ├── 📁 michael
+│   │   ├── 📄 nurgrl3.dff
+│   │   └── 📄 nurgrl3.txd
+│   ├── 📄 Screenshot (53).png
+│   └── 📄 Screenshot (54).png
+├── 📁 40-gtav-trevor
+│   ├── 📁 Trevor
+│   │   ├── 📄 gungrl3.dff
+│   │   └── 📄 gungrl3.txd
+│   ├── 📄 Screenshot (50).png
+│   └── 📄 Screenshot (51).png
+├── 📁 41-gtavc-tommy
+│   ├── 📁 Tommy
+│   │   ├── 📄 mecgrl3.dff
+│   │   └── 📄 mecgrl3.txd
+│   ├── 📄 Screenshot (58).png
+│   └── 📄 Screenshot (59).png
+├── 📁 42-Meme Dog
+│   ├── 📁 Dog Meme
+│   │   ├── 📄 bfyri.dff
+│   │   └── 📄 bfyri.txd
+│   ├── 📄 Screenshot (14).png
+│   └── 📄 Screenshot (15).png
+├── 📁 43-Meme Pack
+│   ├── 📁 MemePack
+│   │   ├── 📄 cwfyfr2.dff
+│   │   ├── 📄 cwfyfr2.txd
+│   │   ├── 📄 dnfylc.dff
+│   │   ├── 📄 dnfylc.txd
+│   │   ├── 📄 sbfystr.dff
+│   │   ├── 📄 sbfystr.txd
+│   │   ├── 📄 sfypro.dff
+│   │   ├── 📄 sfypro.txd
+│   │   ├── 📄 swfystr.dff
+│   │   ├── 📄 swfystr.txd
+│   │   ├── 📄 vbfypro.dff
+│   │   └── 📄 vbfypro.txd
+│   ├── 📄 cwfyfr2-1.png
+│   ├── 📄 cwfyfr2-2.png
+│   ├── 📄 dnfylc-1.png
+│   ├── 📄 dnfylc-2.png
+│   ├── 📄 sbfystr-1.png
+│   ├── 📄 sbfystr-2.png
+│   ├── 📄 sfypro-1.png
+│   ├── 📄 sfypro-2.png
+│   ├── 📄 swfystr-1.png
+│   ├── 📄 swfystr-2.png
+│   ├── 📄 vbfypro-1.png
+│   └── 📄 vbfypro-2.png
+├── 📁 44-Persian Police
+│   ├── 📄 gallery1.jpg
+│   ├── 📄 gallery2.jpg
+│   ├── 📄 gallery3.jpg
+│   ├── 📄 k1.jpg
+│   ├── 📄 lapd1.dff
+│   └── 📄 lapd1.txd
+├── 📁 45-Persian soldier
+│   ├── 📁 Persian soldier
+│   │   ├── 📄 swfori.dff
+│   │   └── 📄 swfori.txd
+│   ├── 📄 readme.txt
+│   ├── 📄 Screenshot (101).png
+│   └── 📄 Screenshot (102).png
+├── 📁 46-preisedent-hitler-adolf
+│   ├── 📁 Hitler
+│   │   ├── 📄 cwmyhb1.dff
+│   │   └── 📄 cwmyhb1.txd
+│   ├── 📄 Screenshot (36).png
+│   └── 📄 Screenshot (37).png
+├── 📁 47-preisedent-khaminei
+│   ├── 📁 khaminei
+│   │   ├── 📄 ballas2.dff
+│   │   └── 📄 ballas2.txd
+│   ├── 📄 gallery2.jpg
+│   └── 📄 gallery3.jpg
+├── 📁 48-preisedent-trump
+│   ├── 📁 Trump
+│   │   ├── 📄 ballas3.dff
+│   │   └── 📄 ballas3.txd
+│   ├── 📄 Screenshot (138).png
+│   └── 📄 Screenshot (139).png
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 92
+فایل‌ها: 518

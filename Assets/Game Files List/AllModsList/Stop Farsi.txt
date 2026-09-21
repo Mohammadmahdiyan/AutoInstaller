@@ -1,0 +1,15 @@
+📁 Stop Farsi
+
+├── 📁 AutoPlay
+│   └── 📁 Images
+│       └── 📄 BGT.jpg
+├── 📄 Gta.5.San.Andreas.Farsi_www.MagBazi.ir.rar
+├── 📄 gtasanandres.www.game-pc-mm.ir.rar
+├── 📄 LibraryTree.txt
+├── 📄 MagBazi - مگ بازی.url
+├── 📄 Step2.lnk
+└── 📄 Step3.lnk
+
+────────────────────────────
+پوشه‌ها: 2
+فایل‌ها: 7

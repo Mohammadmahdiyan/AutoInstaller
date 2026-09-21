@@ -1,0 +1,3054 @@
+📁 Weapons
+
+├── 📁 01-Banana model
+│   ├── 📄 gallery280.jpg
+│   ├── 📄 gallery306.jpg
+│   ├── 📄 gallery307.jpg
+│   ├── 📄 gallery408.jpg
+│   ├── 📄 gun_vibe2.dff
+│   └── 📄 gun_vibe2.txd
+├── 📁 02-CakeHappybirthday
+│   ├── 📄 cakemodelpreview.jpg
+│   ├── 📄 grenade.dff
+│   ├── 📄 grenade.txd
+│   ├── 📄 happybirthday.jpg
+│   └── 📄 Readme.txt
+├── 📁 03-CakeHappybirthday 2
+│   ├── 📄 satchel.dff
+│   ├── 📄 satchel.txd
+│   └── 📄 Screenshot (242).png
+├── 📁 04-Combat FX pack
+│   ├── 📁 01-Combat FX + Sound Pack
+│   │   ├── 📁 01-imfx
+│   │   │   ├── 📄 bloodspots.txd
+│   │   │   ├── 📄 gunflash.dat
+│   │   │   └── 📄 imfx.dat
+│   │   ├── 📁 02-models
+│   │   │   └── 📁 effects
+│   │   │       ├── 📁 01-explosion_airstrike
+│   │   │       │   ├── 📄 sheet2.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   └── 📄 smokespikeb.png
+│   │   │       ├── 📁 02-explosion_fuel_car
+│   │   │       │   ├── 📄 ballflam1.png
+│   │   │       │   ├── 📄 ballflam3.png
+│   │   │       │   ├── 📄 ballflam5.png
+│   │   │       │   ├── 📄 ballflam7.png
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 firesmoke1.png
+│   │   │       │   ├── 📄 firesmoke2.png
+│   │   │       │   ├── 📄 firesmoke3.png
+│   │   │       │   ├── 📄 firesmoke4.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokemid2.png
+│   │   │       │   ├── 📄 smokemid3.png
+│   │   │       │   ├── 📄 smokemid4.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 03-explosion_grenade
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokemid2.png
+│   │   │       │   ├── 📄 smokemid3.png
+│   │   │       │   ├── 📄 smokemid4.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 04-explosion_grenadelauncher
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 blacksmoke5.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparx3.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 05-explosion_large
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparx3.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 06-explosion_medium
+│   │   │       │   ├── 📄 ballflam1.png
+│   │   │       │   ├── 📄 ballflam3.png
+│   │   │       │   ├── 📄 ballflam5.png
+│   │   │       │   ├── 📄 ballflam7.png
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 sheet2.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokepuff1.png
+│   │   │       │   ├── 📄 smokepuff2.png
+│   │   │       │   ├── 📄 smokepuff3.png
+│   │   │       │   ├── 📄 smokepuff4.png
+│   │   │       │   ├── 📄 smokespikeb.png
+│   │   │       │   ├── 📄 smokespikeb1.png
+│   │   │       │   ├── 📄 smokespikeb2.png
+│   │   │       │   ├── 📄 smokespikeb3.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 07-explosion_molotov
+│   │   │       │   ├── 📄 ballflam1.png
+│   │   │       │   ├── 📄 ballflam3.png
+│   │   │       │   ├── 📄 ballflam5.png
+│   │   │       │   ├── 📄 ballflam7.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 fire1.png
+│   │   │       │   ├── 📄 fire2.png
+│   │   │       │   ├── 📄 fire3.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   └── 📄 smokemid1.png
+│   │   │       ├── 📁 08-explosion_rocket
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   ├── 📄 sploder6h.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 09-explosion_satchel
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokespikeb.png
+│   │   │       │   ├── 📄 smokespikeb1.png
+│   │   │       │   ├── 📄 smokespikeb2.png
+│   │   │       │   ├── 📄 smokespikeb3.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 10-explosion_small
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   ├── 📄 sploder6h.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 11-explosion_tiny
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 firesmoke1.png
+│   │   │       │   ├── 📄 firesmoke2.png
+│   │   │       │   ├── 📄 firesmoke3.png
+│   │   │       │   ├── 📄 firesmoke4.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 12-fire
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 firespark1.png
+│   │   │       │   ├── 📄 firespark2.png
+│   │   │       │   ├── 📄 firespark3.png
+│   │   │       │   ├── 📄 firespark4.png
+│   │   │       │   ├── 📄 smokepuff1.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 13-fire_bike
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 14-fire_car
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 15-fire_large
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 16-fire_med
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 17-flamethrower
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 flameballa23e.png
+│   │   │       │   ├── 📄 flameballa31.png
+│   │   │       │   ├── 📄 flameballa39e.png
+│   │   │       │   ├── 📄 flameballa47e.png
+│   │   │       │   ├── 📄 hoot.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 18-gf_ak47
+│   │   │       │   ├── 📄 mfcloudy1.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenside3.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparky1.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparky4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 19-gf_chromegun
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparky3.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 20-gf_colt45
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 lightsmoke1l.png
+│   │   │       │   ├── 📄 lightsmoke2l.png
+│   │   │       │   ├── 📄 lightsmoke3l.png
+│   │   │       │   ├── 📄 lightsmoke4l.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfmagnum1.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfpointy1.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 21-gf_cuntgun
+│   │   │       │   ├── 📄 mfcloudy1.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfcloudy8e.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparky1.png
+│   │   │       │   ├── 📄 mfsparky2.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparky4.png
+│   │   │       │   ├── 📄 mfsparkyfront1.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 22-gf_deserteagle
+│   │   │       │   ├── 📄 bpfsmoke16wz.png
+│   │   │       │   ├── 📄 bpfsmoke32wz.png
+│   │   │       │   ├── 📄 bpfsmoke48wz.png
+│   │   │       │   ├── 📄 bpfsmoke60wz.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfgenfront5b.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum2.png
+│   │   │       │   ├── 📄 mfmagnum3c.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 muzzspark1.png
+│   │   │       │   ├── 📄 muzzspark3.png
+│   │   │       │   ├── 📄 muzzspark4.png
+│   │   │       │   ├── 📄 muzzspark5.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 23-gf_m16
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal1.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal3.png
+│   │   │       │   ├── 📄 mfpetal4.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsflake1.png
+│   │   │       │   ├── 📄 mfsflake2.png
+│   │   │       │   ├── 📄 mfsflake3.png
+│   │   │       │   ├── 📄 mfsflake4.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 24-gf_minigun
+│   │   │       │   ├── 📄 gunglow.png
+│   │   │       │   ├── 📄 mfmagnum1.png
+│   │   │       │   ├── 📄 mfmagnum2.png
+│   │   │       │   ├── 📄 mfmagnum3.png
+│   │   │       │   ├── 📄 mfmagnum4.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 minisparks.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 25-gf_mp5
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfpointy1.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 26-gf_sawnoff
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 27-gf_shotgspa
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 28-gf_silenced
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 mfgenfront5.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter2.png
+│   │   │       │   ├── 📄 mflighter3.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfmagnum1.png
+│   │   │       │   ├── 📄 mfsparkyfront2.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 29-gf_sniper
+│   │   │       │   ├── 📄 mfcloudy1.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfcloudy8e.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparky1.png
+│   │   │       │   ├── 📄 mfsparky2.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparky4.png
+│   │   │       │   ├── 📄 mfsparkyfront1.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 30-gf_tec9
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter2.png
+│   │   │       │   ├── 📄 mflighter3.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 31-gf_uzi
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfpointy1.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 32-gunflash
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 33-gunsmoke
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 bpfsmoke16wz.png
+│   │   │       │   ├── 📄 bpfsmoke32wz.png
+│   │   │       │   ├── 📄 bpfsmoke48wz.png
+│   │   │       │   ├── 📄 bpfsmoke60wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 lightsmoke1l.png
+│   │   │       │   ├── 📄 lightsmoke2l.png
+│   │   │       │   ├── 📄 lightsmoke3l.png
+│   │   │       │   ├── 📄 lightsmoke4l.png
+│   │   │       │   ├── 📄 puffwisp20w.png
+│   │   │       │   ├── 📄 puffwisp23w.png
+│   │   │       │   ├── 📄 puffwisp25w.png
+│   │   │       │   ├── 📄 puffwisp27w.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 Spark1a.png
+│   │   │       │   ├── 📄 Spark3a.png
+│   │   │       │   ├── 📄 Spark4a.png
+│   │   │       │   ├── 📄 Spark5a.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3bw.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sparx3cw.png
+│   │   │       ├── 📁 34-headshot
+│   │   │       │   ├── 📄 bloodhitdrope.png
+│   │   │       │   ├── 📄 bloodmistspray1.png
+│   │   │       │   ├── 📄 bloodmistspray2.png
+│   │   │       │   ├── 📄 bloodmistspray3.png
+│   │   │       │   ├── 📄 bloodmistspray4.png
+│   │   │       │   ├── 📄 brain.png
+│   │   │       │   ├── 📄 brain2.png
+│   │   │       │   ├── 📄 chunk2b2.png
+│   │   │       │   ├── 📄 chunk2b3.png
+│   │   │       │   ├── 📄 chunk2b4.png
+│   │   │       │   ├── 📄 chunk2b5.png
+│   │   │       │   ├── 📄 dusthit1w.png
+│   │   │       │   ├── 📄 dusthit2w.png
+│   │   │       │   ├── 📄 dusthit3w.png
+│   │   │       │   ├── 📄 dusthit4w.png
+│   │   │       │   ├── 📄 skullfrag.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit2b.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit3b.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokehit4b.png
+│   │   │       │   ├── 📄 smokehit5b.png
+│   │   │       │   └── 📄 smokehit6b.png
+│   │   │       ├── 📁 35-jetpack
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam1mpg.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam2mpg.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam3mpg.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 dimflam4mpg.png
+│   │   │       │   ├── 📄 firespark1a.png
+│   │   │       │   ├── 📄 firespark2a.png
+│   │   │       │   ├── 📄 firespark3a.png
+│   │   │       │   ├── 📄 firespark4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   ├── 📄 sphere_CJ.png
+│   │   │       │   └── 📄 vflarewide.png
+│   │   │       ├── 📁 36-overheat_bike
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   └── 📄 smokepuff4a.png
+│   │   │       ├── 📁 37-overheat_car
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 pointlight.png
+│   │   │       │   ├── 📄 smokeII_3.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   └── 📄 waterspark_16.png
+│   │   │       ├── 📁 38-overheat_petrol
+│   │   │       │   ├── 📄 crfl1.png
+│   │   │       │   ├── 📄 crfl2.png
+│   │   │       │   ├── 📄 crfl3.png
+│   │   │       │   ├── 📄 crfl4.png
+│   │   │       │   ├── 📄 myspl.png
+│   │   │       │   └── 📄 spush.png
+│   │   │       ├── 📁 39-prt_blood
+│   │   │       │   ├── 📄 bloodhitdrope.png
+│   │   │       │   ├── 📄 bloodhitfront1b.png
+│   │   │       │   ├── 📄 bloodhitfront1c.png
+│   │   │       │   ├── 📄 bloodhitfront1d.png
+│   │   │       │   ├── 📄 bloodhitfront1e.png
+│   │   │       │   ├── 📄 bloodhitside2a.png
+│   │   │       │   ├── 📄 bloodhitside2b.png
+│   │   │       │   ├── 📄 bloodhitside2c.png
+│   │   │       │   ├── 📄 bloodhitside2d.png
+│   │   │       │   ├── 📄 bloodhitside2e.png
+│   │   │       │   ├── 📄 bloodhitside4a.png
+│   │   │       │   ├── 📄 bloodhitside4b.png
+│   │   │       │   ├── 📄 bloodhitside4c.png
+│   │   │       │   ├── 📄 bloodhitside4d.png
+│   │   │       │   ├── 📄 bloodmistspray1.png
+│   │   │       │   ├── 📄 bloodmistspray2.png
+│   │   │       │   ├── 📄 bloodmistspray3.png
+│   │   │       │   ├── 📄 bloodmistspray4.png
+│   │   │       │   ├── 📄 dusthit1.png
+│   │   │       │   ├── 📄 dusthit2.png
+│   │   │       │   ├── 📄 dusthit3.png
+│   │   │       │   ├── 📄 dusthit4.png
+│   │   │       │   ├── 📄 dusthit5.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit2b.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit3b.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokehit4b.png
+│   │   │       │   ├── 📄 smokehit5b.png
+│   │   │       │   └── 📄 smokehit6b.png
+│   │   │       ├── 📁 40-prt_gunshell
+│   │   │       │   ├── 📄 glowyspark1.png
+│   │   │       │   ├── 📄 lightsmoke1l.png
+│   │   │       │   ├── 📄 lightsmoke2l.png
+│   │   │       │   ├── 📄 lightsmoke3l.png
+│   │   │       │   ├── 📄 lightsmoke4l.png
+│   │   │       │   ├── 📄 shell40a.png
+│   │   │       │   ├── 📄 shell40b.png
+│   │   │       │   ├── 📄 shell40c.png
+│   │   │       │   └── 📄 shell40d.png
+│   │   │       ├── 📁 41-prt_smoke_II_3_expand
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   └── 📄 smokepuff4a.png
+│   │   │       ├── 📁 42-prt_spark
+│   │   │       │   ├── 📄 chunk2bla.png
+│   │   │       │   ├── 📄 dusthit1w.png
+│   │   │       │   ├── 📄 dusthit2w.png
+│   │   │       │   ├── 📄 dusthit3w.png
+│   │   │       │   ├── 📄 dusthit4w.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparkout1a.png
+│   │   │       │   ├── 📄 sparkout2a.png
+│   │   │       │   ├── 📄 sparkout3a.png
+│   │   │       │   ├── 📄 sparkout4a.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparky3.png
+│   │   │       │   ├── 📄 sparky3b.png
+│   │   │       │   ├── 📄 sparky4.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 43-prt_spark2
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1a.png
+│   │   │       │   ├── 📄 Spark3a.png
+│   │   │       │   ├── 📄 Spark4a.png
+│   │   │       │   ├── 📄 Spark5a.png
+│   │   │       │   ├── 📄 sparky3.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 44-tank_fire
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 muzzspark2.png
+│   │   │       │   ├── 📄 muzzspark3.png
+│   │   │       │   ├── 📄 muzzspark4.png
+│   │   │       │   ├── 📄 muzzspark5.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 vflarewide.png
+│   │   │       └── 📄 log.txt
+│   │   ├── 📁 03-modloader
+│   │   │   ├── 📁 01-Enhance Particle TXD
+│   │   │   │   └── 📁 Combat FX ParticleTXD
+│   │   │   │       └── 📄 particle.txd
+│   │   │   ├── 📁 02-FxsFuncs
+│   │   │   │   └── 📄 FxsFuncs.ini
+│   │   │   └── 📁 03-RSL Combat FX Sounds
+│   │   │       ├── 📁 Audio
+│   │   │       │   └── 📁 SFX
+│   │   │       │       └── 📁 GENRL
+│   │   │       │           ├── 📁 01-Bank_021
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   ├── 📄 sound_003.wav
+│   │   │       │           │   ├── 📄 sound_004.wav
+│   │   │       │           │   ├── 📄 sound_005.wav
+│   │   │       │           │   ├── 📄 sound_006.wav
+│   │   │       │           │   ├── 📄 sound_007.wav
+│   │   │       │           │   ├── 📄 sound_008.wav
+│   │   │       │           │   ├── 📄 sound_009.wav
+│   │   │       │           │   ├── 📄 sound_010.wav
+│   │   │       │           │   ├── 📄 sound_011.wav
+│   │   │       │           │   ├── 📄 sound_012.wav
+│   │   │       │           │   ├── 📄 sound_013.wav
+│   │   │       │           │   ├── 📄 sound_014.wav
+│   │   │       │           │   ├── 📄 sound_015.wav
+│   │   │       │           │   ├── 📄 sound_016.wav
+│   │   │       │           │   ├── 📄 sound_017.wav
+│   │   │       │           │   ├── 📄 sound_018.wav
+│   │   │       │           │   ├── 📄 sound_019.wav
+│   │   │       │           │   ├── 📄 sound_020.wav
+│   │   │       │           │   ├── 📄 sound_021.wav
+│   │   │       │           │   ├── 📄 sound_022.wav
+│   │   │       │           │   ├── 📄 sound_023.wav
+│   │   │       │           │   └── 📄 sound_024.wav
+│   │   │       │           ├── 📁 02-Bank_022
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   └── 📄 sound_003.wav
+│   │   │       │           ├── 📁 03-Bank_023
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   └── 📄 sound_003.wav
+│   │   │       │           ├── 📁 04-Bank_024
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   └── 📄 sound_003.wav
+│   │   │       │           ├── 📁 05-Bank_025
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   └── 📄 sound_003.wav
+│   │   │       │           ├── 📁 06-Bank_033
+│   │   │       │           │   └── 📄 sound_030.wav
+│   │   │       │           ├── 📁 07-Bank_046
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   ├── 📄 sound_003.wav
+│   │   │       │           │   ├── 📄 sound_004.wav
+│   │   │       │           │   └── 📄 sound_005.wav
+│   │   │       │           ├── 📁 08-Bank_132
+│   │   │       │           │   └── 📄 sound_027.wav
+│   │   │       │           ├── 📁 09-Bank_137
+│   │   │       │           │   ├── 📄 desktop.ini
+│   │   │       │           │   ├── 📄 sound_001.wav
+│   │   │       │           │   ├── 📄 sound_002.wav
+│   │   │       │           │   ├── 📄 sound_004.wav
+│   │   │       │           │   ├── 📄 sound_005.wav
+│   │   │       │           │   ├── 📄 sound_006.wav
+│   │   │       │           │   ├── 📄 sound_007.wav
+│   │   │       │           │   ├── 📄 sound_008.wav
+│   │   │       │           │   ├── 📄 sound_009.wav
+│   │   │       │           │   ├── 📄 sound_012.wav
+│   │   │       │           │   ├── 📄 sound_013.wav
+│   │   │       │           │   ├── 📄 sound_014.wav
+│   │   │       │           │   ├── 📄 sound_015.wav
+│   │   │       │           │   ├── 📄 sound_018.wav
+│   │   │       │           │   ├── 📄 sound_019.wav
+│   │   │       │           │   ├── 📄 sound_022.wav
+│   │   │       │           │   ├── 📄 sound_023.wav
+│   │   │       │           │   ├── 📄 sound_024.wav
+│   │   │       │           │   ├── 📄 sound_025.wav
+│   │   │       │           │   ├── 📄 sound_026.wav
+│   │   │       │           │   ├── 📄 sound_026a.wav
+│   │   │       │           │   ├── 📄 sound_027.wav
+│   │   │       │           │   ├── 📄 sound_028.wav
+│   │   │       │           │   ├── 📄 sound_031.wav
+│   │   │       │           │   ├── 📄 sound_032.wav
+│   │   │       │           │   ├── 📄 sound_033.wav
+│   │   │       │           │   ├── 📄 sound_034.wav
+│   │   │       │           │   ├── 📄 sound_036.wav
+│   │   │       │           │   ├── 📄 sound_052.wav
+│   │   │       │           │   ├── 📄 sound_053.wav
+│   │   │       │           │   ├── 📄 sound_054.wav
+│   │   │       │           │   ├── 📄 sound_056.wav
+│   │   │       │           │   ├── 📄 sound_064.wav
+│   │   │       │           │   ├── 📄 sound_066.wav
+│   │   │       │           │   ├── 📄 sound_067.wav
+│   │   │       │           │   ├── 📄 sound_069.wav
+│   │   │       │           │   ├── 📄 sound_070.wav
+│   │   │       │           │   ├── 📄 sound_071.wav
+│   │   │       │           │   ├── 📄 sound_072.wav
+│   │   │       │           │   ├── 📄 sound_073.wav
+│   │   │       │           │   ├── 📄 sound_074.wav
+│   │   │       │           │   ├── 📄 sound_075.wav
+│   │   │       │           │   ├── 📄 sound_076.wav
+│   │   │       │           │   ├── 📄 sound_077.wav
+│   │   │       │           │   ├── 📄 sound_078.wav
+│   │   │       │           │   ├── 📄 sound_084.wav
+│   │   │       │           │   ├── 📄 sound_085.wav
+│   │   │       │           │   ├── 📄 sound_086.wav
+│   │   │       │           │   ├── 📄 sound_090.wav
+│   │   │       │           │   ├── 📄 sound_091.wav
+│   │   │       │           │   ├── 📄 sound_092.wav
+│   │   │       │           │   ├── 📄 sound_093.wav
+│   │   │       │           │   ├── 📄 sound_094.wav
+│   │   │       │           │   ├── 📄 sound_095.wav
+│   │   │       │           │   ├── 📄 sound_096.wav
+│   │   │       │           │   ├── 📄 sound_097.wav
+│   │   │       │           │   ├── 📄 sound_098.wav
+│   │   │       │           │   ├── 📄 sound_099.wav
+│   │   │       │           │   ├── 📄 sound_100.wav
+│   │   │       │           │   ├── 📄 sound_1000.wav
+│   │   │       │           │   ├── 📄 sound_101.wav
+│   │   │       │           │   ├── 📄 sound_102.wav
+│   │   │       │           │   ├── 📄 sound_103.wav
+│   │   │       │           │   ├── 📄 sound_104.wav
+│   │   │       │           │   ├── 📄 sound_105.wav
+│   │   │       │           │   ├── 📄 sound_106.wav
+│   │   │       │           │   ├── 📄 sound_107.wav
+│   │   │       │           │   ├── 📄 sound_108.wav
+│   │   │       │           │   ├── 📄 sound_109.wav
+│   │   │       │           │   ├── 📄 sound_110.wav
+│   │   │       │           │   ├── 📄 sound_111.wav
+│   │   │       │           │   ├── 📄 sound_112.wav
+│   │   │       │           │   ├── 📄 sound_113.wav
+│   │   │       │           │   ├── 📄 sound_114.wav
+│   │   │       │           │   ├── 📄 sound_115.wav
+│   │   │       │           │   └── 📄 sound_116.wav
+│   │   │       │           └── 📄 desktop.ini
+│   │   │       ├── 📄 readme.txt
+│   │   │       └── 📄 Sound ID.txt
+│   │   ├── 📄 read me.txt
+│   │   └── 📄 weaponsound.txt
+│   ├── 📁 02-Combat FX 2025
+│   │   ├── 📁 01-imfx
+│   │   │   ├── 📄 bloodspots.txd
+│   │   │   ├── 📄 gunflash.dat
+│   │   │   └── 📄 imfx.dat
+│   │   ├── 📁 02-models
+│   │   │   └── 📁 effects
+│   │   │       ├── 📁 01-explosion_airstrike
+│   │   │       │   ├── 📄 sheet2.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   └── 📄 smokespikeb.png
+│   │   │       ├── 📁 02-explosion_fuel_car
+│   │   │       │   ├── 📄 ballflam1.png
+│   │   │       │   ├── 📄 ballflam3.png
+│   │   │       │   ├── 📄 ballflam5.png
+│   │   │       │   ├── 📄 ballflam7.png
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 firesmoke1.png
+│   │   │       │   ├── 📄 firesmoke2.png
+│   │   │       │   ├── 📄 firesmoke3.png
+│   │   │       │   ├── 📄 firesmoke4.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokemid2.png
+│   │   │       │   ├── 📄 smokemid3.png
+│   │   │       │   ├── 📄 smokemid4.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 03-explosion_grenade
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokemid2.png
+│   │   │       │   ├── 📄 smokemid3.png
+│   │   │       │   ├── 📄 smokemid4.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 04-explosion_grenadelauncher
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 blacksmoke5.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparx3.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 05-explosion_large
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparx3.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 06-explosion_medium
+│   │   │       │   ├── 📄 ballflam1.png
+│   │   │       │   ├── 📄 ballflam3.png
+│   │   │       │   ├── 📄 ballflam5.png
+│   │   │       │   ├── 📄 ballflam7.png
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 sheet2.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokepuff1.png
+│   │   │       │   ├── 📄 smokepuff2.png
+│   │   │       │   ├── 📄 smokepuff3.png
+│   │   │       │   ├── 📄 smokepuff4.png
+│   │   │       │   ├── 📄 smokespikeb.png
+│   │   │       │   ├── 📄 smokespikeb1.png
+│   │   │       │   ├── 📄 smokespikeb2.png
+│   │   │       │   ├── 📄 smokespikeb3.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 07-explosion_molotov
+│   │   │       │   ├── 📄 ballflam1.png
+│   │   │       │   ├── 📄 ballflam3.png
+│   │   │       │   ├── 📄 ballflam5.png
+│   │   │       │   ├── 📄 ballflam7.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 fire1.png
+│   │   │       │   ├── 📄 fire2.png
+│   │   │       │   ├── 📄 fire3.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   └── 📄 smokemid1.png
+│   │   │       ├── 📁 08-explosion_rocket
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   ├── 📄 sploder6h.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 09-explosion_satchel
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokespikeb.png
+│   │   │       │   ├── 📄 smokespikeb1.png
+│   │   │       │   ├── 📄 smokespikeb2.png
+│   │   │       │   ├── 📄 smokespikeb3.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 10-explosion_small
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 shockwave10.png
+│   │   │       │   ├── 📄 shockwave15.png
+│   │   │       │   ├── 📄 shockwave20.png
+│   │   │       │   ├── 📄 shockwave5.png
+│   │   │       │   ├── 📄 smokeglow1.png
+│   │   │       │   ├── 📄 smokeglow2.png
+│   │   │       │   ├── 📄 smokeglow3.png
+│   │   │       │   ├── 📄 smokeglow4.png
+│   │   │       │   ├── 📄 smokemid1.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   ├── 📄 sploder6h.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 11-explosion_tiny
+│   │   │       │   ├── 📄 blacksmoke1.png
+│   │   │       │   ├── 📄 blacksmoke2.png
+│   │   │       │   ├── 📄 blacksmoke3.png
+│   │   │       │   ├── 📄 blacksmoke4.png
+│   │   │       │   ├── 📄 firesmoke1.png
+│   │   │       │   ├── 📄 firesmoke2.png
+│   │   │       │   ├── 📄 firesmoke3.png
+│   │   │       │   ├── 📄 firesmoke4.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sploder6b.png
+│   │   │       │   ├── 📄 sploder6d.png
+│   │   │       │   ├── 📄 sploder6f.png
+│   │   │       │   └── 📄 sploder6h.png
+│   │   │       ├── 📁 12-fire
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 firespark1.png
+│   │   │       │   ├── 📄 firespark2.png
+│   │   │       │   ├── 📄 firespark3.png
+│   │   │       │   ├── 📄 firespark4.png
+│   │   │       │   ├── 📄 smokepuff1.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 13-fire_bike
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 14-fire_car
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 15-fire_large
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 16-fire_med
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 flameballa32.png
+│   │   │       │   ├── 📄 flameballa39.png
+│   │   │       │   ├── 📄 flameballa47.png
+│   │   │       │   ├── 📄 flameballa58.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 17-flamethrower
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 flameballa23e.png
+│   │   │       │   ├── 📄 flameballa31.png
+│   │   │       │   ├── 📄 flameballa39e.png
+│   │   │       │   ├── 📄 flameballa47e.png
+│   │   │       │   ├── 📄 hoot.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 sphere_CJ.png
+│   │   │       ├── 📁 18-gf_ak47
+│   │   │       │   ├── 📄 mfcloudy1.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenside3.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparky1.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparky4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 19-gf_chromegun
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparky3.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 20-gf_colt45
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 lightsmoke1l.png
+│   │   │       │   ├── 📄 lightsmoke2l.png
+│   │   │       │   ├── 📄 lightsmoke3l.png
+│   │   │       │   ├── 📄 lightsmoke4l.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfmagnum1.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfpointy1.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 21-gf_cuntgun
+│   │   │       │   ├── 📄 mfcloudy1.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfcloudy8e.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparky1.png
+│   │   │       │   ├── 📄 mfsparky2.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparky4.png
+│   │   │       │   ├── 📄 mfsparkyfront1.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 22-gf_deserteagle
+│   │   │       │   ├── 📄 bpfsmoke16wz.png
+│   │   │       │   ├── 📄 bpfsmoke32wz.png
+│   │   │       │   ├── 📄 bpfsmoke48wz.png
+│   │   │       │   ├── 📄 bpfsmoke60wz.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfgenfront5b.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum2.png
+│   │   │       │   ├── 📄 mfmagnum3c.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 muzzspark1.png
+│   │   │       │   ├── 📄 muzzspark3.png
+│   │   │       │   ├── 📄 muzzspark4.png
+│   │   │       │   ├── 📄 muzzspark5.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 wideflare1a.png
+│   │   │       ├── 📁 23-gf_m16
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal1.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal3.png
+│   │   │       │   ├── 📄 mfpetal4.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsflake1.png
+│   │   │       │   ├── 📄 mfsflake2.png
+│   │   │       │   ├── 📄 mfsflake3.png
+│   │   │       │   ├── 📄 mfsflake4.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 24-gf_minigun
+│   │   │       │   ├── 📄 gunglow.png
+│   │   │       │   ├── 📄 mfmagnum1.png
+│   │   │       │   ├── 📄 mfmagnum2.png
+│   │   │       │   ├── 📄 mfmagnum3.png
+│   │   │       │   ├── 📄 mfmagnum4.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 minisparks.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparkup4.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 25-gf_mp5
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfpointy1.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 26-gf_sawnoff
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 27-gf_shotgspa
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfgenside1.png
+│   │   │       │   ├── 📄 mfgenside2.png
+│   │   │       │   ├── 📄 mfgenside4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfsparky2e.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1.png
+│   │   │       │   ├── 📄 Spark3.png
+│   │   │       │   ├── 📄 Spark4.png
+│   │   │       │   ├── 📄 Spark5.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 28-gf_silenced
+│   │   │       │   ├── 📄 expsmoke1wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5w.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 mfgenfront5.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter2.png
+│   │   │       │   ├── 📄 mflighter3.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfmagnum1.png
+│   │   │       │   ├── 📄 mfsparkyfront2.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokeup1.png
+│   │   │       │   ├── 📄 smokeup2.png
+│   │   │       │   ├── 📄 smokeup3.png
+│   │   │       │   ├── 📄 smokeup4.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 29-gf_sniper
+│   │   │       │   ├── 📄 mfcloudy1.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfcloudy8e.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparky1.png
+│   │   │       │   ├── 📄 mfsparky2.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparky4.png
+│   │   │       │   ├── 📄 mfsparkyfront1.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 30-gf_tec9
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfcloudy7e.png
+│   │   │       │   ├── 📄 mflighter1.png
+│   │   │       │   ├── 📄 mflighter2.png
+│   │   │       │   ├── 📄 mflighter3.png
+│   │   │       │   ├── 📄 mflighter4.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 31-gf_uzi
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 mfcloudy3f.png
+│   │   │       │   ├── 📄 mfcloudy5.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfpetal2.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   ├── 📄 mfpointy1.png
+│   │   │       │   ├── 📄 mfsparky3.png
+│   │   │       │   ├── 📄 mfsparkyfront4.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparx3b.png
+│   │   │       │   ├── 📄 sparx3c.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 32-gunflash
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 mfpetal5.png
+│   │   │       │   ├── 📄 mfpetal6.png
+│   │   │       │   ├── 📄 mfpetal7.png
+│   │   │       │   ├── 📄 mfpetal8.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 33-gunsmoke
+│   │   │       │   ├── 📄 blank.png
+│   │   │       │   ├── 📄 bpfsmoke16wz.png
+│   │   │       │   ├── 📄 bpfsmoke32wz.png
+│   │   │       │   ├── 📄 bpfsmoke48wz.png
+│   │   │       │   ├── 📄 bpfsmoke60wz.png
+│   │   │       │   ├── 📄 expsmoke2wz.png
+│   │   │       │   ├── 📄 expsmoke3wz.png
+│   │   │       │   ├── 📄 expsmoke4wz.png
+│   │   │       │   ├── 📄 expsmoke5wz.png
+│   │   │       │   ├── 📄 lightsmoke1l.png
+│   │   │       │   ├── 📄 lightsmoke2l.png
+│   │   │       │   ├── 📄 lightsmoke3l.png
+│   │   │       │   ├── 📄 lightsmoke4l.png
+│   │   │       │   ├── 📄 puffwisp20w.png
+│   │   │       │   ├── 📄 puffwisp23w.png
+│   │   │       │   ├── 📄 puffwisp25w.png
+│   │   │       │   ├── 📄 puffwisp27w.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 Spark1a.png
+│   │   │       │   ├── 📄 Spark3a.png
+│   │   │       │   ├── 📄 Spark4a.png
+│   │   │       │   ├── 📄 Spark5a.png
+│   │   │       │   ├── 📄 sparx3bg.png
+│   │   │       │   ├── 📄 sparx3bw.png
+│   │   │       │   ├── 📄 sparx3cg.png
+│   │   │       │   └── 📄 sparx3cw.png
+│   │   │       ├── 📁 34-headshot
+│   │   │       │   ├── 📄 bloodhitdrope.png
+│   │   │       │   ├── 📄 bloodmistspray1.png
+│   │   │       │   ├── 📄 bloodmistspray2.png
+│   │   │       │   ├── 📄 bloodmistspray3.png
+│   │   │       │   ├── 📄 bloodmistspray4.png
+│   │   │       │   ├── 📄 brain.png
+│   │   │       │   ├── 📄 brain2.png
+│   │   │       │   ├── 📄 chunk2b2.png
+│   │   │       │   ├── 📄 chunk2b3.png
+│   │   │       │   ├── 📄 chunk2b4.png
+│   │   │       │   ├── 📄 chunk2b5.png
+│   │   │       │   ├── 📄 dusthit1w.png
+│   │   │       │   ├── 📄 dusthit2w.png
+│   │   │       │   ├── 📄 dusthit3w.png
+│   │   │       │   ├── 📄 dusthit4w.png
+│   │   │       │   ├── 📄 skullfrag.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit2b.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit3b.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokehit4b.png
+│   │   │       │   ├── 📄 smokehit5b.png
+│   │   │       │   └── 📄 smokehit6b.png
+│   │   │       ├── 📁 35-jetpack
+│   │   │       │   ├── 📄 dimflam1bwz.png
+│   │   │       │   ├── 📄 dimflam1mpg.png
+│   │   │       │   ├── 📄 dimflam2bwz.png
+│   │   │       │   ├── 📄 dimflam2mpg.png
+│   │   │       │   ├── 📄 dimflam3bwz.png
+│   │   │       │   ├── 📄 dimflam3mpg.png
+│   │   │       │   ├── 📄 dimflam4bwz.png
+│   │   │       │   ├── 📄 dimflam4mpg.png
+│   │   │       │   ├── 📄 firespark1a.png
+│   │   │       │   ├── 📄 firespark2a.png
+│   │   │       │   ├── 📄 firespark3a.png
+│   │   │       │   ├── 📄 firespark4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   ├── 📄 sphere_CJ.png
+│   │   │       │   └── 📄 vflarewide.png
+│   │   │       ├── 📁 36-overheat_bike
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   └── 📄 smokepuff4a.png
+│   │   │       ├── 📁 37-overheat_car
+│   │   │       │   ├── 📄 expsmoke1w.png
+│   │   │       │   ├── 📄 expsmoke2w.png
+│   │   │       │   ├── 📄 expsmoke3w.png
+│   │   │       │   ├── 📄 expsmoke4w.png
+│   │   │       │   ├── 📄 pointlight.png
+│   │   │       │   ├── 📄 smokeII_3.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   └── 📄 waterspark_16.png
+│   │   │       ├── 📁 38-overheat_petrol
+│   │   │       │   ├── 📄 crfl1.png
+│   │   │       │   ├── 📄 crfl2.png
+│   │   │       │   ├── 📄 crfl3.png
+│   │   │       │   ├── 📄 crfl4.png
+│   │   │       │   ├── 📄 myspl.png
+│   │   │       │   └── 📄 spush.png
+│   │   │       ├── 📁 39-prt_blood
+│   │   │       │   ├── 📄 bloodhitdrope.png
+│   │   │       │   ├── 📄 bloodhitfront1b.png
+│   │   │       │   ├── 📄 bloodhitfront1c.png
+│   │   │       │   ├── 📄 bloodhitfront1d.png
+│   │   │       │   ├── 📄 bloodhitfront1e.png
+│   │   │       │   ├── 📄 bloodhitside2a.png
+│   │   │       │   ├── 📄 bloodhitside2b.png
+│   │   │       │   ├── 📄 bloodhitside2c.png
+│   │   │       │   ├── 📄 bloodhitside2d.png
+│   │   │       │   ├── 📄 bloodhitside2e.png
+│   │   │       │   ├── 📄 bloodhitside4a.png
+│   │   │       │   ├── 📄 bloodhitside4b.png
+│   │   │       │   ├── 📄 bloodhitside4c.png
+│   │   │       │   ├── 📄 bloodhitside4d.png
+│   │   │       │   ├── 📄 bloodmistspray1.png
+│   │   │       │   ├── 📄 bloodmistspray2.png
+│   │   │       │   ├── 📄 bloodmistspray3.png
+│   │   │       │   ├── 📄 bloodmistspray4.png
+│   │   │       │   ├── 📄 dusthit1.png
+│   │   │       │   ├── 📄 dusthit2.png
+│   │   │       │   ├── 📄 dusthit3.png
+│   │   │       │   ├── 📄 dusthit4.png
+│   │   │       │   ├── 📄 dusthit5.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit2b.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit3b.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokehit4b.png
+│   │   │       │   ├── 📄 smokehit5b.png
+│   │   │       │   └── 📄 smokehit6b.png
+│   │   │       ├── 📁 40-prt_gunshell
+│   │   │       │   ├── 📄 glowyspark1.png
+│   │   │       │   ├── 📄 lightsmoke1l.png
+│   │   │       │   ├── 📄 lightsmoke2l.png
+│   │   │       │   ├── 📄 lightsmoke3l.png
+│   │   │       │   ├── 📄 lightsmoke4l.png
+│   │   │       │   ├── 📄 shell40a.png
+│   │   │       │   ├── 📄 shell40b.png
+│   │   │       │   ├── 📄 shell40c.png
+│   │   │       │   └── 📄 shell40d.png
+│   │   │       ├── 📁 41-prt_smoke_II_3_expand
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   └── 📄 smokepuff4a.png
+│   │   │       ├── 📁 42-prt_spark
+│   │   │       │   ├── 📄 chunk2bla.png
+│   │   │       │   ├── 📄 dusthit1w.png
+│   │   │       │   ├── 📄 dusthit2w.png
+│   │   │       │   ├── 📄 dusthit3w.png
+│   │   │       │   ├── 📄 dusthit4w.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 sparkout1a.png
+│   │   │       │   ├── 📄 sparkout2a.png
+│   │   │       │   ├── 📄 sparkout3a.png
+│   │   │       │   ├── 📄 sparkout4a.png
+│   │   │       │   ├── 📄 sparkup1.png
+│   │   │       │   ├── 📄 sparkup2.png
+│   │   │       │   ├── 📄 sparkup3.png
+│   │   │       │   ├── 📄 sparky3.png
+│   │   │       │   ├── 📄 sparky3b.png
+│   │   │       │   ├── 📄 sparky4.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 43-prt_spark2
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 Spark1a.png
+│   │   │       │   ├── 📄 Spark3a.png
+│   │   │       │   ├── 📄 Spark4a.png
+│   │   │       │   ├── 📄 Spark5a.png
+│   │   │       │   ├── 📄 sparky3.png
+│   │   │       │   └── 📄 sphere.png
+│   │   │       ├── 📁 44-tank_fire
+│   │   │       │   ├── 📄 mfcloudy6.png
+│   │   │       │   ├── 📄 mfcloudy7f.png
+│   │   │       │   ├── 📄 mfgenfront4.png
+│   │   │       │   ├── 📄 mfmagnum4c.png
+│   │   │       │   ├── 📄 muzzspark2.png
+│   │   │       │   ├── 📄 muzzspark3.png
+│   │   │       │   ├── 📄 muzzspark4.png
+│   │   │       │   ├── 📄 muzzspark5.png
+│   │   │       │   ├── 📄 smokehit1.png
+│   │   │       │   ├── 📄 smokehit1a.png
+│   │   │       │   ├── 📄 smokehit2.png
+│   │   │       │   ├── 📄 smokehit2a.png
+│   │   │       │   ├── 📄 smokehit3.png
+│   │   │       │   ├── 📄 smokehit3a.png
+│   │   │       │   ├── 📄 smokehit4.png
+│   │   │       │   ├── 📄 smokehit4a.png
+│   │   │       │   ├── 📄 smokepuff1a.png
+│   │   │       │   ├── 📄 smokepuff2a.png
+│   │   │       │   ├── 📄 smokepuff3a.png
+│   │   │       │   ├── 📄 smokepuff4a.png
+│   │   │       │   ├── 📄 sphere.png
+│   │   │       │   └── 📄 vflarewide.png
+│   │   │       └── 📄 log.txt
+│   │   ├── 📁 03-modloader
+│   │   │   ├── 📁 01-Enhance Particle TXD
+│   │   │   │   └── 📁 Combat FX ParticleTXD
+│   │   │   │       └── 📄 particle.txd
+│   │   │   └── 📁 02-FxsFuncs
+│   │   │       └── 📄 FxsFuncs.ini
+│   │   └── 📄 read me.txt
+│   └── 📁 03-RSL Combat FX Sounds
+│       ├── 📁 modloader
+│       │   └── 📁 RSL Combat FX Sounds
+│       │       ├── 📁 Audio
+│       │       │   └── 📁 SFX
+│       │       │       └── 📁 GENRL
+│       │       │           ├── 📁 01-Bank_021
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   ├── 📄 sound_003.wav
+│       │       │           │   ├── 📄 sound_004.wav
+│       │       │           │   ├── 📄 sound_005.wav
+│       │       │           │   ├── 📄 sound_006.wav
+│       │       │           │   ├── 📄 sound_007.wav
+│       │       │           │   ├── 📄 sound_008.wav
+│       │       │           │   ├── 📄 sound_009.wav
+│       │       │           │   ├── 📄 sound_010.wav
+│       │       │           │   ├── 📄 sound_011.wav
+│       │       │           │   ├── 📄 sound_012.wav
+│       │       │           │   ├── 📄 sound_013.wav
+│       │       │           │   ├── 📄 sound_014.wav
+│       │       │           │   ├── 📄 sound_015.wav
+│       │       │           │   ├── 📄 sound_016.wav
+│       │       │           │   ├── 📄 sound_017.wav
+│       │       │           │   ├── 📄 sound_018.wav
+│       │       │           │   ├── 📄 sound_019.wav
+│       │       │           │   ├── 📄 sound_020.wav
+│       │       │           │   ├── 📄 sound_021.wav
+│       │       │           │   ├── 📄 sound_022.wav
+│       │       │           │   ├── 📄 sound_023.wav
+│       │       │           │   └── 📄 sound_024.wav
+│       │       │           ├── 📁 02-Bank_022
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   └── 📄 sound_003.wav
+│       │       │           ├── 📁 03-Bank_023
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   └── 📄 sound_003.wav
+│       │       │           ├── 📁 04-Bank_024
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   └── 📄 sound_003.wav
+│       │       │           ├── 📁 05-Bank_025
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   └── 📄 sound_003.wav
+│       │       │           ├── 📁 06-Bank_033
+│       │       │           │   └── 📄 sound_030.wav
+│       │       │           ├── 📁 07-Bank_046
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   ├── 📄 sound_003.wav
+│       │       │           │   ├── 📄 sound_004.wav
+│       │       │           │   └── 📄 sound_005.wav
+│       │       │           ├── 📁 08-Bank_132
+│       │       │           │   └── 📄 sound_027.wav
+│       │       │           ├── 📁 09-Bank_137
+│       │       │           │   ├── 📄 desktop.ini
+│       │       │           │   ├── 📄 sound_001.wav
+│       │       │           │   ├── 📄 sound_002.wav
+│       │       │           │   ├── 📄 sound_004.wav
+│       │       │           │   ├── 📄 sound_005.wav
+│       │       │           │   ├── 📄 sound_006.wav
+│       │       │           │   ├── 📄 sound_007.wav
+│       │       │           │   ├── 📄 sound_008.wav
+│       │       │           │   ├── 📄 sound_009.wav
+│       │       │           │   ├── 📄 sound_012.wav
+│       │       │           │   ├── 📄 sound_013.wav
+│       │       │           │   ├── 📄 sound_014.wav
+│       │       │           │   ├── 📄 sound_015.wav
+│       │       │           │   ├── 📄 sound_018.wav
+│       │       │           │   ├── 📄 sound_019.wav
+│       │       │           │   ├── 📄 sound_022.wav
+│       │       │           │   ├── 📄 sound_023.wav
+│       │       │           │   ├── 📄 sound_024.wav
+│       │       │           │   ├── 📄 sound_025.wav
+│       │       │           │   ├── 📄 sound_026.wav
+│       │       │           │   ├── 📄 sound_026a.wav
+│       │       │           │   ├── 📄 sound_027.wav
+│       │       │           │   ├── 📄 sound_028.wav
+│       │       │           │   ├── 📄 sound_031.wav
+│       │       │           │   ├── 📄 sound_032.wav
+│       │       │           │   ├── 📄 sound_033.wav
+│       │       │           │   ├── 📄 sound_034.wav
+│       │       │           │   ├── 📄 sound_036.wav
+│       │       │           │   ├── 📄 sound_052.wav
+│       │       │           │   ├── 📄 sound_053.wav
+│       │       │           │   ├── 📄 sound_054.wav
+│       │       │           │   ├── 📄 sound_056.wav
+│       │       │           │   ├── 📄 sound_064.wav
+│       │       │           │   ├── 📄 sound_066.wav
+│       │       │           │   ├── 📄 sound_067.wav
+│       │       │           │   ├── 📄 sound_069.wav
+│       │       │           │   ├── 📄 sound_070.wav
+│       │       │           │   ├── 📄 sound_071.wav
+│       │       │           │   ├── 📄 sound_072.wav
+│       │       │           │   ├── 📄 sound_073.wav
+│       │       │           │   ├── 📄 sound_074.wav
+│       │       │           │   ├── 📄 sound_075.wav
+│       │       │           │   ├── 📄 sound_076.wav
+│       │       │           │   ├── 📄 sound_077.wav
+│       │       │           │   ├── 📄 sound_078.wav
+│       │       │           │   ├── 📄 sound_084.wav
+│       │       │           │   ├── 📄 sound_085.wav
+│       │       │           │   ├── 📄 sound_086.wav
+│       │       │           │   ├── 📄 sound_090.wav
+│       │       │           │   ├── 📄 sound_091.wav
+│       │       │           │   ├── 📄 sound_092.wav
+│       │       │           │   ├── 📄 sound_093.wav
+│       │       │           │   ├── 📄 sound_094.wav
+│       │       │           │   ├── 📄 sound_095.wav
+│       │       │           │   ├── 📄 sound_096.wav
+│       │       │           │   ├── 📄 sound_097.wav
+│       │       │           │   ├── 📄 sound_098.wav
+│       │       │           │   ├── 📄 sound_099.wav
+│       │       │           │   ├── 📄 sound_100.wav
+│       │       │           │   ├── 📄 sound_1000.wav
+│       │       │           │   ├── 📄 sound_101.wav
+│       │       │           │   ├── 📄 sound_102.wav
+│       │       │           │   ├── 📄 sound_103.wav
+│       │       │           │   ├── 📄 sound_104.wav
+│       │       │           │   ├── 📄 sound_105.wav
+│       │       │           │   ├── 📄 sound_106.wav
+│       │       │           │   ├── 📄 sound_107.wav
+│       │       │           │   ├── 📄 sound_108.wav
+│       │       │           │   ├── 📄 sound_109.wav
+│       │       │           │   ├── 📄 sound_110.wav
+│       │       │           │   ├── 📄 sound_111.wav
+│       │       │           │   ├── 📄 sound_112.wav
+│       │       │           │   ├── 📄 sound_113.wav
+│       │       │           │   ├── 📄 sound_114.wav
+│       │       │           │   ├── 📄 sound_115.wav
+│       │       │           │   └── 📄 sound_116.wav
+│       │       │           └── 📄 desktop.ini
+│       │       └── 📄 Sound ID.txt
+│       └── 📄 weaponsound.txt
+├── 📁 05-Crossfire Gatling
+│   ├── 📁 To import to gta3.img
+│   │   ├── 📄 minigun.dff
+│   │   └── 📄 minigun.txd
+│   ├── 📄 readme-de.txt
+│   ├── 📄 readme-en.txt
+│   └── 📄 readme-ru.txt
+├── 📁 06-cucumber
+│   ├── 📄 gun_dildo1.dff
+│   ├── 📄 gun_dildo1.txd
+│   └── 📄 Screenshot (227).png
+├── 📁 07-DB28 fog of war
+│   ├── 📁 To import to gta3.img
+│   │   ├── 📄 ak47.dff
+│   │   └── 📄 ak47.txd
+│   ├── 📄 readme-de.txt
+│   ├── 📄 readme-en.txt
+│   └── 📄 readme-ru.txt
+├── 📁 08-DLq 33 Holiday (Legendry) from CODM
+│   ├── 📄 config.json
+│   ├── 📄 Readme.txt.txt
+│   ├── 📄 sniper.dff
+│   └── 📄 sniper.txd
+├── 📁 09-gravity gun
+│   ├── 📁 01-__MACOSX
+│   │   ├── 📄 ._ggun.cs
+│   │   └── 📄 ._ReadMe.txt
+│   ├── 📁 02-cleo
+│   │   └── 📄 ggun.cs
+│   ├── 📄 ReadMe.txt
+│   ├── 📄 Screenshot (238).png
+│   └── 📄 Screenshot (239).png
+├── 📁 10-GrenadeLauncher+Gas+RPG-VI
+│   ├── 📁 01-Cleo
+│   │   ├── 📄 GrenadeFlowerLauncher+Gas.cs
+│   │   └── 📄 RPG-GunCane.cs
+│   ├── 📁 02-data
+│   │   ├── 📄 default.ide
+│   │   └── 📄 weapon.dat
+│   ├── 📁 03-modloader
+│   │   └── 📁 GrenadeLauncher
+│   │       ├── 📁 01-SA-style weapon-ICON
+│   │       │   ├── 📄 flowera.txd
+│   │       │   ├── 📄 floweraicon.png
+│   │       │   ├── 📄 gun_cane.txd
+│   │       │   └── 📄 gun_caneicon.png
+│   │       └── 📁 02-weaponsSkin
+│   │           ├── 📄 flowera.dff
+│   │           ├── 📄 flowera.txd
+│   │           ├── 📄 gun_cane.dff
+│   │           └── 📄 gun_cane.txd
+│   └── 📄 readme.txt
+├── 📁 11-GTA V Weapons
+│   ├── 📁 01-Advanced Rifle
+│   │   ├── 📄 m4.dff
+│   │   ├── 📄 m4.txd
+│   │   └── 📄 m4fullatached.dff
+│   ├── 📁 02-Antique Cavalry Dagger
+│   │   ├── 📄 gun_dildo1.dff
+│   │   └── 📄 gun_dildo1.txd
+│   ├── 📁 03-AP Pistol
+│   │   ├── 📄 tec9.dff
+│   │   ├── 📄 tec9.txd
+│   │   └── 📄 tec9fullattach.dff
+│   ├── 📁 04-Assault Rifle
+│   │   ├── 📄 ak47.dff
+│   │   ├── 📄 ak47.txd
+│   │   └── 📄 ak47fullatached.dff
+│   ├── 📁 05-Assault Shotgun
+│   │   ├── 📄 shotgspa.dff
+│   │   ├── 📄 shotgspa.txd
+│   │   └── 📄 shotgspafullatached.dff
+│   ├── 📁 06-Assault SMG
+│   │   ├── 📄 mp5lng.dff
+│   │   ├── 📄 mp5lng.txd
+│   │   └── 📄 mp5lngfullatached.dff
+│   ├── 📁 07-Baseball Bat
+│   │   ├── 📄 bat.dff
+│   │   └── 📄 bat.txd
+│   ├── 📁 08-Bullpup Shotgun
+│   │   ├── 📄 chromegun.dff
+│   │   ├── 📄 chromegun.txd
+│   │   └── 📄 chromegunfullatached.dff
+│   ├── 📁 09-Carbine Rilfe
+│   │   ├── 📄 m4.dff
+│   │   ├── 📄 m4.txd
+│   │   └── 📄 m4fullatached.dff
+│   ├── 📁 10-Combat MG
+│   │   ├── 📄 m4.dff
+│   │   ├── 📄 m4.txd
+│   │   └── 📄 m4fullattach.dff
+│   ├── 📁 11-Combat Pistol
+│   │   ├── 📄 colt45.dff
+│   │   ├── 📄 colt45.txd
+│   │   └── 📄 colt45fullatached.dff
+│   ├── 📁 12-Desert Eagle
+│   │   ├── 📄 desert_eagle.dff
+│   │   ├── 📄 desert_eagle.txd
+│   │   └── 📄 desert_eaglefullatached.dff
+│   ├── 📁 13-Fire Extinguisher
+│   │   ├── 📄 fire_ex.dff
+│   │   └── 📄 fire_ex.txd
+│   ├── 📁 14-Firework Launcher
+│   │   ├── 📄 missile.dff
+│   │   ├── 📄 missile.txd
+│   │   ├── 📄 rocketla.dff
+│   │   └── 📄 rocketla.txd
+│   ├── 📁 15-Golf Club
+│   │   ├── 📄 golfclub.dff
+│   │   └── 📄 golfclub.txd
+│   ├── 📁 16-Grenade
+│   │   ├── 📄 grenade.dff
+│   │   └── 📄 grenade.txd
+│   ├── 📁 17-Grenade Launcher
+│   │   ├── 📄 heatseek.dff
+│   │   └── 📄 heatseek.txd
+│   ├── 📁 18-Hammer
+│   │   ├── 📄 shovel.dff
+│   │   └── 📄 shovel.txd
+│   ├── 📁 19-Heavy Shotgun
+│   │   ├── 📄 shotgspa.dff
+│   │   └── 📄 shotgspa.txd
+│   ├── 📁 20-Heavy Sniper
+│   │   ├── 📄 sniper.dff
+│   │   └── 📄 sniper.txd
+│   ├── 📁 21-Knife
+│   │   ├── 📄 knifecur.dff
+│   │   └── 📄 knifecur.txd
+│   ├── 📁 22-Marksman Rifle
+│   │   ├── 📄 sniper.dff
+│   │   └── 📄 sniper.txd
+│   ├── 📁 23-MG
+│   │   ├── 📄 ak47.dff
+│   │   ├── 📄 ak47.txd
+│   │   └── 📄 ak47full.dff
+│   ├── 📁 24-Micro SMG
+│   │   ├── 📄 micro_uzi.dff
+│   │   ├── 📄 micro_uzi.txd
+│   │   └── 📄 micro_uzifullatached.dff
+│   ├── 📁 25-Minigun
+│   │   ├── 📄 minigun.dff
+│   │   └── 📄 minigun.txd
+│   ├── 📁 26-Molotov Cocktail
+│   │   ├── 📄 molotov.dff
+│   │   └── 📄 molotov.txd
+│   ├── 📁 27-Musket
+│   │   ├── 📄 cuntgun.dff
+│   │   └── 📄 cuntgun.txd
+│   ├── 📁 28-Nightstick
+│   │   ├── 📄 nitestick.dff
+│   │   └── 📄 nitestick.txd
+│   ├── 📁 29-Parachute
+│   │   ├── 📄 gun_para.dff
+│   │   └── 📄 gun_para.txd
+│   ├── 📁 30-Pistol
+│   │   ├── 📄 colt45.dff
+│   │   ├── 📄 colt45.txd
+│   │   └── 📄 colt45fullattachment.dff
+│   ├── 📁 31-Rocket Launcher
+│   │   ├── 📄 rocketla.dff
+│   │   └── 📄 rocketla.txd
+│   ├── 📁 32-Sawn Off Shotgun
+│   │   ├── 📄 sawnoff.dff
+│   │   └── 📄 sawnoff.txd
+│   ├── 📁 33-Shotgun
+│   │   ├── 📄 chromegun.dff
+│   │   ├── 📄 chromegun.txd
+│   │   └── 📄 chromegunfullatached.dff
+│   ├── 📁 34-SMG
+│   │   ├── 📄 mp5lng.dff
+│   │   ├── 📄 mp5lng.txd
+│   │   └── 📄 mp5lngfullatached.dff
+│   ├── 📁 35-Sniper Rifle
+│   │   ├── 📄 sniper.dff
+│   │   ├── 📄 sniper.txd
+│   │   └── 📄 sniperfullatached.dff
+│   ├── 📁 36-Sticky Bombs
+│   │   ├── 📄 satchel.dff
+│   │   └── 📄 satchel.txd
+│   ├── 📁 37-Stun Gun
+│   │   ├── 📄 silenced.dff
+│   │   └── 📄 silenced.txd
+│   └── 📁 38-Tear Gas
+│       ├── 📄 teargas.dff
+│       └── 📄 teargas.txd
+├── 📁 12-Ice Cream
+│   ├── 📄 bat.dff
+│   ├── 📄 bat.txd
+│   ├── 📄 Screenshot (281).png
+│   └── 📄 Screenshot (282).png
+├── 📁 13-iphone-16-pro
+│   ├── 📄 camera.dff
+│   ├── 📄 cellphone.dff
+│   ├── 📄 how to install.jpg
+│   ├── 📄 iPhone_16.png
+│   ├── 📄 preview1.jpg
+│   └── 📄 preview2.jpg
+├── 📁 14-Jaro
+│   ├── 📄 Screenshot (228).png
+│   ├── 📄 shovel.dff
+│   └── 📄 shovel.txd
+├── 📁 15-Jaro2
+│   ├── 📄 gun_dildo2.dff
+│   ├── 📄 gun_dildo2.txd
+│   └── 📄 Screenshot (235).png
+├── 📁 16-Molotov ZamZam
+│   ├── 📄 JoaoPSoares.png
+│   ├── 📄 molotov.dff
+│   └── 📄 molotov.txd
+├── 📁 17-NewWeaponPack
+│   └── 📁 new weapon
+│       ├── 📄 ak47.dff
+│       ├── 📄 ak47.txd
+│       ├── 📄 chromegun.dff
+│       ├── 📄 chromegun.txd
+│       ├── 📄 colt45.dff
+│       ├── 📄 colt45.txd
+│       ├── 📄 desert_eagle.dff
+│       ├── 📄 desert_eagle.txd
+│       ├── 📄 grenade.dff
+│       ├── 📄 grenade.txd
+│       ├── 📄 gun_dildo1.dff
+│       ├── 📄 gun_dildo1.txd
+│       ├── 📄 gun_dildo2.dff
+│       ├── 📄 gun_dildo2.txd
+│       ├── 📄 gun_vibe1.dff
+│       ├── 📄 gun_vibe1.txd
+│       ├── 📄 gun_vibe2.dff
+│       ├── 📄 gun_vibe2.txd
+│       ├── 📄 knifecur.dff
+│       ├── 📄 knifecur.txd
+│       ├── 📄 m4.dff
+│       ├── 📄 m4.txd
+│       ├── 📄 micro_uzi.dff
+│       ├── 📄 micro_uzi.txd
+│       ├── 📄 mp5lng.dff
+│       ├── 📄 mp5lng.txd
+│       ├── 📄 sawnoff.dff
+│       ├── 📄 sawnoff.txd
+│       ├── 📄 shotgspa.dff
+│       ├── 📄 shotgspa.txd
+│       ├── 📄 silenced.dff
+│       ├── 📄 silenced.txd
+│       ├── 📄 sniper.dff
+│       ├── 📄 sniper.txd
+│       ├── 📄 tec9.dff
+│       └── 📄 tec9.txd
+├── 📁 18-Nokia
+│   ├── 📄 knifecur.dff
+│   ├── 📄 knifecur.txd
+│   └── 📄 Screenshot (229).png
+├── 📁 19-Nokia 3310
+│   ├── 📄 cellphone.dff
+│   ├── 📄 cellphone.txd
+│   ├── 📄 gun_vibe1.dff
+│   ├── 📄 gun_vibe1.txd
+│   └── 📄 Screenshot (245).png
+├── 📁 20-pan
+│   ├── 📄 gun_dildo1.dff
+│   ├── 📄 gun_dildo1.txd
+│   ├── 📄 ReadMe.txt
+│   └── 📄 Screenshot (244).png
+├── 📁 21-PCTool Hard
+│   ├── 📄 satchel.dff
+│   ├── 📄 satchel.txd
+│   └── 📄 Screenshot (279).png
+├── 📁 22-PCTool Keyboard
+│   ├── 📄 bat.dff
+│   ├── 📄 bat.txd
+│   └── 📄 Screenshot (280).png
+├── 📁 23-poco
+│   ├── 📄 grenade.dff
+│   ├── 📄 grenade.txd
+│   └── 📄 Readme.txt
+├── 📁 24-Remington Shotgun
+│   ├── 📁 To import to gta3.img
+│   │   ├── 📄 shotgspa.dff
+│   │   └── 📄 shotgspa.txd
+│   ├── 📄 readme-de.txt
+│   ├── 📄 readme-en.txt
+│   └── 📄 readme-ru.txt
+├── 📁 25-Ryder Shotgun
+│   ├── 📁 01-To copy to game folder
+│   │   ├── 📁 01-GTAVHud_by_DK22Pac
+│   │   │   └── 📁 weapon
+│   │   │       └── 📁 weapons
+│   │   │           └── 📄 shotgun.png
+│   │   └── 📁 02-modloader
+│   │       └── 📁 audio
+│   │           └── 📁 SFX
+│   │               └── 📁 GENRL
+│   │                   └── 📁 bank_137
+│   │                       ├── 📄 sound_022.wav
+│   │                       └── 📄 sound_023.wav
+│   ├── 📁 02-To import to gta3.img
+│   │   ├── 📄 chromegun.dff
+│   │   └── 📄 chromegun.txd
+│   ├── 📄 readme-de.txt
+│   ├── 📄 readme-en.txt
+│   └── 📄 readme-ru.txt
+├── 📁 26-Shoe
+│   ├── 📁 01-CLEO
+│   │   └── 📄 GTMweapSpawn.cs
+│   ├── 📁 02-gta3.img
+│   │   ├── 📄 grenade.dff
+│   │   ├── 📄 grenade.txd
+│   │   ├── 📄 molotov.dff
+│   │   ├── 📄 molotov.txd
+│   │   ├── 📄 teargas.dff
+│   │   └── 📄 teargas.txd
+│   ├── 📁 03-screenshots
+│   │   ├── 📄 gallery107.jpg
+│   │   ├── 📄 gallery108.jpg
+│   │   ├── 📄 gallery109.jpg
+│   │   ├── 📄 gallery110.jpg
+│   │   ├── 📄 gallery111.jpg
+│   │   ├── 📄 gallery112.jpg
+│   │   ├── 📄 gallery113.jpg
+│   │   ├── 📄 gallery114.jpg
+│   │   ├── 📄 gallery115.jpg
+│   │   ├── 📄 gallery116.jpg
+│   │   ├── 📄 gallery117.jpg
+│   │   ├── 📄 gallery118.jpg
+│   │   ├── 📄 gallery119.jpg
+│   │   ├── 📄 gallery120.jpg
+│   │   ├── 📄 gallery121.jpg
+│   │   ├── 📄 gallery122.jpg
+│   │   ├── 📄 gallery123.jpg
+│   │   └── 📄 Title1.png
+│   └── 📄 Install and Info.txt
+├── 📁 27-Skate Mod
+│   ├── 📁 cleo
+│   │   ├── 📁 01-cleo_audio
+│   │   │   └── 📄 skate.mp3
+│   │   ├── 📁 02-cleo_text
+│   │   │   └── 📄 skateboard.fxt
+│   │   └── 📄 skateboard.cs
+│   ├── 📄 bikearmfix.asi
+│   ├── 📄 choppa.ifp
+│   ├── 📄 gun_cane.dff
+│   ├── 📄 gun_cane.txd
+│   ├── 📄 Leiame (ou morra).txt
+│   ├── 📄 Linhas.txt
+│   ├── 📄 Readme (or die).txt
+│   ├── 📄 sktbd.dff
+│   └── 📄 sktbd.txd
+├── 📁 28-Teleport Gun
+│   ├── 📁 cleo
+│   │   ├── 📄 portal.cs
+│   │   └── 📄 portal.txt
+│   └── 📄 Screenshot (246).png
+├── 📁 29-Weapon Detaills
+│   ├── 📁 01-Weapon Details (Light Version)
+│   │   ├── 📁 Weapon Detaills Light Version
+│   │   │   ├── 📁 01-Cleo
+│   │   │   │   ├── 📄 Clip.txt
+│   │   │   │   ├── 📄 LoadModels.ini
+│   │   │   │   ├── 📄 Weapon Details Clip.cs
+│   │   │   │   ├── 📄 Weapon Details Clip.txt
+│   │   │   │   ├── 📄 Weapon Details.cs
+│   │   │   │   ├── 📄 Weapon Details.ini
+│   │   │   │   └── 📄 Weapon Details.txt
+│   │   │   ├── 📁 02-ModelsQWD
+│   │   │   │   ├── 📄 ak47_R.dff
+│   │   │   │   ├── 📄 colt45_R.dff
+│   │   │   │   ├── 📄 desert_eagle_R.dff
+│   │   │   │   ├── 📄 flame_r.dff
+│   │   │   │   ├── 📄 m4_R.dff
+│   │   │   │   ├── 📄 micro_uzi_R.dff
+│   │   │   │   ├── 📄 minigun_r.dff
+│   │   │   │   ├── 📄 molotov_b1.dff
+│   │   │   │   ├── 📄 molotov_b2.dff
+│   │   │   │   ├── 📄 mp5lng_R.dff
+│   │   │   │   ├── 📄 silenced_R.dff
+│   │   │   │   ├── 📄 tec9_R.dff
+│   │   │   │   └── 📄 WDLight.txd
+│   │   │   ├── 📁 03-SQ
+│   │   │   │   ├── 📄 CRRQA1.mp3
+│   │   │   │   ├── 📄 IMP2.mp3
+│   │   │   │   ├── 📄 RPGLQ.mp3
+│   │   │   │   ├── 📄 SNPRQ.mp3
+│   │   │   │   └── 📄 SPR1.mp3
+│   │   │   └── 📄 WeaponDetails.ifp
+│   │   └── 📄 Installation.txt
+│   ├── 📁 02-Weapon Details (Standard Version)
+│   │   ├── 📁 01-.Optional
+│   │   │   ├── 📁 01-Added Weapons
+│   │   │   │   ├── 📁 cleo
+│   │   │   │   │   ├── 📄 Added Deagle.ini
+│   │   │   │   │   ├── 📄 Added Deagle.txt
+│   │   │   │   │   ├── 📄 Added Melee.ini
+│   │   │   │   │   ├── 📄 Added Melee.txt
+│   │   │   │   │   ├── 📄 Added MP5.ini
+│   │   │   │   │   ├── 📄 Added Mp5.txt
+│   │   │   │   │   ├── 📄 Added Pistol.ini
+│   │   │   │   │   ├── 📄 Added Pistol.txt
+│   │   │   │   │   ├── 📄 Added Rifle.ini
+│   │   │   │   │   ├── 📄 Added Rifle.txt
+│   │   │   │   │   ├── 📄 Added Sawnoff.ini
+│   │   │   │   │   ├── 📄 Added Sawnoff.txt
+│   │   │   │   │   ├── 📄 Added Shotgspa.ini
+│   │   │   │   │   ├── 📄 Added Shotgspa.txt
+│   │   │   │   │   ├── 📄 Added Shotgun.ini
+│   │   │   │   │   ├── 📄 Added Shotgun.txt
+│   │   │   │   │   ├── 📄 Added Silenced.ini
+│   │   │   │   │   ├── 📄 Added Silenced.txt
+│   │   │   │   │   ├── 📄 Added Sniper.ini
+│   │   │   │   │   ├── 📄 Added Sniper.txt
+│   │   │   │   │   ├── 📄 Added UZI.ini
+│   │   │   │   │   ├── 📄 Added UZI.txt
+│   │   │   │   │   ├── 📄 WD Added.cs
+│   │   │   │   │   └── 📄 WD Added.txt
+│   │   │   │   ├── 📄 1. Adding Weapons Tutorial.txt
+│   │   │   │   └── 📄 2. Adding Weapon Details.txt
+│   │   │   ├── 📁 02-Fix gunflash (HD Pack)
+│   │   │   │   ├── 📄 Readme (EN) (RU).txt
+│   │   │   │   └── 📄 weapon.dat
+│   │   │   └── 📁 03-HD Pack
+│   │   │       ├── 📁 01-Ak47
+│   │   │       │   ├── 📄 ak47.dff
+│   │   │       │   ├── 📄 ak47.txd
+│   │   │       │   ├── 📄 ak47_O.dff
+│   │   │       │   ├── 📄 ak47_R.dff
+│   │   │       │   └── 📄 ak47_S.dff
+│   │   │       ├── 📁 02-Bat
+│   │   │       │   ├── 📄 bat.dff
+│   │   │       │   ├── 📄 bat.txd
+│   │   │       │   ├── 📄 batb1.dff
+│   │   │       │   ├── 📄 batb1.txd
+│   │   │       │   ├── 📄 batb2.dff
+│   │   │       │   ├── 📄 batb2.txd
+│   │   │       │   ├── 📄 batb3.dff
+│   │   │       │   └── 📄 batb3.txd
+│   │   │       ├── 📁 03-Cellphone
+│   │   │       │   ├── 📄 cellphone.dff
+│   │   │       │   ├── 📄 cellphone.txd
+│   │   │       │   ├── 📄 cellphone_r1.dff
+│   │   │       │   └── 📄 cellphone_r2.dff
+│   │   │       ├── 📁 04-Chnsaw
+│   │   │       │   ├── 📄 chnsaw.dff
+│   │   │       │   ├── 📄 chnsaw.txd
+│   │   │       │   ├── 📄 chnsaw_p.dff
+│   │   │       │   ├── 📄 chnsaw_p2.dff
+│   │   │       │   ├── 📄 chnsaw_r.dff
+│   │   │       │   ├── 📄 chnsaw_r2.dff
+│   │   │       │   ├── 📄 chnsaw_r2.txd
+│   │   │       │   ├── 📄 chnsaw_r3.dff
+│   │   │       │   ├── 📄 chnsaw_r3.txd
+│   │   │       │   └── 📄 chnsaw_s.dff
+│   │   │       ├── 📁 05-Chromegun
+│   │   │       │   ├── 📄 chromegun.dff
+│   │   │       │   ├── 📄 chromegun.txd
+│   │   │       │   ├── 📄 chromegun_O.dff
+│   │   │       │   └── 📄 chromegun_s.dff
+│   │   │       ├── 📁 06-Cleo
+│   │   │       │   ├── 📄 Ak47.ini
+│   │   │       │   ├── 📄 cellphone.ini
+│   │   │       │   ├── 📄 chromegun.ini
+│   │   │       │   ├── 📄 Colt45.ini
+│   │   │       │   ├── 📄 Cuntgun.ini
+│   │   │       │   ├── 📄 Deagle.ini
+│   │   │       │   ├── 📄 Flame.ini
+│   │   │       │   ├── 📄 M4.ini
+│   │   │       │   ├── 📄 micro_uzi.ini
+│   │   │       │   ├── 📄 mp5lng.ini
+│   │   │       │   ├── 📄 sawnoff.ini
+│   │   │       │   ├── 📄 Shotgspa.ini
+│   │   │       │   ├── 📄 silenced.ini
+│   │   │       │   └── 📄 tec9.ini
+│   │   │       ├── 📁 07-Colt45
+│   │   │       │   ├── 📄 colt45.dff
+│   │   │       │   ├── 📄 colt45.txd
+│   │   │       │   ├── 📄 colt45_O.dff
+│   │   │       │   ├── 📄 colt45_R.dff
+│   │   │       │   └── 📄 colt45_S.dff
+│   │   │       ├── 📁 08-Cuntgun
+│   │   │       │   ├── 📄 cuntgun.dff
+│   │   │       │   ├── 📄 cuntgun.txd
+│   │   │       │   ├── 📄 cuntgun_o.dff
+│   │   │       │   └── 📄 cuntgun_s.dff
+│   │   │       ├── 📁 09-Deagle
+│   │   │       │   ├── 📄 desert_eagle.dff
+│   │   │       │   ├── 📄 desert_eagle.txd
+│   │   │       │   ├── 📄 desert_eagle_O.dff
+│   │   │       │   ├── 📄 desert_eagle_R.dff
+│   │   │       │   └── 📄 desert_eagle_S.dff
+│   │   │       ├── 📁 10-Flame
+│   │   │       │   ├── 📄 flame.dff
+│   │   │       │   ├── 📄 flame.txd
+│   │   │       │   ├── 📄 flame_1.dff
+│   │   │       │   ├── 📄 flame_1.txd
+│   │   │       │   ├── 📄 flame_2.dff
+│   │   │       │   ├── 📄 flame_2.txd
+│   │   │       │   ├── 📄 flame_3.dff
+│   │   │       │   ├── 📄 flame_3.txd
+│   │   │       │   ├── 📄 flame_r.dff
+│   │   │       │   └── 📄 flame_s.dff
+│   │   │       ├── 📁 11-Golfclub
+│   │   │       │   ├── 📄 golfclub.dff
+│   │   │       │   ├── 📄 golfclub.txd
+│   │   │       │   ├── 📄 golfclubb1.dff
+│   │   │       │   ├── 📄 golfclubb1.txd
+│   │   │       │   ├── 📄 golfclubb2.dff
+│   │   │       │   ├── 📄 golfclubb2.txd
+│   │   │       │   ├── 📄 golfclubb3.dff
+│   │   │       │   └── 📄 golfclubb3.txd
+│   │   │       ├── 📁 12-Katana
+│   │   │       │   ├── 📄 katana.dff
+│   │   │       │   ├── 📄 katana.txd
+│   │   │       │   ├── 📄 katanab1.dff
+│   │   │       │   ├── 📄 katanab1.txd
+│   │   │       │   ├── 📄 katanab2.dff
+│   │   │       │   ├── 📄 katanab2.txd
+│   │   │       │   ├── 📄 katanab3.dff
+│   │   │       │   └── 📄 katanab3.txd
+│   │   │       ├── 📁 13-Knifecur
+│   │   │       │   ├── 📄 knifecur.dff
+│   │   │       │   ├── 📄 knifecur.txd
+│   │   │       │   ├── 📄 knifecurb1.dff
+│   │   │       │   ├── 📄 knifecurb1.txd
+│   │   │       │   ├── 📄 knifecurb2.dff
+│   │   │       │   ├── 📄 knifecurb2.txd
+│   │   │       │   ├── 📄 knifecurb3.dff
+│   │   │       │   └── 📄 knifecurb3.txd
+│   │   │       ├── 📁 14-M4
+│   │   │       │   ├── 📄 m4.dff
+│   │   │       │   ├── 📄 m4.txd
+│   │   │       │   ├── 📄 m4_O.dff
+│   │   │       │   ├── 📄 m4_R.dff
+│   │   │       │   ├── 📄 m4_R2.dff
+│   │   │       │   └── 📄 m4_S.dff
+│   │   │       ├── 📁 15-Micro_uzi
+│   │   │       │   ├── 📄 micro_uzi.dff
+│   │   │       │   ├── 📄 micro_uzi.txd
+│   │   │       │   ├── 📄 micro_uzi_O.dff
+│   │   │       │   ├── 📄 micro_uzi_R.dff
+│   │   │       │   └── 📄 micro_uzi_S.dff
+│   │   │       ├── 📁 16-Molotov
+│   │   │       │   ├── 📄 molotov.dff
+│   │   │       │   ├── 📄 molotov.txd
+│   │   │       │   ├── 📄 molotov_b1.dff
+│   │   │       │   └── 📄 molotov_b2.dff
+│   │   │       ├── 📁 17-Mp5lng
+│   │   │       │   ├── 📄 mp5lng.dff
+│   │   │       │   ├── 📄 mp5lng.txd
+│   │   │       │   ├── 📄 mp5lng_O.dff
+│   │   │       │   ├── 📄 mp5lng_R.dff
+│   │   │       │   ├── 📄 mp5lng_R2.dff
+│   │   │       │   └── 📄 mp5lng_s.dff
+│   │   │       ├── 📁 18-Nitestick
+│   │   │       │   ├── 📄 nitestick.dff
+│   │   │       │   ├── 📄 nitestick.txd
+│   │   │       │   ├── 📄 nitestickb1.dff
+│   │   │       │   ├── 📄 nitestickb1.txd
+│   │   │       │   ├── 📄 nitestickb2.dff
+│   │   │       │   ├── 📄 nitestickb2.txd
+│   │   │       │   ├── 📄 nitestickb3.dff
+│   │   │       │   └── 📄 nitestickb3.txd
+│   │   │       ├── 📁 19-Poolcue
+│   │   │       │   ├── 📄 poolcue.dff
+│   │   │       │   ├── 📄 poolcue.txd
+│   │   │       │   ├── 📄 poolCue_BaseColor.png
+│   │   │       │   ├── 📄 poolcueb1.dff
+│   │   │       │   ├── 📄 poolcueb1.txd
+│   │   │       │   ├── 📄 poolcueb2.dff
+│   │   │       │   ├── 📄 poolcueb2.txd
+│   │   │       │   ├── 📄 poolcueb3.dff
+│   │   │       │   └── 📄 poolcueb3.txd
+│   │   │       ├── 📁 20-Rocketla
+│   │   │       │   ├── 📄 rocketla.dff
+│   │   │       │   ├── 📄 rocketla.txd
+│   │   │       │   ├── 📄 rocketla_r.dff
+│   │   │       │   └── 📄 rocketla_s.dff
+│   │   │       ├── 📁 21-Sawnoff
+│   │   │       │   ├── 📄 sawnoff.dff
+│   │   │       │   ├── 📄 sawnoff.txd
+│   │   │       │   ├── 📄 sawnoff_R.dff
+│   │   │       │   └── 📄 sawnoff_S.dff
+│   │   │       ├── 📁 22-Shotgspa
+│   │   │       │   ├── 📄 shotgspa.dff
+│   │   │       │   ├── 📄 shotgspa.txd
+│   │   │       │   ├── 📄 shotgspa_O.dff
+│   │   │       │   ├── 📄 shotgspa_R.dff
+│   │   │       │   └── 📄 shotgspa_S.dff
+│   │   │       ├── 📁 23-Shovel
+│   │   │       │   ├── 📄 shovel.dff
+│   │   │       │   ├── 📄 shovel.txd
+│   │   │       │   ├── 📄 shovelb1.dff
+│   │   │       │   ├── 📄 shovelb1.txd
+│   │   │       │   ├── 📄 shovelb2.dff
+│   │   │       │   ├── 📄 shovelb2.txd
+│   │   │       │   ├── 📄 shovelb3.dff
+│   │   │       │   └── 📄 shovelb3.txd
+│   │   │       ├── 📁 24-Silenced
+│   │   │       │   ├── 📄 silenced.dff
+│   │   │       │   ├── 📄 silenced.txd
+│   │   │       │   ├── 📄 silenced_O.dff
+│   │   │       │   ├── 📄 silenced_R.dff
+│   │   │       │   └── 📄 silenced_s.dff
+│   │   │       ├── 📁 25-Sniper
+│   │   │       │   ├── 📄 sniper.dff
+│   │   │       │   ├── 📄 sniper.txd
+│   │   │       │   ├── 📄 sniper_r.dff
+│   │   │       │   └── 📄 sniper_s.dff
+│   │   │       ├── 📁 26-Tec9
+│   │   │       │   ├── 📄 tec9.dff
+│   │   │       │   ├── 📄 tec9.txd
+│   │   │       │   ├── 📄 tec9_O.dff
+│   │   │       │   ├── 📄 tec9_R.dff
+│   │   │       │   └── 📄 tec9_S.dff
+│   │   │       ├── 📄 1. Readme (EN) (RU).txt
+│   │   │       └── 📄 Weapon Icons for Weapon Details by KoT-BTpycaXXX.rar
+│   │   ├── 📁 02-Fix gunflash
+│   │   │   ├── 📄 Readme (EN) (RU).txt
+│   │   │   └── 📄 weapon.dat
+│   │   ├── 📁 03-Weapon Detaills
+│   │   │   ├── 📁 01-Ak47
+│   │   │   │   ├── 📄 ak47.dff
+│   │   │   │   ├── 📄 ak47.txd
+│   │   │   │   ├── 📄 ak47_O.dff
+│   │   │   │   ├── 📄 ak47_R.dff
+│   │   │   │   └── 📄 ak47_S.dff
+│   │   │   ├── 📁 02-Bat
+│   │   │   │   ├── 📄 bat.dff
+│   │   │   │   ├── 📄 bat.txd
+│   │   │   │   ├── 📄 batb1.dff
+│   │   │   │   ├── 📄 batb1.txd
+│   │   │   │   ├── 📄 batb2.dff
+│   │   │   │   ├── 📄 batb2.txd
+│   │   │   │   ├── 📄 batb3.dff
+│   │   │   │   └── 📄 batb3.txd
+│   │   │   ├── 📁 03-Cellphone
+│   │   │   │   ├── 📄 cellphone.dff
+│   │   │   │   ├── 📄 cellphone.txd
+│   │   │   │   ├── 📄 cellphone_r1.dff
+│   │   │   │   └── 📄 cellphone_r2.dff
+│   │   │   ├── 📁 04-Chnsaw
+│   │   │   │   ├── 📄 chnsaw.dff
+│   │   │   │   ├── 📄 chnsaw.txd
+│   │   │   │   ├── 📄 chnsaw_p.dff
+│   │   │   │   ├── 📄 chnsaw_p2.dff
+│   │   │   │   ├── 📄 chnsaw_r.dff
+│   │   │   │   ├── 📄 chnsaw_r2.dff
+│   │   │   │   ├── 📄 chnsaw_r2.txd
+│   │   │   │   ├── 📄 chnsaw_r3.dff
+│   │   │   │   ├── 📄 chnsaw_r3.txd
+│   │   │   │   └── 📄 chnsaw_s.dff
+│   │   │   ├── 📁 05-Chromegun
+│   │   │   │   ├── 📄 chromegun.dff
+│   │   │   │   ├── 📄 chromegun.txd
+│   │   │   │   ├── 📄 chromegun_O.dff
+│   │   │   │   └── 📄 chromegun_s.dff
+│   │   │   ├── 📁 06-Cleo
+│   │   │   │   ├── 📄 Ak47.ini
+│   │   │   │   ├── 📄 Ak47.txt
+│   │   │   │   ├── 📄 Bat.txt
+│   │   │   │   ├── 📄 cellphone.ini
+│   │   │   │   ├── 📄 Chnsaw.txt
+│   │   │   │   ├── 📄 chromegun.ini
+│   │   │   │   ├── 📄 Chromegun.txt
+│   │   │   │   ├── 📄 Clip.txt
+│   │   │   │   ├── 📄 Colt45.ini
+│   │   │   │   ├── 📄 Colt45.txt
+│   │   │   │   ├── 📄 Cuntgun.ini
+│   │   │   │   ├── 📄 Deagle.ini
+│   │   │   │   ├── 📄 Deagle.txt
+│   │   │   │   ├── 📄 Flame.ini
+│   │   │   │   ├── 📄 Golf.txt
+│   │   │   │   ├── 📄 Katana.txt
+│   │   │   │   ├── 📄 Knifecur.txt
+│   │   │   │   ├── 📄 LoadModels.ini
+│   │   │   │   ├── 📄 M4.ini
+│   │   │   │   ├── 📄 M4.txt
+│   │   │   │   ├── 📄 micro_uzi.ini
+│   │   │   │   ├── 📄 Micro_Uzi.txt
+│   │   │   │   ├── 📄 mp5lng.ini
+│   │   │   │   ├── 📄 Mp5lng.txt
+│   │   │   │   ├── 📄 Nitestick.txt
+│   │   │   │   ├── 📄 Poolcue.txt
+│   │   │   │   ├── 📄 sawnoff.ini
+│   │   │   │   ├── 📄 Sawnoff.txt
+│   │   │   │   ├── 📄 Shotgspa.ini
+│   │   │   │   ├── 📄 Shotgspa.txt
+│   │   │   │   ├── 📄 shovel.txt
+│   │   │   │   ├── 📄 silenced.ini
+│   │   │   │   ├── 📄 Silenced.txt
+│   │   │   │   ├── 📄 tec9.ini
+│   │   │   │   ├── 📄 Tec9.txt
+│   │   │   │   ├── 📄 WD Melee 2.cs
+│   │   │   │   ├── 📄 WD Melee 2.txt
+│   │   │   │   ├── 📄 WD Melee.cs
+│   │   │   │   ├── 📄 WD Melee.txt
+│   │   │   │   ├── 📄 WD Other.cs
+│   │   │   │   ├── 📄 WD Other.txt
+│   │   │   │   ├── 📄 WD Pistol.cs
+│   │   │   │   ├── 📄 WD Pistol.txt
+│   │   │   │   ├── 📄 WD Rifle.cs
+│   │   │   │   ├── 📄 WD Rifle.txt
+│   │   │   │   ├── 📄 WD Shotgun.cs
+│   │   │   │   ├── 📄 WD Shotgun.txt
+│   │   │   │   ├── 📄 WD UZI.cs
+│   │   │   │   └── 📄 WD UZI.txt
+│   │   │   ├── 📁 07-Colt45
+│   │   │   │   ├── 📄 colt45.dff
+│   │   │   │   ├── 📄 colt45.txd
+│   │   │   │   ├── 📄 colt45_O.dff
+│   │   │   │   ├── 📄 colt45_R.dff
+│   │   │   │   └── 📄 colt45_S.dff
+│   │   │   ├── 📁 08-Cuntgun
+│   │   │   │   ├── 📄 cuntgun.dff
+│   │   │   │   ├── 📄 cuntgun.txd
+│   │   │   │   ├── 📄 cuntgun_o.dff
+│   │   │   │   └── 📄 cuntgun_s.dff
+│   │   │   ├── 📁 09-Deagle
+│   │   │   │   ├── 📄 desert_eagle.dff
+│   │   │   │   ├── 📄 desert_eagle.txd
+│   │   │   │   ├── 📄 desert_eagle_O.dff
+│   │   │   │   ├── 📄 desert_eagle_R.dff
+│   │   │   │   └── 📄 desert_eagle_S.dff
+│   │   │   ├── 📁 10-Flame
+│   │   │   │   ├── 📄 flame.dff
+│   │   │   │   ├── 📄 flame.txd
+│   │   │   │   ├── 📄 flame_1.dff
+│   │   │   │   ├── 📄 flame_1.txd
+│   │   │   │   ├── 📄 flame_2.dff
+│   │   │   │   ├── 📄 flame_2.txd
+│   │   │   │   ├── 📄 flame_3.dff
+│   │   │   │   ├── 📄 flame_3.txd
+│   │   │   │   ├── 📄 flame_r.dff
+│   │   │   │   └── 📄 flame_s.dff
+│   │   │   ├── 📁 11-Golfclub
+│   │   │   │   ├── 📄 golfclub.dff
+│   │   │   │   ├── 📄 golfclub.txd
+│   │   │   │   ├── 📄 golfclubb1.dff
+│   │   │   │   ├── 📄 golfclubb1.txd
+│   │   │   │   ├── 📄 golfclubb2.dff
+│   │   │   │   ├── 📄 golfclubb2.txd
+│   │   │   │   ├── 📄 golfclubb3.dff
+│   │   │   │   └── 📄 golfclubb3.txd
+│   │   │   ├── 📁 12-Katana
+│   │   │   │   ├── 📄 katana.dff
+│   │   │   │   ├── 📄 katana.txd
+│   │   │   │   ├── 📄 katanab1.dff
+│   │   │   │   ├── 📄 katanab1.txd
+│   │   │   │   ├── 📄 katanab2.dff
+│   │   │   │   ├── 📄 katanab2.txd
+│   │   │   │   ├── 📄 katanab3.dff
+│   │   │   │   └── 📄 katanab3.txd
+│   │   │   ├── 📁 13-Knifecur
+│   │   │   │   ├── 📄 knifecur.dff
+│   │   │   │   ├── 📄 knifecur.txd
+│   │   │   │   ├── 📄 knifecurb1.dff
+│   │   │   │   ├── 📄 knifecurb1.txd
+│   │   │   │   ├── 📄 knifecurb2.dff
+│   │   │   │   ├── 📄 knifecurb2.txd
+│   │   │   │   ├── 📄 knifecurb3.dff
+│   │   │   │   └── 📄 knifecurb3.txd
+│   │   │   ├── 📁 14-M4
+│   │   │   │   ├── 📄 m4.dff
+│   │   │   │   ├── 📄 m4.txd
+│   │   │   │   ├── 📄 m4_O.dff
+│   │   │   │   ├── 📄 m4_R.dff
+│   │   │   │   ├── 📄 m4_R2.dff
+│   │   │   │   └── 📄 m4_S.dff
+│   │   │   ├── 📁 15-Micro_uzi
+│   │   │   │   ├── 📄 micro_uzi.dff
+│   │   │   │   ├── 📄 micro_uzi.txd
+│   │   │   │   ├── 📄 micro_uzi_O.dff
+│   │   │   │   ├── 📄 micro_uzi_R.dff
+│   │   │   │   └── 📄 micro_uzi_S.dff
+│   │   │   ├── 📁 16-Molotov
+│   │   │   │   ├── 📄 molotov.dff
+│   │   │   │   ├── 📄 molotov.txd
+│   │   │   │   ├── 📄 molotov_b1.dff
+│   │   │   │   └── 📄 molotov_b2.dff
+│   │   │   ├── 📁 17-Mp5lng
+│   │   │   │   ├── 📄 mp5lng.dff
+│   │   │   │   ├── 📄 mp5lng.txd
+│   │   │   │   ├── 📄 mp5lng_O.dff
+│   │   │   │   ├── 📄 mp5lng_R.dff
+│   │   │   │   ├── 📄 mp5lng_R2.dff
+│   │   │   │   └── 📄 mp5lng_s.dff
+│   │   │   ├── 📁 18-Nitestick
+│   │   │   │   ├── 📄 nitestick.dff
+│   │   │   │   ├── 📄 nitestick.txd
+│   │   │   │   ├── 📄 nitestickb1.dff
+│   │   │   │   ├── 📄 nitestickb1.txd
+│   │   │   │   ├── 📄 nitestickb2.dff
+│   │   │   │   ├── 📄 nitestickb2.txd
+│   │   │   │   ├── 📄 nitestickb3.dff
+│   │   │   │   └── 📄 nitestickb3.txd
+│   │   │   ├── 📁 19-Poolcue
+│   │   │   │   ├── 📄 poolcue.dff
+│   │   │   │   ├── 📄 poolcue.txd
+│   │   │   │   ├── 📄 poolcueb1.dff
+│   │   │   │   ├── 📄 poolcueb1.txd
+│   │   │   │   ├── 📄 poolcueb2.dff
+│   │   │   │   ├── 📄 poolcueb2.txd
+│   │   │   │   ├── 📄 poolcueb3.dff
+│   │   │   │   └── 📄 poolcueb3.txd
+│   │   │   ├── 📁 20-Rocketla
+│   │   │   │   ├── 📄 rocketla.dff
+│   │   │   │   ├── 📄 rocketla.txd
+│   │   │   │   ├── 📄 rocketla_r.dff
+│   │   │   │   └── 📄 rocketla_s.dff
+│   │   │   ├── 📁 21-Sawnoff
+│   │   │   │   ├── 📄 sawnoff.dff
+│   │   │   │   ├── 📄 sawnoff.txd
+│   │   │   │   ├── 📄 sawnoff_R.dff
+│   │   │   │   └── 📄 sawnoff_S.dff
+│   │   │   ├── 📁 22-Shotgspa
+│   │   │   │   ├── 📄 shotgspa.dff
+│   │   │   │   ├── 📄 shotgspa.txd
+│   │   │   │   ├── 📄 shotgspa_O.dff
+│   │   │   │   ├── 📄 shotgspa_R.dff
+│   │   │   │   └── 📄 shotgspa_S.dff
+│   │   │   ├── 📁 23-Shovel
+│   │   │   │   ├── 📄 shovel.dff
+│   │   │   │   ├── 📄 shovel.txd
+│   │   │   │   ├── 📄 shovelb1.dff
+│   │   │   │   ├── 📄 shovelb1.txd
+│   │   │   │   ├── 📄 shovelb2.dff
+│   │   │   │   ├── 📄 shovelb2.txd
+│   │   │   │   ├── 📄 shovelb3.dff
+│   │   │   │   └── 📄 shovelb3.txd
+│   │   │   ├── 📁 24-Silenced
+│   │   │   │   ├── 📄 silenced.dff
+│   │   │   │   ├── 📄 silenced.txd
+│   │   │   │   ├── 📄 silenced_O.dff
+│   │   │   │   ├── 📄 silenced_R.dff
+│   │   │   │   └── 📄 silenced_s.dff
+│   │   │   ├── 📁 25-Sniper
+│   │   │   │   ├── 📄 sniper.dff
+│   │   │   │   ├── 📄 sniper.txd
+│   │   │   │   ├── 📄 sniper_r.dff
+│   │   │   │   └── 📄 sniper_s.dff
+│   │   │   ├── 📁 26-SQ
+│   │   │   │   ├── 📄 IMP2.mp3
+│   │   │   │   └── 📄 SPR1.mp3
+│   │   │   ├── 📁 27-Tec9
+│   │   │   │   ├── 📄 tec9.dff
+│   │   │   │   ├── 📄 tec9.txd
+│   │   │   │   ├── 📄 tec9_O.dff
+│   │   │   │   ├── 📄 tec9_R.dff
+│   │   │   │   └── 📄 tec9_S.dff
+│   │   │   └── 📄 WeaponDetails.ifp
+│   │   ├── 📄 ---How to Adapt---.txt
+│   │   └── 📄 Installation.txt
+│   ├── 📄 Installation step-by-step (EN) (RU).txt
+│   ├── 📄 readme (eng).txt
+│   └── 📄 readme (rus).txt
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 294
+فایل‌ها: 2754

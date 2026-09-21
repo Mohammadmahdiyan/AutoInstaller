@@ -1,0 +1,2860 @@
+📁 Cleo scripts
+
+├── 📁 01-Advanced Aiming Mod
+│   ├── 📄 aimingSets.dat
+│   ├── 📄 imCamAim.SA.asi
+│   ├── 📄 Readme (or die).txt
+│   ├── 📄 Screenshot (285).png
+│   └── 📄 Screenshot (287).png
+├── 📁 02-animations-gta-v
+│   ├── 📁 01-anim
+│   │   └── 📄 ped.ifp
+│   ├── 📁 02-CLEO
+│   │   ├── 📄 LAIPOP.cs
+│   │   ├── 📄 reload crouch.cs
+│   │   ├── 📄 reload.cs
+│   │   ├── 📄 run_armed_in45do.cs
+│   │   ├── 📄 script.cs
+│   │   └── 📄 sprint_armed.cs
+│   └── 📁 03-modloader
+│       └── 📁 gta3.img
+│           ├── 📄 colt45.ifp
+│           ├── 📄 dam_jump.ifp
+│           ├── 📄 dancing.ifp
+│           ├── 📄 dinghy.dff
+│           ├── 📄 dinghy.txd
+│           ├── 📄 knife.ifp
+│           ├── 📄 misc.ifp
+│           ├── 📄 rob_bank.ifp
+│           ├── 📄 shop.ifp
+│           ├── 📄 silenced.ifp
+│           ├── 📄 smoking.ifp
+│           ├── 📄 uzi.ifp
+│           └── 📄 wayfarer.ifp
+├── 📁 03-Ben10 Ultimate Alien Mod By KING OF GTA
+│   ├── 📁 01-cleo
+│   │   ├── 📁 cleo_text
+│   │   │   ├── 📄 example.fxt
+│   │   │   └── 📄 rcf_ctp_names.fxt
+│   │   ├── 📄 FileSystemOperations.cleo
+│   │   ├── 📄 fpsunlimiter.cs
+│   │   ├── 📄 IniFiles.cleo
+│   │   ├── 📄 IntOperations.cleo
+│   │   ├── 📄 MemFix.cs
+│   │   ├── 📄 memory1024.cs
+│   │   ├── 📄 memory2048.cs
+│   │   ├── 📄 memory512.cs
+│   │   ├── 📄 SightDistance_by_0x688.cleo
+│   │   ├── 📄 StreamIniExtender.cs
+│   │   └── 📄 test tree remove.cs
+│   ├── 📁 02-cleo_readme
+│   │   ├── 📄 ASI Loader ReadMe.txt
+│   │   ├── 📄 CHANGELOG.md
+│   │   └── 📄 README.md
+│   ├── 📁 03-cleo_sdk
+│   │   ├── 📁 demo_plugins
+│   │   │   ├── 📁 01-FileSystemOperations
+│   │   │   │   └── 📁 FileSystemOperations
+│   │   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   │   ├── 📁 02-IniFiles
+│   │   │   │   └── 📁 IniFiles
+│   │   │   │       ├── 📄 IniFiles.cpp
+│   │   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   │   └── 📁 03-IntOperations
+│   │   │       └── 📁 IntOperations
+│   │   │           ├── 📄 IntOperations.cpp
+│   │   │           ├── 📄 IntOperations.vcxproj
+│   │   │           └── 📄 IntOperations.vcxproj.filters
+│   │   ├── 📄 CLEO.h
+│   │   └── 📄 CLEO.lib
+│   ├── 📁 04-modloader
+│   │   ├── 📁 01-.data
+│   │   │   ├── 📁 01-licenses
+│   │   │   │   ├── 📄 boost.txt
+│   │   │   │   ├── 📄 cereal.txt
+│   │   │   │   ├── 📄 tinympl.txt
+│   │   │   │   └── 📄 utf8-cpp.txt
+│   │   │   ├── 📁 02-plugins
+│   │   │   │   ├── 📁 gta3
+│   │   │   │   │   ├── 📄 std.asi.dll
+│   │   │   │   │   ├── 📄 std.asi.md
+│   │   │   │   │   ├── 📄 std.bank.dll
+│   │   │   │   │   ├── 📄 std.bank.md
+│   │   │   │   │   ├── 📄 std.data.dll
+│   │   │   │   │   ├── 📄 std.data.md
+│   │   │   │   │   ├── 📄 std.fx.dll
+│   │   │   │   │   ├── 📄 std.fx.md
+│   │   │   │   │   ├── 📄 std.movies.dll
+│   │   │   │   │   ├── 📄 std.movies.md
+│   │   │   │   │   ├── 📄 std.scm.dll
+│   │   │   │   │   ├── 📄 std.scm.md
+│   │   │   │   │   ├── 📄 std.sprites.dll
+│   │   │   │   │   ├── 📄 std.sprites.md
+│   │   │   │   │   ├── 📄 std.stream.dll
+│   │   │   │   │   ├── 📄 std.stream.md
+│   │   │   │   │   ├── 📄 std.text.dll
+│   │   │   │   │   ├── 📄 std.text.md
+│   │   │   │   │   ├── 📄 std.tracks.dll
+│   │   │   │   │   └── 📄 std.tracks.md
+│   │   │   │   └── 📄 plugins.ini
+│   │   │   ├── 📁 03-text
+│   │   │   │   ├── 📁 01-1033
+│   │   │   │   │   └── 📄 menu.fxt
+│   │   │   │   └── 📁 02-1046
+│   │   │   │       └── 📄 menu.fxt
+│   │   │   ├── 📄 CHANGELOG.md
+│   │   │   ├── 📄 Command Line Arguments.md
+│   │   │   ├── 📄 config.ini
+│   │   │   ├── 📄 Leia-me.md
+│   │   │   ├── 📄 Profiles.md
+│   │   │   └── 📄 Readme.md
+│   │   ├── 📁 02-Ben10 Mod
+│   │   │   ├── 📁 01-Ben Transform
+│   │   │   │   ├── 📁 01-cleo
+│   │   │   │   │   ├── 📁 SOUND
+│   │   │   │   │   │   ├── 📄 arbol.mp3
+│   │   │   │   │   │   ├── 📄 bigchill.wav
+│   │   │   │   │   │   ├── 📄 ghostfreak.wav
+│   │   │   │   │   │   ├── 📄 houmangsour.wav
+│   │   │   │   │   │   ├── 📄 rath.wav
+│   │   │   │   │   │   ├── 📄 swampfire.wav
+│   │   │   │   │   │   ├── 📄 tesh.mp3
+│   │   │   │   │   │   ├── 📄 transformation.wav
+│   │   │   │   │   │   └── 📄 xlr8.wav
+│   │   │   │   │   └── 📄 Ben10.cs
+│   │   │   │   └── 📁 02-gta3.img
+│   │   │   │       ├── 📄 ben10.dff
+│   │   │   │       ├── 📄 ben10.txd
+│   │   │   │       └── 📄 transform.ifp
+│   │   │   ├── 📁 02-bigchill
+│   │   │   │   ├── 📁 01-CLEO
+│   │   │   │   │   └── 📄 bigchill.cs
+│   │   │   │   └── 📁 02-gta3.img
+│   │   │   │       ├── 📄 big.dff
+│   │   │   │       ├── 📄 big.txd
+│   │   │   │       ├── 📄 dead_mantxd.txd
+│   │   │   │       ├── 📄 KMB_DEADTORSO.dff
+│   │   │   │       └── 📄 ul_bi.ifp
+│   │   │   ├── 📁 03-ghostfreak
+│   │   │   │   ├── 📁 01-CLEO
+│   │   │   │   │   └── 📄 ghostfreak.cs
+│   │   │   │   └── 📁 02-gta3.img
+│   │   │   │       ├── 📄 Ghost.dff
+│   │   │   │       └── 📄 Ghost.txd
+│   │   │   ├── 📁 04-houmangsour
+│   │   │   │   ├── 📁 01-CLEO
+│   │   │   │   │   └── 📄 houmangsour.cs
+│   │   │   │   └── 📁 02-gta3.img
+│   │   │   │       ├── 📄 Humng.dff
+│   │   │   │       └── 📄 Humng.txd
+│   │   │   ├── 📁 05-rath
+│   │   │   │   ├── 📁 01-CLEO
+│   │   │   │   │   └── 📄 rath.cs
+│   │   │   │   └── 📁 02-gta3.img
+│   │   │   │       ├── 📄 rath.dff
+│   │   │   │       └── 📄 rath.txd
+│   │   │   ├── 📁 06-swampfire
+│   │   │   │   ├── 📁 01-cleo
+│   │   │   │   │   └── 📄 swampfire.cs
+│   │   │   │   ├── 📁 02-data
+│   │   │   │   │   ├── 📁 maps
+│   │   │   │   │   │   └── 📁 generic
+│   │   │   │   │   │       └── 📄 procobj.IDE
+│   │   │   │   │   └── 📄 procobj.dat
+│   │   │   │   └── 📁 03-gta3.img
+│   │   │   │       ├── 📄 2han.ifp
+│   │   │   │       ├── 📄 dead_tree_11.dff
+│   │   │   │       ├── 📄 dead_tree_11.txd
+│   │   │   │       ├── 📄 dead_tree_19.dff
+│   │   │   │       ├── 📄 dead_tree_19.txd
+│   │   │   │       ├── 📄 DEAD_TREE_20.dff
+│   │   │   │       ├── 📄 FFIRE.ifp
+│   │   │   │       ├── 📄 gun_vibe2.dff
+│   │   │   │       ├── 📄 gun_vibe2.txd
+│   │   │   │       ├── 📄 kkid.ifp
+│   │   │   │       ├── 📄 levi.ifp
+│   │   │   │       ├── 📄 Madara.ifp
+│   │   │   │       ├── 📄 mopincho.txd
+│   │   │   │       ├── 📄 Susano1.dff
+│   │   │   │       ├── 📄 Susano1.txd
+│   │   │   │       ├── 📄 Swamp.dff
+│   │   │   │       ├── 📄 Swamp.txd
+│   │   │   │       └── 📄 ul_sw.ifp
+│   │   │   └── 📁 07-xlr8
+│   │   │       ├── 📁 01-CLEO
+│   │   │       │   ├── 📁 SKILL
+│   │   │       │   │   └── 📁 xlr8
+│   │   │       │   │       └── 📄 RUN.xlr8
+│   │   │       │   └── 📄 xlr8.cs
+│   │   │       └── 📁 02-gta3.img
+│   │   │           ├── 📄 Ninja1.ifp
+│   │   │           ├── 📄 VMAFF1.dff
+│   │   │           └── 📄 VMAFF1.txd
+│   │   ├── 📄 modloader.ini
+│   │   └── 📄 modloader.log
+│   ├── 📁 05-scripts
+│   │   ├── 📄 flickr.asi
+│   │   ├── 📄 global.ini
+│   │   ├── 📄 limit_adjuster_gta3vcsa.asi
+│   │   ├── 📄 limit_adjuster_gta3vcsa.ini
+│   │   └── 📄 NoShadows.asi
+│   ├── 📄 bass.dll
+│   ├── 📄 cleo.asi
+│   ├── 📄 modloader.asi
+│   ├── 📄 vorbisFile.dll
+│   ├── 📄 vorbisHooked.dll
+│   └── 📄 Z-ReadMe.txt
+├── 📁 04-bullethole
+│   ├── 📄 bullethole.asi
+│   ├── 📄 bullethole.ini
+│   ├── 📄 bullethole.png
+│   ├── 📄 bullethole_material.json
+│   ├── 📄 bullethole_texture.json
+│   └── 📄 bullethole_weapon.json
+├── 📁 05-Chroma Key Switch
+│   ├── 📁 01-cleo
+│   │   ├── 📄 ckswitch.cs
+│   │   └── 📄 ckswitch_cfg.ini
+│   ├── 📁 02-gta3.img
+│   │   ├── 📄 ckbox.dff
+│   │   └── 📄 ckbox.txd
+│   ├── 📄 --- READ ME !!! ---.txt
+│   ├── 📄 ckbox.ide
+│   └── 📄 lines.txt
+├── 📁 06-eCoJ's mix of GTA V anims pack
+│   ├── 📁 01-.Files for MANUAL stories sprinting adaptation (not needed)
+│   │   ├── 📄 CustomFat.ifp
+│   │   ├── 📄 CustomMuscular.ifp
+│   │   ├── 📄 CustomPed.ifp
+│   │   └── 📄 readme.txt
+│   ├── 📁 02-.OPTIONAL Versions
+│   │   ├── 📁 01-RE5 hurt animations
+│   │   │   └── 📁 Animations
+│   │   │       └── 📁 EDITED Arturo Casasnovas GTA V anims
+│   │   │           ├── 📁 01-anim
+│   │   │           │   └── 📄 ped.ifp
+│   │   │           └── 📁 02-gta3.img
+│   │   │               ├── 📁 01-anim fix bike anims
+│   │   │               │   └── 📁 gta3.img
+│   │   │               │       ├── 📄 bikev.ifp
+│   │   │               │       ├── 📄 bmx.ifp
+│   │   │               │       ├── 📄 carry.ifp
+│   │   │               │       ├── 📄 choppa.ifp
+│   │   │               │       ├── 📄 quad.ifp
+│   │   │               │       ├── 📄 skate.ifp
+│   │   │               │       └── 📄 sword.ifp
+│   │   │               ├── 📁 02-fat and muscular
+│   │   │               │   ├── 📄 fat.ifp
+│   │   │               │   ├── 📄 muscular.ifp
+│   │   │               │   └── 📄 oldmuscular.ifp
+│   │   │               ├── 📁 03-GTA IV Bike animations
+│   │   │               │   └── 📁 gta3.img
+│   │   │               │       ├── 📄 biked.ifp
+│   │   │               │       ├── 📄 bikeh.ifp
+│   │   │               │       ├── 📄 bikes.ifp
+│   │   │               │       └── 📄 wayfarer.ifp
+│   │   │               ├── 📄 baseball.ifp
+│   │   │               ├── 📄 chainsaw.ifp
+│   │   │               ├── 📄 dildo.ifp
+│   │   │               ├── 📄 fight_b.ifp
+│   │   │               ├── 📄 fight_c.ifp
+│   │   │               ├── 📄 fight_d.ifp
+│   │   │               ├── 📄 fight_e.ifp
+│   │   │               ├── 📄 goggles.ifp
+│   │   │               ├── 📄 grenade.ifp
+│   │   │               ├── 📄 knife.ifp
+│   │   │               ├── 📄 parachute.ifp
+│   │   │               ├── 📄 playidles.ifp
+│   │   │               ├── 📄 shop.ifp
+│   │   │               └── 📄 sword.ifp
+│   │   ├── 📁 02-V Fighting
+│   │   │   └── 📁 Animations
+│   │   │       └── 📁 EDITED Arturo Casasnovas GTA V anims
+│   │   │           ├── 📁 01-anim
+│   │   │           │   └── 📄 ped.ifp
+│   │   │           ├── 📁 02-data
+│   │   │           │   └── 📄 melee.dat
+│   │   │           └── 📁 03-gta3.img
+│   │   │               ├── 📁 01-anim fix bike anims
+│   │   │               │   └── 📁 gta3.img
+│   │   │               │       ├── 📄 bikev.ifp
+│   │   │               │       ├── 📄 bmx.ifp
+│   │   │               │       ├── 📄 carry.ifp
+│   │   │               │       ├── 📄 choppa.ifp
+│   │   │               │       ├── 📄 quad.ifp
+│   │   │               │       ├── 📄 skate.ifp
+│   │   │               │       └── 📄 sword.ifp
+│   │   │               ├── 📁 02-fat and muscular
+│   │   │               │   ├── 📄 Bmuscular.ifp
+│   │   │               │   ├── 📄 fat.ifp
+│   │   │               │   └── 📄 muscular.ifp
+│   │   │               ├── 📁 03-GTA IV Bike animations
+│   │   │               │   └── 📁 gta3.img
+│   │   │               │       ├── 📄 biked.ifp
+│   │   │               │       ├── 📄 bikeh.ifp
+│   │   │               │       ├── 📄 bikes.ifp
+│   │   │               │       └── 📄 wayfarer.ifp
+│   │   │               ├── 📄 baseball.ifp
+│   │   │               ├── 📄 chainsaw.ifp
+│   │   │               ├── 📄 fight_e.ifp
+│   │   │               ├── 📄 goggles.ifp
+│   │   │               ├── 📄 grenade.ifp
+│   │   │               ├── 📄 knife.ifp
+│   │   │               ├── 📄 parachute.ifp
+│   │   │               ├── 📄 playidles.ifp
+│   │   │               └── 📄 shop.ifp
+│   │   ├── 📁 03-V Fighting + RE5 hurt animations
+│   │   │   └── 📁 Animations
+│   │   │       └── 📁 EDITED Arturo Casasnovas GTA V anims
+│   │   │           ├── 📁 01-anim
+│   │   │           │   └── 📄 ped.ifp
+│   │   │           ├── 📁 02-data
+│   │   │           │   └── 📄 melee.dat
+│   │   │           └── 📁 03-gta3.img
+│   │   │               ├── 📁 01-anim fix bike anims
+│   │   │               │   └── 📁 gta3.img
+│   │   │               │       ├── 📄 bikev.ifp
+│   │   │               │       ├── 📄 bmx.ifp
+│   │   │               │       ├── 📄 carry.ifp
+│   │   │               │       ├── 📄 choppa.ifp
+│   │   │               │       ├── 📄 quad.ifp
+│   │   │               │       ├── 📄 skate.ifp
+│   │   │               │       └── 📄 sword.ifp
+│   │   │               ├── 📁 02-fat and muscular
+│   │   │               │   ├── 📄 Bmuscular.ifp
+│   │   │               │   ├── 📄 fat.ifp
+│   │   │               │   ├── 📄 muscular.ifp
+│   │   │               │   └── 📄 oldmuscular.ifp
+│   │   │               ├── 📁 03-GTA IV Bike animations
+│   │   │               │   └── 📁 gta3.img
+│   │   │               │       ├── 📄 biked.ifp
+│   │   │               │       ├── 📄 bikeh.ifp
+│   │   │               │       ├── 📄 bikes.ifp
+│   │   │               │       └── 📄 wayfarer.ifp
+│   │   │               ├── 📄 baseball.ifp
+│   │   │               ├── 📄 chainsaw.ifp
+│   │   │               ├── 📄 dildo.ifp
+│   │   │               ├── 📄 fight_b.ifp
+│   │   │               ├── 📄 fight_c.ifp
+│   │   │               ├── 📄 fight_d.ifp
+│   │   │               ├── 📄 fight_e.ifp
+│   │   │               ├── 📄 goggles.ifp
+│   │   │               ├── 📄 grenade.ifp
+│   │   │               ├── 📄 knife.ifp
+│   │   │               ├── 📄 parachute.ifp
+│   │   │               ├── 📄 playidles.ifp
+│   │   │               ├── 📄 shop.ifp
+│   │   │               └── 📄 sword.ifp
+│   │   └── 📁 04-Vanilla-like (best)
+│   │       └── 📁 Animations
+│   │           └── 📁 EDITED Arturo Casasnovas GTA V anims
+│   │               ├── 📁 01-anim
+│   │               │   └── 📄 ped.ifp
+│   │               └── 📁 02-gta3.img
+│   │                   ├── 📁 01-anim fix bike anims
+│   │                   │   └── 📁 gta3.img
+│   │                   │       ├── 📄 bikev.ifp
+│   │                   │       ├── 📄 bmx.ifp
+│   │                   │       ├── 📄 carry.ifp
+│   │                   │       ├── 📄 choppa.ifp
+│   │                   │       ├── 📄 quad.ifp
+│   │                   │       ├── 📄 skate.ifp
+│   │                   │       └── 📄 sword.ifp
+│   │                   ├── 📁 02-fat and muscular
+│   │                   │   ├── 📄 fat.ifp
+│   │                   │   ├── 📄 muscular.ifp
+│   │                   │   └── 📄 oldmuscular.ifp
+│   │                   ├── 📁 03-GTA IV Bike animations
+│   │                   │   └── 📁 gta3.img
+│   │                   │       ├── 📄 biked.ifp
+│   │                   │       ├── 📄 bikeh.ifp
+│   │                   │       ├── 📄 bikes.ifp
+│   │                   │       ├── 📄 bikev.ifp
+│   │                   │       └── 📄 wayfarer.ifp
+│   │                   ├── 📄 baseball.ifp
+│   │                   ├── 📄 chainsaw.ifp
+│   │                   ├── 📄 dildo.ifp
+│   │                   ├── 📄 fight_b.ifp
+│   │                   ├── 📄 fight_c.ifp
+│   │                   ├── 📄 fight_d.ifp
+│   │                   ├── 📄 fight_e.ifp
+│   │                   ├── 📄 goggles.ifp
+│   │                   ├── 📄 grenade.ifp
+│   │                   ├── 📄 knife.ifp
+│   │                   ├── 📄 parachute.ifp
+│   │                   ├── 📄 playidles.ifp
+│   │                   ├── 📄 shop.ifp
+│   │                   └── 📄 sword.ifp
+│   ├── 📁 03-GTA V Anims (modloader drag and drop)
+│   │   └── 📁 Animations
+│   │       ├── 📁 01-.OLD gun anims (as seen in the video)
+│   │       │   ├── 📄 buddy.ifp
+│   │       │   ├── 📄 colt45.ifp
+│   │       │   ├── 📄 python.ifp
+│   │       │   ├── 📄 rifle.ifp
+│   │       │   ├── 📄 shotgun.ifp
+│   │       │   ├── 📄 silenced.ifp
+│   │       │   └── 📄 uzi.ifp
+│   │       ├── 📁 02-Additional mods
+│   │       │   ├── 📁 01-.Explosions Covered Face Animation (Extra)
+│   │       │   │   ├── 📁 cleo
+│   │       │   │   │   └── 📄 ExplosionEffect.cs
+│   │       │   │   └── 📄 coingod.ifp
+│   │       │   ├── 📁 02-DeathAnimsMod - RE5&6
+│   │       │   │   ├── 📁 cleo
+│   │       │   │   │   ├── 📄 DeathMod.cs
+│   │       │   │   │   ├── 📄 DeathMod.ini
+│   │       │   │   │   ├── 📄 DeathMod.txt
+│   │       │   │   │   ├── 📄 ReviveFix.cs
+│   │       │   │   │   ├── 📄 ReviveFix.txt
+│   │       │   │   │   └── 📄 testanim.txt
+│   │       │   │   └── 📄 Death Anims.ifp
+│   │       │   ├── 📁 03-Gang Command Animations
+│   │       │   │   ├── 📁 01-cleo
+│   │       │   │   │   └── 📄 gang_command_anim.cs
+│   │       │   │   └── 📁 02-gta3img
+│   │       │   │       └── 📄 swat.ifp
+│   │       │   ├── 📁 04-Gangster Walk Fix (SA)
+│   │       │   │   └── 📁 CLEO
+│   │       │   │       └── 📄 SA.GangsterWalkFix.cs
+│   │       │   ├── 📁 05-ImprovedMove
+│   │       │   │   ├── 📄 ImprovedMove.asi
+│   │       │   │   └── 📄 ImprovedMove.ini
+│   │       │   ├── 📁 06-VstyleRolling
+│   │       │   │   ├── 📁 01-cleo
+│   │       │   │   │   ├── 📄 Vrolling.cs
+│   │       │   │   │   └── 📄 Vrolling.ini
+│   │       │   │   └── 📁 02-gta3.img
+│   │       │   │       └── 📄 VRolling.ifp
+│   │       │   └── 📁 07-Weapon change animation like GTA5 - NEW
+│   │       │       ├── 📁 CLEO
+│   │       │       │   ├── 📄 Weapon Change Animation like GTA5.cs
+│   │       │       │   ├── 📄 Weapon Change Animation like GTA5.txt
+│   │       │       │   └── 📄 Weapon Change Settings.ini
+│   │       │       └── 📄 weapc.ifp
+│   │       ├── 📁 03-Clumsie Gun animations
+│   │       │   └── 📁 gta3.img
+│   │       │       ├── 📄 buddy.ifp
+│   │       │       ├── 📄 colt45.ifp
+│   │       │       ├── 📄 python.ifp
+│   │       │       ├── 📄 rifle.ifp
+│   │       │       ├── 📄 shotgun.ifp
+│   │       │       ├── 📄 silenced.ifp
+│   │       │       └── 📄 uzi.ifp
+│   │       └── 📁 04-EDITED Arturo Casasnovas GTA V anims
+│   │           ├── 📁 01-anim
+│   │           │   └── 📄 ped.ifp
+│   │           └── 📁 02-gta3.img
+│   │               ├── 📁 01-anim fix bike anims
+│   │               │   └── 📁 gta3.img
+│   │               │       ├── 📄 bikev.ifp
+│   │               │       ├── 📄 bmx.ifp
+│   │               │       ├── 📄 carry.ifp
+│   │               │       ├── 📄 choppa.ifp
+│   │               │       ├── 📄 quad.ifp
+│   │               │       ├── 📄 skate.ifp
+│   │               │       └── 📄 sword.ifp
+│   │               ├── 📁 02-fat and muscular
+│   │               │   ├── 📄 fat.ifp
+│   │               │   ├── 📄 muscular.ifp
+│   │               │   └── 📄 oldmuscular.ifp
+│   │               ├── 📁 03-GTA IV Bike animations
+│   │               │   └── 📁 gta3.img
+│   │               │       ├── 📄 biked.ifp
+│   │               │       ├── 📄 bikeh.ifp
+│   │               │       ├── 📄 bikes.ifp
+│   │               │       └── 📄 wayfarer.ifp
+│   │               ├── 📄 baseball.ifp
+│   │               ├── 📄 chainsaw.ifp
+│   │               ├── 📄 dildo.ifp
+│   │               ├── 📄 fight_b.ifp
+│   │               ├── 📄 fight_c.ifp
+│   │               ├── 📄 fight_d.ifp
+│   │               ├── 📄 fight_e.ifp
+│   │               ├── 📄 goggles.ifp
+│   │               ├── 📄 grenade.ifp
+│   │               ├── 📄 knife.ifp
+│   │               ├── 📄 parachute.ifp
+│   │               ├── 📄 playidles.ifp
+│   │               ├── 📄 shop.ifp
+│   │               └── 📄 sword.ifp
+│   └── 📄 readme.txt
+├── 📁 07-first person v3
+│   ├── 📁 01-data
+│   │   └── 📁 fonts
+│   │       ├── 📄 fp_font.dat
+│   │       └── 📄 fp_font.txd
+│   ├── 📁 02-models
+│   │   └── 📄 FirstPerson.txd
+│   ├── 📄 FirstPerson.cfg
+│   ├── 📄 FirstPerson.sp
+│   ├── 📄 FirstPersonModFix.asi
+│   ├── 📄 GUI.fp
+│   ├── 📄 Hooks.asi
+│   ├── 📄 Leiame (ou morra).txt
+│   └── 📄 Readme (or die).txt
+├── 📁 08-first person v30
+│   ├── 📁 01-data
+│   │   └── 📁 fonts
+│   │       ├── 📄 fp_font.dat
+│   │       └── 📄 fp_font.txd
+│   ├── 📁 02-models
+│   │   └── 📄 FirstPerson.txd
+│   ├── 📄 FirstPerson.cfg
+│   ├── 📄 FirstPerson.sp
+│   ├── 📄 GUI.fp
+│   ├── 📄 Hooks.asi
+│   └── 📄 msvcr100d.dll
+├── 📁 09-First_Person_V30_Fixed
+│   ├── 📁 01-data
+│   │   └── 📁 fonts
+│   │       ├── 📄 fp_font.dat
+│   │       └── 📄 fp_font.txd
+│   ├── 📁 02-models
+│   │   └── 📄 FirstPerson.txd
+│   ├── 📄 FirstPerson.cfg
+│   ├── 📄 FirstPerson.sp
+│   ├── 📄 FP_Readme_Eng.txt
+│   ├── 📄 FP_Readme_Rus.txt
+│   ├── 📄 GUI.fp
+│   ├── 📄 Hooks.asi
+│   ├── 📄 msvcr100d.dll
+│   ├── 📄 vorbisFile.dll
+│   └── 📄 vorbishooked.dll
+├── 📁 10-Football
+│   ├── 📁 01-cleo
+│   │   ├── 📁 CLEO_TEXT
+│   │   │   └── 📄 soccerTeamPlay.fxt
+│   │   ├── 📄 SoccerTP.cm
+│   │   ├── 📄 SoccerTP.dll
+│   │   ├── 📄 SoccerTP.ini
+│   │   └── 📄 SoccerTPStarter.cs
+│   ├── 📁 02-data
+│   │   └── 📁 maps
+│   │       └── 📁 generic
+│   │           └── 📄 multiobj.ide
+│   └── 📁 03-modloader
+│       └── 📁 FootballTeamPlay
+│           ├── 📁 gta3.img
+│           │   ├── 📄 soccerball.dff
+│           │   ├── 📄 soccerfield.dff
+│           │   ├── 📄 soccergoal.dff
+│           │   └── 📄 soccerTeamPlay.txd
+│           └── 📄 object.dat
+├── 📁 11-GTA V FRANKLIN ANIM V2
+│   ├── 📁 01-anim
+│   │   ├── 📁 Quick Wstart (better run transition)
+│   │   │   └── 📄 ped.ifp
+│   │   └── 📄 ped.ifp
+│   └── 📁 02-gta3.img
+│       ├── 📁 muscular
+│       │   ├── 📁 01-RUN ARMED VERSION
+│       │   │   └── 📄 muscular.ifp
+│       │   └── 📁 02-SPRINT ARMED VERSION
+│       │       └── 📄 muscular.ifp
+│       ├── 📄 baseball.ifp
+│       ├── 📄 bmx.ifp
+│       ├── 📄 fight_e.ifp
+│       ├── 📄 muscular.ifp
+│       ├── 📄 playidles.ifp
+│       ├── 📄 shop.ifp
+│       └── 📄 vending.ifp
+├── 📁 12-GTA V ONLINE ANIMATION v1.0
+│   ├── 📁 01-anim
+│   │   └── 📄 ped.ifp
+│   └── 📁 02-modloader
+│       └── 📁 gta3.img
+│           └── 📄 fight_e.ifp
+├── 📁 13-HULK Full
+│   ├── 📁 01-models
+│   │   └── 📁 effects
+│   │       └── 📁 Hulk
+│   │           ├── 📄 HK_G1.png
+│   │           ├── 📄 HK_G2.png
+│   │           ├── 📄 HK_G4.png
+│   │           ├── 📄 HK_G6.png
+│   │           ├── 📄 HKR_G1.png
+│   │           ├── 📄 HKR_G2.png
+│   │           ├── 📄 HKR_G4.png
+│   │           └── 📄 stone1.png
+│   ├── 📁 02-modloader
+│   │   └── 📁 Hulk
+│   │       ├── 📁 01-Cleo
+│   │       │   ├── 📁 Marvel
+│   │       │   │   └── 📁 Hulk
+│   │       │   │       └── 📁 sounds
+│   │       │   │           ├── 📄 attack_1.mp3
+│   │       │   │           ├── 📄 attack_2.mp3
+│   │       │   │           ├── 📄 attack_3.mp3
+│   │       │   │           ├── 📄 explosion.mp3
+│   │       │   │           ├── 📄 groundsmash.mp3
+│   │       │   │           ├── 📄 punch.mp3
+│   │       │   │           ├── 📄 punch_1.wav
+│   │       │   │           ├── 📄 punch_2.wav
+│   │       │   │           ├── 📄 punch_3.wav
+│   │       │   │           ├── 📄 punch_ground.mp3
+│   │       │   │           └── 📄 Roar.mp3
+│   │       │   ├── 📄 Abomination enemy RB.cs
+│   │       │   ├── 📄 Abomination enemy.cs
+│   │       │   ├── 📄 Hulk enemy RB.cs
+│   │       │   ├── 📄 Hulk enemy smoke.cs
+│   │       │   ├── 📄 Hulk enemy.cs
+│   │       │   ├── 📄 Hulk red enemy RB.cs
+│   │       │   ├── 📄 Hulk red enemy.cs
+│   │       │   └── 📄 Hulk.cs
+│   │       ├── 📁 02-data
+│   │       │   └── 📄 animgrp.dat
+│   │       ├── 📁 03-gta3.img
+│   │       │   ├── 📄 abo.dff
+│   │       │   ├── 📄 abo.txd
+│   │       │   ├── 📄 hulk.dff
+│   │       │   ├── 📄 hulk.txd
+│   │       │   ├── 📄 hulkr.dff
+│   │       │   ├── 📄 hulkr.txd
+│   │       │   └── 📄 mhulk.ifp
+│   │       └── 📁 04-models
+│   │           └── 📁 txd
+│   │               └── 📄 mhulk.txd
+│   ├── 📄 EffectLoader.asi
+│   ├── 📄 modloader.asi
+│   └── 📄 Readme.txt
+├── 📁 14-irani skanas (money)
+│   └── 📁 gta3.img
+│       ├── 📄 bonus.dff
+│       └── 📄 bonus.txd
+├── 📁 15-Lamppost_Insects (batter light)
+│   ├── 📁 cleo
+│   │   └── 📄 Lamppost Insects (Junior_Djjr).cs
+│   ├── 📄 Leiame (ou morra).txt
+│   └── 📄 Readme (or die).txt
+├── 📁 16-loadsc Mods
+│   ├── 📄 LOADSCS.txd
+│   └── 📄 LOADSUK.txd
+├── 📁 17-ModernKBControls_v1.3
+│   ├── 📄 ModernKBControlsSA.asi
+│   └── 📄 ModernKBControlsSA.ini
+├── 📁 18-new-HUD
+│   ├── 📁 models
+│   │   └── 📄 hud.txd
+│   └── 📄 config.json
+├── 📁 19-Pickups on the ground V to SA
+│   ├── 📁 01-cleo
+│   │   ├── 📁 audio
+│   │   │   ├── 📄 checkpoint.wav
+│   │   │   └── 📄 money.wav
+│   │   └── 📄 GTA V WEAPON & MONEY PICUP.cs
+│   └── 📁 02-modloader
+│       └── 📁 pickup moeny Hd
+│           ├── 📄 bonus.dff
+│           └── 📄 bonus.txd
+├── 📁 20-Ragdoll
+│   ├── 📁 CLEO
+│   │   ├── 📄 RagDoll_FrameAdjust.cs
+│   │   └── 📄 RagDoll_uniqueAbility.cs
+│   ├── 📄 RagDoll_physics.asi
+│   ├── 📄 RagDoll_physics.ini
+│   └── 📄 readme.txt
+├── 📁 21-Rainbomizer.v3.2
+│   ├── 📁 01-modloader
+│   │   └── 📁 rainbomizer
+│   │       ├── 📁 data
+│   │       │   ├── 📄 Cutscene_Models.txt
+│   │       │   ├── 📄 Cutscene_Models2.txt
+│   │       │   ├── 📄 Vehicle_Patterns.txt
+│   │       │   └── 📄 Weapon_Patterns.txt
+│   │       └── 📄 FAQ.txt
+│   ├── 📁 02-scripts
+│   │   └── 📄 SA.Rainbomizer.asi
+│   └── 📄 readme.txt
+├── 📁 22-Rocket Launcher third person
+│   ├── 📁 01-(optional)
+│   │   ├── 📁 01-audio
+│   │   │   └── 📁 SFX
+│   │   │       └── 📁 GENRL
+│   │   │           └── 📁 Bank_053
+│   │   │               └── 📄 sound_012.wav
+│   │   └── 📁 02-circle rocket shot
+│   │       └── 📁 cleo
+│   │           ├── 📄 Rocket Fly.cs
+│   │           └── 📄 Rocket Fly.txt
+│   └── 📁 02-modloader
+│       └── 📁 Rocket Launcher third person By LKbosss
+│           ├── 📁 01-cleo
+│           │   ├── 📄 foguete.cs
+│           │   └── 📄 foguete.ini
+│           ├── 📁 02-data
+│           │   └── 📄 weapon dat.txt
+│           └── 📁 03-models
+│               └── 📁 txd
+│                   └── 📄 FOGUETE.txd
+├── 📁 23-SA.Project2DFX
+│   ├── 📁 optional
+│   │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   ├── 📄 SALodLights.asi
+│   ├── 📄 SALodLights.dat
+│   └── 📄 SALodLights.ini
+├── 📁 24-Sit animation
+│   └── 📁 CLEO
+│       └── 📄 sit.cs
+├── 📁 25-Smoking
+│   └── 📁 cleo
+│       └── 📄 Smoking-smoking_V2.0.cs
+├── 📁 26-start effect mod v1.4
+│   ├── 📁 cleo
+│   │   ├── 📄 start effect.cs
+│   │   ├── 📄 start effect.txt
+│   │   └── 📄 start_effect.ini
+│   ├── 📄 ReadMe.txt
+│   └── 📄 Requirment for mod.txt
+├── 📁 27-V HUD by DK22Pac - release 06.12.14
+│   ├── 📁 01-put to SA folder
+│   │   ├── 📁 GTAVHud_by_DK22Pac
+│   │   │   ├── 📁 01-crosshair
+│   │   │   │   ├── 📁 crosshairs
+│   │   │   │   │   ├── 📄 assault.png
+│   │   │   │   │   ├── 📄 pistol.png
+│   │   │   │   │   ├── 📄 shotgun.png
+│   │   │   │   │   └── 📄 smg.png
+│   │   │   │   ├── 📄 crosshairs.dat
+│   │   │   │   ├── 📄 dot.png
+│   │   │   │   ├── 📄 reddot.png
+│   │   │   │   ├── 📄 rocket.png
+│   │   │   │   ├── 📄 sniper.png
+│   │   │   │   └── 📄 snipertarget.png
+│   │   │   ├── 📁 02-effects
+│   │   │   │   ├── 📄 black_n_white.fxc
+│   │   │   │   ├── 📄 blur.fxc
+│   │   │   │   ├── 📄 crosshairblur.fxc
+│   │   │   │   ├── 📄 crosshairlens.fxc
+│   │   │   │   ├── 📄 multi_alpha_mask.fxc
+│   │   │   │   ├── 📄 overlay_color.fxc
+│   │   │   │   ├── 📄 overlay_color.png
+│   │   │   │   ├── 📄 radar_gps.fxc
+│   │   │   │   └── 📄 radar_gps_alpha_mask.fxc
+│   │   │   ├── 📁 03-gps
+│   │   │   │   └── 📄 path_dir.png
+│   │   │   ├── 📁 04-menus
+│   │   │   │   ├── 📄 ammu-nation.png
+│   │   │   │   ├── 📄 ammu-nation_pattern.png
+│   │   │   │   ├── 📄 binco.png
+│   │   │   │   ├── 📄 binco_pattern.png
+│   │   │   │   ├── 📄 car_spawner.png
+│   │   │   │   ├── 📄 car_spawner_pattern.png
+│   │   │   │   ├── 📄 menu_bought.png
+│   │   │   │   ├── 📄 menu_car.png
+│   │   │   │   ├── 📄 menu_clothes.png
+│   │   │   │   ├── 📄 menu_selector.png
+│   │   │   │   ├── 📄 menu_weapons.png
+│   │   │   │   └── 📄 menus.dat
+│   │   │   ├── 📁 05-mp
+│   │   │   │   ├── 📄 feature.png
+│   │   │   │   └── 📄 V_HUD_by_DK22Pac.ini
+│   │   │   ├── 📁 06-phone
+│   │   │   │   ├── 📄 phone.ini
+│   │   │   │   └── 📄 phone.png
+│   │   │   ├── 📁 07-radar
+│   │   │   │   ├── 📄 radar_damage.png
+│   │   │   │   ├── 📄 radar_higher.png
+│   │   │   │   ├── 📄 radar_level.png
+│   │   │   │   ├── 📄 radar_lower.png
+│   │   │   │   ├── 📄 radar_plane.png
+│   │   │   │   ├── 📄 radar_plane_mask.png
+│   │   │   │   ├── 📄 radar_police_heli.png
+│   │   │   │   ├── 📄 radar_rect.png
+│   │   │   │   └── 📄 radar_rect_2p.png
+│   │   │   ├── 📁 08-radio
+│   │   │   │   ├── 📄 radio_1.png
+│   │   │   │   ├── 📄 radio_10.png
+│   │   │   │   ├── 📄 radio_11.png
+│   │   │   │   ├── 📄 radio_12.png
+│   │   │   │   ├── 📄 radio_13.png
+│   │   │   │   ├── 📄 radio_2.png
+│   │   │   │   ├── 📄 radio_3.png
+│   │   │   │   ├── 📄 radio_4.png
+│   │   │   │   ├── 📄 radio_5.png
+│   │   │   │   ├── 📄 radio_6.png
+│   │   │   │   ├── 📄 radio_7.png
+│   │   │   │   ├── 📄 radio_8.png
+│   │   │   │   ├── 📄 radio_9.png
+│   │   │   │   ├── 📄 radio_current.png
+│   │   │   │   └── 📄 radio_names.dat
+│   │   │   ├── 📁 09-stats
+│   │   │   │   ├── 📁 player
+│   │   │   │   │   ├── 📄 0.png
+│   │   │   │   │   ├── 📄 andre.png
+│   │   │   │   │   ├── 📄 army.png
+│   │   │   │   │   ├── 📄 ballas1.png
+│   │   │   │   │   ├── 📄 ballas2.png
+│   │   │   │   │   ├── 📄 ballas3.png
+│   │   │   │   │   ├── 📄 bb.png
+│   │   │   │   │   ├── 📄 bbthin.png
+│   │   │   │   │   ├── 📄 bfori.png
+│   │   │   │   │   ├── 📄 bfost.png
+│   │   │   │   │   ├── 📄 bfybe.png
+│   │   │   │   │   ├── 📄 bfybu.png
+│   │   │   │   │   ├── 📄 bfypro.png
+│   │   │   │   │   ├── 📄 bfyri.png
+│   │   │   │   │   ├── 📄 bfyst.png
+│   │   │   │   │   ├── 📄 bikdrug.png
+│   │   │   │   │   ├── 📄 bikera.png
+│   │   │   │   │   ├── 📄 bikerb.png
+│   │   │   │   │   ├── 📄 bmobar.png
+│   │   │   │   │   ├── 📄 bmocd.png
+│   │   │   │   │   ├── 📄 bmochil.png
+│   │   │   │   │   ├── 📄 bmori.png
+│   │   │   │   │   ├── 📄 bmosec.png
+│   │   │   │   │   ├── 📄 bmost.png
+│   │   │   │   │   ├── 📄 bmotr1.png
+│   │   │   │   │   ├── 📄 bmyap.png
+│   │   │   │   │   ├── 📄 bmybar.png
+│   │   │   │   │   ├── 📄 bmybe.png
+│   │   │   │   │   ├── 📄 bmyboun.png
+│   │   │   │   │   ├── 📄 bmybu.png
+│   │   │   │   │   ├── 📄 bmycg.png
+│   │   │   │   │   ├── 📄 bmycon.png
+│   │   │   │   │   ├── 📄 bmycr.png
+│   │   │   │   │   ├── 📄 bmydrug.png
+│   │   │   │   │   ├── 📄 bmymib.png
+│   │   │   │   │   ├── 📄 bmymoun.png
+│   │   │   │   │   ├── 📄 bmypimp.png
+│   │   │   │   │   ├── 📄 bmypol1.png
+│   │   │   │   │   ├── 📄 bmypol2.png
+│   │   │   │   │   ├── 📄 bmyri.png
+│   │   │   │   │   ├── 📄 bmyst.png
+│   │   │   │   │   ├── 📄 bmytatt.png
+│   │   │   │   │   ├── 📄 bones.png
+│   │   │   │   │   ├── 📄 cat.png
+│   │   │   │   │   ├── 📄 cdeput.png
+│   │   │   │   │   ├── 📄 cesar.png
+│   │   │   │   │   ├── 📄 claude.png
+│   │   │   │   │   ├── 📄 copgrl1.png
+│   │   │   │   │   ├── 📄 copgrl2.png
+│   │   │   │   │   ├── 📄 copgrl3.png
+│   │   │   │   │   ├── 📄 crogrl1.png
+│   │   │   │   │   ├── 📄 crogrl2.png
+│   │   │   │   │   ├── 📄 crogrl3.png
+│   │   │   │   │   ├── 📄 csher.png
+│   │   │   │   │   ├── 📄 cwfofr.png
+│   │   │   │   │   ├── 📄 cwfohb.png
+│   │   │   │   │   ├── 📄 cwfyfr1.png
+│   │   │   │   │   ├── 📄 cwfyfr2.png
+│   │   │   │   │   ├── 📄 cwfyhb.png
+│   │   │   │   │   ├── 📄 cwmofr.png
+│   │   │   │   │   ├── 📄 cwmohb1.png
+│   │   │   │   │   ├── 📄 cwmohb2.png
+│   │   │   │   │   ├── 📄 cwmyfr.png
+│   │   │   │   │   ├── 📄 cwmyhb1.png
+│   │   │   │   │   ├── 📄 cwmyhb2.png
+│   │   │   │   │   ├── 📄 dnb1.png
+│   │   │   │   │   ├── 📄 dnb2.png
+│   │   │   │   │   ├── 📄 dnb3.png
+│   │   │   │   │   ├── 📄 dnfolc1.png
+│   │   │   │   │   ├── 📄 dnfolc2.png
+│   │   │   │   │   ├── 📄 dnfylc.png
+│   │   │   │   │   ├── 📄 dnmolc1.png
+│   │   │   │   │   ├── 📄 dnmolc2.png
+│   │   │   │   │   ├── 📄 dsher.png
+│   │   │   │   │   ├── 📄 dwayne.png
+│   │   │   │   │   ├── 📄 dwfolc.png
+│   │   │   │   │   ├── 📄 dwfylc1.png
+│   │   │   │   │   ├── 📄 dwfylc2.png
+│   │   │   │   │   ├── 📄 dwmolc1.png
+│   │   │   │   │   ├── 📄 dwmolc2.png
+│   │   │   │   │   ├── 📄 dwmylc1.png
+│   │   │   │   │   ├── 📄 dwmylc2.png
+│   │   │   │   │   ├── 📄 emmet.png
+│   │   │   │   │   ├── 📄 fam1.png
+│   │   │   │   │   ├── 📄 fam2.png
+│   │   │   │   │   ├── 📄 fam3.png
+│   │   │   │   │   ├── 📄 fbi.png
+│   │   │   │   │   ├── 📄 forelli.png
+│   │   │   │   │   ├── 📄 heck1.png
+│   │   │   │   │   ├── 📄 heck2.png
+│   │   │   │   │   ├── 📄 hern.png
+│   │   │   │   │   ├── 📄 hfori.png
+│   │   │   │   │   ├── 📄 hfost.png
+│   │   │   │   │   ├── 📄 hfybe.png
+│   │   │   │   │   ├── 📄 hfypro.png
+│   │   │   │   │   ├── 📄 hfyri.png
+│   │   │   │   │   ├── 📄 hfyst.png
+│   │   │   │   │   ├── 📄 hmogar.png
+│   │   │   │   │   ├── 📄 hmori.png
+│   │   │   │   │   ├── 📄 hmost.png
+│   │   │   │   │   ├── 📄 hmybe.png
+│   │   │   │   │   ├── 📄 hmycm.png
+│   │   │   │   │   ├── 📄 hmycr.png
+│   │   │   │   │   ├── 📄 hmydrug.png
+│   │   │   │   │   ├── 📄 hmyri.png
+│   │   │   │   │   ├── 📄 hmyst.png
+│   │   │   │   │   ├── 📄 janitor.png
+│   │   │   │   │   ├── 📄 jethro.png
+│   │   │   │   │   ├── 📄 jizzy.png
+│   │   │   │   │   ├── 📄 kendl.png
+│   │   │   │   │   ├── 📄 laemt1.png
+│   │   │   │   │   └── 📄 swmotr4.png
+│   │   │   │   ├── 📄 background.png
+│   │   │   │   ├── 📄 background1.png
+│   │   │   │   ├── 📄 background2.png
+│   │   │   │   ├── 📄 default.png
+│   │   │   │   ├── 📄 line1p.png
+│   │   │   │   ├── 📄 mask1p.png
+│   │   │   │   └── 📄 mask2p.png
+│   │   │   ├── 📁 10-text
+│   │   │   │   ├── 📄 skip_icon.png
+│   │   │   │   ├── 📄 text_box_corner.png
+│   │   │   │   └── 📄 timer_rect.png
+│   │   │   ├── 📁 11-vhud_text
+│   │   │   │   ├── 📄 default.ini
+│   │   │   │   └── 📄 translation.ini
+│   │   │   ├── 📁 12-wanted
+│   │   │   │   ├── 📄 star1.png
+│   │   │   │   └── 📄 star2.png
+│   │   │   ├── 📁 13-weapon
+│   │   │   │   ├── 📁 weapons
+│   │   │   │   │   ├── 📄 ak-47.png
+│   │   │   │   │   ├── 📄 baseball_bat.png
+│   │   │   │   │   ├── 📄 brass_knuckles.png
+│   │   │   │   │   ├── 📄 camera.png
+│   │   │   │   │   ├── 📄 cane.png
+│   │   │   │   │   ├── 📄 chainsaw.png
+│   │   │   │   │   ├── 📄 desert_eagle.png
+│   │   │   │   │   ├── 📄 detonator.png
+│   │   │   │   │   ├── 📄 dildo_1.png
+│   │   │   │   │   ├── 📄 dildo_2.png
+│   │   │   │   │   ├── 📄 fire_extinguisher.png
+│   │   │   │   │   ├── 📄 flame_thrower.png
+│   │   │   │   │   ├── 📄 flowers.png
+│   │   │   │   │   ├── 📄 golf_club.png
+│   │   │   │   │   ├── 📄 grenade.png
+│   │   │   │   │   ├── 📄 katana.png
+│   │   │   │   │   ├── 📄 knife.png
+│   │   │   │   │   ├── 📄 m4.png
+│   │   │   │   │   ├── 📄 micro_uzi.png
+│   │   │   │   │   ├── 📄 micro_uzi_double.png
+│   │   │   │   │   ├── 📄 minigun.png
+│   │   │   │   │   ├── 📄 missile_launcher.png
+│   │   │   │   │   ├── 📄 molotov.png
+│   │   │   │   │   ├── 📄 mp5.png
+│   │   │   │   │   ├── 📄 night_stick.png
+│   │   │   │   │   ├── 📄 nightvision_goggles.png
+│   │   │   │   │   ├── 📄 parachute.png
+│   │   │   │   │   ├── 📄 pistol.png
+│   │   │   │   │   ├── 📄 pistol_double.png
+│   │   │   │   │   ├── 📄 pool_cue.png
+│   │   │   │   │   ├── 📄 rifle.png
+│   │   │   │   │   ├── 📄 rpg.png
+│   │   │   │   │   ├── 📄 sachet_charge.png
+│   │   │   │   │   ├── 📄 sawn_off.png
+│   │   │   │   │   ├── 📄 sawn_off_double.png
+│   │   │   │   │   ├── 📄 shotgun.png
+│   │   │   │   │   ├── 📄 shovel.png
+│   │   │   │   │   ├── 📄 silenced_pistol.png
+│   │   │   │   │   ├── 📄 sniper_rifle.png
+│   │   │   │   │   ├── 📄 spas_12.png
+│   │   │   │   │   ├── 📄 spray_paint.png
+│   │   │   │   │   ├── 📄 tear_gas.png
+│   │   │   │   │   ├── 📄 tec_9.png
+│   │   │   │   │   ├── 📄 tec_9_double.png
+│   │   │   │   │   ├── 📄 thermal_goggles.png
+│   │   │   │   │   ├── 📄 unarmed.png
+│   │   │   │   │   ├── 📄 vibe_1.png
+│   │   │   │   │   └── 📄 vibe_2.png
+│   │   │   │   ├── 📄 weapon_rates.dat
+│   │   │   │   ├── 📄 weapon_selector.dat
+│   │   │   │   ├── 📄 weapon_selector_sounds.dat
+│   │   │   │   ├── 📄 wheel_current.png
+│   │   │   │   ├── 📄 wheel_part.png
+│   │   │   │   └── 📄 wheel_selected.png
+│   │   │   ├── 📄 controls.dat
+│   │   │   ├── 📄 hudcolor.dat
+│   │   │   └── 📄 V_HUD_by_DK22Pac.ini
+│   │   └── 📄 V_HUD_by_DK22Pac.asi
+│   ├── 📁 02-x)bonus - put&replace in 'models' folder
+│   │   └── 📄 hud.txd
+│   ├── 📄 controls.png
+│   ├── 📄 features.png
+│   └── 📄 ReadMe.txt
+├── 📁 28-V Style Character Switch 4
+│   ├── 📁 01-Requirements
+│   │   ├── 📁 01-CLEO + ASI Loader
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   ├── 📄 FileSystemOperations.cleo
+│   │   │   │   ├── 📄 IniFiles.cleo
+│   │   │   │   └── 📄 IntOperations.cleo
+│   │   │   ├── 📁 02-scripts
+│   │   │   │   └── 📄 global.ini
+│   │   │   ├── 📄 ASI Loader ReadMe.txt
+│   │   │   ├── 📄 bass.dll
+│   │   │   ├── 📄 CLEO Changes.txt
+│   │   │   ├── 📄 CLEO.asi
+│   │   │   ├── 📄 vorbisFile.dll
+│   │   │   └── 📄 vorbisHooked.dll
+│   │   ├── 📁 02-IDE_DD_Tweaker, Limit adjuster, Draw Distance Changer
+│   │   │   ├── 📄 IDE_DD_Tweaker.asi
+│   │   │   ├── 📄 IDE_DD_Tweaker.ini
+│   │   │   ├── 📄 limit_adjuster_gta3vcsa.asi
+│   │   │   ├── 📄 limit_adjuster_gta3vcsa.ini
+│   │   │   ├── 📄 sa_draw_distance_changer.asi
+│   │   │   └── 📄 sa_draw_distance_changer.ini
+│   │   └── 📁 03-Modloader
+│   │       ├── 📁 modloader
+│   │       │   └── 📁 .data
+│   │       │       ├── 📁 01-licenses
+│   │       │       │   ├── 📄 boost.txt
+│   │       │       │   ├── 📄 cereal.txt
+│   │       │       │   └── 📄 tinympl.txt
+│   │       │       ├── 📁 02-plugins
+│   │       │       │   └── 📁 gta3
+│   │       │       │       ├── 📄 std.asi.dll
+│   │       │       │       ├── 📄 std.asi.md
+│   │       │       │       ├── 📄 std.bank.dll
+│   │       │       │       ├── 📄 std.bank.md
+│   │       │       │       ├── 📄 std.data.dll
+│   │       │       │       ├── 📄 std.data.md
+│   │       │       │       ├── 📄 std.fx.dll
+│   │       │       │       ├── 📄 std.fx.md
+│   │       │       │       ├── 📄 std.movies.dll
+│   │       │       │       ├── 📄 std.movies.md
+│   │       │       │       ├── 📄 std.scm.dll
+│   │       │       │       ├── 📄 std.scm.md
+│   │       │       │       ├── 📄 std.sprites.dll
+│   │       │       │       ├── 📄 std.sprites.md
+│   │       │       │       ├── 📄 std.stream.dll
+│   │       │       │       ├── 📄 std.stream.md
+│   │       │       │       ├── 📄 std.text.dll
+│   │       │       │       ├── 📄 std.text.md
+│   │       │       │       ├── 📄 std.tracks.dll
+│   │       │       │       └── 📄 std.tracks.md
+│   │       │       ├── 📁 03-text
+│   │       │       │   └── 📁 1033
+│   │       │       │       └── 📄 menu.fxt
+│   │       │       ├── 📄 CHANGELOG.md
+│   │       │       ├── 📄 Command Line Arguments.md
+│   │       │       ├── 📄 Leia-me.md
+│   │       │       ├── 📄 Profiles.md
+│   │       │       └── 📄 Readme.md
+│   │       ├── 📄 Leia-me.txt
+│   │       ├── 📄 modloader.asi
+│   │       └── 📄 Readme.txt
+│   ├── 📁 02-To SA Folder
+│   │   └── 📁 modloader
+│   │       └── 📁 VSCS 4
+│   │           ├── 📁 01-CLEO
+│   │           │   ├── 📁 01-CLEO_TEXT
+│   │           │   │   └── 📄 VSCS by Rakesh_nama.fxt
+│   │           │   ├── 📁 02-INTPHONE
+│   │           │   │   ├── 📄 2g.mp3
+│   │           │   │   ├── 📄 3g.mp3
+│   │           │   │   ├── 📄 camera.mp3
+│   │           │   │   ├── 📄 focusing.mp3
+│   │           │   │   ├── 📄 gudok.mp3
+│   │           │   │   ├── 📄 notav.mp3
+│   │           │   │   ├── 📄 RINGTONE.mp3
+│   │           │   │   ├── 📄 RINGTONE2.mp3
+│   │           │   │   ├── 📄 RINGTONE3.mp3
+│   │           │   │   ├── 📄 select.mp3
+│   │           │   │   ├── 📄 SWITCH.mp3
+│   │           │   │   └── 📄 UNLOCK.mp3
+│   │           │   ├── 📁 03-Phone_Music
+│   │           │   │   └── 📄 music readme.txt
+│   │           │   ├── 📁 04-VSCS
+│   │           │   │   ├── 📁 Sounds
+│   │           │   │   │   ├── 📄 Changing_Idle.mp3
+│   │           │   │   │   ├── 📄 Death_Sounds_M.mp3
+│   │           │   │   │   ├── 📄 Death_Sounds_T.mp3
+│   │           │   │   │   ├── 📄 F_ABILITY.mp3
+│   │           │   │   │   ├── 📄 F_ABILITY_end.mp3
+│   │           │   │   │   ├── 📄 go_2_home_chop.mp3
+│   │           │   │   │   ├── 📄 go_home_chop.mp3
+│   │           │   │   │   ├── 📄 M_ABILITY.mp3
+│   │           │   │   │   ├── 📄 M_ABILITY_END.mp3
+│   │           │   │   │   ├── 📄 Poof.mp3
+│   │           │   │   │   ├── 📄 T_ABILITY.mp3
+│   │           │   │   │   ├── 📄 T_ABILITY_END.mp3
+│   │           │   │   │   ├── 📄 Too_Close_F.mp3
+│   │           │   │   │   ├── 📄 Too_Close_M.mp3
+│   │           │   │   │   ├── 📄 Too_Close_T.mp3
+│   │           │   │   │   └── 📄 walking_chop.mp3
+│   │           │   │   └── 📄 VSCS.ini
+│   │           │   ├── 📄 Ang_plugin_for_intphone.cs
+│   │           │   ├── 📄 INTPHONE_SETTINGS.ini
+│   │           │   ├── 📄 Intphone_V2_By_Gon_Iss.cs
+│   │           │   └── 📄 VSCS.cs
+│   │           ├── 📁 02-data
+│   │           │   ├── 📁 maps
+│   │           │   │   └── 📁 interior
+│   │           │   │       └── 📄 savehous.ipl
+│   │           │   ├── 📄 clothes.dat
+│   │           │   └── 📄 shopping.dat
+│   │           ├── 📁 03-GTAVHud_by_DK22Pac
+│   │           │   ├── 📁 01-crosshair
+│   │           │   │   ├── 📁 crosshairs
+│   │           │   │   │   ├── 📄 assault.png
+│   │           │   │   │   ├── 📄 pistol.png
+│   │           │   │   │   ├── 📄 shotgun.png
+│   │           │   │   │   └── 📄 smg.png
+│   │           │   │   ├── 📄 crosshairs.dat
+│   │           │   │   ├── 📄 dot.png
+│   │           │   │   ├── 📄 reddot.png
+│   │           │   │   ├── 📄 rocket.png
+│   │           │   │   ├── 📄 sniper.png
+│   │           │   │   └── 📄 snipertarget.png
+│   │           │   ├── 📁 02-effects
+│   │           │   │   ├── 📄 black_n_white.fxc
+│   │           │   │   ├── 📄 blur (2x).fxc
+│   │           │   │   ├── 📄 blur.fxc
+│   │           │   │   ├── 📄 crosshairblur.fxc
+│   │           │   │   ├── 📄 crosshairlens.fxc
+│   │           │   │   ├── 📄 multi_alpha_mask.fxc
+│   │           │   │   ├── 📄 overlay_color.fxc
+│   │           │   │   ├── 📄 overlay_color.png
+│   │           │   │   ├── 📄 radar_gps.fxc
+│   │           │   │   └── 📄 radar_gps_alpha_mask.fxc
+│   │           │   ├── 📁 03-gps
+│   │           │   │   └── 📄 path_dir.png
+│   │           │   ├── 📁 04-menus
+│   │           │   │   ├── 📄 ammu-nation.png
+│   │           │   │   ├── 📄 ammu-nation_pattern.png
+│   │           │   │   ├── 📄 binco.png
+│   │           │   │   ├── 📄 binco_pattern.png
+│   │           │   │   ├── 📄 car_spawner.png
+│   │           │   │   ├── 📄 car_spawner_pattern.png
+│   │           │   │   ├── 📄 menu_bought.png
+│   │           │   │   ├── 📄 menu_car.png
+│   │           │   │   ├── 📄 menu_clothes.png
+│   │           │   │   ├── 📄 menu_selector.png
+│   │           │   │   ├── 📄 menu_weapons.png
+│   │           │   │   └── 📄 menus.dat
+│   │           │   ├── 📁 05-mp
+│   │           │   │   ├── 📄 feature.png
+│   │           │   │   └── 📄 V_HUD_by_DK22Pac.ini
+│   │           │   ├── 📁 06-phone
+│   │           │   │   ├── 📄 phone.ini
+│   │           │   │   └── 📄 phone.png
+│   │           │   ├── 📁 07-radar
+│   │           │   │   ├── 📄 radar_cop.png
+│   │           │   │   ├── 📄 radar_damage.png
+│   │           │   │   ├── 📄 radar_higher.png
+│   │           │   │   ├── 📄 radar_level.png
+│   │           │   │   ├── 📄 radar_lower.png
+│   │           │   │   ├── 📄 radar_mask.png
+│   │           │   │   ├── 📄 radar_plane.png
+│   │           │   │   ├── 📄 radar_plane_mask.png
+│   │           │   │   ├── 📄 radar_police_heli.png
+│   │           │   │   ├── 📄 radar_rect.png
+│   │           │   │   └── 📄 radar_rect_2p.png
+│   │           │   ├── 📁 08-radio
+│   │           │   │   ├── 📄 radio_1.png
+│   │           │   │   ├── 📄 radio_10.png
+│   │           │   │   ├── 📄 radio_11.png
+│   │           │   │   ├── 📄 radio_12.png
+│   │           │   │   ├── 📄 radio_13.png
+│   │           │   │   ├── 📄 radio_2.png
+│   │           │   │   ├── 📄 radio_3.png
+│   │           │   │   ├── 📄 radio_4.png
+│   │           │   │   ├── 📄 radio_5.png
+│   │           │   │   ├── 📄 radio_6.png
+│   │           │   │   ├── 📄 radio_7.png
+│   │           │   │   ├── 📄 radio_8.png
+│   │           │   │   ├── 📄 radio_9.png
+│   │           │   │   ├── 📄 radio_current.png
+│   │           │   │   └── 📄 radio_names.dat
+│   │           │   ├── 📁 09-stats
+│   │           │   │   ├── 📁 player
+│   │           │   │   │   ├── 📄 0.png
+│   │           │   │   │   ├── 📄 andre.png
+│   │           │   │   │   ├── 📄 army.png
+│   │           │   │   │   ├── 📄 ballas1.png
+│   │           │   │   │   ├── 📄 ballas2.png
+│   │           │   │   │   ├── 📄 ballas3.png
+│   │           │   │   │   ├── 📄 bb.png
+│   │           │   │   │   ├── 📄 bbthin.png
+│   │           │   │   │   ├── 📄 bfori.png
+│   │           │   │   │   ├── 📄 bfost.png
+│   │           │   │   │   ├── 📄 bfybe.png
+│   │           │   │   │   ├── 📄 bfybu.png
+│   │           │   │   │   ├── 📄 bfypro.png
+│   │           │   │   │   ├── 📄 bfyri.png
+│   │           │   │   │   ├── 📄 bfyst.png
+│   │           │   │   │   ├── 📄 bikdrug.png
+│   │           │   │   │   ├── 📄 bikera.png
+│   │           │   │   │   ├── 📄 bikerb.png
+│   │           │   │   │   ├── 📄 bmobar.png
+│   │           │   │   │   ├── 📄 bmocd.png
+│   │           │   │   │   ├── 📄 bmochil.png
+│   │           │   │   │   ├── 📄 bmori.png
+│   │           │   │   │   ├── 📄 bmosec.png
+│   │           │   │   │   ├── 📄 bmost.png
+│   │           │   │   │   ├── 📄 bmotr1.png
+│   │           │   │   │   ├── 📄 bmyap.png
+│   │           │   │   │   ├── 📄 bmybar.png
+│   │           │   │   │   ├── 📄 bmybe.png
+│   │           │   │   │   ├── 📄 bmyboun.png
+│   │           │   │   │   ├── 📄 bmybu.png
+│   │           │   │   │   ├── 📄 bmycg.png
+│   │           │   │   │   ├── 📄 bmycon.png
+│   │           │   │   │   ├── 📄 bmycr.png
+│   │           │   │   │   ├── 📄 bmydrug.png
+│   │           │   │   │   ├── 📄 bmymib.png
+│   │           │   │   │   ├── 📄 bmymoun.png
+│   │           │   │   │   ├── 📄 bmypimp.png
+│   │           │   │   │   ├── 📄 bmypol1.png
+│   │           │   │   │   ├── 📄 bmypol2.png
+│   │           │   │   │   ├── 📄 bmyri.png
+│   │           │   │   │   ├── 📄 bmyst.png
+│   │           │   │   │   ├── 📄 bmytatt.png
+│   │           │   │   │   ├── 📄 bones.png
+│   │           │   │   │   ├── 📄 cat.png
+│   │           │   │   │   ├── 📄 cdeput.png
+│   │           │   │   │   ├── 📄 cesar.png
+│   │           │   │   │   ├── 📄 claude.png
+│   │           │   │   │   ├── 📄 copgrl1.png
+│   │           │   │   │   ├── 📄 copgrl2.png
+│   │           │   │   │   ├── 📄 copgrl3.png
+│   │           │   │   │   ├── 📄 crogrl1.png
+│   │           │   │   │   ├── 📄 crogrl2.png
+│   │           │   │   │   ├── 📄 crogrl3.png
+│   │           │   │   │   ├── 📄 csher.png
+│   │           │   │   │   ├── 📄 cwfofr.png
+│   │           │   │   │   ├── 📄 cwfohb.png
+│   │           │   │   │   ├── 📄 cwfyfr1.png
+│   │           │   │   │   ├── 📄 cwfyfr2.png
+│   │           │   │   │   ├── 📄 cwfyhb.png
+│   │           │   │   │   ├── 📄 cwmofr.png
+│   │           │   │   │   ├── 📄 cwmohb1.png
+│   │           │   │   │   ├── 📄 cwmohb2.png
+│   │           │   │   │   ├── 📄 cwmyfr.png
+│   │           │   │   │   ├── 📄 cwmyhb1.png
+│   │           │   │   │   ├── 📄 cwmyhb2.png
+│   │           │   │   │   ├── 📄 dnb1.png
+│   │           │   │   │   ├── 📄 dnb2.png
+│   │           │   │   │   ├── 📄 dnb3.png
+│   │           │   │   │   ├── 📄 dnfolc1.png
+│   │           │   │   │   ├── 📄 dnfolc2.png
+│   │           │   │   │   ├── 📄 dnfylc.png
+│   │           │   │   │   ├── 📄 dnmolc1.png
+│   │           │   │   │   ├── 📄 dnmolc2.png
+│   │           │   │   │   ├── 📄 dsher.png
+│   │           │   │   │   ├── 📄 dwayne.png
+│   │           │   │   │   ├── 📄 dwfolc.png
+│   │           │   │   │   ├── 📄 dwfylc1.png
+│   │           │   │   │   ├── 📄 dwfylc2.png
+│   │           │   │   │   ├── 📄 dwmolc1.png
+│   │           │   │   │   ├── 📄 dwmolc2.png
+│   │           │   │   │   ├── 📄 dwmylc1.png
+│   │           │   │   │   ├── 📄 dwmylc2.png
+│   │           │   │   │   ├── 📄 emmet.png
+│   │           │   │   │   ├── 📄 fam1.png
+│   │           │   │   │   ├── 📄 fam2.png
+│   │           │   │   │   ├── 📄 fam3.png
+│   │           │   │   │   ├── 📄 fbi.png
+│   │           │   │   │   ├── 📄 forelli.png
+│   │           │   │   │   ├── 📄 heck1.png
+│   │           │   │   │   ├── 📄 heck2.png
+│   │           │   │   │   ├── 📄 hern.png
+│   │           │   │   │   ├── 📄 hfori.png
+│   │           │   │   │   ├── 📄 hfost.png
+│   │           │   │   │   ├── 📄 hfybe.png
+│   │           │   │   │   ├── 📄 hfypro.png
+│   │           │   │   │   ├── 📄 hfyri.png
+│   │           │   │   │   ├── 📄 hfyst.png
+│   │           │   │   │   ├── 📄 hmogar.png
+│   │           │   │   │   ├── 📄 hmori.png
+│   │           │   │   │   ├── 📄 hmost.png
+│   │           │   │   │   ├── 📄 hmybe.png
+│   │           │   │   │   ├── 📄 hmycm.png
+│   │           │   │   │   ├── 📄 hmycr.png
+│   │           │   │   │   ├── 📄 hmydrug.png
+│   │           │   │   │   ├── 📄 hmyri.png
+│   │           │   │   │   ├── 📄 hmyst.png
+│   │           │   │   │   ├── 📄 janitor.png
+│   │           │   │   │   ├── 📄 jethro.png
+│   │           │   │   │   ├── 📄 jizzy.png
+│   │           │   │   │   ├── 📄 kendl.png
+│   │           │   │   │   ├── 📄 laemt1.png
+│   │           │   │   │   └── 📄 swmotr4.png
+│   │           │   │   ├── 📄 background.png
+│   │           │   │   ├── 📄 background1.png
+│   │           │   │   ├── 📄 background2.png
+│   │           │   │   ├── 📄 default.png
+│   │           │   │   ├── 📄 line1p.png
+│   │           │   │   ├── 📄 mask1p.png
+│   │           │   │   └── 📄 mask2p.png
+│   │           │   ├── 📁 10-text
+│   │           │   │   ├── 📄 skip_icon.png
+│   │           │   │   ├── 📄 text_box_corner.png
+│   │           │   │   └── 📄 timer_rect.png
+│   │           │   ├── 📁 11-vhud_text
+│   │           │   │   ├── 📄 default.ini
+│   │           │   │   └── 📄 translation.ini
+│   │           │   ├── 📁 12-wanted
+│   │           │   │   ├── 📄 star1.png
+│   │           │   │   └── 📄 star2.png
+│   │           │   ├── 📁 13-weapon
+│   │           │   │   ├── 📁 weapons
+│   │           │   │   │   ├── 📄 ak-47.png
+│   │           │   │   │   ├── 📄 baseball_bat.png
+│   │           │   │   │   ├── 📄 brass_knuckles.png
+│   │           │   │   │   ├── 📄 camera.png
+│   │           │   │   │   ├── 📄 cane.png
+│   │           │   │   │   ├── 📄 chainsaw.png
+│   │           │   │   │   ├── 📄 desert_eagle.png
+│   │           │   │   │   ├── 📄 detonator.png
+│   │           │   │   │   ├── 📄 dildo_1.png
+│   │           │   │   │   ├── 📄 dildo_2.png
+│   │           │   │   │   ├── 📄 fire_extinguisher.png
+│   │           │   │   │   ├── 📄 flame_thrower.png
+│   │           │   │   │   ├── 📄 flowers.png
+│   │           │   │   │   ├── 📄 golf_club.png
+│   │           │   │   │   ├── 📄 grenade.png
+│   │           │   │   │   ├── 📄 katana.png
+│   │           │   │   │   ├── 📄 knife.png
+│   │           │   │   │   ├── 📄 m4.png
+│   │           │   │   │   ├── 📄 micro_uzi.png
+│   │           │   │   │   ├── 📄 micro_uzi_double.png
+│   │           │   │   │   ├── 📄 minigun.png
+│   │           │   │   │   ├── 📄 missile_launcher.png
+│   │           │   │   │   ├── 📄 molotov.png
+│   │           │   │   │   ├── 📄 mp5.png
+│   │           │   │   │   ├── 📄 night_stick.png
+│   │           │   │   │   ├── 📄 nightvision_goggles.png
+│   │           │   │   │   ├── 📄 parachute.png
+│   │           │   │   │   ├── 📄 pistol.png
+│   │           │   │   │   ├── 📄 pistol_double.png
+│   │           │   │   │   ├── 📄 pool_cue.png
+│   │           │   │   │   ├── 📄 rifle.png
+│   │           │   │   │   ├── 📄 rpg.png
+│   │           │   │   │   ├── 📄 sachet_charge.png
+│   │           │   │   │   ├── 📄 sawn_off.png
+│   │           │   │   │   ├── 📄 sawn_off_double.png
+│   │           │   │   │   ├── 📄 shotgun.png
+│   │           │   │   │   ├── 📄 shovel.png
+│   │           │   │   │   ├── 📄 silenced_pistol.png
+│   │           │   │   │   ├── 📄 sniper_rifle.png
+│   │           │   │   │   ├── 📄 spas_12.png
+│   │           │   │   │   ├── 📄 spray_paint.png
+│   │           │   │   │   ├── 📄 tear_gas.png
+│   │           │   │   │   ├── 📄 tec_9.png
+│   │           │   │   │   ├── 📄 tec_9_double.png
+│   │           │   │   │   ├── 📄 thermal_goggles.png
+│   │           │   │   │   ├── 📄 unarmed.png
+│   │           │   │   │   ├── 📄 vibe_1.png
+│   │           │   │   │   └── 📄 vibe_2.png
+│   │           │   │   ├── 📄 weapon_rates.dat
+│   │           │   │   ├── 📄 weapon_selector.dat
+│   │           │   │   ├── 📄 weapon_selector_sounds.dat
+│   │           │   │   ├── 📄 wheel_current.png
+│   │           │   │   ├── 📄 wheel_part.png
+│   │           │   │   └── 📄 wheel_selected.png
+│   │           │   ├── 📄 controls.dat
+│   │           │   ├── 📄 hudcolor.dat
+│   │           │   └── 📄 V_HUD_by_DK22Pac.ini
+│   │           ├── 📁 04-models
+│   │           │   ├── 📁 txd
+│   │           │   │   ├── 📄 bar.txd
+│   │           │   │   ├── 📄 LOADSCS.txd
+│   │           │   │   ├── 📄 LOADSUK.txd
+│   │           │   │   ├── 📄 phinet.txd
+│   │           │   │   ├── 📄 phmisc.txd
+│   │           │   │   ├── 📄 phmisc2.txd
+│   │           │   │   ├── 📄 phone.txd
+│   │           │   │   ├── 📄 switch.txd
+│   │           │   │   ├── 📄 theme2.txd
+│   │           │   │   └── 📄 theme3.txd
+│   │           │   └── 📄 hud.txd
+│   │           ├── 📁 05-text
+│   │           │   └── 📄 american.gxt
+│   │           ├── 📁 06-To GTA3.img
+│   │           │   ├── 📄 bobcat.dff
+│   │           │   ├── 📄 bobcat.txd
+│   │           │   ├── 📄 buffalo.dff
+│   │           │   ├── 📄 buffalo.txd
+│   │           │   ├── 📄 chop.dff
+│   │           │   ├── 📄 chop.txd
+│   │           │   ├── 📄 frank.dff
+│   │           │   ├── 📄 frank.txd
+│   │           │   ├── 📄 Michael.dff
+│   │           │   ├── 📄 Michael.txd
+│   │           │   ├── 📄 nebula.dff
+│   │           │   ├── 📄 nebula.txd
+│   │           │   ├── 📄 Trevor.dff
+│   │           │   └── 📄 Trevor.txd
+│   │           ├── 📁 07-To Player.img
+│   │           │   ├── 📄 10ls.txd
+│   │           │   ├── 📄 10ls2.txd
+│   │           │   ├── 📄 10ls3.txd
+│   │           │   ├── 📄 10ls4.txd
+│   │           │   ├── 📄 10ls5.txd
+│   │           │   ├── 📄 10og.txd
+│   │           │   ├── 📄 10weed.txd
+│   │           │   ├── 📄 11dice.txd
+│   │           │   ├── 📄 11dice2.txd
+│   │           │   ├── 📄 11godsgift.txd
+│   │           │   ├── 📄 11grove.txd
+│   │           │   ├── 📄 11grove2.txd
+│   │           │   ├── 📄 11grove3.txd
+│   │           │   ├── 📄 11jail.txd
+│   │           │   ├── 📄 12angels.txd
+│   │           │   ├── 📄 12bandit.txd
+│   │           │   ├── 📄 12cross7.txd
+│   │           │   ├── 📄 12dagger.txd
+│   │           │   ├── 📄 12mayabird.txd
+│   │           │   ├── 📄 12mayaface.txd
+│   │           │   ├── 📄 4nation.txd
+│   │           │   ├── 📄 4rip.txd
+│   │           │   ├── 📄 4spider.txd
+│   │           │   ├── 📄 4weed.txd
+│   │           │   ├── 📄 5cross.txd
+│   │           │   ├── 📄 5cross2.txd
+│   │           │   ├── 📄 5cross3.txd
+│   │           │   ├── 📄 5gun.txd
+│   │           │   ├── 📄 6africa.txd
+│   │           │   ├── 📄 6aztec.txd
+│   │           │   ├── 📄 6clown.txd
+│   │           │   ├── 📄 6crown.txd
+│   │           │   ├── 📄 7cross.txd
+│   │           │   ├── 📄 7cross2.txd
+│   │           │   ├── 📄 7cross3.txd
+│   │           │   ├── 📄 7mary.txd
+│   │           │   ├── 📄 8gun.txd
+│   │           │   ├── 📄 8poker.txd
+│   │           │   ├── 📄 8sa.txd
+│   │           │   ├── 📄 8sa2.txd
+│   │           │   ├── 📄 8sa3.txd
+│   │           │   ├── 📄 8santos.txd
+│   │           │   ├── 📄 8westside.txd
+│   │           │   ├── 📄 9bullet.txd
+│   │           │   ├── 📄 9crown.txd
+│   │           │   ├── 📄 9gun.txd
+│   │           │   ├── 📄 9gun2.txd
+│   │           │   ├── 📄 9homeboy.txd
+│   │           │   ├── 📄 9rasta.txd
+│   │           │   ├── 📄 afro.dff
+│   │           │   ├── 📄 afro.txd
+│   │           │   ├── 📄 afrobeard.dff
+│   │           │   ├── 📄 afrobeard.txd
+│   │           │   ├── 📄 afroblond.txd
+│   │           │   ├── 📄 afrogoatee.txd
+│   │           │   ├── 📄 afrotash.dff
+│   │           │   ├── 📄 afrotash.txd
+│   │           │   ├── 📄 b2.txd
+│   │           │   ├── 📄 balaclava.dff
+│   │           │   ├── 📄 balaclava.txd
+│   │           │   ├── 📄 bald.txd
+│   │           │   ├── 📄 baldbeard.txd
+│   │           │   ├── 📄 baldgoatee.txd
+│   │           │   ├── 📄 baldtash.txd
+│   │           │   ├── 📄 bandana.dff
+│   │           │   ├── 📄 bandanablu.txd
+│   │           │   ├── 📄 bandanaflag.txd
+│   │           │   ├── 📄 bandanagang.txd
+│   │           │   ├── 📄 bandanaleaf.txd
+│   │           │   ├── 📄 bandanared.txd
+│   │           │   ├── 📄 bandanaskull.txd
+│   │           │   ├── 📄 bandblack.txd
+│   │           │   ├── 📄 bandblack2.txd
+│   │           │   ├── 📄 bandblack3.txd
+│   │           │   ├── 📄 bandblue.txd
+│   │           │   ├── 📄 bandblue2.txd
+│   │           │   ├── 📄 bandblue3.txd
+│   │           │   ├── 📄 bandgang.txd
+│   │           │   ├── 📄 bandgang2.txd
+│   │           │   ├── 📄 bandgang3.txd
+│   │           │   ├── 📄 bandgang4.txd
+│   │           │   ├── 📄 bandits.txd
+│   │           │   ├── 📄 bandknots.dff
+│   │           │   ├── 📄 bandmask.dff
+│   │           │   ├── 📄 bandred.txd
+│   │           │   ├── 📄 bandred2.txd
+│   │           │   ├── 📄 bandred3.txd
+│   │           │   ├── 📄 barefeet.dff
+│   │           │   ├── 📄 base2.txd
+│   │           │   ├── 📄 base3.txd
+│   │           │   ├── 📄 base4.txd
+│   │           │   ├── 📄 base5.txd
+│   │           │   ├── 📄 baseball.dff
+│   │           │   ├── 📄 bask1.dff
+│   │           │   ├── 📄 bask1eris.txd
+│   │           │   ├── 📄 bask1problk.txd
+│   │           │   ├── 📄 bask1prowht.txd
+│   │           │   ├── 📄 bask2heatband.txd
+│   │           │   ├── 📄 bask2heatwht.txd
+│   │           │   ├── 📄 bask2semi.txd
+│   │           │   ├── 📄 baskball.dff
+│   │           │   ├── 📄 baskballdrib.txd
+│   │           │   ├── 📄 baskballloc.txd
+│   │           │   ├── 📄 baskballrim.txd
+│   │           │   ├── 📄 bballjackrstar.txd
+│   │           │   ├── 📄 bbjack.dff
+│   │           │   ├── 📄 bbjack.txd
+│   │           │   ├── 📄 bbjack2.txd
+│   │           │   ├── 📄 bbjackrim.txd
+│   │           │   ├── 📄 bbjersey.txd
+│   │           │   ├── 📄 bbshortred.txd
+│   │           │   ├── 📄 bbshortwht.txd
+│   │           │   ├── 📄 beard.txd
+│   │           │   ├── 📄 beret.dff
+│   │           │   ├── 📄 beretblk.txd
+│   │           │   ├── 📄 beretred.txd
+│   │           │   ├── 📄 biegetr.txd
+│   │           │   ├── 📄 biker.dff
+│   │           │   ├── 📄 biker.txd
+│   │           │   ├── 📄 bikerhelmet.dff
+│   │           │   ├── 📄 bikerhelmet.txd
+│   │           │   ├── 📄 boater.dff
+│   │           │   ├── 📄 boater.txd
+│   │           │   ├── 📄 boaterblk.txd
+│   │           │   ├── 📄 bowler.dff
+│   │           │   ├── 📄 bowler.txd
+│   │           │   ├── 📄 bowlerblue.txd
+│   │           │   ├── 📄 bowlergang.txd
+│   │           │   ├── 📄 bowlerred.txd
+│   │           │   ├── 📄 bowleryellow.txd
+│   │           │   ├── 📄 bowling.txd
+│   │           │   ├── 📄 boxingcap.dff
+│   │           │   ├── 📄 boxingcap.txd
+│   │           │   ├── 📄 boxingshoe.dff
+│   │           │   ├── 📄 boxingshoe.txd
+│   │           │   ├── 📄 boxingshort.dff
+│   │           │   ├── 📄 boxshort.txd
+│   │           │   ├── 📄 cap.dff
+│   │           │   ├── 📄 capandband.dff
+│   │           │   ├── 📄 capback.dff
+│   │           │   ├── 📄 capblk.txd
+│   │           │   ├── 📄 capblkback.txd
+│   │           │   ├── 📄 capblkover.txd
+│   │           │   ├── 📄 capblkside.txd
+│   │           │   ├── 📄 capblkup.txd
+│   │           │   ├── 📄 capblue.txd
+│   │           │   ├── 📄 capblueback.txd
+│   │           │   ├── 📄 capblueover.txd
+│   │           │   ├── 📄 capblueside.txd
+│   │           │   ├── 📄 capblueup.txd
+│   │           │   ├── 📄 capgang.txd
+│   │           │   ├── 📄 capgangback.txd
+│   │           │   ├── 📄 capgangover.txd
+│   │           │   ├── 📄 capgangside.txd
+│   │           │   ├── 📄 capgangup.txd
+│   │           │   ├── 📄 capgrey.txd
+│   │           │   ├── 📄 capgreyback.txd
+│   │           │   ├── 📄 capgreyup.txd
+│   │           │   ├── 📄 capknit.dff
+│   │           │   ├── 📄 capknitblk.txd
+│   │           │   ├── 📄 capknitgrn.txd
+│   │           │   ├── 📄 capnband.txd
+│   │           │   ├── 📄 capnbandgang.txd
+│   │           │   ├── 📄 capover.dff
+│   │           │   ├── 📄 capovereye.dff
+│   │           │   ├── 📄 capovergang.txd
+│   │           │   ├── 📄 capoverred.txd
+│   │           │   ├── 📄 cappolice.dff
+│   │           │   ├── 📄 cappolice.txd
+│   │           │   ├── 📄 capred.txd
+│   │           │   ├── 📄 capredback.txd
+│   │           │   ├── 📄 capredover.txd
+│   │           │   ├── 📄 capredside.txd
+│   │           │   ├── 📄 capredup.txd
+│   │           │   ├── 📄 caprimup.dff
+│   │           │   ├── 📄 capside.dff
+│   │           │   ├── 📄 captruck.dff
+│   │           │   ├── 📄 captruck.txd
+│   │           │   ├── 📄 capzip.txd
+│   │           │   ├── 📄 capzipback.txd
+│   │           │   ├── 📄 capzipover.txd
+│   │           │   ├── 📄 capzipside.txd
+│   │           │   ├── 📄 capzipup.txd
+│   │           │   ├── 📄 chinos.dff
+│   │           │   ├── 📄 chinosb.dff
+│   │           │   ├── 📄 chinosbiege.txd
+│   │           │   ├── 📄 chinosblack.txd
+│   │           │   ├── 📄 chinosblue.txd
+│   │           │   ├── 📄 chinoskhaki.txd
+│   │           │   ├── 📄 chonger.dff
+│   │           │   ├── 📄 chongerblue.txd
+│   │           │   ├── 📄 chongergang.txd
+│   │           │   ├── 📄 chongergrey.txd
+│   │           │   ├── 📄 chongerred.txd
+│   │           │   ├── 📄 chucks.dff
+│   │           │   ├── 📄 chucksblack.txd
+│   │           │   ├── 📄 coach.dff
+│   │           │   ├── 📄 coach.txd
+│   │           │   ├── 📄 coachsemi.txd
+│   │           │   ├── 📄 conv.dff
+│   │           │   ├── 📄 convheatblk.txd
+│   │           │   ├── 📄 convheatorn.txd
+│   │           │   ├── 📄 convheatred.txd
+│   │           │   ├── 📄 convproblk.txd
+│   │           │   ├── 📄 convproblu.txd
+│   │           │   ├── 📄 convprogrn.txd
+│   │           │   ├── 📄 cornrows.dff
+│   │           │   ├── 📄 cornrows.txd
+│   │           │   ├── 📄 cornrowsb.txd
+│   │           │   ├── 📄 country.dff
+│   │           │   ├── 📄 country.txd
+│   │           │   ├── 📄 countrytr.dff
+│   │           │   ├── 📄 countrytr.txd
+│   │           │   ├── 📄 cowboy.dff
+│   │           │   ├── 📄 cowboy.txd
+│   │           │   ├── 📄 cowboyboot.txd
+│   │           │   ├── 📄 cowboyboot2.txd
+│   │           │   ├── 📄 croupier.txd
+│   │           │   ├── 📄 cs_afro.dff
+│   │           │   ├── 📄 cs_afrobeard.dff
+│   │           │   ├── 📄 cs_afrotash.dff
+│   │           │   ├── 📄 cs_bandana.dff
+│   │           │   ├── 📄 cs_bandknots.dff
+│   │           │   ├── 📄 cs_bandmask.dff
+│   │           │   ├── 📄 cs_bikerhelmet.dff
+│   │           │   ├── 📄 cs_cornrows.dff
+│   │           │   ├── 📄 cs_flatears.dff
+│   │           │   ├── 📄 cs_gimpmask.dff
+│   │           │   ├── 📄 cs_hands.dff
+│   │           │   ├── 📄 cs_head.dff
+│   │           │   ├── 📄 cs_highafro.dff
+│   │           │   ├── 📄 cs_mohawk.dff
+│   │           │   ├── 📄 cs_zorro.dff
+│   │           │   ├── 📄 cutoffchinos.txd
+│   │           │   ├── 📄 cutoffchinosblue.txd
+│   │           │   ├── 📄 cutoffdenims.txd
+│   │           │   ├── 📄 denim.dff
+│   │           │   ├── 📄 denimfade.txd
+│   │           │   ├── 📄 denimsgang.txd
+│   │           │   ├── 📄 denimsred.txd
+│   │           │   ├── 📄 dogtag.txd
+│   │           │   ├── 📄 dustmask.txd
+│   │           │   ├── 📄 ear2.txd
+│   │           │   ├── 📄 eyepatch.dff
+│   │           │   ├── 📄 eyepatch.txd
+│   │           │   ├── 📄 feet.dff
+│   │           │   ├── 📄 feet.txd
+│   │           │   ├── 📄 fez.txd
+│   │           │   ├── 📄 field.dff
+│   │           │   ├── 📄 field.txd
+│   │           │   ├── 📄 field2.txd
+│   │           │   ├── 📄 field3.txd
+│   │           │   ├── 📄 flatears.dff
+│   │           │   ├── 📄 flipflop.dff
+│   │           │   ├── 📄 flipflop.txd
+│   │           │   ├── 📄 foot.txd
+│   │           │   ├── 📄 garageleg.txd
+│   │           │   ├── 📄 garagetop.dff
+│   │           │   ├── 📄 garagetop.txd
+│   │           │   ├── 📄 garagetr.dff
+│   │           │   ├── 📄 gimp.txd
+│   │           │   ├── 📄 gimpfeet.dff
+│   │           │   ├── 📄 gimphands.dff
+│   │           │   ├── 📄 gimpleg.dff
+│   │           │   ├── 📄 gimpleg.txd
+│   │           │   ├── 📄 gimpmask.dff
+│   │           │   ├── 📄 gimpmask.txd
+│   │           │   ├── 📄 gimpshoe.txd
+│   │           │   ├── 📄 gimptorso.dff
+│   │           │   ├── 📄 glasses01.dff
+│   │           │   ├── 📄 glasses01.txd
+│   │           │   ├── 📄 glasses01dark.txd
+│   │           │   ├── 📄 glasses03.dff
+│   │           │   ├── 📄 glasses03.txd
+│   │           │   ├── 📄 glasses03blue.txd
+│   │           │   ├── 📄 glasses03dark.txd
+│   │           │   ├── 📄 glasses03red.txd
+│   │           │   ├── 📄 glasses04.dff
+│   │           │   ├── 📄 glasses04.txd
+│   │           │   ├── 📄 glasses04dark.txd
+│   │           │   ├── 📄 glasses05.txd
+│   │           │   ├── 📄 glasses05dark.txd
+│   │           │   ├── 📄 glassesx.dff
+│   │           │   ├── 📄 glassesx.txd
+│   │           │   ├── 📄 goatee.txd
+│   │           │   ├── 📄 groovecut.dff
+│   │           │   ├── 📄 groucho.txd
+│   │           │   ├── 📄 grouchos.dff
+│   │           │   ├── 📄 hairblond.txd
+│   │           │   ├── 📄 hairblue.txd
+│   │           │   ├── 📄 hairgreen.txd
+│   │           │   ├── 📄 hairpink.txd
+│   │           │   ├── 📄 hairred.txd
+│   │           │   ├── 📄 hands.dff
+│   │           │   ├── 📄 hands.txd
+│   │           │   ├── 📄 hatmanc.dff
+│   │           │   ├── 📄 hatmancblk.txd
+│   │           │   ├── 📄 hatmancplaid.txd
+│   │           │   ├── 📄 hattiger.dff
+│   │           │   ├── 📄 hattiger.txd
+│   │           │   ├── 📄 hawaii.dff
+│   │           │   ├── 📄 hawaiired.txd
+│   │           │   ├── 📄 hawaiiwht.txd
+│   │           │   ├── 📄 head.dff
+│   │           │   ├── 📄 head.txd
+│   │           │   ├── 📄 helmet.dff
+│   │           │   ├── 📄 helmet.txd
+│   │           │   ├── 📄 highafro.dff
+│   │           │   ├── 📄 highafro.txd
+│   │           │   ├── 📄 highfade.txd
+│   │           │   ├── 📄 hitop.dff
+│   │           │   ├── 📄 hitop.txd
+│   │           │   ├── 📄 hockey.txd
+│   │           │   ├── 📄 hockeymask.dff
+│   │           │   ├── 📄 hockeytop.txd
+│   │           │   ├── 📄 hoodjack.dff
+│   │           │   ├── 📄 hoodjackbeige.txd
+│   │           │   ├── 📄 hoodya.dff
+│   │           │   ├── 📄 hoodyabase5.txd
+│   │           │   ├── 📄 hoodyablack.txd
+│   │           │   ├── 📄 hoodyablue.txd
+│   │           │   ├── 📄 hoodyagreen.txd
+│   │           │   ├── 📄 hoodyamerc.txd
+│   │           │   ├── 📄 hoodyarockstar.txd
+│   │           │   ├── 📄 hoodyb.dff
+│   │           │   ├── 📄 hoodyb.txd
+│   │           │   ├── 📄 jeans.dff
+│   │           │   ├── 📄 jeansdenim.txd
+│   │           │   ├── 📄 jheri.dff
+│   │           │   ├── 📄 jhericurl.txd
+│   │           │   ├── 📄 leather.dff
+│   │           │   ├── 📄 leather.txd
+│   │           │   ├── 📄 leathertr.dff
+│   │           │   ├── 📄 leathertr.txd
+│   │           │   ├── 📄 leathertrchaps.txd
+│   │           │   ├── 📄 legs.dff
+│   │           │   ├── 📄 legs.txd
+│   │           │   ├── 📄 legsblack.txd
+│   │           │   ├── 📄 legsboxerswht.txd
+│   │           │   ├── 📄 legsheart.txd
+│   │           │   ├── 📄 legspants.dff
+│   │           │   ├── 📄 legspantsgrey.txd
+│   │           │   ├── 📄 letter.txd
+│   │           │   ├── 📄 medic.txd
+│   │           │   ├── 📄 medictr.dff
+│   │           │   ├── 📄 medictr.txd
+│   │           │   ├── 📄 mohawk.dff
+│   │           │   ├── 📄 mohawk.txd
+│   │           │   ├── 📄 mohawkbeard.txd
+│   │           │   ├── 📄 mohawkblond.txd
+│   │           │   ├── 📄 mohawkpink.txd
+│   │           │   ├── 📄 moto.dff
+│   │           │   ├── 📄 moto.txd
+│   │           │   ├── 📄 neck.dff
+│   │           │   ├── 📄 neck2.dff
+│   │           │   ├── 📄 neck2_bb.dff
+│   │           │   ├── 📄 neck2_field.dff
+│   │           │   ├── 📄 neck2_hoodya.dff
+│   │           │   ├── 📄 neck2_pimp.dff
+│   │           │   ├── 📄 neck2_shirt.dff
+│   │           │   ├── 📄 neck_bb.dff
+│   │           │   ├── 📄 neck_field.dff
+│   │           │   ├── 📄 neck_hoodya.dff
+│   │           │   ├── 📄 neck_pimp.dff
+│   │           │   ├── 📄 neck_shirt.dff
+│   │           │   ├── 📄 neck_tracky.dff
+│   │           │   ├── 📄 neckafrica.txd
+│   │           │   ├── 📄 neckcross.txd
+│   │           │   ├── 📄 neckdollar.txd
+│   │           │   ├── 📄 neckgold.txd
+│   │           │   ├── 📄 neckhash.txd
+│   │           │   ├── 📄 neckls.txd
+│   │           │   ├── 📄 neckropeg.txd
+│   │           │   ├── 📄 neckropes.txd
+│   │           │   ├── 📄 necksaints.txd
+│   │           │   ├── 📄 necksilver.txd
+│   │           │   ├── 📄 painter.dff
+│   │           │   ├── 📄 painter.txd
+│   │           │   ├── 📄 pimp.dff
+│   │           │   ├── 📄 pimp.txd
+│   │           │   ├── 📄 pimpshoe.dff
+│   │           │   ├── 📄 pimpshoe.txd
+│   │           │   ├── 📄 pimptr.dff
+│   │           │   ├── 📄 pimptr.txd
+│   │           │   ├── 📄 player_face.txd
+│   │           │   ├── 📄 player_feet.txd
+│   │           │   ├── 📄 player_legs.txd
+│   │           │   ├── 📄 player_torso.txd
+│   │           │   ├── 📄 policeshirt.dff
+│   │           │   ├── 📄 policeshirt.txd
+│   │           │   ├── 📄 policetr.dff
+│   │           │   ├── 📄 policetr.txd
+│   │           │   ├── 📄 sandal.txd
+│   │           │   ├── 📄 sandalsock.txd
+│   │           │   ├── 📄 shadesblk.txd
+│   │           │   ├── 📄 shellsuit.txd
+│   │           │   ├── 📄 shellsuittr.txd
+│   │           │   ├── 📄 shirta.dff
+│   │           │   ├── 📄 shirtablue.txd
+│   │           │   ├── 📄 shirtagrey.txd
+│   │           │   ├── 📄 shirtayellow.txd
+│   │           │   ├── 📄 shirtb.dff
+│   │           │   ├── 📄 shirtbblue.txd
+│   │           │   ├── 📄 shirtbcheck.txd
+│   │           │   ├── 📄 shirtbgang.txd
+│   │           │   ├── 📄 shirtbplaid.txd
+│   │           │   ├── 📄 shoe.dff
+│   │           │   ├── 📄 shoedressblk.txd
+│   │           │   ├── 📄 shoedressbrn.txd
+│   │           │   ├── 📄 shoesandal.txd
+│   │           │   ├── 📄 shoespatz.txd
+│   │           │   ├── 📄 shorts.dff
+│   │           │   ├── 📄 shortsgang.txd
+│   │           │   ├── 📄 shortsgrey.txd
+│   │           │   ├── 📄 shortskhaki.txd
+│   │           │   ├── 📄 sixtyniners.txd
+│   │           │   ├── 📄 skullyblk.txd
+│   │           │   ├── 📄 skullycap.dff
+│   │           │   ├── 📄 skullygrn.txd
+│   │           │   ├── 📄 sleevt.dff
+│   │           │   ├── 📄 sleevtbrown.txd
+│   │           │   ├── 📄 snakeskin.txd
+│   │           │   ├── 📄 sneaker.dff
+│   │           │   ├── 📄 sneakerbincblk.txd
+│   │           │   ├── 📄 sneakerbincblu.txd
+│   │           │   ├── 📄 sneakerbincgang.txd
+│   │           │   ├── 📄 sneakerheatblk.txd
+│   │           │   ├── 📄 sneakerheatgry.txd
+│   │           │   ├── 📄 sneakerheatwht.txd
+│   │           │   ├── 📄 sneakerproblu.txd
+│   │           │   ├── 📄 sneakerprored.txd
+│   │           │   ├── 📄 sneakerprowht.txd
+│   │           │   ├── 📄 sportjack.txd
+│   │           │   ├── 📄 stopwatch.txd
+│   │           │   ├── 📄 suit1.dff
+│   │           │   ├── 📄 suit1blk.txd
+│   │           │   ├── 📄 suit1blue.txd
+│   │           │   ├── 📄 suit1gang.txd
+│   │           │   ├── 📄 suit1grey.txd
+│   │           │   ├── 📄 suit1red.txd
+│   │           │   ├── 📄 suit1tr.dff
+│   │           │   ├── 📄 suit1trblk.txd
+│   │           │   ├── 📄 suit1trblk2.txd
+│   │           │   ├── 📄 suit1trblue.txd
+│   │           │   ├── 📄 suit1trgang.txd
+│   │           │   ├── 📄 suit1trgreen.txd
+│   │           │   ├── 📄 suit1trgrey.txd
+│   │           │   ├── 📄 suit1trred.txd
+│   │           │   ├── 📄 suit1tryellow.txd
+│   │           │   ├── 📄 suit1yellow.txd
+│   │           │   ├── 📄 suit2.dff
+│   │           │   ├── 📄 suit2grn.txd
+│   │           │   ├── 📄 sweat.dff
+│   │           │   ├── 📄 sweatrstar.txd
+│   │           │   ├── 📄 t2.dff
+│   │           │   ├── 📄 t2.txd
+│   │           │   ├── 📄 t3.txd
+│   │           │   ├── 📄 t4.txd
+│   │           │   ├── 📄 t5.txd
+│   │           │   ├── 📄 t6.txd
+│   │           │   ├── 📄 tash.txd
+│   │           │   ├── 📄 timber.dff
+│   │           │   ├── 📄 timberfawn.txd
+│   │           │   ├── 📄 timbergrey.txd
+│   │           │   ├── 📄 timberhike.txd
+│   │           │   ├── 📄 timberred.txd
+│   │           │   ├── 📄 torso.dff
+│   │           │   ├── 📄 torso.txd
+│   │           │   ├── 📄 tracktr.dff
+│   │           │   ├── 📄 tracktr.txd
+│   │           │   ├── 📄 tracktrblue.txd
+│   │           │   ├── 📄 tracktrblustr.txd
+│   │           │   ├── 📄 tracktreris.txd
+│   │           │   ├── 📄 tracktrgang.txd
+│   │           │   ├── 📄 tracktrpro.txd
+│   │           │   ├── 📄 tracktrwhstr.txd
+│   │           │   ├── 📄 trackytop1.dff
+│   │           │   ├── 📄 trackytop1pro.txd
+│   │           │   ├── 📄 trackytop2eris.txd
+│   │           │   ├── 📄 trilby.dff
+│   │           │   ├── 📄 trilbydrk.txd
+│   │           │   ├── 📄 trilbylght.txd
+│   │           │   ├── 📄 tshirt.dff
+│   │           │   ├── 📄 tshirt.txd
+│   │           │   ├── 📄 tshirt2.dff
+│   │           │   ├── 📄 tshirt2.txd
+│   │           │   ├── 📄 tshirt22.txd
+│   │           │   ├── 📄 tshirt23.txd
+│   │           │   ├── 📄 tshirt24.txd
+│   │           │   ├── 📄 tshirt25.txd
+│   │           │   ├── 📄 tshirt2horiz.txd
+│   │           │   ├── 📄 tshirtbase5.txd
+│   │           │   ├── 📄 tshirtblunts.txd
+│   │           │   ├── 📄 tshirtbobomonk.txd
+│   │           │   ├── 📄 tshirtbobored.txd
+│   │           │   ├── 📄 tshirterisorn.txd
+│   │           │   ├── 📄 tuxedo.txd
+│   │           │   ├── 📄 v2.txd
+│   │           │   ├── 📄 v3.txd
+│   │           │   ├── 📄 v4.txd
+│   │           │   ├── 📄 valet.dff
+│   │           │   ├── 📄 valet.txd
+│   │           │   ├── 📄 valet2.dff
+│   │           │   ├── 📄 vest.dff
+│   │           │   ├── 📄 vest.txd
+│   │           │   ├── 📄 vestblack.txd
+│   │           │   ├── 📄 visor.txd
+│   │           │   ├── 📄 watch.dff
+│   │           │   ├── 📄 watch_hoody.dff
+│   │           │   ├── 📄 watchcro.txd
+│   │           │   ├── 📄 watchcro2.txd
+│   │           │   ├── 📄 watchgno.txd
+│   │           │   ├── 📄 watchgno2.txd
+│   │           │   ├── 📄 watchpink.txd
+│   │           │   ├── 📄 watchpro.txd
+│   │           │   ├── 📄 watchpro2.txd
+│   │           │   ├── 📄 watchsub1.txd
+│   │           │   ├── 📄 watchsub2.txd
+│   │           │   ├── 📄 watchyellow.txd
+│   │           │   ├── 📄 watchzip1.txd
+│   │           │   ├── 📄 watchzip2.txd
+│   │           │   ├── 📄 wcoat.dff
+│   │           │   ├── 📄 wcoatblue.txd
+│   │           │   ├── 📄 wedge.dff
+│   │           │   ├── 📄 wedge.txd
+│   │           │   ├── 📄 worktr.dff
+│   │           │   ├── 📄 worktrboot.dff
+│   │           │   ├── 📄 worktrcamogrn.txd
+│   │           │   ├── 📄 worktrcamogry.txd
+│   │           │   ├── 📄 worktrgrey.txd
+│   │           │   ├── 📄 worktrkhaki.txd
+│   │           │   ├── 📄 zorro.txd
+│   │           │   └── 📄 zorromask.dff
+│   │           └── 📄 V_HUD_by_DK22Pac.asi
+│   ├── 📄 10.jpg
+│   ├── 📄 11.jpg
+│   ├── 📄 12.jpg
+│   ├── 📄 13.jpg
+│   ├── 📄 3.jpg
+│   ├── 📄 4.jpg
+│   ├── 📄 5.jpg
+│   ├── 📄 6.jpg
+│   ├── 📄 7.jpg
+│   ├── 📄 8.jpg
+│   ├── 📄 9.jpg
+│   ├── 📄 Read Me.txt
+│   ├── 📄 V Style Character Switch 4.pdf
+│   └── 📄 VSCS.jpg
+├── 📁 29-VehDeform
+│   ├── 📄 Screenshot (226).png
+│   ├── 📄 VehDeform.SA.asi
+│   └── 📄 VehDeform_CFG.ini
+├── 📁 30-VHUD V0.944
+│   ├── 📁 01-Extra
+│   │   └── 📁 GTA UG
+│   │       └── 📁 VHud
+│   │           └── 📁 data
+│   │               └── 📄 radar_tilemap.dat
+│   ├── 📁 02-VHud
+│   │   ├── 📁 01-audio
+│   │   │   └── 📁 frontend
+│   │   │       ├── 📄 menu_back.wav
+│   │   │       ├── 📄 menu_map_move.wav
+│   │   │       ├── 📄 menu_music_1.wav
+│   │   │       ├── 📄 menu_music_2.wav
+│   │   │       ├── 📄 menu_music_3.wav
+│   │   │       ├── 📄 menu_music_4.wav
+│   │   │       ├── 📄 menu_music_5.wav
+│   │   │       ├── 📄 menu_music_6.wav
+│   │   │       ├── 📄 menu_music_7.wav
+│   │   │       ├── 📄 menu_scroll.wav
+│   │   │       ├── 📄 menu_select.wav
+│   │   │       ├── 📄 screen_pulse1.wav
+│   │   │       ├── 📄 stats_background.wav
+│   │   │       ├── 📄 td_loading_music.wav
+│   │   │       ├── 📄 wasted_busted.wav
+│   │   │       ├── 📄 wheel_background.wav
+│   │   │       ├── 📄 wheel_move.wav
+│   │   │       └── 📄 wheel_open_close.wav
+│   │   ├── 📁 02-buttons
+│   │   │   ├── 📁 01-pc
+│   │   │   │   ├── 📄 0.png
+│   │   │   │   ├── 📄 1.png
+│   │   │   │   ├── 📄 2.png
+│   │   │   │   ├── 📄 3.png
+│   │   │   │   ├── 📄 4.png
+│   │   │   │   ├── 📄 5.png
+│   │   │   │   ├── 📄 6.png
+│   │   │   │   ├── 📄 7.png
+│   │   │   │   ├── 📄 8.png
+│   │   │   │   ├── 📄 9.png
+│   │   │   │   ├── 📄 A.png
+│   │   │   │   ├── 📄 alt.png
+│   │   │   │   ├── 📄 APPS.png
+│   │   │   │   ├── 📄 B.png
+│   │   │   │   ├── 📄 BACKSP.png
+│   │   │   │   ├── 📄 C.png
+│   │   │   │   ├── 📄 CAPSLK.png
+│   │   │   │   ├── 📄 D.png
+│   │   │   │   ├── 📄 del.png
+│   │   │   │   ├── 📄 DIVIDE.png
+│   │   │   │   ├── 📄 down.png
+│   │   │   │   ├── 📄 E.png
+│   │   │   │   ├── 📄 end.png
+│   │   │   │   ├── 📄 enter.png
+│   │   │   │   ├── 📄 esc.png
+│   │   │   │   ├── 📄 F.png
+│   │   │   │   ├── 📄 f1.png
+│   │   │   │   ├── 📄 f10.png
+│   │   │   │   ├── 📄 f11.png
+│   │   │   │   ├── 📄 f12.png
+│   │   │   │   ├── 📄 f2.png
+│   │   │   │   ├── 📄 f3.png
+│   │   │   │   ├── 📄 f4.png
+│   │   │   │   ├── 📄 f5.png
+│   │   │   │   ├── 📄 f6.png
+│   │   │   │   ├── 📄 f7.png
+│   │   │   │   ├── 📄 f8.png
+│   │   │   │   ├── 📄 f9.png
+│   │   │   │   ├── 📄 G.png
+│   │   │   │   ├── 📄 H.png
+│   │   │   │   ├── 📄 home.png
+│   │   │   │   ├── 📄 I.png
+│   │   │   │   ├── 📄 ins.png
+│   │   │   │   ├── 📄 J.png
+│   │   │   │   ├── 📄 K.png
+│   │   │   │   ├── 📄 l.png
+│   │   │   │   ├── 📄 lalt.png
+│   │   │   │   ├── 📄 lctrl.png
+│   │   │   │   ├── 📄 left.png
+│   │   │   │   ├── 📄 LMB.png
+│   │   │   │   ├── 📄 LSHIFT.png
+│   │   │   │   ├── 📄 lwin.png
+│   │   │   │   ├── 📄 M.png
+│   │   │   │   ├── 📄 menu.png
+│   │   │   │   ├── 📄 MINUS.png
+│   │   │   │   ├── 📄 MMB.png
+│   │   │   │   ├── 📄 MWHD.png
+│   │   │   │   ├── 📄 MWHU.png
+│   │   │   │   ├── 📄 N.png
+│   │   │   │   ├── 📄 numlock.png
+│   │   │   │   ├── 📄 O.png
+│   │   │   │   ├── 📄 P.png
+│   │   │   │   ├── 📄 pad5.png
+│   │   │   │   ├── 📄 paddown.png
+│   │   │   │   ├── 📄 padend.png
+│   │   │   │   ├── 📄 padenter.png
+│   │   │   │   ├── 📄 padhome.png
+│   │   │   │   ├── 📄 padins.png
+│   │   │   │   ├── 📄 padleft.png
+│   │   │   │   ├── 📄 padpgdn.png
+│   │   │   │   ├── 📄 padpgup.png
+│   │   │   │   ├── 📄 padright.png
+│   │   │   │   ├── 📄 padup.png
+│   │   │   │   ├── 📄 pause.png
+│   │   │   │   ├── 📄 PGDN.png
+│   │   │   │   ├── 📄 pgup.png
+│   │   │   │   ├── 📄 PLUS.png
+│   │   │   │   ├── 📄 print.png
+│   │   │   │   ├── 📄 Q.png
+│   │   │   │   ├── 📄 R.png
+│   │   │   │   ├── 📄 ralt.png
+│   │   │   │   ├── 📄 rctrl.png
+│   │   │   │   ├── 📄 right.png
+│   │   │   │   ├── 📄 RMB.png
+│   │   │   │   ├── 📄 RSHIFT.png
+│   │   │   │   ├── 📄 rwin.png
+│   │   │   │   ├── 📄 S.png
+│   │   │   │   ├── 📄 SCROLL.png
+│   │   │   │   ├── 📄 shift.png
+│   │   │   │   ├── 📄 spacebar.png
+│   │   │   │   ├── 📄 T.png
+│   │   │   │   ├── 📄 TAB.png
+│   │   │   │   ├── 📄 TIMES.png
+│   │   │   │   ├── 📄 U.png
+│   │   │   │   ├── 📄 up.png
+│   │   │   │   ├── 📄 V.png
+│   │   │   │   ├── 📄 W.png
+│   │   │   │   ├── 📄 X.png
+│   │   │   │   ├── 📄 Y.png
+│   │   │   │   └── 📄 Z.png
+│   │   │   └── 📁 02-xbox
+│   │   │       ├── 📄 circle.png
+│   │   │       ├── 📄 cross.png
+│   │   │       ├── 📄 dlr.png
+│   │   │       ├── 📄 down.png
+│   │   │       ├── 📄 dud.png
+│   │   │       ├── 📄 l1.png
+│   │   │       ├── 📄 l2.png
+│   │   │       ├── 📄 l3.png
+│   │   │       ├── 📄 left.png
+│   │   │       ├── 📄 r1.png
+│   │   │       ├── 📄 r2.png
+│   │   │       ├── 📄 r3.png
+│   │   │       ├── 📄 right.png
+│   │   │       ├── 📄 square.png
+│   │   │       ├── 📄 thumbl.png
+│   │   │       ├── 📄 thumblx.png
+│   │   │       ├── 📄 thumblxl.png
+│   │   │       ├── 📄 thumblxr.png
+│   │   │       ├── 📄 thumbly.png
+│   │   │       ├── 📄 thumblyd.png
+│   │   │       ├── 📄 thumblyu.png
+│   │   │       ├── 📄 thumbr.png
+│   │   │       ├── 📄 thumbrx.png
+│   │   │       ├── 📄 thumbrxl.png
+│   │   │       ├── 📄 thumbrxr.png
+│   │   │       ├── 📄 thumbry.png
+│   │   │       ├── 📄 thumbryd.png
+│   │   │       ├── 📄 thumbryu.png
+│   │   │       ├── 📄 triangle.png
+│   │   │       └── 📄 up.png
+│   │   ├── 📁 03-cellphone
+│   │   │   ├── 📁 01-ifruit
+│   │   │   │   ├── 📁 01-icons
+│   │   │   │   │   ├── 📄 cellphone_icon_back.png
+│   │   │   │   │   ├── 📄 cellphone_icon_browser.png
+│   │   │   │   │   ├── 📄 cellphone_icon_contacts.png
+│   │   │   │   │   ├── 📄 cellphone_icon_mail.png
+│   │   │   │   │   ├── 📄 cellphone_icon_notifications.png
+│   │   │   │   │   ├── 📄 cellphone_icon_quicksave.png
+│   │   │   │   │   ├── 📄 cellphone_icon_selected.png
+│   │   │   │   │   ├── 📄 cellphone_icon_settings.png
+│   │   │   │   │   ├── 📄 cellphone_icon_snapmatic.png
+│   │   │   │   │   └── 📄 cellphone_icon_texts.png
+│   │   │   │   ├── 📁 02-wallpaper
+│   │   │   │   │   ├── 📄 cellphone_wallpaper_badgerdefault.png
+│   │   │   │   │   ├── 📄 cellphone_wallpaper_ifruitdefault.png
+│   │   │   │   │   ├── 📄 cellphone_wallpaper_orangetriangles.png
+│   │   │   │   │   ├── 📄 cellphone_wallpaper_purpleglow.png
+│   │   │   │   │   └── 📄 cellphone_wallpaper_purpletartan.png
+│   │   │   │   ├── 📄 cellphone_border.png
+│   │   │   │   ├── 📄 cellphone_header_bar.png
+│   │   │   │   ├── 📄 cellphone_logo.png
+│   │   │   │   ├── 📄 cellphone_mask.png
+│   │   │   │   ├── 📄 cellphone_soft_key_bg.png
+│   │   │   │   ├── 📄 cellphone_touch_back.png
+│   │   │   │   ├── 📄 cellphone_touch_home.png
+│   │   │   │   └── 📄 cellphone_touch_search.png
+│   │   │   └── 📁 02-shared
+│   │   │       ├── 📄 cellphone_shared_back.png
+│   │   │       ├── 📄 cellphone_shared_battery.png
+│   │   │       ├── 📄 cellphone_shared_phone.png
+│   │   │       ├── 📄 cellphone_shared_plus.png
+│   │   │       ├── 📄 cellphone_shared_sign.png
+│   │   │       └── 📄 cellphone_shared_signal.png
+│   │   ├── 📁 04-data
+│   │   │   ├── 📄 blips.dat
+│   │   │   ├── 📄 hud.dat
+│   │   │   ├── 📄 hudcolor.dat
+│   │   │   ├── 📄 languages.dat
+│   │   │   ├── 📄 shopui.dat
+│   │   │   ├── 📄 weapon_rates.dat
+│   │   │   └── 📄 weapon_selector.dat
+│   │   ├── 📁 05-frontend
+│   │   │   ├── 📄 back.png
+│   │   │   ├── 📄 front.png
+│   │   │   ├── 📄 gtalogo.png
+│   │   │   └── 📄 infobox.png
+│   │   ├── 📁 06-gps
+│   │   │   └── 📄 path_dir.png
+│   │   ├── 📁 07-markers
+│   │   │   ├── 📄 arrow.png
+│   │   │   └── 📄 arrowa.png
+│   │   ├── 📁 08-menus
+│   │   │   ├── 📄 arrow_left.png
+│   │   │   ├── 📄 arrow_right.png
+│   │   │   ├── 📄 menu_bought.png
+│   │   │   ├── 📄 menu_car.png
+│   │   │   ├── 📄 menu_car_b.png
+│   │   │   ├── 📄 menu_clothes.png
+│   │   │   ├── 📄 menu_clothes_b.png
+│   │   │   ├── 📄 menu_map_crosshair_line_right.png
+│   │   │   ├── 📄 menu_map_crosshair_line_up.png
+│   │   │   ├── 📄 menu_selector.png
+│   │   │   ├── 📄 menu_weapons.png
+│   │   │   ├── 📄 menu_weapons_b.png
+│   │   │   ├── 📄 mouse_arrow.png
+│   │   │   ├── 📄 mouse_fucku.png
+│   │   │   ├── 📄 mouse_grab.png
+│   │   │   ├── 📄 mouse_hand.png
+│   │   │   ├── 📄 rockstarlogo256.png
+│   │   │   └── 📄 xbox_gamepad.png
+│   │   ├── 📁 09-misc
+│   │   │   ├── 📄 rect_grad.png
+│   │   │   ├── 📄 rect_grad_centered.png
+│   │   │   ├── 📄 skip_icon.png
+│   │   │   └── 📄 spinner.png
+│   │   ├── 📁 10-radio
+│   │   │   ├── 📄 radio_1.png
+│   │   │   ├── 📄 radio_10.png
+│   │   │   ├── 📄 radio_11.png
+│   │   │   ├── 📄 radio_12.png
+│   │   │   ├── 📄 radio_13.png
+│   │   │   ├── 📄 radio_2.png
+│   │   │   ├── 📄 radio_3.png
+│   │   │   ├── 📄 radio_4.png
+│   │   │   ├── 📄 radio_5.png
+│   │   │   ├── 📄 radio_6.png
+│   │   │   ├── 📄 radio_7.png
+│   │   │   ├── 📄 radio_8.png
+│   │   │   ├── 📄 radio_9.png
+│   │   │   └── 📄 radio_current.png
+│   │   ├── 📁 11-shopui
+│   │   │   ├── 📄 shopui_title_carmod.png
+│   │   │   ├── 📄 shopui_title_gunclub.png
+│   │   │   ├── 📄 shopui_title_lowendfashion2.png
+│   │   │   ├── 📄 shopui_title_midfashion.png
+│   │   │   ├── 📄 shopui_title_tattoos2.png
+│   │   │   ├── 📄 shopui_title_tattoos4.png
+│   │   │   └── 📄 shopui_title_tennisstore.png
+│   │   ├── 📁 12-stats
+│   │   │   ├── 📁 01-colors
+│   │   │   │   ├── 📄 default_color.png
+│   │   │   │   ├── 📄 player1_color.png
+│   │   │   │   ├── 📄 player2_color.png
+│   │   │   │   └── 📄 player3_color.png
+│   │   │   ├── 📁 02-masks
+│   │   │   │   ├── 📄 player1_mask.png
+│   │   │   │   ├── 📄 player2_mask.png
+│   │   │   │   ├── 📄 player3_mask.png
+│   │   │   │   └── 📄 player4_mask.png
+│   │   │   ├── 📁 03-portraits
+│   │   │   │   ├── 📄 andre.png
+│   │   │   │   ├── 📄 army.png
+│   │   │   │   ├── 📄 ballas1.png
+│   │   │   │   ├── 📄 ballas2.png
+│   │   │   │   ├── 📄 ballas3.png
+│   │   │   │   ├── 📄 bb.png
+│   │   │   │   ├── 📄 bbthin.png
+│   │   │   │   ├── 📄 bfori.png
+│   │   │   │   ├── 📄 bfost.png
+│   │   │   │   ├── 📄 bfybe.png
+│   │   │   │   ├── 📄 bfybu.png
+│   │   │   │   ├── 📄 bfypro.png
+│   │   │   │   ├── 📄 bfyri.png
+│   │   │   │   ├── 📄 bfyst.png
+│   │   │   │   ├── 📄 bikdrug.png
+│   │   │   │   ├── 📄 bikera.png
+│   │   │   │   ├── 📄 bikerb.png
+│   │   │   │   ├── 📄 bmobar.png
+│   │   │   │   ├── 📄 bmocd.png
+│   │   │   │   ├── 📄 bmochil.png
+│   │   │   │   ├── 📄 bmori.png
+│   │   │   │   ├── 📄 bmosec.png
+│   │   │   │   ├── 📄 bmost.png
+│   │   │   │   ├── 📄 bmotr1.png
+│   │   │   │   ├── 📄 bmyap.png
+│   │   │   │   ├── 📄 bmybar.png
+│   │   │   │   ├── 📄 bmybe.png
+│   │   │   │   ├── 📄 bmyboun.png
+│   │   │   │   ├── 📄 bmybu.png
+│   │   │   │   ├── 📄 bmycg.png
+│   │   │   │   ├── 📄 bmycon.png
+│   │   │   │   ├── 📄 bmycr.png
+│   │   │   │   ├── 📄 bmydrug.png
+│   │   │   │   ├── 📄 bmymib.png
+│   │   │   │   ├── 📄 bmymoun.png
+│   │   │   │   ├── 📄 bmypimp.png
+│   │   │   │   ├── 📄 bmypol1.png
+│   │   │   │   ├── 📄 bmypol2.png
+│   │   │   │   ├── 📄 bmyri.png
+│   │   │   │   ├── 📄 bmyst.png
+│   │   │   │   ├── 📄 bmytatt.png
+│   │   │   │   ├── 📄 bones.png
+│   │   │   │   ├── 📄 cat.png
+│   │   │   │   ├── 📄 cdeput.png
+│   │   │   │   ├── 📄 cesar.png
+│   │   │   │   ├── 📄 cj.png
+│   │   │   │   ├── 📄 claude.png
+│   │   │   │   ├── 📄 copgrl1.png
+│   │   │   │   ├── 📄 copgrl2.png
+│   │   │   │   ├── 📄 copgrl3.png
+│   │   │   │   ├── 📄 crogrl1.png
+│   │   │   │   ├── 📄 crogrl2.png
+│   │   │   │   ├── 📄 crogrl3.png
+│   │   │   │   ├── 📄 csher.png
+│   │   │   │   ├── 📄 cwfofr.png
+│   │   │   │   ├── 📄 cwfohb.png
+│   │   │   │   ├── 📄 cwfyfr1.png
+│   │   │   │   ├── 📄 cwfyfr2.png
+│   │   │   │   ├── 📄 cwfyhb.png
+│   │   │   │   ├── 📄 cwmofr.png
+│   │   │   │   ├── 📄 cwmohb1.png
+│   │   │   │   ├── 📄 cwmohb2.png
+│   │   │   │   ├── 📄 cwmyfr.png
+│   │   │   │   ├── 📄 cwmyhb1.png
+│   │   │   │   ├── 📄 cwmyhb2.png
+│   │   │   │   ├── 📄 dnb1.png
+│   │   │   │   ├── 📄 dnb2.png
+│   │   │   │   ├── 📄 dnb3.png
+│   │   │   │   ├── 📄 dnfolc1.png
+│   │   │   │   ├── 📄 dnfolc2.png
+│   │   │   │   ├── 📄 dnfylc.png
+│   │   │   │   ├── 📄 dnmolc1.png
+│   │   │   │   ├── 📄 dnmolc2.png
+│   │   │   │   ├── 📄 dsher.png
+│   │   │   │   ├── 📄 dwayne.png
+│   │   │   │   ├── 📄 dwfolc.png
+│   │   │   │   ├── 📄 dwfylc1.png
+│   │   │   │   ├── 📄 dwfylc2.png
+│   │   │   │   ├── 📄 dwmolc1.png
+│   │   │   │   ├── 📄 dwmolc2.png
+│   │   │   │   ├── 📄 dwmylc1.png
+│   │   │   │   ├── 📄 dwmylc2.png
+│   │   │   │   ├── 📄 emmet.png
+│   │   │   │   ├── 📄 fam1.png
+│   │   │   │   ├── 📄 fam2.png
+│   │   │   │   ├── 📄 fam3.png
+│   │   │   │   ├── 📄 fbi.png
+│   │   │   │   ├── 📄 forelli.png
+│   │   │   │   ├── 📄 heck1.png
+│   │   │   │   ├── 📄 heck2.png
+│   │   │   │   ├── 📄 hern.png
+│   │   │   │   ├── 📄 hfori.png
+│   │   │   │   ├── 📄 hfost.png
+│   │   │   │   ├── 📄 hfybe.png
+│   │   │   │   ├── 📄 hfypro.png
+│   │   │   │   ├── 📄 hfyri.png
+│   │   │   │   ├── 📄 hfyst.png
+│   │   │   │   ├── 📄 hmogar.png
+│   │   │   │   ├── 📄 hmori.png
+│   │   │   │   ├── 📄 hmost.png
+│   │   │   │   ├── 📄 hmybe.png
+│   │   │   │   ├── 📄 hmycm.png
+│   │   │   │   ├── 📄 hmycr.png
+│   │   │   │   ├── 📄 hmydrug.png
+│   │   │   │   ├── 📄 hmyri.png
+│   │   │   │   ├── 📄 hmyst.png
+│   │   │   │   ├── 📄 janitor.png
+│   │   │   │   ├── 📄 jethro.png
+│   │   │   │   ├── 📄 jizzy.png
+│   │   │   │   ├── 📄 kendl.png
+│   │   │   │   ├── 📄 laemt1.png
+│   │   │   │   ├── 📄 sweet.png
+│   │   │   │   ├── 📄 swmotr4.png
+│   │   │   │   └── 📄 unknown.png
+│   │   │   ├── 📁 04-wheel_part
+│   │   │   │   ├── 📄 player1_active.png
+│   │   │   │   ├── 📄 player2_active.png
+│   │   │   │   ├── 📄 player3_active.png
+│   │   │   │   └── 📄 player4_active.png
+│   │   │   ├── 📄 progress_bar.png
+│   │   │   └── 📄 wheel.png
+│   │   ├── 📁 13-text
+│   │   │   ├── 📄 english.ini
+│   │   │   └── 📄 italian.ini
+│   │   ├── 📁 14-wanted
+│   │   │   ├── 📄 star1.png
+│   │   │   └── 📄 star2.png
+│   │   └── 📁 15-weapon
+│   │       ├── 📁 01-extra
+│   │       │   └── 📄 parachute.png
+│   │       ├── 📁 02-weapons
+│   │       │   ├── 📄 ak-47.png
+│   │       │   ├── 📄 baseball_bat.png
+│   │       │   ├── 📄 brass_knuckles.png
+│   │       │   ├── 📄 camera.png
+│   │       │   ├── 📄 cane.png
+│   │       │   ├── 📄 chainsaw.png
+│   │       │   ├── 📄 desert_eagle.png
+│   │       │   ├── 📄 detonator.png
+│   │       │   ├── 📄 dildo_1.png
+│   │       │   ├── 📄 dildo_2.png
+│   │       │   ├── 📄 fire_extinguisher.png
+│   │       │   ├── 📄 flame_thrower.png
+│   │       │   ├── 📄 flowers.png
+│   │       │   ├── 📄 golf_club.png
+│   │       │   ├── 📄 grenade.png
+│   │       │   ├── 📄 katana.png
+│   │       │   ├── 📄 knife.png
+│   │       │   ├── 📄 m4.png
+│   │       │   ├── 📄 micro_uzi.png
+│   │       │   ├── 📄 minigun.png
+│   │       │   ├── 📄 missile_launcher.png
+│   │       │   ├── 📄 molotov.png
+│   │       │   ├── 📄 mp5.png
+│   │       │   ├── 📄 night_stick.png
+│   │       │   ├── 📄 nightvision_goggles.png
+│   │       │   ├── 📄 pistol.png
+│   │       │   ├── 📄 pool_cue.png
+│   │       │   ├── 📄 rifle.png
+│   │       │   ├── 📄 rpg.png
+│   │       │   ├── 📄 sachet_charge.png
+│   │       │   ├── 📄 sawn_off.png
+│   │       │   ├── 📄 shotgun.png
+│   │       │   ├── 📄 shovel.png
+│   │       │   ├── 📄 silenced_pistol.png
+│   │       │   ├── 📄 sniper_rifle.png
+│   │       │   ├── 📄 spas_12.png
+│   │       │   ├── 📄 spray_paint.png
+│   │       │   ├── 📄 tear_gas.png
+│   │       │   ├── 📄 tec_9.png
+│   │       │   ├── 📄 thermal_goggles.png
+│   │       │   ├── 📄 unarmed.png
+│   │       │   ├── 📄 vibe_1.png
+│   │       │   └── 📄 vibe_2.png
+│   │       ├── 📄 wheel_arrow_left.png
+│   │       ├── 📄 wheel_arrow_right.png
+│   │       ├── 📄 wheel_extra.png
+│   │       ├── 📄 wheel_part_active.png
+│   │       ├── 📄 wheel_part_grad.png
+│   │       ├── 📄 wheel_part_inactive.png
+│   │       └── 📄 wheel_part_solid.png
+│   ├── 📄 bass.dll
+│   ├── 📄 VHud Readme.txt
+│   └── 📄 VHud.asi
+├── 📁 31-VI_HUD
+│   ├── 📁 01-CLEO
+│   │   ├── 📄 Radar Map Color.cs
+│   │   └── 📄 Radar Map Color.ini
+│   ├── 📁 02-data
+│   │   └── 📄 fonts.dat
+│   ├── 📁 03-GTAVHud_by_DK22Pac
+│   │   ├── 📁 01-crosshair
+│   │   │   ├── 📁 crosshairs
+│   │   │   │   ├── 📄 assault - Copy.png
+│   │   │   │   ├── 📄 assault.png
+│   │   │   │   ├── 📄 pistol.png
+│   │   │   │   ├── 📄 shotgun.png
+│   │   │   │   └── 📄 smg.png
+│   │   │   ├── 📄 crosshairs.dat
+│   │   │   ├── 📄 dot.png
+│   │   │   ├── 📄 reddot.png
+│   │   │   ├── 📄 rocket - Copy.png
+│   │   │   ├── 📄 rocket.png
+│   │   │   ├── 📄 sniper.png
+│   │   │   └── 📄 snipertarget.png
+│   │   ├── 📁 02-effects
+│   │   │   ├── 📄 black_n_white.fxc
+│   │   │   ├── 📄 blur (2x).fxc
+│   │   │   ├── 📄 blur.fxc
+│   │   │   ├── 📄 crosshairblur.fxc
+│   │   │   ├── 📄 crosshairlens.fxc
+│   │   │   ├── 📄 multi_alpha_mask.fxc
+│   │   │   ├── 📄 overlay_color.fxc
+│   │   │   ├── 📄 overlay_color.png
+│   │   │   ├── 📄 radar_gps.fxc
+│   │   │   └── 📄 radar_gps_alpha_mask.fxc
+│   │   ├── 📁 03-gps
+│   │   │   └── 📄 path_dir.png
+│   │   ├── 📁 04-menus
+│   │   │   ├── 📄 ammu-nation.png
+│   │   │   ├── 📄 ammu-nation_pattern.png
+│   │   │   ├── 📄 binco.png
+│   │   │   ├── 📄 binco_pattern.png
+│   │   │   ├── 📄 burgershot.png
+│   │   │   ├── 📄 burgershot_pattern.png
+│   │   │   ├── 📄 car_spawner.png
+│   │   │   ├── 📄 car_spawner_pattern.png
+│   │   │   ├── 📄 carsimport.png
+│   │   │   ├── 📄 carsimport_pattern.png
+│   │   │   ├── 📄 cluckinbell.png
+│   │   │   ├── 📄 cluckinbell_pattern.png
+│   │   │   ├── 📄 dsstore.png
+│   │   │   ├── 📄 dsstore_pattern.png
+│   │   │   ├── 📄 llc.png
+│   │   │   ├── 📄 llc_pattern.png
+│   │   │   ├── 📄 menu_bought.png
+│   │   │   ├── 📄 menu_car.png
+│   │   │   ├── 📄 menu_clothes.png
+│   │   │   ├── 📄 menu_selector.png
+│   │   │   ├── 📄 menu_weapons.png
+│   │   │   ├── 📄 menus.dat
+│   │   │   ├── 📄 pizzastack.png
+│   │   │   ├── 📄 pizzastack_pattern.png
+│   │   │   ├── 📄 prolaps.png
+│   │   │   ├── 📄 prolaps_pattern.png
+│   │   │   ├── 📄 reecebarber.png
+│   │   │   ├── 📄 reecebarber_pattern.png
+│   │   │   ├── 📄 suburban.png
+│   │   │   ├── 📄 suburban_pattern.png
+│   │   │   ├── 📄 tattoo.png
+│   │   │   ├── 📄 tattoo_pattern.png
+│   │   │   ├── 📄 transfender.png
+│   │   │   ├── 📄 transfender_pattern.png
+│   │   │   ├── 📄 victim.png
+│   │   │   ├── 📄 victim_pattern.png
+│   │   │   ├── 📄 waa.png
+│   │   │   ├── 📄 waa_pattern.png
+│   │   │   ├── 📄 wardrobe.png
+│   │   │   ├── 📄 wardrobe_pattern.png
+│   │   │   ├── 📄 zaz_vehspawn.png
+│   │   │   ├── 📄 zaz_vehspawn_pattern.png
+│   │   │   ├── 📄 zip.png
+│   │   │   └── 📄 zip_pattern.png
+│   │   ├── 📁 05-mp
+│   │   │   ├── 📄 feature.png
+│   │   │   └── 📄 V_HUD_by_DK22Pac.ini
+│   │   ├── 📁 06-phone
+│   │   │   ├── 📄 phone.ini
+│   │   │   └── 📄 phone.png
+│   │   ├── 📁 07-radar
+│   │   │   ├── 📄 radar_cop.png
+│   │   │   ├── 📄 radar_damage.png
+│   │   │   ├── 📄 radar_higher.png
+│   │   │   ├── 📄 radar_level.png
+│   │   │   ├── 📄 radar_lower.png
+│   │   │   ├── 📄 radar_mask.png
+│   │   │   ├── 📄 radar_plane.png
+│   │   │   ├── 📄 radar_plane_mask.png
+│   │   │   ├── 📄 radar_police_heli.png
+│   │   │   ├── 📄 radar_rect.png
+│   │   │   └── 📄 radar_rect_2p.png
+│   │   ├── 📁 08-radio
+│   │   │   ├── 📄 radio_1.png
+│   │   │   ├── 📄 radio_10.png
+│   │   │   ├── 📄 radio_11.png
+│   │   │   ├── 📄 radio_12.png
+│   │   │   ├── 📄 radio_13.png
+│   │   │   ├── 📄 radio_2.png
+│   │   │   ├── 📄 radio_3.png
+│   │   │   ├── 📄 radio_4.png
+│   │   │   ├── 📄 radio_5.png
+│   │   │   ├── 📄 radio_6.png
+│   │   │   ├── 📄 radio_7.png
+│   │   │   ├── 📄 radio_8.png
+│   │   │   ├── 📄 radio_9.png
+│   │   │   ├── 📄 radio_current.png
+│   │   │   └── 📄 radio_names.dat
+│   │   ├── 📁 09-stats
+│   │   │   ├── 📁 player
+│   │   │   │   ├── 📄 0.png
+│   │   │   │   ├── 📄 andre.png
+│   │   │   │   ├── 📄 army.png
+│   │   │   │   ├── 📄 ballas1.png
+│   │   │   │   ├── 📄 ballas2.png
+│   │   │   │   ├── 📄 ballas3.png
+│   │   │   │   ├── 📄 bb.png
+│   │   │   │   ├── 📄 bbthin.png
+│   │   │   │   ├── 📄 bfori.png
+│   │   │   │   ├── 📄 bfost.png
+│   │   │   │   ├── 📄 bfybe.png
+│   │   │   │   ├── 📄 bfybu.png
+│   │   │   │   ├── 📄 bfypro.png
+│   │   │   │   ├── 📄 bfyri.png
+│   │   │   │   ├── 📄 bfyst.png
+│   │   │   │   ├── 📄 bikdrug.png
+│   │   │   │   ├── 📄 bikera.png
+│   │   │   │   ├── 📄 bikerb.png
+│   │   │   │   ├── 📄 bmobar.png
+│   │   │   │   ├── 📄 bmocd.png
+│   │   │   │   ├── 📄 bmochil.png
+│   │   │   │   ├── 📄 bmori.png
+│   │   │   │   ├── 📄 bmosec.png
+│   │   │   │   ├── 📄 bmost.png
+│   │   │   │   ├── 📄 bmotr1.png
+│   │   │   │   ├── 📄 bmyap.png
+│   │   │   │   ├── 📄 bmybar.png
+│   │   │   │   ├── 📄 bmybe.png
+│   │   │   │   ├── 📄 bmyboun.png
+│   │   │   │   ├── 📄 bmybu.png
+│   │   │   │   ├── 📄 bmycg.png
+│   │   │   │   ├── 📄 bmycon.png
+│   │   │   │   ├── 📄 bmycr.png
+│   │   │   │   ├── 📄 bmydrug.png
+│   │   │   │   ├── 📄 bmymib.png
+│   │   │   │   ├── 📄 bmymoun.png
+│   │   │   │   ├── 📄 bmypimp.png
+│   │   │   │   ├── 📄 bmypol1.png
+│   │   │   │   ├── 📄 bmypol2.png
+│   │   │   │   ├── 📄 bmyri.png
+│   │   │   │   ├── 📄 bmyst.png
+│   │   │   │   ├── 📄 bmytatt.png
+│   │   │   │   ├── 📄 bones.png
+│   │   │   │   ├── 📄 cat.png
+│   │   │   │   ├── 📄 cdeput.png
+│   │   │   │   ├── 📄 cesar.png
+│   │   │   │   ├── 📄 claude.png
+│   │   │   │   ├── 📄 copgrl1.png
+│   │   │   │   ├── 📄 copgrl2.png
+│   │   │   │   ├── 📄 copgrl3.png
+│   │   │   │   ├── 📄 crogrl1.png
+│   │   │   │   ├── 📄 crogrl2.png
+│   │   │   │   ├── 📄 crogrl3.png
+│   │   │   │   ├── 📄 csher.png
+│   │   │   │   ├── 📄 cwfofr.png
+│   │   │   │   ├── 📄 cwfohb.png
+│   │   │   │   ├── 📄 cwfyfr1.png
+│   │   │   │   ├── 📄 cwfyfr2.png
+│   │   │   │   ├── 📄 cwfyhb.png
+│   │   │   │   ├── 📄 cwmofr.png
+│   │   │   │   ├── 📄 cwmohb1.png
+│   │   │   │   ├── 📄 cwmohb2.png
+│   │   │   │   ├── 📄 cwmyfr.png
+│   │   │   │   ├── 📄 cwmyhb1.png
+│   │   │   │   ├── 📄 cwmyhb2.png
+│   │   │   │   ├── 📄 dnb1.png
+│   │   │   │   ├── 📄 dnb2.png
+│   │   │   │   ├── 📄 dnb3.png
+│   │   │   │   ├── 📄 dnfolc1.png
+│   │   │   │   ├── 📄 dnfolc2.png
+│   │   │   │   ├── 📄 dnfylc.png
+│   │   │   │   ├── 📄 dnmolc1.png
+│   │   │   │   ├── 📄 dnmolc2.png
+│   │   │   │   ├── 📄 dsher.png
+│   │   │   │   ├── 📄 dwayne.png
+│   │   │   │   ├── 📄 dwfolc.png
+│   │   │   │   ├── 📄 dwfylc1.png
+│   │   │   │   ├── 📄 dwfylc2.png
+│   │   │   │   ├── 📄 dwmolc1.png
+│   │   │   │   ├── 📄 dwmolc2.png
+│   │   │   │   ├── 📄 dwmylc1.png
+│   │   │   │   ├── 📄 dwmylc2.png
+│   │   │   │   ├── 📄 emmet.png
+│   │   │   │   ├── 📄 fam1.png
+│   │   │   │   ├── 📄 fam2.png
+│   │   │   │   ├── 📄 fam3.png
+│   │   │   │   ├── 📄 fbi.png
+│   │   │   │   ├── 📄 forelli.png
+│   │   │   │   ├── 📄 heck1.png
+│   │   │   │   ├── 📄 heck2.png
+│   │   │   │   ├── 📄 hern.png
+│   │   │   │   ├── 📄 hfori.png
+│   │   │   │   ├── 📄 hfost.png
+│   │   │   │   ├── 📄 hfybe.png
+│   │   │   │   ├── 📄 hfypro.png
+│   │   │   │   ├── 📄 hfyri.png
+│   │   │   │   ├── 📄 hfyst.png
+│   │   │   │   ├── 📄 hmogar.png
+│   │   │   │   ├── 📄 hmori.png
+│   │   │   │   ├── 📄 hmost.png
+│   │   │   │   ├── 📄 hmybe.png
+│   │   │   │   ├── 📄 hmycm.png
+│   │   │   │   ├── 📄 hmycr.png
+│   │   │   │   ├── 📄 hmydrug.png
+│   │   │   │   ├── 📄 hmyri.png
+│   │   │   │   ├── 📄 hmyst.png
+│   │   │   │   ├── 📄 janitor.png
+│   │   │   │   ├── 📄 jethro.png
+│   │   │   │   ├── 📄 jizzy.png
+│   │   │   │   ├── 📄 kendl.png
+│   │   │   │   ├── 📄 laemt1.png
+│   │   │   │   └── 📄 swmotr4.png
+│   │   │   ├── 📄 background.png
+│   │   │   ├── 📄 background1.png
+│   │   │   ├── 📄 background2.png
+│   │   │   ├── 📄 default.png
+│   │   │   ├── 📄 line1p.png
+│   │   │   ├── 📄 mask1p.png
+│   │   │   └── 📄 mask2p.png
+│   │   ├── 📁 10-text
+│   │   │   ├── 📄 skip_icon.png
+│   │   │   ├── 📄 text_box_corner.png
+│   │   │   └── 📄 timer_rect.png
+│   │   ├── 📁 11-vhud_text
+│   │   │   ├── 📄 default.ini
+│   │   │   └── 📄 translation.ini
+│   │   ├── 📁 12-wanted
+│   │   │   ├── 📄 star1.png
+│   │   │   └── 📄 star2.png
+│   │   ├── 📁 13-weapon
+│   │   │   ├── 📁 weapons
+│   │   │   │   ├── 📄 ak-47.png
+│   │   │   │   ├── 📄 baseball_bat.png
+│   │   │   │   ├── 📄 brass_knuckles.png
+│   │   │   │   ├── 📄 camera.png
+│   │   │   │   ├── 📄 cane.png
+│   │   │   │   ├── 📄 chainsaw.png
+│   │   │   │   ├── 📄 Desert_eagle.png
+│   │   │   │   ├── 📄 detonator.png
+│   │   │   │   ├── 📄 dildo_1.png
+│   │   │   │   ├── 📄 dildo_2.png
+│   │   │   │   ├── 📄 fire_extinguisher.png
+│   │   │   │   ├── 📄 flame_thrower.png
+│   │   │   │   ├── 📄 flowers.png
+│   │   │   │   ├── 📄 golf_club.png
+│   │   │   │   ├── 📄 grenade.png
+│   │   │   │   ├── 📄 katana.png
+│   │   │   │   ├── 📄 knife.png
+│   │   │   │   ├── 📄 m4.png
+│   │   │   │   ├── 📄 micro_uzi.png
+│   │   │   │   ├── 📄 micro_uzi_double.png
+│   │   │   │   ├── 📄 minigun.png
+│   │   │   │   ├── 📄 missile_launcher.png
+│   │   │   │   ├── 📄 molotov.png
+│   │   │   │   ├── 📄 mp5.png
+│   │   │   │   ├── 📄 night_stick.png
+│   │   │   │   ├── 📄 nightvision_goggles.png
+│   │   │   │   ├── 📄 parachute.png
+│   │   │   │   ├── 📄 Pistol.png
+│   │   │   │   ├── 📄 pistol_double.png
+│   │   │   │   ├── 📄 pool_cue.png
+│   │   │   │   ├── 📄 Rifle.png
+│   │   │   │   ├── 📄 rpg.png
+│   │   │   │   ├── 📄 sachet_charge.png
+│   │   │   │   ├── 📄 sawn_off.png
+│   │   │   │   ├── 📄 sawn_off_double.png
+│   │   │   │   ├── 📄 shotgun.png
+│   │   │   │   ├── 📄 shovel.png
+│   │   │   │   ├── 📄 silenced_pistol.png
+│   │   │   │   ├── 📄 sniper_rifle.png
+│   │   │   │   ├── 📄 spas_12.png
+│   │   │   │   ├── 📄 spray_paint.png
+│   │   │   │   ├── 📄 tear_gas.png
+│   │   │   │   ├── 📄 tec_9.png
+│   │   │   │   ├── 📄 tec_9_double.png
+│   │   │   │   ├── 📄 thermal_goggles.png
+│   │   │   │   ├── 📄 unarmed.png
+│   │   │   │   ├── 📄 vibe_1.png
+│   │   │   │   └── 📄 vibe_2.png
+│   │   │   ├── 📄 weapon_rates.dat
+│   │   │   ├── 📄 weapon_selector.dat
+│   │   │   ├── 📄 weapon_selector_sounds.dat
+│   │   │   ├── 📄 wheel_current.png
+│   │   │   ├── 📄 wheel_part.png
+│   │   │   └── 📄 wheel_selected.png
+│   │   ├── 📄 controls.dat
+│   │   ├── 📄 hudcolor.dat
+│   │   └── 📄 V_HUD_by_DK22Pac.ini
+│   ├── 📁 04-models
+│   │   ├── 📄 fonts.txd
+│   │   ├── 📄 fronten2.txd
+│   │   └── 📄 hud.txd
+│   ├── 📁 05-modloader
+│   │   └── 📁 VI HUD
+│   │       ├── 📄 radar00.txd
+│   │       ├── 📄 radar01.txd
+│   │       ├── 📄 radar02.txd
+│   │       ├── 📄 radar03.txd
+│   │       ├── 📄 radar04.txd
+│   │       ├── 📄 radar05.txd
+│   │       ├── 📄 radar06.txd
+│   │       ├── 📄 radar07.txd
+│   │       ├── 📄 radar08.txd
+│   │       ├── 📄 radar09.txd
+│   │       ├── 📄 radar10.txd
+│   │       ├── 📄 radar100.txd
+│   │       ├── 📄 radar101.txd
+│   │       ├── 📄 radar102.txd
+│   │       ├── 📄 radar103.txd
+│   │       ├── 📄 radar104.txd
+│   │       ├── 📄 radar105.txd
+│   │       ├── 📄 radar106.txd
+│   │       ├── 📄 radar107.txd
+│   │       ├── 📄 radar108.txd
+│   │       ├── 📄 radar109.txd
+│   │       ├── 📄 radar11.txd
+│   │       ├── 📄 radar110.txd
+│   │       ├── 📄 radar111.txd
+│   │       ├── 📄 radar112.txd
+│   │       ├── 📄 radar113.txd
+│   │       ├── 📄 radar114.txd
+│   │       ├── 📄 radar115.txd
+│   │       ├── 📄 radar116.txd
+│   │       ├── 📄 radar117.txd
+│   │       ├── 📄 radar118.txd
+│   │       ├── 📄 radar119.txd
+│   │       ├── 📄 radar12.txd
+│   │       ├── 📄 radar120.txd
+│   │       ├── 📄 radar121.txd
+│   │       ├── 📄 radar122.txd
+│   │       ├── 📄 radar123.txd
+│   │       ├── 📄 radar124.txd
+│   │       ├── 📄 radar125.txd
+│   │       ├── 📄 radar126.txd
+│   │       ├── 📄 radar127.txd
+│   │       ├── 📄 radar128.txd
+│   │       ├── 📄 radar129.txd
+│   │       ├── 📄 radar13.txd
+│   │       ├── 📄 radar130.txd
+│   │       ├── 📄 radar131.txd
+│   │       ├── 📄 radar132.txd
+│   │       ├── 📄 radar133.txd
+│   │       ├── 📄 radar134.txd
+│   │       ├── 📄 radar135.txd
+│   │       ├── 📄 radar136.txd
+│   │       ├── 📄 radar137.txd
+│   │       ├── 📄 radar138.txd
+│   │       ├── 📄 radar139.txd
+│   │       ├── 📄 radar14.txd
+│   │       ├── 📄 radar140.txd
+│   │       ├── 📄 radar141.txd
+│   │       ├── 📄 radar142.txd
+│   │       ├── 📄 radar143.txd
+│   │       ├── 📄 radar15.txd
+│   │       ├── 📄 radar16.txd
+│   │       ├── 📄 radar17.txd
+│   │       ├── 📄 radar18.txd
+│   │       ├── 📄 radar19.txd
+│   │       ├── 📄 radar20.txd
+│   │       ├── 📄 radar21.txd
+│   │       ├── 📄 radar22.txd
+│   │       ├── 📄 radar23.txd
+│   │       ├── 📄 radar24.txd
+│   │       ├── 📄 radar25.txd
+│   │       ├── 📄 radar26.txd
+│   │       ├── 📄 radar27.txd
+│   │       ├── 📄 radar28.txd
+│   │       ├── 📄 radar29.txd
+│   │       ├── 📄 radar30.txd
+│   │       ├── 📄 radar31.txd
+│   │       ├── 📄 radar32.txd
+│   │       ├── 📄 radar33.txd
+│   │       ├── 📄 radar34.txd
+│   │       ├── 📄 radar35.txd
+│   │       ├── 📄 radar36.txd
+│   │       ├── 📄 radar37.txd
+│   │       ├── 📄 radar38.txd
+│   │       ├── 📄 radar39.txd
+│   │       ├── 📄 radar40.txd
+│   │       ├── 📄 radar41.txd
+│   │       ├── 📄 radar42.txd
+│   │       ├── 📄 radar43.txd
+│   │       ├── 📄 radar44.txd
+│   │       ├── 📄 radar45.txd
+│   │       ├── 📄 radar46.txd
+│   │       ├── 📄 radar47.txd
+│   │       ├── 📄 radar48.txd
+│   │       ├── 📄 radar49.txd
+│   │       ├── 📄 radar50.txd
+│   │       ├── 📄 radar51.txd
+│   │       ├── 📄 radar52.txd
+│   │       ├── 📄 radar53.txd
+│   │       ├── 📄 radar54.txd
+│   │       ├── 📄 radar55.txd
+│   │       ├── 📄 radar56.txd
+│   │       ├── 📄 radar57.txd
+│   │       ├── 📄 radar58.txd
+│   │       ├── 📄 radar59.txd
+│   │       ├── 📄 radar60.txd
+│   │       ├── 📄 radar61.txd
+│   │       ├── 📄 radar62.txd
+│   │       ├── 📄 radar63.txd
+│   │       ├── 📄 radar64.txd
+│   │       ├── 📄 radar65.txd
+│   │       ├── 📄 radar66.txd
+│   │       ├── 📄 radar67.txd
+│   │       ├── 📄 radar68.txd
+│   │       ├── 📄 radar69.txd
+│   │       ├── 📄 radar70.txd
+│   │       ├── 📄 radar71.txd
+│   │       ├── 📄 radar72.txd
+│   │       ├── 📄 radar73.txd
+│   │       ├── 📄 radar74.txd
+│   │       ├── 📄 radar75.txd
+│   │       ├── 📄 radar76.txd
+│   │       ├── 📄 radar77.txd
+│   │       ├── 📄 radar78.txd
+│   │       ├── 📄 radar79.txd
+│   │       ├── 📄 radar80.txd
+│   │       ├── 📄 radar81.txd
+│   │       ├── 📄 radar82.txd
+│   │       ├── 📄 radar83.txd
+│   │       ├── 📄 radar84.txd
+│   │       ├── 📄 radar85.txd
+│   │       ├── 📄 radar86.txd
+│   │       ├── 📄 radar87.txd
+│   │       ├── 📄 radar88.txd
+│   │       ├── 📄 radar89.txd
+│   │       ├── 📄 radar90.txd
+│   │       ├── 📄 radar91.txd
+│   │       ├── 📄 radar92.txd
+│   │       ├── 📄 radar93.txd
+│   │       ├── 📄 radar94.txd
+│   │       ├── 📄 radar95.txd
+│   │       ├── 📄 radar96.txd
+│   │       ├── 📄 radar97.txd
+│   │       ├── 📄 radar98.txd
+│   │       └── 📄 radar99.txd
+│   └── 📄 V_HUD_by_DK22Pac.asi
+├── 📁 32-WidescreenFix
+│   ├── 📁 scripts
+│   │   ├── 📄 GTASA.WidescreenFix.asi
+│   │   ├── 📄 GTASA.WidescreenFix.ini
+│   │   └── 📄 modupdater.asi
+│   ├── 📄 vorbisFile.dll
+│   ├── 📄 Widescreen Fix.url
+│   └── 📄 wshps.asi
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 349
+فایل‌ها: 2505

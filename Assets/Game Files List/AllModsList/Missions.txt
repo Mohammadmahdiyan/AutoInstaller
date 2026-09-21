@@ -1,0 +1,202 @@
+📁 Missions
+
+├── 📁 01-001
+│   ├── 📄 DYOM1.dat
+│   └── 📄 DYOM2.dat
+├── 📁 02-002
+│   ├── 📄 config.json
+│   ├── 📄 DYOM1.dat
+│   └── 📄 New Text Document.txt
+├── 📁 03-1282102023_cleozombiealarm
+│   ├── 📁 Cleo_ZombieAlarm
+│   │   ├── 📁 01-anim
+│   │   │   └── 📄 ped.ifp
+│   │   ├── 📁 02-CLEO
+│   │   │   ├── 📄 ZombiAlarm.cm
+│   │   │   └── 📄 ZombiAlarmstart.cs
+│   │   ├── 📁 03-data
+│   │   │   └── 📄 gta.dat
+│   │   ├── 📄 readme.txt
+│   │   └── 📄 REvil.img
+│   └── 📄 LibertyCity.Ru.url
+├── 📁 04-1365848659_rrrssrrsrrs-rrrrr
+│   ├── 📁 гонка
+│   │   ├── 📄 DYOM1.DAT
+│   │   └── 📄 DYOM2.DAT
+│   ├── 📄 LibertyCity.Ru.url
+│   ├── 📄 read me.txt
+│   └── 📄 screen.jpg
+├── 📁 05-1371385327_rrrrr-rrjorrrjorr
+│   ├── 📄 DYOM1.DAT
+│   └── 📄 LibertyCity.Ru.url
+├── 📁 06-1386702766_rrrrrrrrr-rrrrrrrrjor
+│   ├── 📁 Нежданное нападение
+│   │   ├── 📁 01-SD
+│   │   │   └── 📁 LNDZX
+│   │   │       ├── 📄 29.mp3
+│   │   │       └── 📄 31.mp3
+│   │   ├── 📁 02-Скрины
+│   │   │   ├── 📄 gallery35.jpg
+│   │   │   ├── 📄 gallery36.jpg
+│   │   │   ├── 📄 gallery37.jpg
+│   │   │   ├── 📄 gallery38.jpg
+│   │   │   ├── 📄 gallery39.jpg
+│   │   │   ├── 📄 gallery40.jpg
+│   │   │   ├── 📄 gallery41.jpg
+│   │   │   ├── 📄 gallery42.jpg
+│   │   │   └── 📄 gallery43.jpg
+│   │   └── 📄 DYOM1.dat
+│   └── 📄 LibertyCity.Ru.url
+├── 📁 07-1393694007_dyom1
+│   ├── 📄 DYOM1.dat
+│   └── 📄 LibertyCity.Ru.url
+├── 📁 08-1470875546_59382
+│   ├── 📄 DYOM2.DAT
+│   ├── 📄 LibertyCity.Ru.url
+│   └── 📄 readme.txt
+├── 📁 09-1471863064_devils-run
+│   ├── 📁 01-missions
+│   │   ├── 📄 DYOM1.dat
+│   │   ├── 📄 DYOM2.dat
+│   │   ├── 📄 DYOM3.dat
+│   │   ├── 📄 DYOM4.dat
+│   │   ├── 📄 DYOM5.dat
+│   │   ├── 📄 DYOM6.dat
+│   │   ├── 📄 DYOM7.dat
+│   │   └── 📄 DYOM8.dat
+│   ├── 📁 02-SD
+│   │   ├── 📁 01-ACFMD
+│   │   │   └── 📄 00.mp3
+│   │   ├── 📁 02-EVKTY
+│   │   │   └── 📄 am.mp3
+│   │   ├── 📁 03-FMGOS
+│   │   │   └── 📄 am.mp3
+│   │   ├── 📁 04-JGWUK
+│   │   │   └── 📄 am.mp3
+│   │   ├── 📁 05-NZZKO
+│   │   │   └── 📄 am.mp3
+│   │   ├── 📁 06-THMTN
+│   │   │   └── 📄 am.mp3
+│   │   ├── 📁 07-YFDXA
+│   │   │   └── 📄 am.mp3
+│   │   └── 📁 08-YGYJL
+│   │       └── 📄 am.mp3
+│   ├── 📁 03-в data
+│   │   └── 📄 vehicles.ide
+│   ├── 📁 04-в gta3.img
+│   │   ├── 📄 infernus.dff
+│   │   └── 📄 infernus.txd
+│   ├── 📄 gta_sa 2016-08-22 14-35-00-54.png
+│   ├── 📄 gta_sa 2016-08-22 14-35-25-79.png
+│   ├── 📄 gta_sa 2016-08-22 14-35-59-45.png
+│   ├── 📄 gta_sa 2016-08-22 14-37-31-45.png
+│   ├── 📄 gta_sa 2016-08-22 14-37-48-79.png
+│   ├── 📄 gta_sa 2016-08-22 14-38-04-23.png
+│   ├── 📄 gta_sa 2016-08-22 14-38-39-04.png
+│   ├── 📄 gta_sa 2016-08-22 14-39-42-84.png
+│   ├── 📄 gta_sa 2016-08-22 14-40-23-04.png
+│   ├── 📄 gta_sa 2016-08-22 14-43-16-89.png
+│   ├── 📄 LibertyCity.Ru.url
+│   └── 📄 screenshot01.jpg
+├── 📁 10-8mission_pack
+│   ├── 📄 DYOM1.dat
+│   ├── 📄 DYOM2.dat
+│   ├── 📄 DYOM3.dat
+│   ├── 📄 DYOM4.dat
+│   ├── 📄 DYOM5.dat
+│   ├── 📄 DYOM6.dat
+│   ├── 📄 DYOM8.dat
+│   └── 📄 Stealing_the_hydra_part_2.rar
+├── 📁 11-Dyom Prepadeni_gta.cz_Aligator007
+│   ├── 📄 DYOM 1.JPG
+│   ├── 📄 DYOM5.DAT
+│   ├── 📄 DYOM6.DAT
+│   └── 📄 Readme.txt
+├── 📁 12-Grand_Theft_Auto_San_Andreas_Stories
+│   └── 📁 GTA SAS
+│       ├── 📁 01-1 - The beginning
+│       │   └── 📄 DYOM1.dat
+│       ├── 📁 02-10 - Exploring the city
+│       │   └── 📄 DYOM2.DAT
+│       ├── 📁 03-11 - Vlad's attack
+│       │   └── 📄 DYOM3.DAT
+│       ├── 📁 04-12 - Stealing a Hunter
+│       │   └── 📄 DYOM4.DAT
+│       ├── 📁 05-13 - Killing is the best thing you can do
+│       │   └── 📄 DYOM5.DAT
+│       ├── 📁 06-14 - The greenies are enemies
+│       │   └── 📄 DYOM6.DAT
+│       ├── 📁 07-15 - Crime and punishment
+│       │   └── 📄 DYOM7.DAT
+│       ├── 📁 08-16 - Carl Johnson
+│       │   └── 📄 DYOM8.dat
+│       ├── 📁 09-17 - Never trust one of them
+│       │   └── 📄 DYOM1.DAT
+│       ├── 📁 10-18 - That Motherfucker
+│       │   └── 📄 DYOM2.DAT
+│       ├── 📁 11-19 - A hard job
+│       │   └── 📄 DYOM3.DAT
+│       ├── 📁 12-2 - First job
+│       │   └── 📄 DYOM2.DAT
+│       ├── 📁 13-20 - A new gang
+│       │   └── 📄 DYOM4.DAT
+│       ├── 📁 14-21 - It's hard to escape from the cops
+│       │   └── 📄 DYOM5.DAT
+│       ├── 📁 15-22 - Destroying the Vagos
+│       │   └── 📄 DYOM6.DAT
+│       ├── 📁 16-23 - The ambush
+│       │   └── 📄 DYOM7.DAT
+│       ├── 📁 17-24 - Making peace
+│       │   └── 📄 DYOM8.DAT
+│       ├── 📁 18-3 - Moving from Los Santos
+│       │   └── 📄 DYOM3.dat
+│       ├── 📁 19-4 - Getting a job
+│       │   └── 📄 DYOM4.DAT
+│       ├── 📁 20-5 - Wu Zi Mu
+│       │   └── 📄 DYOM5.DAT
+│       ├── 📁 21-6 - Bloodbath
+│       │   └── 📄 DYOM6.DAT
+│       ├── 📁 22-7 - Sneaking into a ship
+│       │   └── 📄 DYOM7.DAT
+│       ├── 📁 23-8 - Something unexpected
+│       │   └── 📄 DYOM8.DAT
+│       └── 📁 24-9 - Hunted
+│           └── 📄 DYOM1.DAT
+├── 📁 13-GTA_SA_Zombie_Mod_3.0
+│   ├── 📁 01-Basic Files
+│   │   ├── 📄 Basic Files 1 Install.txt
+│   │   ├── 📄 GTASAsf1.b
+│   │   ├── 📄 ped.ifp
+│   │   └── 📄 timecyc.dat
+│   ├── 📁 02-Cleo 3
+│   │   ├── 📄 attack.cs
+│   │   ├── 📄 CLEO 3 Installation.txt
+│   │   ├── 📄 FOGGY weather.cs
+│   │   ├── 📄 Zombie.cs
+│   │   └── 📄 Zombies.cs
+│   ├── 📁 03-Map
+│   │   ├── 📄 Map Install 1.txt
+│   │   └── 📄 SFse.IPL
+│   └── 📄 The Creators.txt
+├── 📁 14-VCS&LCS Side Missions
+│   └── 📁 modloader
+│       └── 📁 Side Mission
+│           ├── 📁 01-cleo
+│           │   ├── 📁 cleo_text
+│           │   │   └── 📄 vlssm.fxt
+│           │   ├── 📄 VCS&LCS Side Missions.cs
+│           │   ├── 📄 VCS&LCS Side Missions.txt
+│           │   ├── 📄 VLSMQ1.txt
+│           │   ├── 📄 VLSMQ2.txt
+│           │   ├── 📄 VLSMQ3.txt
+│           │   ├── 📄 VLSMQ4.txt
+│           │   └── 📄 VLSMQ5.txt
+│           └── 📁 02-Models
+│               └── 📁 txd
+│                   └── 📄 vlssm.txd
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 69
+فایل‌ها: 127

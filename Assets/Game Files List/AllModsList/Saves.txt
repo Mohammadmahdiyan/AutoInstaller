@@ -1,0 +1,31 @@
+📁 Saves
+
+├── 📁 01-100%
+│   └── 📄 GTASAsf1.b
+├── 📁 02-Best
+│   └── 📄 GTASAsf2.b
+├── 📁 03-END OF THE LINE
+│   └── 📄 GTASAsf3.b
+├── 📁 04-SF4
+│   ├── 📁 __MACOSX
+│   │   ├── 📄 ._GTASAsf4.b
+│   │   └── 📄 ._Read Me.txt
+│   ├── 📄 GTASAsf4.b
+│   ├── 📄 Read Me.txt
+│   └── 📄 www.seyedrezabazyar.com.url
+├── 📁 05-Super sohranenie pered 1 missiey
+│   ├── 📄 GTASAsf5.b
+│   └── 📄 Readme.txt
+├── 📁 06-VERDANT MEADOWS
+│   ├── 📄 07.50.36 - England - 53%.dat
+│   ├── 📄 10.35.44 - Bolivia Redux - 74%.dat
+│   ├── 📄 autosave.dat
+│   └── 📄 GTASAsf6.b
+├── 📁 07-WU ZI MU
+│   └── 📄 GTASAsf7.b
+├── 📄 desktop.ini
+└── 📄 LibraryTree.txt
+
+────────────────────────────
+پوشه‌ها: 8
+فایل‌ها: 17
