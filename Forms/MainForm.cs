@@ -1281,7 +1281,8 @@ public partial class MainForm : Form
 
         try
         {
-            box.Text = File.ReadAllText(readmePath);
+            var sanitized = SanitizeMarkdownReadme(File.ReadAllText(readmePath));
+            box.Text = sanitized;
             var computedHeight = CalculateReadmeViewportHeight(box.Text, Math.Max(160, box.Width), box.Font, 120, Math.Max(180, availableHeight));
             box.Height = Math.Min(Math.Max(computedHeight, 120), Math.Max(180, availableHeight));
             if (!string.IsNullOrWhiteSpace(box.Text))
@@ -2938,6 +2939,43 @@ public partial class MainForm : Form
         return normalized.Contains("readme", StringComparison.OrdinalIgnoreCase);
     }
 
+    private static int GetReadmePriority(string filePath)
+    {
+        var extension = Path.GetExtension(filePath);
+        if (string.Equals(extension, ".md", StringComparison.OrdinalIgnoreCase))
+        {
+            return 0;
+        }
+
+        if (string.Equals(extension, ".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            return 1;
+        }
+
+        return 2;
+    }
+
+    private static string SanitizeMarkdownReadme(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return string.Empty;
+        }
+
+        var text = content.Replace("\r\n", "\n");
+        text = Regex.Replace(text, @"```[\s\S]*?```", string.Empty, RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^\s{0,3}#{1,6}\s*", string.Empty, RegexOptions.Multiline);
+        text = Regex.Replace(text, @"\*\*(.+?)\*\*", "$1");
+        text = Regex.Replace(text, @"\*(.+?)\*", "$1");
+        text = Regex.Replace(text, @"_([^_]+)_", "$1");
+        text = Regex.Replace(text, @"\[([^\]]+)\]\([^\)]+\)", "$1");
+        text = Regex.Replace(text, @"^\s*[-*+]\s+", "- ", RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^\s*\d+\.\s+", string.Empty, RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^>\s*", string.Empty, RegexOptions.Multiline);
+        text = text.Replace("\t", "    ");
+        return text.Trim();
+    }
+
     private static string FindReadmeFile(string root)
     {
         if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
@@ -2945,16 +2983,13 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
-        foreach (var file in Directory.GetFiles(root, "*", SearchOption.AllDirectories))
-        {
-            var name = Path.GetFileName(file);
-            if (IsReadmeFileName(name))
-            {
-                return file;
-            }
-        }
+        var candidateFiles = Directory.GetFiles(root, "*", SearchOption.AllDirectories)
+            .Where(file => IsReadmeFileName(Path.GetFileName(file)))
+            .OrderBy(file => GetReadmePriority(file), Comparer<int>.Default)
+            .ThenBy(file => file, StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-        return string.Empty;
+        return candidateFiles.FirstOrDefault() ?? string.Empty;
     }
 
     private static List<string> FindImageFiles(string root)
@@ -2998,7 +3033,7 @@ public partial class MainForm : Form
             Dock = DockStyle.Fill
         };
 
-        box.Text = File.ReadAllText(path);
+        box.Text = SanitizeMarkdownReadme(File.ReadAllText(path));
         form.Controls.Add(box);
         form.ShowDialog(this);
     }
@@ -4483,7 +4518,8 @@ public partial class MainForm : Form
 
         try
         {
-            return File.ReadAllText(path);
+            var content = File.ReadAllText(path);
+            return SanitizeMarkdownReadme(content);
         }
         catch
         {
