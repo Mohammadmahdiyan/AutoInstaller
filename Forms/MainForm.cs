@@ -1570,6 +1570,8 @@ public partial class MainForm : Form
         var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 240, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
         var columns = new ComboBox { Name = "AssetColumns", Width = 80, DropDownStyle = ComboBoxStyle.DropDownList };
         var sorting = new ComboBox { Name = "AssetSortMode", Width = 180, DropDownStyle = ComboBoxStyle.DropDownList };
+        var columnsLabel = new Label { Name = "AssetColumnsLabel", Text = _localizationService.GetString("AssetColumns", "Columns"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) };
+        var sortLabel = new Label { Name = "AssetSortLabel", Text = _localizationService.GetString("AssetSort", "Sort"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) };
         var allText = _localizationService.GetString("AssetAll", "All");
 
         columns.Items.AddRange(new object[] { "2", "3", "4", "5" });
@@ -1579,9 +1581,9 @@ public partial class MainForm : Form
 
         filters.Controls.Add(categoryLabel);
         filters.Controls.Add(categoryFilter);
-        filters.Controls.Add(new Label { Text = _localizationService.GetString("AssetColumns", "Columns"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) });
+        filters.Controls.Add(columnsLabel);
         filters.Controls.Add(columns);
-        filters.Controls.Add(new Label { Text = _localizationService.GetString("AssetSort", "Sort"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) });
+        filters.Controls.Add(sortLabel);
         filters.Controls.Add(sorting);
         var gallery = new FlowLayoutPanel { Name = "AssetGallery", Dock = DockStyle.Fill, AutoScroll = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Padding = new Padding(0, 8, 0, 0) };
 
@@ -3994,6 +3996,22 @@ public partial class MainForm : Form
                 {
                     label.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
                 }
+                else if (control is Label assetTitle && assetTitle.Name == "AssetStepTitle")
+                {
+                    assetTitle.Text = GetReplacementTitleForType(GetCurrentStep5AssetType());
+                }
+                else if (control is Label assetCategory && assetCategory.Name == "AssetCategoryLabel")
+                {
+                    assetCategory.Text = _localizationService.GetString("AssetCategory", "Category");
+                }
+                else if (control is Label assetColumnsLabel && assetColumnsLabel.Name == "AssetColumnsLabel")
+                {
+                    assetColumnsLabel.Text = _localizationService.GetString("AssetColumns", "Columns");
+                }
+                else if (control is Label assetSortLabel && assetSortLabel.Name == "AssetSortLabel")
+                {
+                    assetSortLabel.Text = _localizationService.GetString("AssetSort", "Sort");
+                }
                 else if (control is Button button && button.Name == "NextActionButton")
                 {
                     button.Text = _localizationService.GetString("Next", "Next");
@@ -4007,6 +4025,11 @@ public partial class MainForm : Form
                     button3.Text = _localizationService.GetString("Continue", "Continue");
                 }
             }
+        }
+
+        if (_currentStep == WizardStep.Step5)
+        {
+            RefreshAssetStep();
         }
 
         UpdateSidebarState();
