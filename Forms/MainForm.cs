@@ -403,9 +403,9 @@ public partial class MainForm : Form
         stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
-        stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
-        stack.RowStyles.Add(new RowStyle(SizeType.Absolute, 46F));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
         _sidebarPreviousButton = new Button { Text = _localizationService.GetString("Previous", "Previous"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarNextButton = new Button { Text = _localizationService.GetString("Next", "Next"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
@@ -1211,6 +1211,36 @@ public partial class MainForm : Form
         return basePanel;
     }
 
+    private static void OpenImageViewerFromPictureBox(PictureBox pictureBox, List<string> imageFiles, string? fallbackTitle = null)
+    {
+        if (pictureBox == null || pictureBox.IsDisposed)
+        {
+            return;
+        }
+
+        var validPaths = imageFiles
+            .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (validPaths.Count == 0)
+        {
+            return;
+        }
+
+        var currentIndex = Math.Clamp(Math.Max(0, imageFiles.FindIndex(path => string.Equals(path, pictureBox.Tag?.ToString(), StringComparison.OrdinalIgnoreCase))), 0, validPaths.Count - 1);
+        if (pictureBox.Tag is string selectedPath && validPaths.Contains(selectedPath, StringComparer.OrdinalIgnoreCase))
+        {
+            currentIndex = validPaths.FindIndex(path => string.Equals(path, selectedPath, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var mainForm = pictureBox.FindForm();
+        if (mainForm is MainForm parentForm)
+        {
+            parentForm.OpenFullImageViewer(validPaths, currentIndex, fallbackTitle ?? Path.GetFileName(validPaths[currentIndex]));
+        }
+    }
+
     private PictureBox CreateImagePreviewCard(string imagePath, int index, List<string>? imageList = null)
     {
         var items = imageList is { Count: > 0 } ? imageList : new List<string> { imagePath };
@@ -1224,18 +1254,17 @@ public partial class MainForm : Form
             Margin = new Padding(4),
             Padding = new Padding(0),
             Dock = DockStyle.Fill,
-            Image = TryLoadImage(imagePath)
+            Image = TryLoadImage(imagePath),
+            Tag = imagePath
         };
 
-        box.Click += (_, _) =>
+        box.Click += (_, _) => OpenImageViewerFromPictureBox(box, items, imagePath);
+        box.MouseUp += (_, e) =>
         {
-            var currentIndex = items.FindIndex(path => string.Equals(path, imagePath, StringComparison.OrdinalIgnoreCase));
-            if (currentIndex < 0)
+            if (e.Button == MouseButtons.Right)
             {
-                currentIndex = 0;
+                OpenImageViewerFromPictureBox(box, items, imagePath);
             }
-
-            OpenFullImageViewer(items, currentIndex, imagePath);
         };
         return box;
     }
@@ -1275,8 +1304,11 @@ public partial class MainForm : Form
             SizeMode = PictureBoxSizeMode.Zoom,
             BorderStyle = BorderStyle.None,
             BackColor = Color.Black,
-            Image = TryLoadImage(validPaths[currentIndex])
+            Image = TryLoadImage(validPaths[currentIndex]),
+            Cursor = Cursors.Hand
         };
+
+        imageBox.Click += (_, _) => viewer.Close();
 
         var closeButton = new Button
         {
@@ -1512,7 +1544,9 @@ public partial class MainForm : Form
 
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
-        _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
+        _step5CategoryFilter = !string.IsNullOrWhiteSpace(sourceAsset.Category)
+            ? sourceAsset.Category
+            : _localizationService.GetString("AssetAll", "All");
     }
 
     private static string GetAssetSelectionKey(GameAsset asset)
@@ -1625,26 +1659,28 @@ public partial class MainForm : Form
             .OrderBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var vehicleOnly = assets.Any(asset => string.Equals(asset.AssetType, "Vehicle", StringComparison.OrdinalIgnoreCase));
+        var categories = assets
+            .Where(asset => !string.IsNullOrWhiteSpace(asset.Category))
+            .Select(asset => asset.Category.Trim())
+            .Where(category => !string.IsNullOrWhiteSpace(category))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var hasMeaningfulCategories = categories.Count > 1;
+
         if (categoryFilter != null)
         {
-            categoryFilter.Visible = vehicleOnly;
-            categoryFilter.Enabled = vehicleOnly;
+            categoryFilter.Visible = hasMeaningfulCategories;
+            categoryFilter.Enabled = hasMeaningfulCategories;
         }
         if (categoryLabel != null)
         {
-            categoryLabel.Visible = vehicleOnly;
+            categoryLabel.Visible = hasMeaningfulCategories;
         }
 
-        if (categoryFilter != null && vehicleOnly)
+        if (categoryFilter != null && hasMeaningfulCategories)
         {
-            var categories = assets
-                .Where(asset => !string.IsNullOrWhiteSpace(asset.Category))
-                .Select(asset => asset.Category)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
             var allText = _localizationService.GetString("AssetAll", "All");
             var selectedCategory = string.IsNullOrWhiteSpace(_step5CategoryFilter) ? allText : _step5CategoryFilter;
             categoryFilter.Items.Clear();
@@ -1660,7 +1696,7 @@ public partial class MainForm : Form
         }
 
         var allCategoryText = _localizationService.GetString("AssetAll", "All");
-        var visibleAssets = vehicleOnly && !string.Equals(_step5CategoryFilter, allCategoryText, StringComparison.OrdinalIgnoreCase)
+        var visibleAssets = hasMeaningfulCategories && !string.Equals(_step5CategoryFilter, allCategoryText, StringComparison.OrdinalIgnoreCase)
             ? assets.Where(asset => string.Equals(asset.Category, _step5CategoryFilter, StringComparison.OrdinalIgnoreCase)).ToList()
             : assets;
 
@@ -1804,6 +1840,42 @@ public partial class MainForm : Form
             fileName.Visible = true;
             name.Visible = false;
         }
+
+        preview.MouseUp += (_, e) =>
+        {
+            if (e.Button != MouseButtons.Right)
+            {
+                return;
+            }
+
+            var selectedIndex = _step5DetectedAssets
+                .Where(assetItem => string.Equals(assetItem.AssetType, asset.AssetType, StringComparison.OrdinalIgnoreCase))
+                .Select(assetItem => assetItem)
+                .ToList()
+                .FindIndex(item => string.Equals(GetAssetSelectionKey(item), selectionKey, StringComparison.OrdinalIgnoreCase));
+
+            var imageList = _step5DetectedAssets
+                .Where(assetItem => string.Equals(assetItem.AssetType, asset.AssetType, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(item => item.NameFile, StringComparer.OrdinalIgnoreCase)
+                .Select(item => _assetCatalogService.ResolveImagePath(item))
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Select(path => path!)
+                .Where(path => File.Exists(path))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (imageList.Count == 0)
+            {
+                return;
+            }
+
+            if (selectedIndex < 0 || selectedIndex >= imageList.Count)
+            {
+                selectedIndex = 0;
+            }
+
+            OpenFullImageViewer(imageList, selectedIndex, imagePath);
+        };
 
         card.Click += ToggleSelection;
         preview.Click += ToggleSelection;
@@ -2329,6 +2401,19 @@ public partial class MainForm : Form
                     }
 
                     OpenFullImageViewer(imageList, selectedIndex, imageFile);
+                };
+                pictureBox.MouseUp += (_, e) =>
+                {
+                    if (e.Button == MouseButtons.Right)
+                    {
+                        var selectedIndex = imageList.FindIndex(path => string.Equals(path, imageFile, StringComparison.OrdinalIgnoreCase));
+                        if (selectedIndex < 0)
+                        {
+                            selectedIndex = 0;
+                        }
+
+                        OpenFullImageViewer(imageList, selectedIndex, imageFile);
+                    }
                 };
 
                 gallery.Controls.Add(pictureBox);
@@ -3698,6 +3783,32 @@ public partial class MainForm : Form
         UpdateSidebarState();
     }
 
+    private int GetSidebarReadmeHeight(string? readmeText, bool hasVisibleImage)
+    {
+        var availableWidth = Math.Max(140, _sidebarReadmeTextBox.Width - 18);
+        var normalizedText = string.IsNullOrWhiteSpace(readmeText) ? "README" : readmeText;
+
+        using var graphics = _sidebarReadmeTextBox.CreateGraphics();
+        var size = TextRenderer.MeasureText(
+            graphics,
+            normalizedText,
+            _sidebarReadmeTextBox.Font,
+            new Size(availableWidth, int.MaxValue),
+            TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding);
+
+        var requiredHeight = size.Height + 16;
+        var availableHeight = hasVisibleImage ? 190 : 260;
+        var targetHeight = Math.Clamp(requiredHeight, 80, availableHeight);
+
+        _sidebarReadmeTextBox.ScrollBars = requiredHeight > availableHeight ? ScrollBars.Vertical : ScrollBars.None;
+        return targetHeight;
+    }
+
+    private int GetSidebarImageHeight(bool hasVisibleReadme)
+    {
+        return hasVisibleReadme ? 130 : 180;
+    }
+
     private void UpdateSidebarState()
     {
         if (_sidebarPreviousButton == null || _sidebarNextButton == null || _sidebarReadmeButton == null)
@@ -3720,7 +3831,7 @@ public partial class MainForm : Form
             && File.Exists(_selectedReadmePath);
         var hasSidebarImage = _currentStep == WizardStep.Step4 && _selectedImageFiles.Any(File.Exists)
             || _currentStep == WizardStep.Step5 && GetStep5SidebarImageFiles().Any(File.Exists);
-        var hasDetectedModStatus = !string.IsNullOrWhiteSpace(_selectedModName);
+        var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
 
         _sidebarReadmeButton.Visible = hasSidebarReadme;
         _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
@@ -3728,24 +3839,16 @@ public partial class MainForm : Form
 
         _sidebarReadmeTextBox.Visible = hasSidebarReadme;
         _sidebarReadmeTextBox.Enabled = hasSidebarReadme;
-        _sidebarReadmeTextBox.Height = hasDetectedModStatus ? 150 : 120;
-        _sidebarReadmeTextBox.Margin = new Padding(0, 0, 0, hasDetectedModStatus ? 14 : 10);
-        if (hasSidebarReadme)
-        {
-            var readmeText = TryReadTextFile(_selectedReadmePath);
-            _sidebarReadmeTextBox.Text = string.IsNullOrWhiteSpace(readmeText)
-                ? _localizationService.GetString("ReadmeFallback", "README")
-                : readmeText;
-        }
-        else
-        {
-            _sidebarReadmeTextBox.Text = string.Empty;
-        }
+        _sidebarReadmeTextBox.Text = string.IsNullOrWhiteSpace(readmeText)
+            ? _localizationService.GetString("ReadmeFallback", "README")
+            : readmeText;
+        _sidebarReadmeTextBox.Height = GetSidebarReadmeHeight(_sidebarReadmeTextBox.Text, hasSidebarImage);
+        _sidebarReadmeTextBox.Margin = new Padding(0, 0, 0, hasSidebarImage ? 8 : 10);
 
         _sidebarStep4Image.Visible = hasSidebarImage;
         _sidebarStep4Image.Enabled = hasSidebarImage;
-        _sidebarStep4Image.Height = hasDetectedModStatus ? 135 : 110;
-        _sidebarStep4Image.Margin = new Padding(0, 0, 0, hasDetectedModStatus ? 14 : 10);
+        _sidebarStep4Image.Height = GetSidebarImageHeight(hasSidebarReadme);
+        _sidebarStep4Image.Margin = new Padding(0, 0, 0, hasSidebarReadme ? 8 : 10);
 
         if (_currentStep == WizardStep.Step4 && hasSidebarImage)
         {
@@ -3852,6 +3955,7 @@ public partial class MainForm : Form
         if (imageFiles.Count == 0)
         {
             _sidebarStep4Image.Visible = false;
+            _sidebarStep4Image.Tag = new List<string>();
             return;
         }
 
@@ -3869,7 +3973,13 @@ public partial class MainForm : Form
             var sourceImage = TryLoadBitmap(imageFiles[_step4ImageIndex]);
             _sidebarStep4Image.Image?.Dispose();
             _sidebarStep4Image.Image = sourceImage;
+            _sidebarStep4Image.Tag = imageFiles[_step4ImageIndex];
             _sidebarStep4Image.Visible = sourceImage != null;
+
+            _sidebarStep4Image.Click -= SidebarImageClick;
+            _sidebarStep4Image.Click += SidebarImageClick;
+            _sidebarStep4Image.MouseUp -= SidebarImageMouseUp;
+            _sidebarStep4Image.MouseUp += SidebarImageMouseUp;
         }
         catch
         {
@@ -3888,6 +3998,7 @@ public partial class MainForm : Form
         if (imageFiles.Count == 0)
         {
             _sidebarStep4Image.Visible = false;
+            _sidebarStep4Image.Tag = new List<string>();
             return;
         }
 
@@ -3905,12 +4016,48 @@ public partial class MainForm : Form
             var sourceImage = TryLoadBitmap(imageFiles[_step4ImageIndex]);
             _sidebarStep4Image.Image?.Dispose();
             _sidebarStep4Image.Image = sourceImage;
+            _sidebarStep4Image.Tag = imageFiles[_step4ImageIndex];
             _sidebarStep4Image.Visible = sourceImage != null;
+
+            _sidebarStep4Image.Click -= SidebarImageClick;
+            _sidebarStep4Image.Click += SidebarImageClick;
+            _sidebarStep4Image.MouseUp -= SidebarImageMouseUp;
+            _sidebarStep4Image.MouseUp += SidebarImageMouseUp;
         }
         catch
         {
             _sidebarStep4Image.Visible = false;
         }
+    }
+
+    private void SidebarImageClick(object? sender, EventArgs e)
+    {
+        if (_sidebarStep4Image == null || _sidebarStep4Image.IsDisposed)
+        {
+            return;
+        }
+
+        var imageFiles = _currentStep == WizardStep.Step4
+            ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+            : GetStep5SidebarImageFiles();
+
+        if (imageFiles.Count == 0)
+        {
+            return;
+        }
+
+        var selectedIndex = Math.Clamp(_step4ImageIndex, 0, imageFiles.Count - 1);
+        OpenFullImageViewer(imageFiles, selectedIndex, _selectedModName);
+    }
+
+    private void SidebarImageMouseUp(object? sender, MouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Right)
+        {
+            return;
+        }
+
+        SidebarImageClick(sender, e);
     }
 
     private void HandleSidebarPrevious()
