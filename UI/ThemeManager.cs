@@ -350,6 +350,12 @@ public static class ThemeManager
 
         if (control is Button button)
         {
+            if (button is RoundedButton roundedButton)
+            {
+                roundedButton.AccentColor = palette.Accent;
+                roundedButton.Invalidate();
+            }
+
             ApplyModernButton(
                 button,
                 palette);

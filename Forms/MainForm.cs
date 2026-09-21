@@ -26,6 +26,10 @@ public partial class MainForm : Form
     private Button _sidebarReadmeButton = null!;
     private TextBox _sidebarReadmeTextBox = null!;
     private PictureBox _sidebarStep4Image = null!;
+    private Panel _sidebarImageNavPanel = null!;
+    private Button _sidebarImagePrevButton = null!;
+    private Button _sidebarImageNextButton = null!;
+    private Label _sidebarDetectedModLabel = null!;
     private readonly System.Windows.Forms.Timer _step4ImageTimer = new();
     private readonly System.Windows.Forms.Timer _step5ImageTimer = new();
     private readonly System.Windows.Forms.Timer _detectedModTimer = new();
@@ -411,7 +415,47 @@ public partial class MainForm : Form
         _sidebarNextButton = new Button { Text = _localizationService.GetString("Next", "Next"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarLanguageComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarThemeComboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarDetectedModLabel = new Label
+        {
+            Name = "SidebarDetectedModLabel",
+            AutoSize = true,
+            Visible = false,
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 0, 0, 8),
+            ForeColor = Color.FromArgb(15, 23, 42),
+            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+            Text = _localizationService.GetString("DetectedMod", "Detected mod")
+        };
         _sidebarStep4Image = new PictureBox { Width = 190, Height = 110, Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarImageNavPanel = new Panel { Dock = DockStyle.Fill, Visible = false, Height = 38, Margin = new Padding(0, 0, 0, 8), BackColor = Color.Transparent };
+        _sidebarImagePrevButton = new Button { Name = "SidebarImagePrevButton", Text = "◀", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 8, 0) };
+        _sidebarImageNextButton = new Button { Name = "SidebarImageNextButton", Text = "▶", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand };
+        _sidebarImagePrevButton.FlatAppearance.BorderSize = 0;
+        _sidebarImageNextButton.FlatAppearance.BorderSize = 0;
+        _sidebarImagePrevButton.Click += (_, _) =>
+        {
+            if (_currentStep == WizardStep.Step4)
+            {
+                ShowNextStep4Image(false);
+            }
+            else if (_currentStep == WizardStep.Step5)
+            {
+                ShowNextStep5Image(false);
+            }
+        };
+        _sidebarImageNextButton.Click += (_, _) =>
+        {
+            if (_currentStep == WizardStep.Step4)
+            {
+                ShowNextStep4Image(false);
+            }
+            else if (_currentStep == WizardStep.Step5)
+            {
+                ShowNextStep5Image(false);
+            }
+        };
+        _sidebarImageNavPanel.Controls.Add(_sidebarImagePrevButton);
+        _sidebarImageNavPanel.Controls.Add(_sidebarImageNextButton);
         _sidebarReadmeTextBox = new TextBox
         {
             Name = "SidebarReadmeTextBox",
@@ -451,9 +495,11 @@ public partial class MainForm : Form
         stack.Controls.Add(_sidebarLanguageComboBox, 0, 3);
         stack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
         stack.Controls.Add(_sidebarThemeComboBox, 0, 5);
-        stack.Controls.Add(_sidebarStep4Image, 0, 6);
-        stack.Controls.Add(_sidebarReadmeTextBox, 0, 7);
-        stack.Controls.Add(_sidebarReadmeButton, 0, 8);
+        stack.Controls.Add(_sidebarDetectedModLabel, 0, 6);
+        stack.Controls.Add(_sidebarStep4Image, 0, 7);
+        stack.Controls.Add(_sidebarImageNavPanel, 0, 8);
+        stack.Controls.Add(_sidebarReadmeTextBox, 0, 9);
+        stack.Controls.Add(_sidebarReadmeButton, 0, 10);
 
         _sidebarPanel.Controls.Add(stack);
         MainPanel.Controls.Add(_sidebarPanel);
@@ -3829,9 +3875,15 @@ public partial class MainForm : Form
 
         var hasSidebarReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath)
             && File.Exists(_selectedReadmePath);
-        var hasSidebarImage = _currentStep == WizardStep.Step4 && _selectedImageFiles.Any(File.Exists)
-            || _currentStep == WizardStep.Step5 && GetStep5SidebarImageFiles().Any(File.Exists);
+        var sidebarImageFiles = _currentStep == WizardStep.Step4
+            ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+            : GetStep5SidebarImageFiles();
+        var hasSidebarImage = sidebarImageFiles.Count > 0;
         var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
+        var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (_currentStep == WizardStep.Step4 || _currentStep == WizardStep.Step5);
+
+        _sidebarDetectedModLabel.Visible = hasDetectedMod;
+        _sidebarDetectedModLabel.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
 
         _sidebarReadmeButton.Visible = hasSidebarReadme;
         _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
@@ -3847,8 +3899,14 @@ public partial class MainForm : Form
 
         _sidebarStep4Image.Visible = hasSidebarImage;
         _sidebarStep4Image.Enabled = hasSidebarImage;
-        _sidebarStep4Image.Height = GetSidebarImageHeight(hasSidebarReadme);
+        _sidebarStep4Image.Height = GetSidebarImageHeight(hasSidebarReadme) + (sidebarImageFiles.Count > 1 ? 10 : 0);
         _sidebarStep4Image.Margin = new Padding(0, 0, 0, hasSidebarReadme ? 8 : 10);
+
+        _sidebarImageNavPanel.Visible = hasSidebarImage && sidebarImageFiles.Count > 1;
+        _sidebarImagePrevButton.Visible = hasSidebarImage && sidebarImageFiles.Count > 1;
+        _sidebarImageNextButton.Visible = hasSidebarImage && sidebarImageFiles.Count > 1;
+        _sidebarImagePrevButton.Enabled = hasSidebarImage && sidebarImageFiles.Count > 1;
+        _sidebarImageNextButton.Enabled = hasSidebarImage && sidebarImageFiles.Count > 1;
 
         if (_currentStep == WizardStep.Step4 && hasSidebarImage)
         {
@@ -3869,6 +3927,7 @@ public partial class MainForm : Form
             _sidebarStep4Image.Image?.Dispose();
             _sidebarStep4Image.Image = null;
             _sidebarStep4Image.Visible = false;
+            _sidebarImageNavPanel.Visible = false;
         }
 
         switch (_currentStep)

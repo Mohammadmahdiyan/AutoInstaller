@@ -1,4 +1,5 @@
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace GtaSaModManager.UI;
 
@@ -7,14 +8,19 @@ public class RoundedButton : Button
     private bool _isHovered;
     private bool _isPressed;
     private bool _isFocused;
+    private float _hoverProgress;
+    private readonly System.Windows.Forms.Timer _hoverTimer;
+
+    public Color AccentColor { get; set; } = Color.FromArgb(37, 99, 235);
 
     public RoundedButton()
     {
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         SetStyle(ControlStyles.Selectable, true);
+        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
         FlatStyle = FlatStyle.Flat;
         FlatAppearance.BorderSize = 0;
-        BackColor = Color.FromArgb(37, 99, 235);
+        BackColor = Color.Transparent;
         ForeColor = Color.White;
         Cursor = Cursors.Hand;
         TextAlign = ContentAlignment.MiddleCenter;
@@ -23,24 +29,54 @@ public class RoundedButton : Button
         Height = 42;
         Width = 140;
         Font = new Font("Segoe UI", 9.25F, FontStyle.Bold);
+
+        _hoverTimer = new System.Windows.Forms.Timer { Interval = 16 };
+        _hoverTimer.Tick += (_, _) =>
+        {
+            const float step = 0.09f;
+            if (_isHovered)
+            {
+                _hoverProgress = Math.Min(1f, _hoverProgress + step);
+            }
+            else
+            {
+                _hoverProgress = Math.Max(0f, _hoverProgress - step);
+            }
+
+            if ((_isHovered && _hoverProgress >= 1f) || (!_isHovered && _hoverProgress <= 0f))
+            {
+                _hoverTimer.Stop();
+            }
+
+            Invalidate();
+        };
+
+        Resize += (_, _) => UpdateRoundedRegion();
+        HandleCreated += (_, _) => UpdateRoundedRegion();
     }
 
     protected override void OnPaint(PaintEventArgs e)
     {
+        if (Width <= 0 || Height <= 0)
+        {
+            return;
+        }
+
+        UpdateRoundedRegion();
+
         var g = e.Graphics;
         g.SmoothingMode = SmoothingMode.AntiAlias;
         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
         var bounds = new Rectangle(1, 1, Width - 2, Height - 2);
         var rounded = GetRoundedRectangle(bounds, 12);
-        this.Region = new Region(rounded);
 
-        var fillColor = Enabled ? (_isPressed ? Color.FromArgb(30, 64, 175)
-            : _isHovered ? Color.FromArgb(59, 130, 246)
-            : BackColor)
-            : Color.FromArgb(203, 213, 225);
-        var topColor = ControlPaint.Light(fillColor, 0.12f);
-        var bottomColor = ControlPaint.Dark(fillColor, 0.08f);
+        var normalColor = AccentColor;
+        var hoverColor = Lighten(normalColor, 0.12f);
+        var pressedColor = Darken(normalColor, 0.18f);
+        var fillColor = Enabled ? (_isPressed ? pressedColor : ColorLerp(normalColor, hoverColor, _hoverProgress)) : Color.FromArgb(203, 213, 225);
+        var topColor = Lighten(fillColor, 0.12f);
+        var bottomColor = Darken(fillColor, 0.08f);
 
         using var gradientBrush = new LinearGradientBrush(bounds, topColor, bottomColor, LinearGradientMode.Vertical);
         g.FillPath(gradientBrush, rounded);
@@ -81,6 +117,10 @@ public class RoundedButton : Button
     {
         base.OnMouseEnter(e);
         _isHovered = true;
+        if (!_hoverTimer.Enabled)
+        {
+            _hoverTimer.Start();
+        }
         Invalidate();
     }
 
@@ -89,6 +129,10 @@ public class RoundedButton : Button
         base.OnMouseLeave(e);
         _isHovered = false;
         _isPressed = false;
+        if (!_hoverTimer.Enabled)
+        {
+            _hoverTimer.Start();
+        }
         Invalidate();
     }
 
@@ -109,7 +153,31 @@ public class RoundedButton : Button
     protected override void OnEnabledChanged(EventArgs e)
     {
         base.OnEnabledChanged(e);
+        if (!Enabled)
+        {
+            _hoverProgress = 0f;
+            _isHovered = false;
+            _isPressed = false;
+        }
         Invalidate();
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        UpdateRoundedRegion();
+    }
+
+    private void UpdateRoundedRegion()
+    {
+        if (Width <= 0 || Height <= 0)
+        {
+            return;
+        }
+
+        var bounds = new Rectangle(1, 1, Width - 2, Height - 2);
+        var rounded = GetRoundedRectangle(bounds, 12);
+        Region = new Region(rounded);
     }
 
     private static GraphicsPath GetRoundedRectangle(Rectangle rect, int radius)
@@ -131,5 +199,25 @@ public class RoundedButton : Button
         path.AddLine(x, y + height - corner, x, y + corner);
         path.CloseFigure();
         return path;
+    }
+
+    private static Color ColorLerp(Color from, Color to, float amount)
+    {
+        amount = Math.Clamp(amount, 0f, 1f);
+        var r = (int)Math.Round(from.R + (to.R - from.R) * amount);
+        var g = (int)Math.Round(from.G + (to.G - from.G) * amount);
+        var b = (int)Math.Round(from.B + (to.B - from.B) * amount);
+        var a = (int)Math.Round(from.A + (to.A - from.A) * amount);
+        return Color.FromArgb(a, r, g, b);
+    }
+
+    private static Color Lighten(Color color, float amount)
+    {
+        return ColorLerp(color, Color.White, amount);
+    }
+
+    private static Color Darken(Color color, float amount)
+    {
+        return ColorLerp(color, Color.Black, amount);
     }
 }
