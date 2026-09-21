@@ -1770,9 +1770,17 @@ public partial class MainForm : Form
             return;
         }
 
-        var sourceAsset = _step5DetectedAssets.FirstOrDefault(asset => string.Equals(asset.NameFile, sourceModelName, StringComparison.OrdinalIgnoreCase))
+        var currentlySelected = _selectedAssetForInstall;
+        var matchingSelectedAsset = currentlySelected is null
+            ? null
+            : _step5DetectedAssets.FirstOrDefault(asset =>
+                string.Equals(GetAssetSelectionKey(asset), GetAssetSelectionKey(currentlySelected), StringComparison.OrdinalIgnoreCase));
+
+        var sourceAsset = matchingSelectedAsset
+            ?? _step5DetectedAssets.FirstOrDefault(asset => string.Equals(asset.NameFile, sourceModelName, StringComparison.OrdinalIgnoreCase))
             ?? _step5DetectedAssets.First();
 
+        _step5SelectedAssetKeys.Clear();
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
         _step5CategoryFilter = !string.IsNullOrWhiteSpace(sourceAsset.Category)
@@ -2507,70 +2515,102 @@ public partial class MainForm : Form
 
     private async Task InstallSelectedModAsync()
     {
-        if (!GameService.IsValidGameFolder(_selectedGamePath))
+        try
         {
-            MessageBox.Show(_localizationService.GetString("GameFolderNotConfiguredMessage", "Please select a valid GTA San Andreas folder first."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(_selectedModName) || string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
-        {
-            MessageBox.Show(_localizationService.GetString("SelectModFirst", "Please select a valid mod folder first."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-
-        if (!Directory.Exists(_selectedModPayloadPath) || Directory.EnumerateFileSystemEntries(_selectedModPayloadPath).Any() == false)
-        {
-            MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-
-        if (!await EnsureDependenciesBeforeInstallAsync())
-        {
-            return;
-        }
-
-        var modJsonPath = Path.Combine(_selectedModPayloadPath, "mod.json");
-        if (File.Exists(modJsonPath))
-        {
-            try
+            if (!GameService.IsValidGameFolder(_selectedGamePath))
             {
-                using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(modJsonPath));
-                var root = jsonDoc.RootElement;
-                var hasAnyProperties = root.ValueKind == System.Text.Json.JsonValueKind.Object && root.EnumerateObject().Any();
-                if (root.ValueKind != System.Text.Json.JsonValueKind.Object || !hasAnyProperties)
+                MessageBox.Show(_localizationService.GetString("GameFolderNotConfiguredMessage", "Please select a valid GTA San Andreas folder first."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(_selectedModName) || string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
+            {
+                MessageBox.Show(_localizationService.GetString("SelectModFirst", "Please select a valid mod folder first."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!Directory.Exists(_selectedModPayloadPath) || Directory.EnumerateFileSystemEntries(_selectedModPayloadPath).Any() == false)
+            {
+                MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!await EnsureDependenciesBeforeInstallAsync())
+            {
+                return;
+            }
+
+            var modJsonPath = Path.Combine(_selectedModPayloadPath, "mod.json");
+            if (File.Exists(modJsonPath))
+            {
+                try
+                {
+                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(modJsonPath));
+                    var root = jsonDoc.RootElement;
+                    var hasAnyProperties = root.ValueKind == System.Text.Json.JsonValueKind.Object && root.EnumerateObject().Any();
+                    if (root.ValueKind != System.Text.Json.JsonValueKind.Object || !hasAnyProperties)
+                    {
+                        MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                catch (Exception)
                 {
                     MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            catch (Exception)
+
+            _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
+            _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
+
+            if (_selectedModManifest.NormalizedType == "savesandmissions")
             {
-                MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await InstallSaveOrDyomPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModManifest);
+                return;
             }
-        }
 
-        _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
-        _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
-
-        if (_selectedModManifest.NormalizedType == "savesandmissions")
-        {
-            await InstallSaveOrDyomPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModManifest);
-            return;
-        }
-
-        if (_selectedModManifest.NormalizedType == "missiondsl")
-        {
-            await InstallMissionDslPackageAsync(_selectedModPayloadPath, _selectedModName);
-            return;
-        }
-
-        if (_selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage)
-        {
-            if (_selectedAssetForInstall != null || _selectedModManifest.IsMultiAssetPackage)
+            if (_selectedModManifest.NormalizedType == "missiondsl")
             {
+                await InstallMissionDslPackageAsync(_selectedModPayloadPath, _selectedModName);
+                return;
+            }
+
+            if (_selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage)
+            {
+                var preservedSelection = _selectedAssetForInstall;
+
+                if (_selectedAssetForInstall == null && !_selectedModManifest.IsMultiAssetPackage)
+                {
+                    _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+                    _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+                    PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                }
+
+                if (_selectedAssetForInstall == null && !_selectedModManifest.IsMultiAssetPackage)
+                {
+                    if (preservedSelection != null)
+                    {
+                        _selectedAssetForInstall = preservedSelection;
+                    }
+
+                    MessageBox.Show(_localizationService.GetString("NoAssetSelected", "Please select an asset before starting the installation."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
                 _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
                 PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+
+                if (_selectedAssetForInstall == null && preservedSelection != null)
+                {
+                    _selectedAssetForInstall = preservedSelection;
+                }
+
+                if (_selectedAssetForInstall == null && !_selectedModManifest.IsMultiAssetPackage)
+                {
+                    MessageBox.Show(_localizationService.GetString("NoAssetSelected", "Please select an asset before starting the installation."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 GoToStep(WizardStep.Step4);
                 await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
                 await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
@@ -2578,42 +2618,47 @@ public partial class MainForm : Form
                 return;
             }
 
-            _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
-            _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
-            PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
-            GoToStep(WizardStep.Step4);
-            await CompleteAssetPreparationStepAsync();
-            GoToStep(WizardStep.Step5);
-            return;
-        }
+            var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
+            var targetDir = Path.Combine(modLoaderFolder, _selectedModName);
 
-        var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
-        var targetDir = Path.Combine(modLoaderFolder, _selectedModName);
-
-        if (Directory.Exists(targetDir))
-        {
-            var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), _selectedModName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result != DialogResult.Yes)
+            if (Directory.Exists(targetDir))
             {
-                return;
+                var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), _selectedModName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                Directory.Delete(targetDir, true);
             }
 
-            Directory.Delete(targetDir, true);
+            _installPaths = Directory.GetFiles(_selectedModPayloadPath, "*", SearchOption.AllDirectories)
+                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+            _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+
+            GoToStep(WizardStep.Step4);
+            await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir);
+            ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
+            await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
+            GoToStep(WizardStep.Step5);
+            _selectedReadmePath = FindReadmeFile(targetDir);
         }
+        catch (Exception ex)
+        {
+            var logPath = Path.Combine(AppContext.BaseDirectory, "mod-install-debug.log");
+            try
+            {
+                File.AppendAllText(logPath, $"[{DateTime.Now:O}] InstallSelectedModAsync failed:{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}");
+            }
+            catch
+            {
+            }
 
-        _installPaths = Directory.GetFiles(_selectedModPayloadPath, "*", SearchOption.AllDirectories)
-            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
-        _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
-
-        GoToStep(WizardStep.Step4);
-        await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir);
-        ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
-        await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
-        GoToStep(WizardStep.Step5);
-        _selectedReadmePath = FindReadmeFile(targetDir);
+            MessageBox.Show($"Installation failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}More details were written to:{Environment.NewLine}{logPath}", _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private async Task CompleteAssetPreparationStepAsync()
@@ -4566,42 +4611,54 @@ public partial class MainForm : Form
         }
     }
 
-    private void HandleSidebarNext()
+    private async void HandleSidebarNext()
     {
-        switch (_currentStep)
+        try
         {
-            case WizardStep.Step1:
-                if (GameService.IsValidGameFolder(_selectedGamePath))
-                {
-                    NavigateToStep(WizardStep.Step2);
-                }
-                break;
-            case WizardStep.Step2:
-                NavigateToStep(WizardStep.Step3);
-                break;
-            case WizardStep.Step3:
-                if (!string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
-                {
-                    _ = InstallSelectedModAsync();
-                }
-                break;
-            case WizardStep.Step5:
-                if (_selectedAssetForInstall != null)
-                {
-                    _ = InstallSelectedModAsync();
-                }
-                else
-                {
-                    NavigateToStep(WizardStep.Step6);
-                }
-                break;
-            case WizardStep.Step4:
-                if (_returnedToInstallStepFromCompletion)
-                {
-                    _returnedToInstallStepFromCompletion = false;
-                    NavigateToStep(WizardStep.Step5);
-                }
-                break;
+            switch (_currentStep)
+            {
+                case WizardStep.Step1:
+                    if (GameService.IsValidGameFolder(_selectedGamePath))
+                    {
+                        NavigateToStep(WizardStep.Step2);
+                    }
+                    break;
+                case WizardStep.Step2:
+                    NavigateToStep(WizardStep.Step3);
+                    break;
+                case WizardStep.Step3:
+                    if (!string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
+                    {
+                        await InstallSelectedModAsync();
+                    }
+                    break;
+                case WizardStep.Step5:
+                    if (_selectedAssetForInstall != null)
+                    {
+                        await InstallSelectedModAsync();
+                    }
+                    break;
+                case WizardStep.Step4:
+                    if (_returnedToInstallStepFromCompletion)
+                    {
+                        _returnedToInstallStepFromCompletion = false;
+                        NavigateToStep(WizardStep.Step5);
+                    }
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            var logPath = Path.Combine(AppContext.BaseDirectory, "mod-install-debug.log");
+            try
+            {
+                File.AppendAllText(logPath, $"[{DateTime.Now:O}] HandleSidebarNext failed:{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}");
+            }
+            catch
+            {
+            }
+
+            MessageBox.Show($"An unexpected UI error occurred while advancing steps.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}More details were written to:{Environment.NewLine}{logPath}", _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
