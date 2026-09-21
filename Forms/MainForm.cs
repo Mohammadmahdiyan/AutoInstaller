@@ -1964,15 +1964,14 @@ public partial class MainForm : Form
             .ToList();
 
         var categories = assets
-            .Where(asset => !string.IsNullOrWhiteSpace(asset.Category))
-            .Select(asset => asset.Category.Trim())
+            .Select(asset => NormalizeCategoryValue(asset.Category))
             .Where(category => !string.IsNullOrWhiteSpace(category))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var hasMeaningfulCategories = categories.Count > 0;
-        Debug.WriteLine($"[Step5] categories={categories.Count}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}");
+        var hasMeaningfulCategories = categories.Count > 1;
+        Debug.WriteLine($"[Step5] categories={categories.Count}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}; meaningful={hasMeaningfulCategories}");
 
         if (categoryFilter != null)
         {
@@ -1991,6 +1990,11 @@ public partial class MainForm : Form
             categoryFilter.Items.Add(allText);
             foreach (var category in categories)
             {
+                if (string.Equals(NormalizeCategoryValue(category), NormalizeCategoryValue(allText), StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 categoryFilter.Items.Add(category);
             }
 
@@ -2009,7 +2013,8 @@ public partial class MainForm : Form
                 _step5CategoryFilter = allText;
             }
 
-            var selectedExists = categoryFilter.Items.Cast<object>().Any(item => string.Equals(item?.ToString(), _step5CategoryFilter, StringComparison.OrdinalIgnoreCase));
+            var selectedExists = categoryFilter.Items.Cast<object>().Any(item =>
+                string.Equals(NormalizeCategoryValue(item?.ToString()), NormalizeCategoryValue(_step5CategoryFilter), StringComparison.OrdinalIgnoreCase));
             if (!selectedExists)
             {
                 _step5CategoryFilter = allText;
