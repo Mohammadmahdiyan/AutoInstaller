@@ -1586,6 +1586,7 @@ public partial class MainForm : Form
         filters.Controls.Add(sortLabel);
         filters.Controls.Add(sorting);
         var gallery = new FlowLayoutPanel { Name = "AssetGallery", Dock = DockStyle.Fill, AutoScroll = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Padding = new Padding(0, 8, 0, 0) };
+        gallery.SizeChanged += (_, _) => RefreshAssetStep();
 
         categoryFilter.SelectedIndexChanged += (_, _) =>
         {
@@ -1599,13 +1600,7 @@ public partial class MainForm : Form
 
         columns.SelectedIndexChanged += (_, _) =>
         {
-            var selectedValue = columns.SelectedItem?.ToString();
-            if (int.TryParse(selectedValue, out var count))
-            {
-                _step5ColumnCount = Math.Clamp(count, 2, 5);
-                Debug.WriteLine($"[Step5] columns changed => {_step5ColumnCount}");
-            }
-
+            ApplyStep5ColumnCount(columns);
             RefreshAssetStep();
         };
 
@@ -1782,6 +1777,26 @@ public partial class MainForm : Form
         return defaultSourceAsset is null ? new List<GameAsset>() : new List<GameAsset> { defaultSourceAsset };
     }
 
+    private void ApplyStep5ColumnCount(ComboBox? columns)
+    {
+        if (columns == null)
+        {
+            return;
+        }
+
+        var selectedValue = columns.SelectedItem?.ToString();
+        if (int.TryParse(selectedValue, out var parsedColumns))
+        {
+            _step5ColumnCount = Math.Clamp(parsedColumns, 2, 6);
+        }
+        else
+        {
+            _step5ColumnCount = 3;
+        }
+
+        Debug.WriteLine($"[Step5] columns changed => {_step5ColumnCount}");
+    }
+
     private void RefreshAssetStep()
     {
         if (_isRefreshingAssetStep)
@@ -1823,17 +1838,7 @@ public partial class MainForm : Form
 
         if (columns != null)
         {
-            var parsedValue = columns.SelectedItem?.ToString();
-            if (int.TryParse(parsedValue, out var parsedColumns))
-            {
-                _step5ColumnCount = Math.Clamp(parsedColumns, 2, 5);
-            }
-            else
-            {
-                _step5ColumnCount = 3;
-            }
-
-            Debug.WriteLine($"[Step5] columns changed => {_step5ColumnCount}");
+            ApplyStep5ColumnCount(columns);
         }
 
         if (sortFilter != null && string.IsNullOrWhiteSpace(sortFilter.SelectedItem?.ToString()) == false)
@@ -1919,9 +1924,11 @@ public partial class MainForm : Form
             ? gallery.ClientSize.Width
             : Math.Max(320, panel.ClientSize.Width - 32);
 
-        var usableGalleryWidth = Math.Max(260, availableGalleryWidth - gallery.Padding.Horizontal);
+        var usableGalleryWidth = Math.Max(180, availableGalleryWidth - gallery.Padding.Horizontal);
         var columnGap = 12;
-        var baseCardWidth = Math.Max(150, (usableGalleryWidth - (_step5ColumnCount - 1) * columnGap) / Math.Max(1, _step5ColumnCount));
+        var columnCount = Math.Max(1, _step5ColumnCount);
+        var rawCardWidth = (usableGalleryWidth - (columnCount - 1) * columnGap) / (double)columnCount;
+        var baseCardWidth = Math.Max(120, (int)Math.Floor(rawCardWidth));
         var cardHeight = Math.Max(95, (int)Math.Round(baseCardWidth * 0.50d));
 
         foreach (var asset in visibleAssets)
