@@ -2019,13 +2019,32 @@ public partial class MainForm : Form
         var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
         var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 22, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = palette.TextPrimary, Cursor = Cursors.Hand };
         var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 20, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = palette.TextSecondary, Visible = false, Cursor = Cursors.Hand };
-        var id = string.IsNullOrWhiteSpace(asset.Id) ? null : new Label { Text = asset.Id, Width = 36, Height = 26, Location = new Point(cardWidth - 42, 8), TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White, BackColor = GetAssetTypeColor(asset.AssetType, palette), Font = new Font("Segoe UI", 8F, FontStyle.Bold), AutoSize = false, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
+        var idText = string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id;
+        var id = string.IsNullOrWhiteSpace(idText)
+            ? null
+            : new Label
+            {
+                Text = idText,
+                Width = 44,
+                Height = 22,
+                Location = new Point(8, previewHeight + 6),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = GetAssetTypeColor(asset.AssetType, palette),
+                Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
+                AutoSize = false,
+                BorderStyle = BorderStyle.None,
+                Cursor = Cursors.Hand,
+                Padding = new Padding(0),
+                Anchor = AnchorStyles.Left | AnchorStyles.Top,
+                Visible = true,
+                Tag = $"AssetId:{idText}"
+            };
 
         if (id != null)
         {
-            id.Padding = new Padding(0);
             id.TextAlign = ContentAlignment.MiddleCenter;
-            id.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            id.Margin = new Padding(0);
         }
 
         var imagePath = _assetCatalogService.ResolveImagePath(asset);
@@ -2057,6 +2076,19 @@ public partial class MainForm : Form
         if (id != null)
         {
             card.Controls.Add(id);
+        }
+
+        var tooltip = new ToolTip
+        {
+            AutoPopDelay = 2000,
+            InitialDelay = 250,
+            ReshowDelay = 100,
+            ShowAlways = true
+        };
+        tooltip.SetToolTip(preview, $"{asset.NameFile}\nID: {asset.Id}");
+        if (id != null)
+        {
+            tooltip.SetToolTip(id, $"{asset.NameFile}\nID: {asset.Id}");
         }
 
         void ToggleSelection(object? _, EventArgs __)
