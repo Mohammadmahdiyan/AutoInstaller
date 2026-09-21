@@ -26,6 +26,12 @@ public partial class MainForm : Form
     private ComboBox _sidebarThemeComboBox = null!;
     private Button _sidebarReadmeButton = null!;
     private TextBox _sidebarReadmeTextBox = null!;
+    private Panel _sidebarSelectedModelPanel = null!;
+    private PictureBox _sidebarSourceModelImage = null!;
+    private PictureBox _sidebarSelectedAssetImage = null!;
+    private Label _sidebarSelectedModelArrowLabel = null!;
+    private Label _sidebarSelectedAssetNameLabel = null!;
+    private Label _sidebarSelectedAssetIdLabel = null!;
     private PictureBox _sidebarStep4Image = null!;
     private Panel _sidebarImageNavPanel = null!;
     private Button _sidebarImagePrevButton = null!;
@@ -508,6 +514,43 @@ public partial class MainForm : Form
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
             Text = _localizationService.GetString("DetectedMod", "Detected mod")
         };
+        _sidebarSelectedModelPanel = new Panel
+        {
+            Name = "SidebarSelectedModelPanel",
+            Visible = false,
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 0, 0, 8),
+            BackColor = Color.Transparent,
+            Padding = new Padding(0)
+        };
+        var selectedModelLayout = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 3,
+            RowCount = 2,
+            Padding = new Padding(0),
+            Margin = new Padding(0),
+            BackColor = Color.Transparent
+        };
+        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 46F));
+        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36F));
+        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 74F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+        _sidebarSourceModelImage = new PictureBox { Width = 64, Height = 64, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0, 0, 4, 0), Visible = false };
+        _sidebarSelectedAssetImage = new PictureBox { Width = 64, Height = 64, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(4, 0, 0, 0), Visible = false };
+        _sidebarSelectedModelArrowLabel = new Label { Text = "→", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 18F, FontStyle.Bold), ForeColor = Color.FromArgb(37, 99, 235), Margin = new Padding(0, 18, 0, 0), Visible = false };
+        _sidebarSelectedAssetNameLabel = new Label { AutoSize = true, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Visible = false, Text = string.Empty };
+        _sidebarSelectedAssetIdLabel = new Label { AutoSize = true, Font = new Font("Segoe UI", 7.5F), ForeColor = Color.FromArgb(71, 85, 105), Visible = false, Text = string.Empty };
+
+        selectedModelLayout.Controls.Add(_sidebarSourceModelImage, 0, 0);
+        selectedModelLayout.Controls.Add(_sidebarSelectedModelArrowLabel, 1, 0);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetImage, 2, 0);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetNameLabel, 0, 1);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetIdLabel, 2, 1);
+
+        _sidebarSelectedModelPanel.Controls.Add(selectedModelLayout);
         _sidebarStep4Image = new PictureBox { Width = 190, Height = 110, Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
         _sidebarImageNavPanel = new Panel { Dock = DockStyle.Fill, Visible = false, Height = 38, Margin = new Padding(0, 0, 0, 8), BackColor = Color.Transparent };
         _sidebarImagePrevButton = new Button { Name = "SidebarImagePrevButton", Text = "◀", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 8, 0) };
@@ -578,10 +621,11 @@ public partial class MainForm : Form
         stack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
         stack.Controls.Add(_sidebarThemeComboBox, 0, 5);
         stack.Controls.Add(_sidebarDetectedModLabel, 0, 6);
-        stack.Controls.Add(_sidebarStep4Image, 0, 7);
-        stack.Controls.Add(_sidebarImageNavPanel, 0, 8);
-        stack.Controls.Add(_sidebarReadmeTextBox, 0, 9);
-        stack.Controls.Add(_sidebarReadmeButton, 0, 10);
+        stack.Controls.Add(_sidebarSelectedModelPanel, 0, 7);
+        stack.Controls.Add(_sidebarStep4Image, 0, 8);
+        stack.Controls.Add(_sidebarImageNavPanel, 0, 9);
+        stack.Controls.Add(_sidebarReadmeTextBox, 0, 10);
+        stack.Controls.Add(_sidebarReadmeButton, 0, 11);
 
         _sidebarPanel.Controls.Add(stack);
         MainPanel.Controls.Add(_sidebarPanel);
@@ -4161,9 +4205,79 @@ public partial class MainForm : Form
         var hasSidebarImage = sidebarImageFiles.Count > 0;
         var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
         var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (_currentStep == WizardStep.Step4 || _currentStep == WizardStep.Step5);
+        var hasSelectedAssetModel = _currentStep == WizardStep.Step5 && _selectedAssetForInstall != null;
 
         _sidebarDetectedModLabel.Visible = hasDetectedMod;
         _sidebarDetectedModLabel.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+
+        if (hasSelectedAssetModel)
+        {
+            var selectedAsset = _selectedAssetForInstall;
+            if (selectedAsset is null)
+            {
+                _sidebarSelectedModelPanel.Visible = false;
+                _sidebarSourceModelImage.Visible = false;
+                _sidebarSelectedAssetImage.Visible = false;
+                _sidebarSelectedModelArrowLabel.Visible = false;
+                _sidebarSelectedAssetNameLabel.Visible = false;
+                _sidebarSelectedAssetIdLabel.Visible = false;
+                _sidebarSourceModelImage.Image?.Dispose();
+                _sidebarSourceModelImage.Image = null;
+                _sidebarSelectedAssetImage.Image?.Dispose();
+                _sidebarSelectedAssetImage.Image = null;
+            }
+            else
+            {
+                var sourceFiles = FindImageFiles(_selectedModPayloadPath);
+                var sourceImagePath = sourceFiles.FirstOrDefault(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path));
+                var selectedAssetImagePath = _assetCatalogService.ResolveImagePath(selectedAsset);
+
+                _sidebarSelectedModelPanel.Visible = true;
+                _sidebarSourceModelImage.Visible = !string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath);
+                _sidebarSelectedAssetImage.Visible = !string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath);
+                _sidebarSelectedModelArrowLabel.Visible = true;
+                _sidebarSelectedModelArrowLabel.Text = isRtl ? "←" : "→";
+                _sidebarSelectedAssetNameLabel.Visible = true;
+                _sidebarSelectedAssetNameLabel.Text = selectedAsset.NameFile ?? _selectedModName;
+                _sidebarSelectedAssetIdLabel.Visible = !string.IsNullOrWhiteSpace(selectedAsset.Id);
+                _sidebarSelectedAssetIdLabel.Text = string.IsNullOrWhiteSpace(selectedAsset.Id) ? string.Empty : "ID: " + selectedAsset.Id;
+
+                if (!string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath))
+                {
+                    _sidebarSourceModelImage.Image?.Dispose();
+                    _sidebarSourceModelImage.Image = TryLoadBitmap(sourceImagePath);
+                }
+                else
+                {
+                    _sidebarSourceModelImage.Image?.Dispose();
+                    _sidebarSourceModelImage.Image = null;
+                }
+
+                if (!string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath))
+                {
+                    _sidebarSelectedAssetImage.Image?.Dispose();
+                    _sidebarSelectedAssetImage.Image = TryLoadBitmap(selectedAssetImagePath);
+                }
+                else
+                {
+                    _sidebarSelectedAssetImage.Image?.Dispose();
+                    _sidebarSelectedAssetImage.Image = null;
+                }
+            }
+        }
+        else
+        {
+            _sidebarSelectedModelPanel.Visible = false;
+            _sidebarSourceModelImage.Visible = false;
+            _sidebarSelectedAssetImage.Visible = false;
+            _sidebarSelectedModelArrowLabel.Visible = false;
+            _sidebarSelectedAssetNameLabel.Visible = false;
+            _sidebarSelectedAssetIdLabel.Visible = false;
+            _sidebarSourceModelImage.Image?.Dispose();
+            _sidebarSourceModelImage.Image = null;
+            _sidebarSelectedAssetImage.Image?.Dispose();
+            _sidebarSelectedAssetImage.Image = null;
+        }
 
         _sidebarReadmeButton.Visible = hasSidebarReadme;
         _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
