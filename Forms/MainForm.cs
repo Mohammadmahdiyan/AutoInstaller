@@ -64,6 +64,8 @@ public partial class MainForm : Form
     private int _step5ColumnCount = 3;
     private string _step5CategoryFilter = string.Empty;
     private string _step5SortMode = "Name";
+    private const string Step5SortByName = "Name";
+    private const string Step5SortById = "Id";
 
     private enum WizardStep
     {
@@ -1576,8 +1578,13 @@ public partial class MainForm : Form
 
         columns.Items.AddRange(new object[] { "2", "3", "4", "5" });
         columns.SelectedItem = "3";
-        sorting.Items.AddRange(new object[] { _localizationService.GetString("SortByFileName", "Sort by file name"), _localizationService.GetString("SortById", "Sort by ID") });
+        sorting.Items.AddRange(new object[]
+        {
+            _localizationService.GetString("SortByFileName", "Sort by file name"),
+            _localizationService.GetString("SortById", "Sort by ID")
+        });
         sorting.SelectedItem = _localizationService.GetString("SortByFileName", "Sort by file name");
+        _step5SortMode = Step5SortByName;
 
         filters.Controls.Add(categoryLabel);
         filters.Controls.Add(categoryFilter);
@@ -1606,7 +1613,7 @@ public partial class MainForm : Form
 
         sorting.SelectedIndexChanged += (_, _) =>
         {
-            _step5SortMode = sorting.SelectedItem?.ToString() == _localizationService.GetString("SortById", "Sort by ID") ? "Id" : "Name";
+            _step5SortMode = sorting.SelectedItem?.ToString() == _localizationService.GetString("SortById", "Sort by ID") ? Step5SortById : Step5SortByName;
             RefreshAssetStep();
         };
 
@@ -1841,9 +1848,21 @@ public partial class MainForm : Form
             ApplyStep5ColumnCount(columns);
         }
 
-        if (sortFilter != null && string.IsNullOrWhiteSpace(sortFilter.SelectedItem?.ToString()) == false)
+        if (sortFilter != null)
         {
-            _step5SortMode = sortFilter.SelectedItem?.ToString() == _localizationService.GetString("SortById", "Sort by ID") ? "Id" : "Name";
+            if (string.IsNullOrWhiteSpace(sortFilter.SelectedItem?.ToString()))
+            {
+                sortFilter.SelectedItem = _localizationService.GetString("SortByFileName", "Sort by file name");
+                _step5SortMode = Step5SortByName;
+            }
+            else if (sortFilter.SelectedItem?.ToString() == _localizationService.GetString("SortById", "Sort by ID"))
+            {
+                _step5SortMode = Step5SortById;
+            }
+            else
+            {
+                _step5SortMode = Step5SortByName;
+            }
         }
 
         _isRefreshingAssetStep = true;
@@ -1921,7 +1940,7 @@ public partial class MainForm : Form
                 .ToList();
         }
 
-        if (_step5SortMode == "Id")
+        if (_step5SortMode == Step5SortById)
         {
             visibleAssets = visibleAssets
                 .OrderBy(asset => string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id, StringComparer.OrdinalIgnoreCase)
