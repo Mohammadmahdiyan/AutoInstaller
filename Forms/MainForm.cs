@@ -1975,15 +1975,26 @@ public partial class MainForm : Form
 
     private Control CreateAssetCard(GameAsset asset, int cardWidth, int cardHeight)
     {
+        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
         var innerWidth = cardWidth - 18;
         var previewHeight = Math.Max(62, cardHeight - 38);
         var selectionKey = GetAssetSelectionKey(asset);
         var isSelected = _step5SelectedAssetKeys.Contains(selectionKey);
-        var card = new Panel { Width = cardWidth, Height = cardHeight, BorderStyle = BorderStyle.FixedSingle, Margin = new Padding(0, 0, 12, 12), BackColor = isSelected ? Color.FromArgb(219, 234, 254) : Color.White, Cursor = Cursors.Hand, Padding = new Padding(0) };
-        var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
-        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 22, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Cursor = Cursors.Hand };
-        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 20, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(30, 41, 59), Visible = false, Cursor = Cursors.Hand };
-        var id = string.IsNullOrWhiteSpace(asset.Id) ? null : new Label { Text = asset.Id, Width = 36, Height = 26, Location = new Point(cardWidth - 42, 8), TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White, BackColor = GetAssetTypeColor(asset.AssetType), Font = new Font("Segoe UI", 8F, FontStyle.Bold), AutoSize = false, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
+        var card = new Panel
+        {
+            Width = cardWidth,
+            Height = cardHeight,
+            BorderStyle = BorderStyle.FixedSingle,
+            Margin = new Padding(0, 0, 12, 12),
+            BackColor = isSelected ? palette.AccentSoft : palette.Card,
+            ForeColor = palette.TextPrimary,
+            Cursor = Cursors.Hand,
+            Padding = new Padding(0)
+        };
+        var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
+        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 22, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = palette.TextPrimary, Cursor = Cursors.Hand };
+        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 20, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = palette.TextSecondary, Visible = false, Cursor = Cursors.Hand };
+        var id = string.IsNullOrWhiteSpace(asset.Id) ? null : new Label { Text = asset.Id, Width = 36, Height = 26, Location = new Point(cardWidth - 42, 8), TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White, BackColor = GetAssetTypeColor(asset.AssetType, palette), Font = new Font("Segoe UI", 8F, FontStyle.Bold), AutoSize = false, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
 
         if (id != null)
         {
@@ -1997,7 +2008,7 @@ public partial class MainForm : Form
         if (cachedImage == null)
         {
             preview.Image = null;
-            preview.BackColor = Color.FromArgb(248, 250, 252);
+            preview.BackColor = palette.SurfaceSecondary;
             preview.Controls.Add(new Label
             {
                 Text = _localizationService.GetString("ImageUnavailableFriendly", "No image available"),
@@ -2005,8 +2016,8 @@ public partial class MainForm : Form
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(127, 140, 141),
-                BackColor = Color.FromArgb(248, 250, 252)
+                ForeColor = palette.TextSecondary,
+                BackColor = palette.SurfaceSecondary
             });
         }
         else
@@ -2031,10 +2042,11 @@ public partial class MainForm : Form
 
             foreach (var sibling in card.Parent?.Controls.OfType<Panel>() ?? Enumerable.Empty<Panel>())
             {
-                sibling.BackColor = Color.White;
+                sibling.BackColor = sibling == card ? palette.AccentSoft : palette.Card;
+                sibling.ForeColor = palette.TextPrimary;
             }
 
-            card.BackColor = Color.FromArgb(219, 234, 254);
+            card.BackColor = palette.AccentSoft;
 
             UpdateSidebarState();
             RefreshAssetStep();
@@ -2107,14 +2119,15 @@ public partial class MainForm : Form
         return card;
     }
 
-    private static Color GetAssetTypeColor(string assetType)
+    private static Color GetAssetTypeColor(string assetType, ThemePalette? palette = null)
     {
+        var resolvedPalette = palette ?? ThemeManager.ResolvePalette(AppTheme.LightBlue);
         return assetType.ToLowerInvariant() switch
         {
-            "vehicle" => Color.FromArgb(37, 99, 235),
-            "skin" => Color.FromArgb(16, 185, 129),
-            "weapon" => Color.FromArgb(220, 38, 38),
-            _ => Color.FromArgb(71, 85, 105)
+            "vehicle" => resolvedPalette.Accent,
+            "skin" => resolvedPalette.Success,
+            "weapon" => resolvedPalette.Error,
+            _ => resolvedPalette.TextSecondary
         };
     }
 
@@ -3719,6 +3732,11 @@ public partial class MainForm : Form
         _settingsService.Save(_settings);
         ApplyCurrentTheme();
         ApplySidebarDirection();
+
+        if (_currentStep == WizardStep.Step5)
+        {
+            RefreshAssetStep();
+        }
     }
 
     private void ApplyComboSelectionSafely(ComboBox? comboBox, string displayValue)
