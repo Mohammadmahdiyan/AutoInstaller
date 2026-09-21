@@ -1705,9 +1705,31 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
+        var normalizedModelName = NormalizeAssetIdentifier(modelName);
+
         return _assetCatalogService.LoadAssets()
-            .FirstOrDefault(asset => string.Equals(asset.NameFile, modelName, StringComparison.OrdinalIgnoreCase))?
+            .FirstOrDefault(asset =>
+                string.Equals(asset.NameFile, modelName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(asset.Name, modelName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(NormalizeAssetIdentifier(asset.NameFile), normalizedModelName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(NormalizeAssetIdentifier(asset.Name), normalizedModelName, StringComparison.OrdinalIgnoreCase))?
             .AssetType ?? string.Empty;
+    }
+
+    private static string NormalizeAssetIdentifier(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var trimmed = value.Trim();
+        trimmed = trimmed.Replace('\\', '/');
+        trimmed = trimmed.TrimEnd('/');
+        trimmed = trimmed.Replace(".dff", string.Empty, StringComparison.OrdinalIgnoreCase);
+        trimmed = trimmed.Replace(".txd", string.Empty, StringComparison.OrdinalIgnoreCase);
+        trimmed = Regex.Replace(trimmed, "[_-]+", "");
+        return trimmed.Trim();
     }
 
     private string GetReplacementTitleForType(string assetType)
@@ -1984,6 +2006,12 @@ public partial class MainForm : Form
             if (!validSelection)
             {
                 Debug.WriteLine($"[Step5] category selection reset from '{_step5CategoryFilter}' to '{allText}'");
+                _step5CategoryFilter = allText;
+            }
+
+            var selectedExists = categoryFilter.Items.Cast<object>().Any(item => string.Equals(item?.ToString(), _step5CategoryFilter, StringComparison.OrdinalIgnoreCase));
+            if (!selectedExists)
+            {
                 _step5CategoryFilter = allText;
             }
 
