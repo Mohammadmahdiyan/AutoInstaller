@@ -4441,7 +4441,11 @@ public partial class MainForm : Form
             ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
             : GetStep5SidebarImageFiles();
         var hasSidebarImage = sidebarImageFiles.Count > 0;
+        var hasStep5ModImage = _currentStep == WizardStep.Step5
+            && !string.IsNullOrWhiteSpace(_selectedModPayloadPath)
+            && FindImageFiles(_selectedModPayloadPath).Any(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path));
         var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
+        var shouldDisplaySidebarReadme = hasSidebarReadme && !(hasStep5ModImage && _currentStep == WizardStep.Step5);
         var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (_currentStep == WizardStep.Step4 || _currentStep == WizardStep.Step5);
         var hasSelectedAssetModel = _currentStep == WizardStep.Step5 && _selectedAssetForInstall != null;
 
@@ -4521,12 +4525,12 @@ public partial class MainForm : Form
             _sidebarSelectedAssetImage.Image = null;
         }
 
-        _sidebarReadmeButton.Visible = hasSidebarReadme;
+        _sidebarReadmeButton.Visible = shouldDisplaySidebarReadme;
         _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
-        _sidebarReadmeButton.Enabled = hasSidebarReadme;
+        _sidebarReadmeButton.Enabled = shouldDisplaySidebarReadme;
 
-        _sidebarReadmeTextBox.Visible = hasSidebarReadme;
-        _sidebarReadmeTextBox.Enabled = hasSidebarReadme;
+        _sidebarReadmeTextBox.Visible = shouldDisplaySidebarReadme;
+        _sidebarReadmeTextBox.Enabled = shouldDisplaySidebarReadme;
         _sidebarReadmeTextBox.Text = string.IsNullOrWhiteSpace(readmeText)
             ? _localizationService.GetString("ReadmeFallback", "README")
             : readmeText;
