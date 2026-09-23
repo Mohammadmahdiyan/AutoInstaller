@@ -2,7 +2,7 @@ using GtaSaModManager.Services;
 
 namespace GtaSaModManager.Forms;
 
-public class InstallProgressForm : Form
+public class InstallProgressPanel : Panel
 {
     private readonly LocalizationService _localizationService;
     private readonly Label _titleLabel;
@@ -10,18 +10,15 @@ public class InstallProgressForm : Form
     private readonly Label _statusLabel;
     private readonly Label _currentFileLabel;
 
-    public InstallProgressForm(LocalizationService localizationService, string modName)
+    public InstallProgressPanel(LocalizationService localizationService, string modName)
     {
         _localizationService = localizationService;
 
-        StartPosition = FormStartPosition.CenterParent;
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MinimizeBox = false;
-        MaximizeBox = false;
-        Width = 540;
-        Height = 220;
-        Text = localizationService.GetString("InstallingTitle", "Installing") + " " + modName;
-        Padding = new Padding(18);
+        BorderStyle = BorderStyle.FixedSingle;
+        BackColor = Color.FromArgb(248, 250, 252);
+        Dock = DockStyle.Fill;
+        Padding = new Padding(16);
+        Visible = true;
 
         _titleLabel = new Label
         {
@@ -38,7 +35,8 @@ public class InstallProgressForm : Form
             Height = 28,
             Minimum = 0,
             Maximum = 100,
-            Value = 0
+            Value = 0,
+            Margin = new Padding(0, 12, 0, 0)
         };
 
         _statusLabel = new Label
@@ -56,7 +54,8 @@ public class InstallProgressForm : Form
             Font = new Font("Segoe UI", 9F),
             Dock = DockStyle.Top,
             Margin = new Padding(0, 8, 0, 0),
-            Text = ""
+            Text = string.Empty,
+            MaximumSize = new Size(600, 0)
         };
 
         Controls.Add(_currentFileLabel);

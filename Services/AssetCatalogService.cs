@@ -56,13 +56,14 @@ public sealed class AssetCatalogService
                         continue;
                     }
 
+                    var categoryValue = ResolveCategory(item, assetType, nameFile);
                     assets.Add(new GameAsset
                     {
                         AssetType = assetType,
                         Id = GetValueAsString(item, "id"),
                         Name = GetString(item, "name") is { Length: > 0 } name ? name : nameFile,
                         NameFile = nameFile,
-                        Category = GetString(item, "category") is { Length: > 0 } category ? category : "normal",
+                        Category = categoryValue,
                         Image = GetString(item, "image")
                     });
                 }
@@ -141,5 +142,43 @@ public sealed class AssetCatalogService
         }
 
         return value.ValueKind == JsonValueKind.String ? value.GetString() ?? string.Empty : value.ToString();
+    }
+
+    private static string ResolveCategory(JsonElement item, string assetType, string nameFile)
+    {
+        var rawCategory = GetString(item, "category");
+        if (!string.IsNullOrWhiteSpace(rawCategory))
+        {
+            return rawCategory.Trim();
+        }
+
+        var inferred = InferCategoryFromName(nameFile, assetType);
+        return string.IsNullOrWhiteSpace(inferred) ? "General" : inferred;
+    }
+
+    private static string InferCategoryFromName(string nameFile, string assetType)
+    {
+        var normalizedName = nameFile.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedName))
+        {
+            return string.Empty;
+        }
+
+        if (string.Equals(assetType, "Vehicle", StringComparison.OrdinalIgnoreCase))
+        {
+            return "General Vehicles";
+        }
+
+        if (string.Equals(assetType, "Skin", StringComparison.OrdinalIgnoreCase))
+        {
+            return "General Skins";
+        }
+
+        if (string.Equals(assetType, "Weapon", StringComparison.OrdinalIgnoreCase))
+        {
+            return "General Weapons";
+        }
+
+        return "General";
     }
 }

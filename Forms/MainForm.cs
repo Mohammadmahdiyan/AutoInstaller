@@ -54,6 +54,7 @@ public partial class MainForm : Form
     private string _selectedReadmePath = string.Empty;
     private List<string> _selectedImageFiles = new();
     private List<string> _installPaths = new();
+    private readonly Dictionary<string, List<int>> _step4FileProgress = new(StringComparer.OrdinalIgnoreCase);
     private WizardStep _currentStep = WizardStep.Step1;
     private int _completionSecondsLeft = 6;
     private bool _completionTimerActive;
@@ -109,7 +110,15 @@ public partial class MainForm : Form
             if (_detectedModLabel != null && !_detectedModLabel.IsDisposed)
             {
                 _detectedModLabel.Text = string.Empty;
+                _detectedModLabel.Visible = false;
             }
+
+            if (_sidebarDetectedModLabel != null && !_sidebarDetectedModLabel.IsDisposed)
+            {
+                _sidebarDetectedModLabel.Text = string.Empty;
+                _sidebarDetectedModLabel.Visible = false;
+            }
+
             _detectedModTimer.Stop();
         };
 
@@ -898,6 +907,14 @@ public partial class MainForm : Form
             folderText.Text = selected;
             _detectedModLabel = selectedName;
             selectedName.Text = string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName);
+            selectedName.Visible = true;
+
+            if (_sidebarDetectedModLabel != null && !_sidebarDetectedModLabel.IsDisposed)
+            {
+                _sidebarDetectedModLabel.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+                _sidebarDetectedModLabel.Visible = true;
+            }
+
             _detectedModTimer.Stop();
             _detectedModTimer.Start();
             RefreshStep3Images(panel, selected);
@@ -1157,85 +1174,75 @@ public partial class MainForm : Form
 
         var root = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
         var readmeButton = panel.Controls.OfType<Button>().FirstOrDefault(control => control.Name == "Step4ReadmeButton");
-        var fileList = panel.Controls.OfType<ListBox>().FirstOrDefault(control => control.Name == "Step4FileList");
         if (root == null)
         {
             return;
         }
 
-        if (fileList != null)
-        {
-            fileList.Items.Clear();
-            foreach (var item in _installPaths.Where(path => !string.IsNullOrWhiteSpace(path)).Select(path => Path.GetRelativePath(_selectedModPayloadPath, path).Replace('\\', '/')).Distinct(StringComparer.OrdinalIgnoreCase))
-            {
-                fileList.Items.Add(item);
-            }
-            fileList.Visible = _installPaths.Count > 0;
-            fileList.Height = _installPaths.Count > 0 ? 140 : 0;
-        }
-
-        root.SuspendLayout();
-        root.Controls.Clear();
-
-        var hasReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath);
-        var imageFiles = _selectedImageFiles.Where(File.Exists).ToList();
-        var hasImages = imageFiles.Count > 0;
-
         if (readmeButton != null)
         {
-            readmeButton.Visible = hasReadme;
-            readmeButton.Enabled = hasReadme;
-            readmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+            readmeButton.Visible = false;
+            readmeButton.Enabled = false;
         }
 
-        if (!hasReadme && !hasImages)
+        var progressPanel = root.Controls.OfType<InstallProgressPanel>().FirstOrDefault();
+        if (progressPanel == null)
         {
-            root.Controls.Clear();
-            root.Visible = false;
-            root.Height = 0;
-            root.ResumeLayout(true);
-            return;
+            progressPanel = new InstallProgressPanel(_localizationService, _selectedModName);
+            progressPanel.Name = "Step4ProgressPanel";
+            progressPanel.Dock = DockStyle.Top;
+            progressPanel.Height = 170;
+            root.Controls.Add(progressPanel);
         }
 
+        var fileList = root.Controls.OfType<ListBox>().FirstOrDefault(control => control.Name == "Step4FileList");
+        if (fileList == null)
+        {
+            fileList = new ListBox
+            {
+                Name = "Step4FileList",
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 9F),
+                Margin = new Padding(0, 8, 0, 0),
+                Visible = true,
+                BorderStyle = BorderStyle.FixedSingle,
+                SelectionMode = SelectionMode.None,
+                IntegralHeight = true
+            };
+            root.Controls.Add(fileList);
+        }
+
+        fileList.Items.Clear();
+        var fileEntries = _installPaths
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(path => Path.GetRelativePath(_selectedModPayloadPath, path).Replace('\\', '/'))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var item in fileEntries)
+        {
+            if (_step4FileProgress.TryGetValue(item, out var percentages) && percentages.Count > 0)
+            {
+                var latest = percentages[^1];
+                if (latest >= 100)
+                {
+                    fileList.Items.Add(item);
+                    continue;
+                }
+
+                fileList.Items.Add($"{item} ({string.Join(" ", percentages.Select(value => $"{value}%"))})");
+                continue;
+            }
+
+            fileList.Items.Add(item);
+        }
+
+        fileList.Visible = fileEntries.Count > 0;
+        fileList.Height = fileEntries.Count > 0 ? 210 : 0;
+
+        root.SuspendLayout();
         root.Visible = true;
         root.Height = 0;
-
-        var contentPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0), Margin = new Padding(0), BackColor = Color.White };
-
-        if (hasReadme && hasImages)
-        {
-            var availableHeight = Math.Max(180, root.ClientSize.Height - 40);
-            var readmePanelHeight = Math.Clamp(availableHeight - 160, 180, Math.Max(180, availableHeight));
-
-            var readmePanel = new Panel { Dock = DockStyle.Bottom, Height = readmePanelHeight, Padding = new Padding(0), Margin = new Padding(0, 0, 0, 8) };
-            var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath, readmePanelHeight);
-            readmeBox.Dock = DockStyle.Fill;
-            readmePanel.Controls.Add(readmeBox);
-
-            var imagePanel = CreateStep4ImagePanel(imageFiles);
-            imagePanel.Dock = DockStyle.Fill;
-            contentPanel.Controls.Add(imagePanel);
-            contentPanel.Controls.Add(readmePanel);
-            imagePanel.BringToFront();
-            readmePanel.BringToFront();
-        }
-        else if (hasReadme)
-        {
-            var readmePanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0) };
-            var readmeBox = CreateStep4ReadmeBox(_selectedReadmePath);
-            readmeBox.Dock = DockStyle.Fill;
-            readmePanel.Controls.Add(readmeBox);
-            contentPanel.Controls.Add(readmePanel);
-        }
-        else
-        {
-            var imagePanel = CreateStep4ImagePanel(imageFiles);
-            imagePanel.Dock = DockStyle.Fill;
-            contentPanel.Controls.Add(imagePanel);
-        }
-
-        root.Controls.Add(contentPanel);
-        contentPanel.BringToFront();
         root.ResumeLayout(true);
         panel.PerformLayout();
     }
@@ -1439,14 +1446,37 @@ public partial class MainForm : Form
             Tag = imagePath
         };
 
-        box.Click += (_, _) => OpenImageViewerFromPictureBox(box, items, imagePath);
-        box.MouseUp += (_, e) =>
+        void OpenFromRightClick(object? sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button != MouseButtons.Right)
             {
-                OpenImageViewerFromPictureBox(box, items, imagePath);
+                return;
             }
-        };
+
+            if (sender is Control source && !ReferenceEquals(source, box))
+            {
+                var parent = box.Parent ?? source;
+                if (parent is not null)
+                {
+                    var mousePosition = parent.PointToClient(Control.MousePosition);
+                    if (!box.Bounds.Contains(mousePosition))
+                    {
+                        return;
+                    }
+                }
+            }
+
+            OpenImageViewerFromPictureBox(box, items, imagePath);
+        }
+
+        box.Click += (_, _) => OpenImageViewerFromPictureBox(box, items, imagePath);
+        box.MouseUp += OpenFromRightClick;
+
+        if (box.Parent != null)
+        {
+            box.Parent.MouseUp += OpenFromRightClick;
+        }
+
         return box;
     }
 
@@ -1972,7 +2002,7 @@ public partial class MainForm : Form
             .ToList();
 
         var hasMeaningfulCategories = categories.Count > 1;
-        Debug.WriteLine($"[Step5] categories={categories.Count}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}; meaningful={hasMeaningfulCategories}");
+        Debug.WriteLine($"[Step5] detectedAssets={assets.Count}; categories={categories.Count}; categoryList={string.Join(" | ", categories)}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}; meaningful={hasMeaningfulCategories}");
 
         if (categoryFilter != null)
         {
@@ -2056,6 +2086,8 @@ public partial class MainForm : Form
                 .ThenBy(asset => string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id, StringComparer.OrdinalIgnoreCase)
                 .ToList();
         }
+
+        Debug.WriteLine($"[Step5] finalVisibleAssets={visibleAssets.Count}; filter={_step5CategoryFilter}; sort={_step5SortMode}");
 
         var availableGalleryWidth = gallery.ClientSize.Width > 0
             ? gallery.ClientSize.Width
@@ -2876,6 +2908,8 @@ public partial class MainForm : Form
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
         var total = files.Count;
+        _step4FileProgress.Clear();
+
         for (var i = 0; i < files.Count; i++)
         {
             var file = files[i];
@@ -2884,24 +2918,47 @@ public partial class MainForm : Form
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             File.Copy(file, destination, true);
 
+            var percent = Math.Min(100, (int)((i + 1) * 100d / Math.Max(1, total)));
+            if (!_step4FileProgress.TryGetValue(relative, out var values))
+            {
+                values = new List<int>();
+                _step4FileProgress[relative] = values;
+            }
+
+            if (!values.Contains(percent))
+            {
+                values.Add(percent);
+            }
+
             if (_wizardPanels.TryGetValue(WizardStep.Step4, out var panel))
             {
-                foreach (var control in panel.Controls)
+                var progressPanel = panel.Controls.OfType<InstallProgressPanel>().FirstOrDefault();
+                if (progressPanel != null)
                 {
-                    if (control is ProgressBar pb)
-                    {
-                        pb.Value = Math.Min(100, (int)((i + 1) * 100d / Math.Max(1, total)));
-                    }
+                    progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + _selectedModName + " - " + percent + "%");
+                    progressPanel.UpdateProgress(percent, Path.GetFileName(file));
+                }
 
-                    if (control is Label statusLabel && statusLabel.Name == "ProgressStatus")
+                var root = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+                var listBox = root?.Controls.OfType<ListBox>().FirstOrDefault(control => control.Name == "Step4FileList");
+                if (listBox != null)
+                {
+                    listBox.Items.Clear();
+                    foreach (var item in files.Select(path => Path.GetRelativePath(sourceDir, path).Replace('\\', '/')).Distinct(StringComparer.OrdinalIgnoreCase))
                     {
-                        statusLabel.Text = _localizationService.GetString("Installing", "Installing") + " " + _selectedModName + " - " + Math.Min(100, (int)((i + 1) * 100d / Math.Max(1, total))) + "%";
-                    }
-
-                    if (control is ListBox listBox)
-                    {
-                        listBox.Items.Clear();
-                        foreach (var item in files.Select(path => Path.GetRelativePath(sourceDir, path)))
+                        if (_step4FileProgress.TryGetValue(item, out var statusValues) && statusValues.Count > 0)
+                        {
+                            var latest = statusValues[^1];
+                            if (latest >= 100)
+                            {
+                                listBox.Items.Add(item);
+                            }
+                            else
+                            {
+                                listBox.Items.Add($"{item} ({string.Join(" ", statusValues.Select(value => $"{value}%"))})");
+                            }
+                        }
+                        else
                         {
                             listBox.Items.Add(item);
                         }
@@ -3562,7 +3619,7 @@ public partial class MainForm : Form
 
         Directory.CreateDirectory(dslRoot);
         await ModPackageService.CopyDirectoryAsync(packageRoot, dslRoot, null, excludeMetadataFiles: true);
-        MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        GoToStep(WizardStep.Step6);
     }
 
     private async Task InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, ModManifest manifest)
@@ -3673,9 +3730,21 @@ public partial class MainForm : Form
             }
         }
 
-        var progressForm = new InstallProgressForm(_localizationService, modName);
-        progressForm.Show(this);
-        progressForm.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName);
+        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var step4RootPanel)
+            ? step4RootPanel
+            : null;
+        var previewRoot = step4Panel?.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+        var progressPanel = new InstallProgressPanel(_localizationService, modName);
+        progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName);
+
+        if (previewRoot != null)
+        {
+            previewRoot.Controls.Clear();
+            previewRoot.Controls.Add(progressPanel);
+            progressPanel.Dock = DockStyle.Fill;
+            progressPanel.BringToFront();
+        }
+
         try
         {
             var records = new List<ReplaceInstallationRecord>();
@@ -3717,7 +3786,7 @@ public partial class MainForm : Form
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
                 File.Copy(sourcePath, destinationPath, true);
                 var percent = (int)((index + 1) * 100d / Math.Max(1, packageFiles.Count));
-                progressForm.UpdateProgress(percent, sourcePath);
+                progressPanel.UpdateProgress(percent, sourcePath);
                 await Task.Yield();
             }
 
@@ -3735,18 +3804,22 @@ public partial class MainForm : Form
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
             }
 
-            progressForm.Complete();
-            MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            progressPanel.Complete();
+            GoToStep(WizardStep.Step6);
             RefreshModList();
         }
         catch (Exception ex)
         {
-            progressForm.Fail();
+            progressPanel.Fail();
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
-            progressForm.Close();
+            if (previewRoot != null && progressPanel.Parent == previewRoot)
+            {
+                previewRoot.Controls.Remove(progressPanel);
+                progressPanel.Dispose();
+            }
         }
     }
 
@@ -3828,9 +3901,20 @@ public partial class MainForm : Form
             }
         }
 
-        var progressForm = new InstallProgressForm(_localizationService, modName);
-        progressForm.Show(this);
-        progressForm.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName + " (Replacing)" );
+        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var step4RootPanel)
+            ? step4RootPanel
+            : null;
+        var previewRoot = step4Panel?.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+        var progressPanel = new InstallProgressPanel(_localizationService, modName);
+        progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName + " (Replacing)");
+
+        if (previewRoot != null)
+        {
+            previewRoot.Controls.Clear();
+            previewRoot.Controls.Add(progressPanel);
+            progressPanel.Dock = DockStyle.Fill;
+            progressPanel.BringToFront();
+        }
 
         var records = new List<ReplaceInstallationRecord>();
 
@@ -3878,21 +3962,25 @@ public partial class MainForm : Form
                 ModPackageService.RecordReplacementInstallation(record);
 
                 var percent = (int)((i + 1) * 100d / Math.Max(1, filesToReplace.Count));
-                progressForm.UpdateProgress(percent, sourceFile);
+                progressPanel.UpdateProgress(percent, sourceFile);
                 await Task.Delay(30);
             }
 
-            progressForm.Complete();
-            MessageBox.Show(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            progressPanel.Complete();
+            GoToStep(WizardStep.Step6);
         }
         catch (Exception ex)
         {
-            progressForm.Fail();
+            progressPanel.Fail();
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
-            progressForm.Close();
+            if (previewRoot != null && progressPanel.Parent == previewRoot)
+            {
+                previewRoot.Controls.Remove(progressPanel);
+                progressPanel.Dispose();
+            }
         }
     }
 
@@ -4149,6 +4237,62 @@ public partial class MainForm : Form
         ApplyDirectionalState(this, _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian);
     }
 
+    private void RefreshLocalizedTextForControl(Control control)
+    {
+        if (control == null || control.IsDisposed)
+        {
+            return;
+        }
+
+        if (control is Label label)
+        {
+            switch (label.Name)
+            {
+                case "ProfileSummary":
+                    label.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+                    return;
+                case "AssetStepTitle":
+                    label.Text = GetReplacementTitleForType(GetCurrentStep5AssetType());
+                    return;
+                case "AssetCategoryLabel":
+                    label.Text = _localizationService.GetString("AssetCategory", "Category");
+                    return;
+                case "AssetColumnsLabel":
+                    label.Text = _localizationService.GetString("AssetColumns", "Columns");
+                    return;
+                case "AssetSortLabel":
+                    label.Text = _localizationService.GetString("AssetSort", "Sort");
+                    return;
+                case "Step4LoadingText":
+                    label.Text = GetStep4LoadingText(GetCurrentStep5AssetType());
+                    return;
+            }
+        }
+        else if (control is Button button)
+        {
+            switch (button.Name)
+            {
+                case "NextActionButton":
+                    button.Text = _localizationService.GetString("Next", "Next");
+                    return;
+                case "InstallActionButton":
+                    button.Text = _localizationService.GetString("InstallMod", "Install Mod");
+                    return;
+                case "ContinueButton":
+                    button.Text = _localizationService.GetString("Continue", "Continue");
+                    return;
+                case "Step4ReadmeButton":
+                    button.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+                    return;
+            }
+        }
+
+        foreach (Control child in control.Controls)
+        {
+            RefreshLocalizedTextForControl(child);
+        }
+    }
+
     private void RebuildWizardPanels()
     {
         if (_wizardHost == null)
@@ -4235,43 +4379,9 @@ public partial class MainForm : Form
         ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
         ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
 
-        foreach (var panel in _wizardPanels.Values.Where(p => p != null && !p.IsDisposed).ToList())
+        foreach (var root in new Control[] { this, MainPanel, _sidebarPanel, _wizardHost }.Where(control => control != null && !control.IsDisposed).ToList())
         {
-            foreach (var control in panel.Controls.Cast<Control>().ToList())
-            {
-                if (control is Label label && label.Name == "ProfileSummary")
-                {
-                    label.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
-                }
-                else if (control is Label assetTitle && assetTitle.Name == "AssetStepTitle")
-                {
-                    assetTitle.Text = GetReplacementTitleForType(GetCurrentStep5AssetType());
-                }
-                else if (control is Label assetCategory && assetCategory.Name == "AssetCategoryLabel")
-                {
-                    assetCategory.Text = _localizationService.GetString("AssetCategory", "Category");
-                }
-                else if (control is Label assetColumnsLabel && assetColumnsLabel.Name == "AssetColumnsLabel")
-                {
-                    assetColumnsLabel.Text = _localizationService.GetString("AssetColumns", "Columns");
-                }
-                else if (control is Label assetSortLabel && assetSortLabel.Name == "AssetSortLabel")
-                {
-                    assetSortLabel.Text = _localizationService.GetString("AssetSort", "Sort");
-                }
-                else if (control is Button button && button.Name == "NextActionButton")
-                {
-                    button.Text = _localizationService.GetString("Next", "Next");
-                }
-                else if (control is Button button2 && button2.Name == "InstallActionButton")
-                {
-                    button2.Text = _localizationService.GetString("InstallMod", "Install Mod");
-                }
-                else if (control is Button button3 && button3.Name == "ContinueButton")
-                {
-                    button3.Text = _localizationService.GetString("Continue", "Continue");
-                }
-            }
+            RefreshLocalizedTextForControl(root);
         }
 
         if (_currentStep == WizardStep.Step5)

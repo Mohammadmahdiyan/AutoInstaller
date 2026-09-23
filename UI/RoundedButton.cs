@@ -52,7 +52,11 @@ public class RoundedButton : Button
         };
 
         Resize += (_, _) => UpdateRoundedRegion();
+        SizeChanged += (_, _) => UpdateRoundedRegion();
+        Layout += (_, _) => UpdateRoundedRegion();
+        ParentChanged += (_, _) => UpdateRoundedRegion();
         HandleCreated += (_, _) => UpdateRoundedRegion();
+        VisibleChanged += (_, _) => UpdateRoundedRegion();
     }
 
     protected override void OnPaint(PaintEventArgs e)
@@ -168,16 +172,29 @@ public class RoundedButton : Button
         UpdateRoundedRegion();
     }
 
+    protected override void OnLayout(LayoutEventArgs levent)
+    {
+        base.OnLayout(levent);
+        UpdateRoundedRegion();
+    }
+
     private void UpdateRoundedRegion()
     {
-        if (Width <= 0 || Height <= 0)
+        if (Width <= 0 || Height <= 0 || IsDisposed)
         {
             return;
         }
 
-        var bounds = new Rectangle(1, 1, Width - 2, Height - 2);
+        var bounds = new Rectangle(0, 0, Width, Height);
         var rounded = GetRoundedRectangle(bounds, 12);
+        if (Region != null)
+        {
+            Region.Dispose();
+        }
+
         Region = new Region(rounded);
+        Region.MakeEmpty();
+        Region.Union(rounded);
     }
 
     private static GraphicsPath GetRoundedRectangle(Rectangle rect, int radius)
