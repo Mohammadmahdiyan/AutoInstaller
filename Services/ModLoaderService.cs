@@ -126,6 +126,48 @@ public class ModLoaderService
         SaveInstallationManifest(manifestPath, manifest);
     }
 
+    public static bool RemoveInstalledRecord(string modName, string? installedDestination = null)
+    {
+        var normalizedName = ModPackageService.NormalizeDisplayName(modName);
+        var records = LoadInstalledRecords();
+        var removed = records.RemoveAll(record =>
+            string.Equals(record.ModName, normalizedName, StringComparison.OrdinalIgnoreCase)
+            || (!string.IsNullOrWhiteSpace(installedDestination)
+                && string.Equals(record.InstalledDestination, installedDestination, StringComparison.OrdinalIgnoreCase))) > 0;
+
+        if (removed)
+        {
+            SaveInstalledRecords(records);
+        }
+
+        return removed;
+    }
+
+    public static bool TryUninstallInstalledMod(string modName, string? installedDestination = null, string? gamePath = null, string modType = "putinmodloader")
+    {
+        var normalizedName = ModPackageService.NormalizeDisplayName(modName);
+        var destination = !string.IsNullOrWhiteSpace(installedDestination)
+            ? installedDestination
+            : !string.IsNullOrWhiteSpace(gamePath)
+                ? Path.Combine(GameService.GetModLoaderFolder(gamePath), normalizedName)
+                : string.Empty;
+
+        var removedRecord = RemoveInstalledRecord(normalizedName, destination);
+
+        if (!string.IsNullOrWhiteSpace(destination) && Directory.Exists(destination))
+        {
+            Directory.Delete(destination, true);
+            removedRecord = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(gamePath))
+        {
+            TryUninstallByModId(normalizedName, modType, destination, gamePath);
+        }
+
+        return removedRecord || (!string.IsNullOrWhiteSpace(destination) && !Directory.Exists(destination));
+    }
+
     public static bool TryUninstallByModId(string modId, string modType, string? installedDestination = null, string? gamePath = null)
     {
         if (string.IsNullOrWhiteSpace(modId))
@@ -146,6 +188,7 @@ public class ModLoaderService
             if (!string.IsNullOrWhiteSpace(installedDestination) && Directory.Exists(installedDestination))
             {
                 Directory.Delete(installedDestination, true);
+                RemoveInstalledRecord(modId, installedDestination);
                 return true;
             }
 

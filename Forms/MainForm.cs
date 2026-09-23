@@ -3316,12 +3316,13 @@ public partial class MainForm : Form
 
         foreach (var mod in mods)
         {
-            var card = new Panel { Width = 260, Height = 250, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(10), Margin = new Padding(10) };
+            var card = new Panel { Width = 260, Height = 270, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(10), Margin = new Padding(10) };
             var preview = new PictureBox { Width = 220, Height = 110, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle };
             var name = new Label { Text = mod.Name, AutoSize = true, Font = new Font("Segoe UI", 12F, FontStyle.Bold) };
             var status = new Label { Text = mod.Status, AutoSize = true, Font = new Font("Segoe UI", 9.5F) };
             var path = new Label { Text = mod.FolderPath, AutoSize = true, MaximumSize = new Size(220, 60), Font = new Font("Segoe UI", 8.5F) };
             var readme = new Button { Text = _localizationService.GetString("ViewReadme", "View README"), Width = 120, Height = 32, Visible = !string.IsNullOrWhiteSpace(mod.ReadmePath) };
+            var uninstall = new Button { Text = _localizationService.GetString("UninstallMod", "Uninstall"), Width = 90, Height = 32 };
 
             if (File.Exists(mod.PreviewPath))
             {
@@ -3336,16 +3337,35 @@ public partial class MainForm : Form
                 }
             };
 
+            uninstall.Click += (_, _) =>
+            {
+                if (MessageBox.Show(string.Format(_localizationService.GetString("ConfirmUninstallMod", "Are you sure you want to uninstall '{0}'?"), mod.Name), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                var success = ModLoaderService.TryUninstallInstalledMod(mod.Name, mod.FolderPath, gamePath, "putinmodloader");
+                if (!success)
+                {
+                    MessageBox.Show(_localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                RefreshModList();
+            };
+
             card.Controls.Add(preview);
             card.Controls.Add(name);
             card.Controls.Add(status);
             card.Controls.Add(path);
             card.Controls.Add(readme);
+            card.Controls.Add(uninstall);
             preview.Location = new Point(10, 10);
             name.Location = new Point(10, 128);
             status.Location = new Point(10, 158);
             path.Location = new Point(10, 180);
             readme.Location = new Point(10, 210);
+            uninstall.Location = new Point(140, 210);
             ModLoaderFlowPanel.Controls.Add(card);
         }
     }
