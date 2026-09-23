@@ -26,12 +26,14 @@ public partial class MainForm : Form
     private ComboBox _sidebarThemeComboBox = null!;
     private Button _sidebarReadmeButton = null!;
     private TextBox _sidebarReadmeTextBox = null!;
+    private TableLayoutPanel _sidebarStep3GalleryPanel = null!;
     private Panel _sidebarSelectedModelPanel = null!;
     private PictureBox _sidebarSourceModelImage = null!;
     private PictureBox _sidebarSelectedAssetImage = null!;
     private Label _sidebarSelectedModelArrowLabel = null!;
     private Label _sidebarSelectedAssetNameLabel = null!;
     private Label _sidebarSelectedAssetIdLabel = null!;
+    private TableLayoutPanel _sidebarStack = null!;
     private PictureBox _sidebarStep4Image = null!;
     private Panel _sidebarImageNavPanel = null!;
     private Button _sidebarImagePrevButton = null!;
@@ -487,26 +489,30 @@ public partial class MainForm : Form
             BackColor = Color.Transparent
         };
 
-        var stack = new TableLayoutPanel
+        _sidebarStack = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 9,
+            RowCount = 13,
             AutoSize = false,
             Padding = new Padding(0),
             Margin = new Padding(0),
             BackColor = Color.Transparent
         };
 
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _sidebarStack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
         _sidebarPreviousButton = new Button { Text = _localizationService.GetString("Previous", "Previous"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
         _sidebarNextButton = new Button { Text = _localizationService.GetString("Next", "Next"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
@@ -559,6 +565,17 @@ public partial class MainForm : Form
         selectedModelLayout.Controls.Add(_sidebarSelectedAssetIdLabel, 0, 4);
 
         _sidebarSelectedModelPanel.Controls.Add(selectedModelLayout);
+        _sidebarStep3GalleryPanel = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 1,
+            Visible = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent,
+            CellBorderStyle = TableLayoutPanelCellBorderStyle.None
+        };
         _sidebarStep4Image = new PictureBox { Width = 190, Height = 110, Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
         _sidebarImageNavPanel = new Panel { Dock = DockStyle.Fill, Visible = false, Height = 38, Margin = new Padding(0, 0, 0, 8), BackColor = Color.Transparent };
         _sidebarImagePrevButton = new Button { Name = "SidebarImagePrevButton", Text = "◀", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 8, 0) };
@@ -567,7 +584,11 @@ public partial class MainForm : Form
         _sidebarImageNextButton.FlatAppearance.BorderSize = 0;
         _sidebarImagePrevButton.Click += (_, _) =>
         {
-            if (_currentStep == WizardStep.Step4)
+            if (_currentStep == WizardStep.Step3)
+            {
+                ShowNextStep4Image(false);
+            }
+            else if (_currentStep == WizardStep.Step4)
             {
                 ShowNextStep4Image(false);
             }
@@ -578,7 +599,11 @@ public partial class MainForm : Form
         };
         _sidebarImageNextButton.Click += (_, _) =>
         {
-            if (_currentStep == WizardStep.Step4)
+            if (_currentStep == WizardStep.Step3)
+            {
+                ShowNextStep4Image(false);
+            }
+            else if (_currentStep == WizardStep.Step4)
             {
                 ShowNextStep4Image(false);
             }
@@ -622,20 +647,21 @@ public partial class MainForm : Form
         _sidebarLanguageComboBox.SelectedIndexChanged += LanguageComboBox_SelectedIndexChanged;
         _sidebarThemeComboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
 
-        stack.Controls.Add(_sidebarPreviousButton, 0, 0);
-        stack.Controls.Add(_sidebarNextButton, 0, 1);
-        stack.Controls.Add(new Label { Text = _localizationService.GetString("Language", "Language"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 2);
-        stack.Controls.Add(_sidebarLanguageComboBox, 0, 3);
-        stack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
-        stack.Controls.Add(_sidebarThemeComboBox, 0, 5);
-        stack.Controls.Add(_sidebarDetectedModLabel, 0, 6);
-        stack.Controls.Add(_sidebarSelectedModelPanel, 0, 7);
-        stack.Controls.Add(_sidebarStep4Image, 0, 8);
-        stack.Controls.Add(_sidebarImageNavPanel, 0, 9);
-        stack.Controls.Add(_sidebarReadmeTextBox, 0, 10);
-        stack.Controls.Add(_sidebarReadmeButton, 0, 11);
+        _sidebarStack.Controls.Add(_sidebarPreviousButton, 0, 0);
+        _sidebarStack.Controls.Add(_sidebarNextButton, 0, 1);
+        _sidebarStack.Controls.Add(new Label { Text = _localizationService.GetString("Language", "Language"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 2);
+        _sidebarStack.Controls.Add(_sidebarLanguageComboBox, 0, 3);
+        _sidebarStack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
+        _sidebarStack.Controls.Add(_sidebarThemeComboBox, 0, 5);
+        _sidebarStack.Controls.Add(_sidebarDetectedModLabel, 0, 6);
+        _sidebarStack.Controls.Add(_sidebarSelectedModelPanel, 0, 7);
+        _sidebarStack.Controls.Add(_sidebarStep3GalleryPanel, 0, 8);
+        _sidebarStack.Controls.Add(_sidebarStep4Image, 0, 9);
+        _sidebarStack.Controls.Add(_sidebarImageNavPanel, 0, 10);
+        _sidebarStack.Controls.Add(_sidebarReadmeTextBox, 0, 11);
+        _sidebarStack.Controls.Add(_sidebarReadmeButton, 0, 12);
 
-        _sidebarPanel.Controls.Add(stack);
+        _sidebarPanel.Controls.Add(_sidebarStack);
         MainPanel.Controls.Add(_sidebarPanel);
         _sidebarPanel.BringToFront();
 
@@ -4762,7 +4788,7 @@ public partial class MainForm : Form
 
     private int GetSidebarReadmeHeight(string? readmeText, bool hasVisibleImage)
     {
-        var availableWidth = Math.Max(140, _sidebarReadmeTextBox.Width - 18);
+        var availableWidth = Math.Max(150, _sidebarPanel.Width - 36);
         var normalizedText = string.IsNullOrWhiteSpace(readmeText) ? "README" : readmeText;
 
         using var graphics = _sidebarReadmeTextBox.CreateGraphics();
@@ -4773,17 +4799,26 @@ public partial class MainForm : Form
             new Size(availableWidth, int.MaxValue),
             TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding);
 
-        var requiredHeight = size.Height + 16;
-        var availableHeight = hasVisibleImage ? 190 : 260;
-        var targetHeight = Math.Clamp(requiredHeight, 80, availableHeight);
+        var remainingHeight = Math.Max(150, _sidebarPanel.Height - 280);
+        var imageSpace = hasVisibleImage ? Math.Max(90, remainingHeight / 2) : 0;
+        var maxAllowed = Math.Max(90, remainingHeight - imageSpace);
+        var requiredHeight = size.Height + 18;
+        var targetHeight = Math.Clamp(requiredHeight, 80, maxAllowed);
 
-        _sidebarReadmeTextBox.ScrollBars = requiredHeight > availableHeight ? ScrollBars.Vertical : ScrollBars.None;
+        _sidebarReadmeTextBox.ScrollBars = requiredHeight > maxAllowed ? ScrollBars.Vertical : ScrollBars.None;
         return targetHeight;
     }
 
     private int GetSidebarImageHeight(bool hasVisibleReadme)
     {
-        return hasVisibleReadme ? 130 : 180;
+        var remainingHeight = Math.Max(150, _sidebarPanel.Height - 280);
+        if (hasVisibleReadme)
+        {
+            var readmeHeight = Math.Min(Math.Max(90, remainingHeight / 2), 190);
+            return Math.Max(120, remainingHeight - readmeHeight);
+        }
+
+        return Math.Max(140, remainingHeight);
     }
 
     private void UpdateSidebarState()
@@ -4804,19 +4839,42 @@ public partial class MainForm : Form
         _sidebarPreviousButton.Enabled = false;
         _sidebarNextButton.Enabled = false;
 
+        var isStep3Preview = _currentStep == WizardStep.Step3;
+        var isStep4Preview = _currentStep == WizardStep.Step4;
+        var isStep5Preview = _currentStep == WizardStep.Step5;
+
         var hasSidebarReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath)
             && File.Exists(_selectedReadmePath);
-        var sidebarImageFiles = _currentStep == WizardStep.Step4
+        var sidebarImageFiles = (isStep3Preview || isStep4Preview)
             ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
             : GetStep5SidebarImageFiles();
         var hasSidebarImage = sidebarImageFiles.Count > 0;
-        var hasStep5ModImage = _currentStep == WizardStep.Step5
+        var hasStep5ModImage = isStep5Preview
             && !string.IsNullOrWhiteSpace(_selectedModPayloadPath)
             && FindImageFiles(_selectedModPayloadPath).Any(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path));
         var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
-        var shouldDisplaySidebarReadme = hasSidebarReadme && !(hasStep5ModImage && _currentStep == WizardStep.Step5);
-        var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (_currentStep == WizardStep.Step4 || _currentStep == WizardStep.Step5);
-        var hasSelectedAssetModel = _currentStep == WizardStep.Step5 && _selectedAssetForInstall != null;
+        var shouldDisplaySidebarReadme = hasSidebarReadme && !(hasStep5ModImage && isStep5Preview);
+        var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (isStep3Preview || isStep4Preview || isStep5Preview);
+        var hasSelectedAssetModel = isStep5Preview && _selectedAssetForInstall != null;
+
+        if (_sidebarStack != null && _sidebarStack.Controls.Contains(_sidebarReadmeTextBox) && _sidebarStack.Controls.Contains(_sidebarStep4Image))
+        {
+            if (isStep3Preview)
+            {
+                _sidebarStack.Controls.SetChildIndex(_sidebarStep3GalleryPanel, 8);
+                _sidebarStack.Controls.SetChildIndex(_sidebarStep4Image, 9);
+                _sidebarStack.Controls.SetChildIndex(_sidebarImageNavPanel, 10);
+                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeTextBox, 11);
+                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeButton, 12);
+            }
+            else
+            {
+                _sidebarStack.Controls.SetChildIndex(_sidebarStep4Image, 8);
+                _sidebarStack.Controls.SetChildIndex(_sidebarImageNavPanel, 9);
+                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeTextBox, 10);
+                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeButton, 11);
+            }
+        }
 
         _sidebarDetectedModLabel.Visible = hasDetectedMod;
         _sidebarDetectedModLabel.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
@@ -4903,21 +4961,95 @@ public partial class MainForm : Form
         _sidebarReadmeTextBox.Text = string.IsNullOrWhiteSpace(readmeText)
             ? _localizationService.GetString("ReadmeFallback", "README")
             : readmeText;
-        _sidebarReadmeTextBox.Height = GetSidebarReadmeHeight(_sidebarReadmeTextBox.Text, hasSidebarImage);
+        _sidebarReadmeTextBox.Height = shouldDisplaySidebarReadme ? GetSidebarReadmeHeight(_sidebarReadmeTextBox.Text, hasSidebarImage) : 0;
         _sidebarReadmeTextBox.Margin = new Padding(0, 0, 0, hasSidebarImage ? 8 : 10);
 
-        _sidebarStep4Image.Visible = hasSidebarImage;
-        _sidebarStep4Image.Enabled = hasSidebarImage;
-        _sidebarStep4Image.Height = GetSidebarImageHeight(hasSidebarReadme) + (sidebarImageFiles.Count > 1 ? 10 : 0);
+        _sidebarStep3GalleryPanel.Visible = isStep3Preview && hasSidebarImage;
+        _sidebarStep3GalleryPanel.Controls.Clear();
+        _sidebarStep3GalleryPanel.ColumnStyles.Clear();
+        _sidebarStep3GalleryPanel.RowStyles.Clear();
+        _sidebarStep3GalleryPanel.ColumnCount = 1;
+        _sidebarStep3GalleryPanel.RowCount = 1;
+
+        if (isStep3Preview && hasSidebarImage)
+        {
+            var imageCount = sidebarImageFiles.Count;
+            var visibleImages = imageCount > 4
+                ? sidebarImageFiles
+                    .Skip(_step4ImageIndex % Math.Max(1, imageCount))
+                    .Concat(sidebarImageFiles.Take(_step4ImageIndex % Math.Max(1, imageCount)))
+                    .Take(4)
+                    .ToList()
+                : sidebarImageFiles;
+
+            var columnCount = imageCount <= 1 ? 1 : imageCount <= 2 ? 1 : 2;
+            var rowCount = imageCount <= 1 ? 1 : imageCount <= 2 ? 2 : 2;
+            _sidebarStep3GalleryPanel.ColumnCount = columnCount;
+            _sidebarStep3GalleryPanel.RowCount = rowCount;
+
+            for (var c = 0; c < columnCount; c++)
+            {
+                _sidebarStep3GalleryPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            }
+
+            for (var r = 0; r < rowCount; r++)
+            {
+                _sidebarStep3GalleryPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            }
+
+            for (var i = 0; i < visibleImages.Count; i++)
+            {
+                var imagePath = visibleImages[i];
+                var box = new PictureBox
+                {
+                    Dock = DockStyle.Fill,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.FromArgb(245, 247, 250),
+                    Margin = new Padding(0, 0, 4, 4),
+                    Image = TryLoadBitmap(imagePath),
+                    Visible = true
+                };
+
+                var rowIndex = i / columnCount;
+                var columnIndex = i % columnCount;
+                if (imageCount == 3 && i == 2)
+                {
+                    columnIndex = isRtl ? 0 : 1;
+                    rowIndex = 1;
+                }
+
+                _sidebarStep3GalleryPanel.Controls.Add(box, columnIndex, rowIndex);
+            }
+
+            _sidebarStep3GalleryPanel.Height = GetSidebarImageHeight(shouldDisplaySidebarReadme);
+            _sidebarStep3GalleryPanel.Margin = new Padding(0, 0, 0, shouldDisplaySidebarReadme ? 8 : 10);
+        }
+
+        _sidebarStep4Image.Visible = hasSidebarImage && !isStep3Preview;
+        _sidebarStep4Image.Enabled = hasSidebarImage && !isStep3Preview;
+        _sidebarStep4Image.Height = hasSidebarImage && !isStep3Preview ? GetSidebarImageHeight(hasSidebarReadme) + (sidebarImageFiles.Count > 1 ? 10 : 0) : 0;
         _sidebarStep4Image.Margin = new Padding(0, 0, 0, hasSidebarReadme ? 8 : 10);
 
-        _sidebarImageNavPanel.Visible = hasSidebarImage && sidebarImageFiles.Count > 1;
-        _sidebarImagePrevButton.Visible = hasSidebarImage && sidebarImageFiles.Count > 1;
-        _sidebarImageNextButton.Visible = hasSidebarImage && sidebarImageFiles.Count > 1;
-        _sidebarImagePrevButton.Enabled = hasSidebarImage && sidebarImageFiles.Count > 1;
-        _sidebarImageNextButton.Enabled = hasSidebarImage && sidebarImageFiles.Count > 1;
+        var shouldShowImageNavigation = hasSidebarImage && sidebarImageFiles.Count > 4 && !isStep3Preview;
+        _sidebarImageNavPanel.Visible = shouldShowImageNavigation;
+        _sidebarImagePrevButton.Visible = shouldShowImageNavigation;
+        _sidebarImageNextButton.Visible = shouldShowImageNavigation;
+        _sidebarImagePrevButton.Enabled = shouldShowImageNavigation;
+        _sidebarImageNextButton.Enabled = shouldShowImageNavigation;
 
-        if (_currentStep == WizardStep.Step4 && hasSidebarImage)
+        if (_currentStep == WizardStep.Step3 && hasSidebarImage)
+        {
+            _step4ImageTimer.Stop();
+            _step5ImageTimer.Stop();
+            _sidebarStep3GalleryPanel.Visible = true;
+            _sidebarImageNavPanel.Visible = sidebarImageFiles.Count > 4;
+            _sidebarImagePrevButton.Visible = sidebarImageFiles.Count > 4;
+            _sidebarImageNextButton.Visible = sidebarImageFiles.Count > 4;
+            _sidebarImagePrevButton.Enabled = sidebarImageFiles.Count > 4;
+            _sidebarImageNextButton.Enabled = sidebarImageFiles.Count > 4;
+        }
+        else if (_currentStep == WizardStep.Step4 && hasSidebarImage)
         {
             _step5ImageTimer.Stop();
             ShowNextStep4Image(true);
@@ -4937,6 +5069,7 @@ public partial class MainForm : Form
             _sidebarStep4Image.Image = null;
             _sidebarStep4Image.Visible = false;
             _sidebarImageNavPanel.Visible = false;
+            _sidebarStep3GalleryPanel.Visible = false;
         }
 
         switch (_currentStep)
