@@ -1,0 +1,52 @@
+1. میخام تایپ های 
+1.1. VehicleAndSkinAndWeapon
+1.2. VehiclesAndSkinsAndWeapons
+1.3. PutInModloader
+مد رو از داخل پوشه مد بخونه و عکس هارو هم نصب کنه 
+مثال 
+base mods address\Skins\football-Ronaldu\
+	config.json
+	Screenshot (95).png
+	Screenshot (96).png
+	hmybe.dff
+	hmybe.txd
+خروجی قابل انتظار
+game address\modloader\football Ronaldu\
+	Screenshot (95).png
+	Screenshot (96).png
+	hmybe.dff
+	hmybe.txd
+و در config.json
+```json
+{
+    "type": "VehicleAndSkinAndWeapon"
+}
+```
+اما باقی تایپ باید پوشه باشه و عکس نصب نکنه
+مثال 
+H:\Mods\Scripts\A1-MyReqFiles\
+	Essentials\ <= مد 
+		CLEO\
+		modloader\
+		CLEO.asi
+		modloader.asi
+		...
+	config.json
+	Essentials (Readme - EN).txt
+و در config.json
+```json
+{
+    "type": "PutInGameFolder"
+}
+```
+خروجی 
+game address\
+	CLEO\
+	modloader\
+	CLEO.asi
+	modloader.asi
+	...
+در دوحالت readme نصب نمیشه
+(نکته منظورم SavesAndMissions و MissionDSL نیست ولی توی اینا هم عکس نباید نصب بشه)
+2. میخام از فیلم و گیف هم پشتیبانی کنه برنامه (خیلی ساده هر جا عکس اوردیم فیلم هم میزاریم)
+اگر فیلم با صدا هم بود باید بدون صدا پخش بشه وقتی روش کلیک راست میشه اونجا یک دکمه برای با صدا کردن باید بزاری ولی اگه گیف بود دکمه نباشه
