@@ -2702,10 +2702,27 @@ public partial class MainForm : Form
                 }
 
                 GoToStep(WizardStep.Step4);
-                await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
-                await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
-                GoToStep(WizardStep.Step6);
-                return;
+                try
+                {
+                    await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
+                    await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
+                    GoToStep(WizardStep.Step6);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    var logPath = Path.Combine(AppContext.BaseDirectory, "mod-install-debug.log");
+                    try
+                    {
+                        File.AppendAllText(logPath, $"[{DateTime.Now:O}] Step5 install branch failed:{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}");
+                    }
+                    catch
+                    {
+                    }
+
+                    MessageBox.Show($"Installation failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}More details were written to:{Environment.NewLine}{logPath}", _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
@@ -3829,7 +3846,6 @@ public partial class MainForm : Form
             }
 
             progressPanel.Complete();
-            GoToStep(WizardStep.Step6);
             RefreshModList();
         }
         catch (Exception ex)
