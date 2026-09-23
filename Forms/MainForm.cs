@@ -1781,7 +1781,14 @@ public partial class MainForm : Form
         }
 
         var sourceModel = DetectSourceModelName(_selectedModPayloadPath);
-        return DetectAssetTypeByName(sourceModel);
+        var detectedType = DetectAssetTypeByName(sourceModel);
+        if (!string.IsNullOrWhiteSpace(detectedType))
+        {
+            return detectedType;
+        }
+
+        var fallbackAsset = _assetCatalogService.LoadAssets().FirstOrDefault();
+        return fallbackAsset?.AssetType ?? string.Empty;
     }
 
     private void PrepareDetectedAssetStep(string payloadPath, ModManifest? manifest)
@@ -1804,6 +1811,24 @@ public partial class MainForm : Form
         var detectedType = DetectAssetTypeByName(sourceModelName);
         if (string.IsNullOrWhiteSpace(detectedType))
         {
+            var fallbackAssets = _assetCatalogService.LoadAssets()
+                .OrderBy(asset => asset.AssetType, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            Debug.WriteLine($"[Step5] detectedType empty for '{sourceModelName}'; fallbackAssets={fallbackAssets.Count}");
+            if (fallbackAssets.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var asset in fallbackAssets)
+            {
+                _step5DetectedAssets.Add(asset);
+            }
+
+            _selectedAssetForInstall = _step5DetectedAssets.FirstOrDefault();
+            _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
             return;
         }
 
