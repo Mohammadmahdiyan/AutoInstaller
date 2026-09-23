@@ -2770,6 +2770,142 @@ public partial class MainForm : Form
         return false;
     }
 
+    private async Task<bool> EnsureRequiredPackagesBeforeInstallAsync()
+    {
+        var manifest = _selectedModManifest ?? ModPackageService.ResolveManifest(_selectedModPayloadPath);
+        if (manifest == null || !manifest.HasRequirements)
+        {
+            return true;
+        }
+
+        var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+
+        foreach (var requirement in manifest.GetRequirements())
+        {
+            if (RequirementEntryIsSatisfied(requirement, _selectedGamePath))
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(requirement.ReqAddress))
+            {
+                MessageBox.Show(
+                    "This mod requires files/folders that are missing from the game installation: " +
+                    string.Join(", ", requirement.FilesToCheck.Concat(requirement.FoldersToCheck)),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            var requiredPackagePath = ResolveRequirementPackagePath(requirement.ReqAddress, baseModsFolder);
+            if (string.IsNullOrWhiteSpace(requiredPackagePath) || !Directory.Exists(requiredPackagePath))
+            {
+                MessageBox.Show(
+                    "Required package was not found for this mod: " + requirement.ReqAddress,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            var installTargetRoot = GameService.GetModLoaderFolder(_selectedGamePath);
+            var targetPackageName = Path.GetFileName(requiredPackagePath);
+            var targetDirectory = Path.Combine(installTargetRoot, targetPackageName);
+            if (Directory.Exists(targetDirectory))
+            {
+                Directory.Delete(targetDirectory, true);
+            }
+
+            await CopyPayloadWithProgressAsync(requiredPackagePath, targetDirectory);
+            if (!RequirementEntryIsSatisfied(requirement, _selectedGamePath))
+            {
+                MessageBox.Show(
+                    "The required package for this mod was installed, but the expected files/folders are still missing.",
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool RequirementEntryIsSatisfied(ModRequirementEntry requirement, string gameFolder)
+    {
+        if (string.IsNullOrWhiteSpace(gameFolder) || !Directory.Exists(gameFolder))
+        {
+            return false;
+        }
+
+        foreach (var path in requirement.FilesToCheck)
+        {
+            var candidate = path;
+            if (!Path.IsPathRooted(candidate))
+            {
+                candidate = Path.Combine(gameFolder, candidate);
+            }
+
+            if (!File.Exists(candidate))
+            {
+                return false;
+            }
+        }
+
+        foreach (var path in requirement.FoldersToCheck)
+        {
+            var candidate = path;
+            if (!Path.IsPathRooted(candidate))
+            {
+                candidate = Path.Combine(gameFolder, candidate);
+            }
+
+            if (!Directory.Exists(candidate))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string? ResolveRequirementPackagePath(string reqAddress, string baseModsFolder)
+    {
+        if (string.IsNullOrWhiteSpace(reqAddress))
+        {
+            return null;
+        }
+
+        var trimmed = reqAddress.Trim();
+        if (Path.IsPathRooted(trimmed))
+        {
+            return Directory.Exists(trimmed) ? trimmed : null;
+        }
+
+        var direct = Path.Combine(baseModsFolder, trimmed);
+        if (Directory.Exists(direct))
+        {
+            return direct;
+        }
+
+        var relativeWithinFolder = Path.Combine(baseModsFolder, "Scripts", trimmed);
+        if (Directory.Exists(relativeWithinFolder))
+        {
+            return relativeWithinFolder;
+        }
+
+        var packageCandidate = Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles", trimmed);
+        if (Directory.Exists(packageCandidate))
+        {
+            return packageCandidate;
+        }
+
+        return Directory.Exists(trimmed) ? trimmed : null;
+    }
+
     private async Task InstallSelectedModAsync()
     {
         try
@@ -2783,6 +2919,11 @@ public partial class MainForm : Form
             if (string.IsNullOrWhiteSpace(_selectedModName) || string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
             {
                 MessageBox.Show(_localizationService.GetString("SelectModFirst", "Please select a valid mod folder first."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!await EnsureRequiredPackagesBeforeInstallAsync())
+            {
                 return;
             }
 

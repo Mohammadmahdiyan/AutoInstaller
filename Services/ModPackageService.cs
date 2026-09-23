@@ -169,12 +169,209 @@ public class ModPackageService
                 manifest.Type = typeProperty.GetString() ?? string.Empty;
             }
 
+            if (document.RootElement.TryGetProperty("require", out var requireProperty))
+            {
+                var requirement = ReadRequirementEntry(requireProperty);
+                if (requirement != null)
+                {
+                    manifest.Require = requirement;
+                }
+            }
+
+            if (document.RootElement.TryGetProperty("requires", out var requiresProperty))
+            {
+                var requirements = ReadRequirementEntries(requiresProperty);
+                if (requirements.Count > 0)
+                {
+                    manifest.Requires = requirements;
+                }
+            }
+
+            if (document.RootElement.TryGetProperty("conflictCleanup", out var conflictCleanupProperty))
+            {
+                var cleanup = ReadConflictCleanupEntry(conflictCleanupProperty);
+                if (cleanup != null)
+                {
+                    manifest.ConflictCleanup = cleanup;
+                }
+            }
+
             return manifest;
         }
         catch
         {
             return null;
         }
+    }
+
+    private static List<ModRequirementEntry> ReadRequirementEntries(JsonElement element)
+    {
+        if (element.ValueKind == JsonValueKind.Object)
+        {
+            var single = ReadRequirementEntry(element);
+            return single is null ? new List<ModRequirementEntry>() : new List<ModRequirementEntry> { single };
+        }
+
+        if (element.ValueKind != JsonValueKind.Array)
+        {
+            return new List<ModRequirementEntry>();
+        }
+
+        var list = new List<ModRequirementEntry>();
+        foreach (var item in element.EnumerateArray())
+        {
+            var requirement = ReadRequirementEntry(item);
+            if (requirement != null)
+            {
+                list.Add(requirement);
+            }
+        }
+
+        return list;
+    }
+
+    private static ModConflictCleanupEntry? ReadConflictCleanupEntry(JsonElement element)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var cleanup = new ModConflictCleanupEntry();
+
+        if (element.TryGetProperty("file", out var fileProperty))
+        {
+            cleanup.File = ReadStringValue(fileProperty);
+        }
+
+        if (element.TryGetProperty("folder", out var folderProperty))
+        {
+            cleanup.Folder = ReadStringValue(folderProperty);
+        }
+
+        if (element.TryGetProperty("files", out var filesProperty))
+        {
+            cleanup.Files = ReadStringCollection(filesProperty);
+        }
+
+        if (element.TryGetProperty("folders", out var foldersProperty))
+        {
+            cleanup.Folders = ReadStringCollection(foldersProperty);
+        }
+
+        if (element.TryGetProperty("replaceWith", out var replaceWithProperty))
+        {
+            cleanup.ReplaceWith = ReadStringValue(replaceWithProperty);
+        }
+
+        if (element.TryGetProperty("replacesWith", out var replacesWithProperty))
+        {
+            cleanup.ReplacesWith = ReadStringCollection(replacesWithProperty);
+        }
+
+        return cleanup.IsEmpty ? null : cleanup;
+    }
+
+    private static ModRequirementEntry? ReadRequirementEntry(JsonElement element)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var requirement = new ModRequirementEntry();
+
+        if (element.TryGetProperty("checkFile", out var checkFileProperty))
+        {
+            var value = ReadStringValue(checkFileProperty);
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                requirement.CheckFile = value;
+            }
+        }
+
+        if (element.TryGetProperty("checkFolder", out var checkFolderProperty))
+        {
+            var value = ReadStringValue(checkFolderProperty);
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                requirement.CheckFolder = value;
+            }
+        }
+
+        if (element.TryGetProperty("checkFiles", out var checkFilesProperty))
+        {
+            requirement.CheckFiles = ReadStringCollection(checkFilesProperty);
+        }
+
+        if (element.TryGetProperty("checkFolders", out var checkFoldersProperty))
+        {
+            requirement.CheckFolders = ReadStringCollection(checkFoldersProperty);
+        }
+
+        if (element.TryGetProperty("reqAddress", out var reqAddressProperty) && reqAddressProperty.ValueKind == JsonValueKind.String)
+        {
+            requirement.ReqAddress = reqAddressProperty.GetString();
+        }
+
+        if (element.TryGetProperty("reqPath", out var reqPathProperty) && reqPathProperty.ValueKind == JsonValueKind.String)
+        {
+            requirement.ReqAddress ??= reqPathProperty.GetString();
+        }
+
+        if (element.TryGetProperty("require", out var nestedRequireProperty))
+        {
+            var nested = ReadRequirementEntry(nestedRequireProperty);
+            if (nested != null)
+            {
+                requirement.CheckFile ??= nested.CheckFile;
+                requirement.CheckFolder ??= nested.CheckFolder;
+                requirement.CheckFiles = requirement.CheckFiles.Count > 0 ? requirement.CheckFiles : nested.CheckFiles;
+                requirement.CheckFolders = requirement.CheckFolders.Count > 0 ? requirement.CheckFolders : nested.CheckFolders;
+                requirement.ReqAddress ??= nested.ReqAddress;
+            }
+        }
+
+        return requirement.IsEmpty ? null : requirement;
+    }
+
+    private static string? ReadStringValue(JsonElement element)
+    {
+        if (element.ValueKind == JsonValueKind.String)
+        {
+            return element.GetString();
+        }
+
+        if (element.ValueKind == JsonValueKind.Array)
+        {
+            return element.EnumerateArray()
+                .Where(item => item.ValueKind == JsonValueKind.String)
+                .Select(item => item.GetString())
+                .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
+        }
+
+        return null;
+    }
+
+    private static List<string> ReadStringCollection(JsonElement element)
+    {
+        if (element.ValueKind == JsonValueKind.String)
+        {
+            var value = element.GetString();
+            return string.IsNullOrWhiteSpace(value) ? new List<string>() : new List<string> { value };
+        }
+
+        if (element.ValueKind != JsonValueKind.Array)
+        {
+            return new List<string>();
+        }
+
+        return element.EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.String)
+            .Select(item => item.GetString())
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private static string? GetManifestPath(string basePath)
