@@ -2410,7 +2410,172 @@ public partial class MainForm : Form
         gallery.Location = new Point(18, 190);
         gallery.Size = new Size(panel.Width - 36, panel.Height - 220);
         panel.AutoScroll = true;
+
+        var optionalHost = new FlowLayoutPanel
+        {
+            Name = "OptionalInstallHost",
+            AutoSize = true,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Visible = false,
+            BackColor = Color.Transparent
+        };
+        panel.Controls.Add(optionalHost);
+        optionalHost.Location = new Point(18, 130);
         return panel;
+    }
+
+    private async Task InstallOptionalPackageAsync(string packageRoot)
+    {
+        if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
+        {
+            return;
+        }
+
+        var payloadPath = ModPackageService.GetPayloadDirectory(packageRoot);
+        if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
+        {
+            payloadPath = packageRoot;
+        }
+
+        _selectedModName = ResolveDirectoryName(packageRoot);
+        _selectedModPayloadPath = payloadPath;
+        _selectedModPackageRoot = packageRoot;
+        _selectedModManifest = ModPackageService.ResolveManifest(packageRoot);
+        _selectedAssetForInstall = null;
+
+        await InstallSelectedModAsync();
+    }
+
+    private List<string> GetOptionalPackageRootsForCurrentInstall()
+    {
+        var roots = new List<string>();
+        var candidateRoots = new List<string>
+        {
+            !string.IsNullOrWhiteSpace(_selectedModPackageRoot) && Directory.Exists(_selectedModPackageRoot)
+                ? _selectedModPackageRoot
+                : string.Empty,
+            !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath)
+                ? _selectedModPayloadPath
+                : string.Empty,
+            !string.IsNullOrWhiteSpace(_selectedGamePath) && Directory.Exists(_selectedGamePath)
+                ? Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), _selectedModName)
+                : string.Empty
+        };
+
+        foreach (var root in candidateRoots.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
+            {
+                continue;
+            }
+
+            foreach (var folderName in new[] { "optional", "optionals" })
+            {
+                var optionalRoot = Path.Combine(root, folderName);
+                if (!Directory.Exists(optionalRoot))
+                {
+                    continue;
+                }
+
+                var childPackages = Directory.GetDirectories(optionalRoot, "*", SearchOption.TopDirectoryOnly)
+                    .Where(path => Directory.Exists(path))
+                    .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                if (childPackages.Count > 0)
+                {
+                    roots.AddRange(childPackages);
+                    continue;
+                }
+
+                roots.Add(optionalRoot);
+            }
+        }
+
+        return roots
+            .Where(path => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private void RefreshStep6OptionalActions()
+    {
+        if (!_wizardPanels.TryGetValue(WizardStep.Step6, out var panel) || panel.IsDisposed)
+        {
+            return;
+        }
+
+        var host = panel.Controls.OfType<FlowLayoutPanel>().FirstOrDefault(x => x.Name == "OptionalInstallHost");
+        if (host == null)
+        {
+            return;
+        }
+
+        host.Controls.Clear();
+        host.Visible = false;
+
+        var packages = GetOptionalPackageRootsForCurrentInstall();
+        if (packages.Count == 0)
+        {
+            return;
+        }
+
+        var tooltip = new ToolTip();
+        host.Visible = true;
+        host.Width = 420;
+        host.AutoSize = true;
+
+        if (packages.Count == 1)
+        {
+            var packageRoot = packages[0];
+            var button = new Button
+            {
+                Text = _localizationService.GetString("InstallOptionalMod", "Install optional mod"),
+                AutoSize = true,
+                Padding = new Padding(10, 6, 10, 6),
+                Margin = new Padding(0, 0, 0, 10)
+            };
+            var packageName = Path.GetFileName(packageRoot);
+            tooltip.SetToolTip(button, string.IsNullOrWhiteSpace(packageName) ? packageRoot : packageName);
+            button.Click += async (_, _) => await InstallOptionalPackageAsync(packageRoot);
+            host.Controls.Add(button);
+            return;
+        }
+
+        foreach (var packageRoot in packages)
+        {
+            var packageName = Path.GetFileName(packageRoot);
+            var row = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                Margin = new Padding(0, 0, 0, 6),
+                BackColor = Color.Transparent
+            };
+
+            var checkBox = new CheckBox
+            {
+                Text = packageName,
+                AutoSize = true,
+                Tag = packageRoot,
+                Margin = new Padding(0, 0, 8, 0)
+            };
+            var installButton = new Button
+            {
+                Text = _localizationService.GetString("Install", "Install"),
+                AutoSize = true,
+                Padding = new Padding(8, 3, 8, 3),
+                Tag = packageRoot
+            };
+
+            tooltip.SetToolTip(checkBox, packageRoot);
+            installButton.Click += async (_, _) => await InstallOptionalPackageAsync((string)installButton.Tag!);
+            row.Controls.Add(checkBox);
+            row.Controls.Add(installButton);
+            host.Controls.Add(row);
+        }
     }
 
     private void GoToStep(WizardStep step)
@@ -2460,13 +2625,15 @@ public partial class MainForm : Form
 
         if (step == WizardStep.Step6)
         {
-            _completionSecondsLeft = 6;
+            var hasOptionalPackages = GetOptionalPackageRootsForCurrentInstall().Count > 0;
+            _completionSecondsLeft = hasOptionalPackages ? 15 : 6;
             _completionTimerActive = true;
             _completionTimer.Start();
             if (_wizardPanels[WizardStep.Step6].Controls.OfType<Label>().FirstOrDefault(x => x.Name == "CountdownLabel") is { } countdown)
             {
-                countdown.Text = _localizationService.GetString("CompletedIn", "Completed") + " 6s";
+                countdown.Text = _localizationService.GetString("CompletedIn", "Completed") + " " + _completionSecondsLeft + "s";
             }
+            RefreshStep6OptionalActions();
         }
         else
         {
