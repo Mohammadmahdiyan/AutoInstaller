@@ -535,29 +535,28 @@ public partial class MainForm : Form
         var selectedModelLayout = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
-            ColumnCount = 3,
-            RowCount = 2,
+            ColumnCount = 1,
+            RowCount = 3,
             Padding = new Padding(0),
             Margin = new Padding(0),
             BackColor = Color.Transparent
         };
-        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 46F));
-        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36F));
-        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54F));
-        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 74F));
-        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 46F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 54F));
 
-        _sidebarSourceModelImage = new PictureBox { Width = 64, Height = 64, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0, 0, 4, 0), Visible = false };
-        _sidebarSelectedAssetImage = new PictureBox { Width = 64, Height = 64, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(4, 0, 0, 0), Visible = false };
-        _sidebarSelectedModelArrowLabel = new Label { Text = "→", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 18F, FontStyle.Bold), ForeColor = Color.FromArgb(37, 99, 235), Margin = new Padding(0, 18, 0, 0), Visible = false };
-        _sidebarSelectedAssetNameLabel = new Label { AutoSize = true, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Visible = false, Text = string.Empty };
-        _sidebarSelectedAssetIdLabel = new Label { AutoSize = true, Font = new Font("Segoe UI", 7.5F), ForeColor = Color.FromArgb(71, 85, 105), Visible = false, Text = string.Empty };
+        _sidebarSourceModelImage = new PictureBox { Dock = DockStyle.Fill, Height = 80, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0, 0, 0, 6), Visible = false };
+        _sidebarSelectedAssetImage = new PictureBox { Dock = DockStyle.Fill, Height = 80, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0, 6, 0, 0), Visible = false };
+        _sidebarSelectedModelArrowLabel = new Label { Text = "→", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 18F, FontStyle.Bold), ForeColor = Color.FromArgb(37, 99, 235), Margin = new Padding(0, 4, 0, 4), Visible = false };
+        _sidebarSelectedAssetNameLabel = new Label { Dock = DockStyle.Fill, AutoSize = true, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Visible = false, Text = string.Empty };
+        _sidebarSelectedAssetIdLabel = new Label { Dock = DockStyle.Fill, AutoSize = true, Font = new Font("Segoe UI", 7.5F), ForeColor = Color.FromArgb(71, 85, 105), Visible = false, Text = string.Empty };
 
         selectedModelLayout.Controls.Add(_sidebarSourceModelImage, 0, 0);
-        selectedModelLayout.Controls.Add(_sidebarSelectedModelArrowLabel, 1, 0);
-        selectedModelLayout.Controls.Add(_sidebarSelectedAssetImage, 2, 0);
-        selectedModelLayout.Controls.Add(_sidebarSelectedAssetNameLabel, 0, 1);
-        selectedModelLayout.Controls.Add(_sidebarSelectedAssetIdLabel, 2, 1);
+        selectedModelLayout.Controls.Add(_sidebarSelectedModelArrowLabel, 0, 1);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetImage, 0, 2);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetNameLabel, 0, 3);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetIdLabel, 0, 4);
 
         _sidebarSelectedModelPanel.Controls.Add(selectedModelLayout);
         _sidebarStep4Image = new PictureBox { Width = 190, Height = 110, Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
@@ -4472,8 +4471,6 @@ public partial class MainForm : Form
                 var selectedAssetImagePath = _assetCatalogService.ResolveImagePath(selectedAsset);
 
                 _sidebarSelectedModelPanel.Visible = true;
-                _sidebarSourceModelImage.Visible = !string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath);
-                _sidebarSelectedAssetImage.Visible = !string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath);
                 _sidebarSelectedModelArrowLabel.Visible = true;
                 _sidebarSelectedModelArrowLabel.Text = isRtl ? "←" : "→";
                 _sidebarSelectedAssetNameLabel.Visible = true;
@@ -4481,7 +4478,13 @@ public partial class MainForm : Form
                 _sidebarSelectedAssetIdLabel.Visible = !string.IsNullOrWhiteSpace(selectedAsset.Id);
                 _sidebarSelectedAssetIdLabel.Text = string.IsNullOrWhiteSpace(selectedAsset.Id) ? string.Empty : "ID: " + selectedAsset.Id;
 
-                if (!string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath))
+                var hasSourceImage = !string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath);
+                var hasSelectedAssetImage = !string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath);
+
+                _sidebarSourceModelImage.Visible = hasSourceImage;
+                _sidebarSelectedAssetImage.Visible = hasSelectedAssetImage;
+
+                if (hasSourceImage && !string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath))
                 {
                     _sidebarSourceModelImage.Image?.Dispose();
                     _sidebarSourceModelImage.Image = TryLoadBitmap(sourceImagePath);
@@ -4492,7 +4495,7 @@ public partial class MainForm : Form
                     _sidebarSourceModelImage.Image = null;
                 }
 
-                if (!string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath))
+                if (hasSelectedAssetImage && !string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath))
                 {
                     _sidebarSelectedAssetImage.Image?.Dispose();
                     _sidebarSelectedAssetImage.Image = TryLoadBitmap(selectedAssetImagePath);
