@@ -6,13 +6,18 @@ namespace GtaSaModManager.Services;
 
 public sealed class AssetCatalogService
 {
-    private readonly string _catalogPath;
+    private readonly string[] _catalogPaths;
     private List<GameAsset>? _assets;
     public string ValidationError { get; private set; } = string.Empty;
 
     public AssetCatalogService()
     {
-        _catalogPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Assets.json");
+        _catalogPaths = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, "Assets", "Vehicles.json"),
+            Path.Combine(AppContext.BaseDirectory, "Assets", "Skins.json"),
+            Path.Combine(AppContext.BaseDirectory, "Assets", "Weapons.json")
+        };
     }
 
     public IReadOnlyList<GameAsset> LoadAssets()
@@ -22,60 +27,52 @@ public sealed class AssetCatalogService
             return _assets;
         }
 
-        if (!File.Exists(_catalogPath))
+        var assets = new List<GameAsset>();
+        foreach (var (catalogPath, assetType) in _catalogPaths.Zip(
+            new[] { "Vehicle", "Skin", "Weapon" },
+            (path, type) => (path, type)))
         {
-            _assets = new List<GameAsset>();
-            return _assets;
-        }
-
-        try
-        {
-            using var document = JsonDocument.Parse(File.ReadAllText(_catalogPath));
-            var assets = new List<GameAsset>();
-            foreach (var property in document.RootElement.EnumerateObject())
+            if (!File.Exists(catalogPath))
             {
-                var assetType = property.Name.ToLowerInvariant() switch
-                {
-                    "vehicles" => "Vehicle",
-                    "skins" => "Skin",
-                    "weapons" => "Weapon",
-                    _ => string.Empty
-                };
+                continue;
+            }
 
-                if (string.IsNullOrWhiteSpace(assetType) || property.Value.ValueKind != JsonValueKind.Array)
+            try
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(catalogPath));
+                if (document.RootElement.ValueKind != JsonValueKind.Array)
                 {
+                    ValidationError = Path.GetFileName(catalogPath) + " باید یک آرایه JSON باشد.";
                     continue;
                 }
 
-                foreach (var item in property.Value.EnumerateArray())
+                foreach (var item in document.RootElement.EnumerateArray())
                 {
                     var nameFile = GetString(item, "nameFile");
                     if (string.IsNullOrWhiteSpace(nameFile))
                     {
-                        ValidationError = "Assets.json مشکل دارد: یک فایل در دستهٔ " + assetType + " مقدار nameFile ندارد.";
+                        ValidationError = Path.GetFileName(catalogPath) + " مشکل دارد: یک فایل مقدار nameFile ندارد.";
                         continue;
                     }
 
-                    var categoryValue = ResolveCategory(item, assetType, nameFile);
                     assets.Add(new GameAsset
                     {
                         AssetType = assetType,
                         Id = GetValueAsString(item, "id"),
                         Name = GetString(item, "name") is { Length: > 0 } name ? name : nameFile,
                         NameFile = nameFile,
-                        Category = categoryValue,
+                        Category = ResolveCategory(item, assetType, nameFile),
                         Image = GetString(item, "image")
                     });
                 }
             }
-
-            _assets = assets;
-        }
-        catch (JsonException)
-        {
-            _assets = new List<GameAsset>();
+            catch (JsonException ex)
+            {
+                ValidationError = Path.GetFileName(catalogPath) + " نامعتبر است: " + ex.Message;
+            }
         }
 
+        _assets = assets;
         return _assets;
     }
 

@@ -1,0 +1,278 @@
+[
+  {
+    "id": "0",
+    "name": "Fist",
+    "nameFile": "fist",
+    "image": "Assets/Weapons/fist.png"
+  },
+  {
+    "id": "1",
+    "name": "Brass Knuckles",
+    "nameFile": "brassknuckle",
+    "image": "Assets/Weapons/BRASSKNUCKLEicon.png"
+  },
+  {
+    "id": "2",
+    "name": "Golf Club",
+    "nameFile": "golfclub",
+    "image": "Assets/Weapons/golfclubicon.png"
+  },
+  {
+    "id": "3",
+    "name": "Nightstick",
+    "nameFile": "nitestick",
+    "image": "Assets/Weapons/nitestickicon.png"
+  },
+  {
+    "id": "4",
+    "name": "Knife",
+    "nameFile": "knifecur",
+    "image": "Assets/Weapons/knifecuricon.png"
+  },
+  {
+    "id": "5",
+    "name": "Baseball Bat",
+    "nameFile": "bat",
+    "image": "Assets/Weapons/baticon.png"
+  },
+  {
+    "id": "6",
+    "name": "Shovel",
+    "nameFile": "shovel",
+    "image": "Assets/Weapons/shovelicon.png"
+  },
+  {
+    "id": "7",
+    "name": "Pool Cue",
+    "nameFile": "poolcue",
+    "image": "Assets/Weapons/poolcueicon.png"
+  },
+  {
+    "id": "8",
+    "name": "Katana",
+    "nameFile": "katana",
+    "image": "Assets/Weapons/katanaicon.png"
+  },
+  {
+    "id": "9",
+    "name": "Chainsaw",
+    "nameFile": "chnsaw",
+    "image": "Assets/Weapons/chnsawicon.png"
+  },
+  {
+    "id": "10",
+    "name": "Purple Dildo",
+    "nameFile": "gun_dildo1",
+    "image": "Assets/Weapons/gun_dildo1icon.png"
+  },
+  {
+    "id": "11",
+    "name": "Dildo",
+    "nameFile": "gun_dildo2",
+    "image": "Assets/Weapons/gun_dildo2icon.png"
+  },
+  {
+    "id": "12",
+    "name": "Vibrator",
+    "nameFile": "gun_vibe1",
+    "image": "Assets/Weapons/gun_vibe1icon.png"
+  },
+  {
+    "id": "13",
+    "name": "Silver Vibrator",
+    "nameFile": "gun_vibe2",
+    "image": "Assets/Weapons/gun_vibe2icon.png"
+  },
+  {
+    "id": "14",
+    "name": "Flowers",
+    "nameFile": "flowera",
+    "image": "Assets/Weapons/floweraicon.png"
+  },
+  {
+    "id": "15",
+    "name": "Cane",
+    "nameFile": "gun_cane",
+    "image": "Assets/Weapons/gun_caneicon.png"
+  },
+  {
+    "id": "16",
+    "name": "Grenade",
+    "nameFile": "grenade",
+    "image": "Assets/Weapons/grenadeicon.png"
+  },
+  {
+    "id": "17",
+    "name": "Tear Gas",
+    "nameFile": "teargas",
+    "image": "Assets/Weapons/TearGasicon.png"
+  },
+  {
+    "id": "18",
+    "name": "Molotov Cocktail",
+    "nameFile": "molotov",
+    "image": "Assets/Weapons/molotovicon.png"
+  },
+  {
+    "id": "22",
+    "name": "9mm",
+    "nameFile": "colt45",
+    "image": "Assets/Weapons/colt45icon.png"
+  },
+  {
+    "id": "23",
+    "name": "Silenced 9mm",
+    "nameFile": "silenced",
+    "image": "Assets/Weapons/silencedicon.png"
+  },
+  {
+    "id": "24",
+    "name": "Desert Eagle",
+    "nameFile": "desert_eagle",
+    "image": "Assets/Weapons/desert_eagleicon.png"
+  },
+  {
+    "id": "25",
+    "name": "Shotgun",
+    "nameFile": "chromegun",
+    "image": "Assets/Weapons/chromegunicon.png"
+  },
+  {
+    "id": "26",
+    "name": "Sawnoff Shotgun",
+    "nameFile": "sawnoff",
+    "image": "Assets/Weapons/sawnofficon.png"
+  },
+  {
+    "id": "27",
+    "name": "Combat Shotgun",
+    "nameFile": "shotgspa",
+    "image": "Assets/Weapons/shotgspaicon.png"
+  },
+  {
+    "id": "28",
+    "name": "Micro SMG",
+    "nameFile": "micro_uzi",
+    "image": "Assets/Weapons/micro_uziicon.png"
+  },
+  {
+    "id": "29",
+    "name": "MP5",
+    "nameFile": "mp5lng",
+    "image": "Assets/Weapons/mp5lngicon.png"
+  },
+  {
+    "id": "30",
+    "name": "AK-47",
+    "nameFile": "ak47",
+    "image": "Assets/Weapons/ak47icon.png"
+  },
+  {
+    "id": "31",
+    "name": "M4",
+    "nameFile": "m4",
+    "image": "Assets/Weapons/M4icon.png"
+  },
+  {
+    "id": "32",
+    "name": "Tec-9",
+    "nameFile": "tec9",
+    "image": "Assets/Weapons/tec9icon.png"
+  },
+  {
+    "id": "33",
+    "name": "Country Rifle",
+    "nameFile": "cuntgun",
+    "image": "Assets/Weapons/cuntgunicon.png"
+  },
+  {
+    "id": "34",
+    "name": "Sniper Rifle",
+    "nameFile": "sniper",
+    "image": "Assets/Weapons/SNIPERicon.png"
+  },
+  {
+    "id": "35",
+    "name": "Rocket Launcher",
+    "nameFile": "rocketla",
+    "image": "Assets/Weapons/rocketlaicon.png"
+  },
+  {
+    "id": "36",
+    "name": "Heat-Seeking Rocket Launcher",
+    "nameFile": "heatseek",
+    "image": "Assets/Weapons/heatseekicon.png"
+  },
+  {
+    "id": "37",
+    "name": "Flamethrower",
+    "nameFile": "flame",
+    "image": "Assets/Weapons/flameicon.png"
+  },
+  {
+    "id": "38",
+    "name": "Minigun",
+    "nameFile": "minigun",
+    "image": "Assets/Weapons/minigunicon.png"
+  },
+  {
+    "id": "39",
+    "name": "Satchel Charge",
+    "nameFile": "satchel",
+    "image": "Assets/Weapons/satchelicon.png"
+  },
+  {
+    "id": "40",
+    "name": "Detonator",
+    "nameFile": "bomb",
+    "image": "Assets/Weapons/bombicon.png"
+  },
+  {
+    "id": "41",
+    "name": "Spraycan",
+    "nameFile": "spraycan",
+    "image": "Assets/Weapons/SPRAYCANicon.png"
+  },
+  {
+    "id": "42",
+    "name": "Fire Extinguisher",
+    "nameFile": "fire_ex",
+    "image": "Assets/Weapons/fire_exicon.png"
+  },
+  {
+    "id": "43",
+    "name": "Camera",
+    "nameFile": "camera",
+    "image": "Assets/Weapons/Cameraicon.png"
+  },
+  {
+    "id": "44",
+    "name": "Night Vision Goggles",
+    "nameFile": "nvgoggles",
+    "image": "Assets/Weapons/nvgogglesicon.png"
+  },
+  {
+    "id": "45",
+    "name": "Thermal Goggles",
+    "nameFile": "irgoggles",
+    "image": "Assets/Weapons/irgogglesicon.png"
+  },
+  {
+    "id": "46",
+    "name": "Parachute",
+    "nameFile": "gun_para",
+    "image": "Assets/Weapons/gun_paraicon.png"
+  },
+  {
+    "id": "330",
+    "name": "Cellphone",
+    "nameFile": "cellphone",
+    "image": "Assets/Weapons/cellphoneicon.png"
+  },
+  {
+    "id": "370",
+    "name": "Jetpack",
+    "nameFile": "jetpack",
+    "image": "Assets/Weapons/jetpackicon.png"
+  }
+]
