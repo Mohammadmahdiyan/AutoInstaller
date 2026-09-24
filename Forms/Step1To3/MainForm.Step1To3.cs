@@ -277,13 +277,8 @@ public partial class MainForm : Form
             return;
         }
 
-        foreach (Control control in gallery.Controls)
+        foreach (var control in gallery.Controls.Cast<Control>().ToList())
         {
-            if (control is PictureBox pictureBox)
-            {
-                pictureBox.Image?.Dispose();
-            }
-
             control.Dispose();
         }
 
@@ -375,7 +370,21 @@ public partial class MainForm : Form
                     continue;
                 }
                 preview.RightClicked += (_, _) =>
+                {
+                    if (preview.IsVideo)
+                    {
+                        preview.SetSoundEnabled(false);
+                    }
+
                     OpenFullImageViewer(imageFiles, imageFiles.FindIndex(path => string.Equals(path, imageFile, StringComparison.OrdinalIgnoreCase)), imageFile);
+                };
+                preview.DoubleClick += (_, _) =>
+                {
+                    if (preview.IsVideo)
+                    {
+                        preview.ToggleSound();
+                    }
+                };
                 var toolTip = new ToolTip();
                 toolTip.SetToolTip(preview, Path.GetFileName(imageFile));
 

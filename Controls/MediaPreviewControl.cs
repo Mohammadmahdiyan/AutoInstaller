@@ -16,14 +16,16 @@ public sealed class MediaPreviewControl : Panel
     private PictureBox? _imageBox;
     private ElementHost? _mediaHost;
     private WpfMediaElement? _mediaElement;
-    private ContextMenuStrip? _videoMenu;
-    private ToolStripMenuItem? _soundMenuItem;
+    private bool _soundEnabled;
 
     public string MediaPath { get; private set; } = string.Empty;
 
     public bool IsVideo => _mediaElement != null;
 
+    public bool SoundEnabled => _soundEnabled;
+
     public event EventHandler? RightClicked;
+    public event EventHandler? SoundStateChanged;
 
     public MediaPreviewControl()
     {
@@ -52,7 +54,7 @@ public sealed class MediaPreviewControl : Panel
     {
         try
         {
-            _mediaElement = new WpfMediaElement
+            var mediaElement = new WpfMediaElement
             {
                 LoadedBehavior = WpfMediaState.Manual,
                 UnloadedBehavior = WpfMediaState.Stop,
@@ -61,37 +63,41 @@ public sealed class MediaPreviewControl : Panel
                 IsMuted = true,
                 Source = new Uri(path, UriKind.Absolute)
             };
-            _mediaElement.MediaOpened += (_, _) => _mediaElement.Play();
-            _mediaElement.MediaEnded += (_, _) =>
+            _mediaElement = mediaElement;
+            mediaElement.MediaOpened += (_, _) =>
             {
-                _mediaElement.Position = TimeSpan.Zero;
-                _mediaElement.Play();
-            };
-
-            _videoMenu = new ContextMenuStrip();
-            _soundMenuItem = new ToolStripMenuItem("Enable sound")
-            {
-                CheckOnClick = true
-            };
-            _soundMenuItem.CheckedChanged += (_, _) =>
-            {
-                if (_mediaElement == null)
+                if (ReferenceEquals(_mediaElement, mediaElement))
                 {
-                    return;
+                    mediaElement.Play();
                 }
-
-                _mediaElement.IsMuted = !_soundMenuItem.Checked;
-                _mediaElement.Volume = _soundMenuItem.Checked ? 1 : 0;
-                _soundMenuItem.Text = _soundMenuItem.Checked ? "Mute sound" : "Enable sound";
             };
-            _videoMenu.Items.Add(_soundMenuItem);
+            mediaElement.MediaEnded += (_, _) =>
+            {
+                if (ReferenceEquals(_mediaElement, mediaElement))
+                {
+                    mediaElement.Position = TimeSpan.Zero;
+                    mediaElement.Play();
+                }
+            };
+            mediaElement.MouseLeftButtonDown += (_, e) =>
+            {
+                if (e.ClickCount >= 2)
+                {
+                    ToggleSound();
+                    e.Handled = true;
+                }
+            };
 
             _mediaHost = new ElementHost
             {
                 Dock = DockStyle.Fill,
                 Child = _mediaElement,
-                BackColor = BackColor,
-                ContextMenuStrip = _videoMenu
+                BackColor = BackColor
+            };
+            mediaElement.MouseRightButtonUp += (_, e) =>
+            {
+                RightClicked?.Invoke(this, EventArgs.Empty);
+                e.Handled = true;
             };
             Controls.Add(_mediaHost);
             _mediaElement.Play();
@@ -102,6 +108,29 @@ public sealed class MediaPreviewControl : Panel
             ClearMedia();
             return false;
         }
+    }
+
+    public void ToggleSound()
+    {
+        if (_mediaElement == null)
+        {
+            return;
+        }
+
+        SetSoundEnabled(!_soundEnabled);
+    }
+
+    public void SetSoundEnabled(bool enabled)
+    {
+        if (_mediaElement == null)
+        {
+            return;
+        }
+
+        _soundEnabled = enabled;
+        _mediaElement.IsMuted = !enabled;
+        _mediaElement.Volume = enabled ? 1 : 0;
+        SoundStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private bool LoadImage(string path)
@@ -140,14 +169,13 @@ public sealed class MediaPreviewControl : Panel
 
     public void ClearMedia()
     {
-        _mediaElement?.Stop();
-        _mediaElement?.Close();
+        var mediaElement = _mediaElement;
         _mediaElement = null;
+        mediaElement?.Stop();
+        mediaElement?.Close();
         _mediaHost?.Dispose();
         _mediaHost = null;
-        _videoMenu?.Dispose();
-        _videoMenu = null;
-        _soundMenuItem = null;
+        _soundEnabled = false;
 
         if (_imageBox != null)
         {

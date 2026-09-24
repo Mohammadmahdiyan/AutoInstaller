@@ -478,6 +478,21 @@ public partial class MainForm : Form
             Cursor = Cursors.Hand
         };
 
+        var soundButton = new Button
+        {
+            Text = "🔇",
+            Width = 44,
+            Height = 44,
+            Visible = false,
+            FlatStyle = FlatStyle.Flat,
+            BackColor = Color.FromArgb(37, 99, 235),
+            ForeColor = Color.White,
+            Cursor = Cursors.Hand
+        };
+        soundButton.FlatAppearance.BorderSize = 0;
+        var soundToolTip = new ToolTip();
+        soundToolTip.SetToolTip(soundButton, "Toggle sound");
+
         var content = new Panel { Dock = DockStyle.Fill, BackColor = Color.Black, Padding = new Padding(10) };
         Control? mediaView = null;
 
@@ -501,7 +516,12 @@ public partial class MainForm : Form
                 };
                 if (videoView.LoadMedia(selectedPath))
                 {
+                    videoView.SetSoundEnabled(true);
                     mediaView = videoView;
+                    videoView.SoundStateChanged += (_, _) =>
+                    {
+                        soundButton.Text = videoView.SoundEnabled ? "🔊" : "🔇";
+                    };
                 }
                 else
                 {
@@ -528,6 +548,9 @@ public partial class MainForm : Form
                 content.Controls.Add(mediaView);
             }
 
+            soundButton.Visible = mediaView is MediaPreviewControl;
+            soundButton.Text = mediaView is MediaPreviewControl video && video.SoundEnabled ? "🔊" : "🔇";
+
             prevButton.Visible = validPaths.Count > 1;
             nextButton.Visible = validPaths.Count > 1;
         }
@@ -543,6 +566,13 @@ public partial class MainForm : Form
             currentIndex = (currentIndex + 1) % validPaths.Count;
             RenderCurrentImage();
         };
+        soundButton.Click += (_, _) =>
+        {
+            if (mediaView is MediaPreviewControl video)
+            {
+                video.ToggleSound();
+            }
+        };
 
         var topBar = new FlowLayoutPanel
         {
@@ -555,6 +585,7 @@ public partial class MainForm : Form
         };
 
         topBar.Controls.Add(closeButton);
+        topBar.Controls.Add(soundButton);
         topBar.Controls.Add(nextButton);
         topBar.Controls.Add(prevButton);
 
