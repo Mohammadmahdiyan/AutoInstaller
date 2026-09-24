@@ -1,20 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "/7ggaD/Zxe0=",
+  "dgSpecHash": "gXR3hq+GAZU=",
   "success": true,
   "projectFilePath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moham\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
-      "projectPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
-      "warningLevel": 1,
-      "filePath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

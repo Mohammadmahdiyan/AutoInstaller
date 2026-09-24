@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Services;
 using GtaSaModManager.UI;
 
@@ -269,7 +270,7 @@ public partial class MainForm : Form
         return panel;
     }
 
-    private static void RefreshStep3Images(Control step3Panel, string modFolder)
+    private void RefreshStep3Images(Control step3Panel, string modFolder, bool resetIndex = true)
     {
         var gallery = step3Panel.Controls.Find("Step3ImageGallery", true).FirstOrDefault() as TableLayoutPanel;
         if (gallery == null)
@@ -289,15 +290,46 @@ public partial class MainForm : Form
 
         gallery.Controls.Clear();
         var imageFiles = Directory.GetFiles(modFolder, "*", SearchOption.AllDirectories)
-            .Where(file => file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+            .Where(MediaPreviewControl.IsSupportedMediaPath)
             .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var columnCount = imageFiles.Count >= 3 ? 2 : 1;
-        var rowCount = imageFiles.Count == 0 ? 0 : (imageFiles.Count + columnCount - 1) / columnCount;
+        if (resetIndex || imageFiles.Count <= 4)
+        {
+            _step4ImageIndex = 0;
+        }
+
+        if (imageFiles.Count == 0)
+        {
+            gallery.ColumnCount = 1;
+            gallery.RowCount = 0;
+            gallery.ColumnStyles.Clear();
+            gallery.RowStyles.Clear();
+            return;
+        }
+
+        var pageStart = Math.Clamp((_step4ImageIndex / 4) * 4, 0, Math.Max(0, imageFiles.Count - 1));
+        var visibleImages = imageFiles
+            .Skip(pageStart)
+            .Take(4)
+            .ToList();
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        gallery.RightToLeft = RightToLeft.No;
+        var imageCount = visibleImages.Count;
+        var columnCount = imageCount switch
+        {
+            1 or 2 => 1,
+            _ => 2
+        };
+        var imageRowCount = imageCount switch
+        {
+            1 => 1,
+            2 => 2,
+            3 or 4 => 2,
+            _ => 0
+        };
+        var hasNavigation = imageFiles.Count > 4;
+        var rowCount = imageRowCount + (hasNavigation ? 1 : 0);
         gallery.ColumnCount = columnCount;
         gallery.RowCount = rowCount;
         gallery.ColumnStyles.Clear();
@@ -308,30 +340,28 @@ public partial class MainForm : Form
             gallery.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / columnCount));
         }
 
-        for (var row = 0; row < rowCount; row++)
+        for (var row = 0; row < imageRowCount; row++)
         {
-            gallery.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / Math.Max(1, rowCount)));
+            gallery.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / Math.Max(1, imageRowCount)));
         }
 
-        for (var index = 0; index < imageFiles.Count; index++)
+        if (hasNavigation)
         {
-            var imageFile = imageFiles[index];
+            gallery.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
+        }
+
+        for (var index = 0; index < visibleImages.Count; index++)
+        {
+            var imageFile = visibleImages[index];
             try
             {
-                var sourceImage = TryLoadBitmap(imageFile);
-                if (sourceImage == null)
-                {
-                    continue;
-                }
-
-                var preview = new PictureBox
+                var preview = new MediaPreviewControl
                 {
                     Dock = DockStyle.Fill,
-                    SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.FromArgb(245, 247, 250),
-                    Image = sourceImage,
-                    Margin = new Padding(4)
+                    Margin = new Padding(4),
+                    Tag = imageFile,
                 };
                 preview.SizeChanged += (_, _) =>
                 {
@@ -340,14 +370,89 @@ public partial class MainForm : Form
                         preview.Region = new Region(CreateRoundedRectanglePath(new Rectangle(0, 0, preview.Width, preview.Height), 12));
                     }
                 };
+                if (!preview.LoadMedia(imageFile))
+                {
+                    preview.Dispose();
+                    continue;
+                }
+                preview.RightClicked += (_, _) =>
+                    OpenFullImageViewer(imageFiles, imageFiles.FindIndex(path => string.Equals(path, imageFile, StringComparison.OrdinalIgnoreCase)), imageFile);
                 var toolTip = new ToolTip();
                 toolTip.SetToolTip(preview, Path.GetFileName(imageFile));
-                gallery.Controls.Add(preview, index % columnCount, index / columnCount);
+
+                var row = index / columnCount;
+                var column = index % columnCount;
+                if (imageCount == 3 && index == 2)
+                {
+                    column = isRtl ? 0 : 1;
+                    row = 1;
+                }
+
+                gallery.Controls.Add(preview, column, row);
             }
             catch
             {
                 // Ignore image formats that Windows cannot decode.
             }
+        }
+
+        if (hasNavigation)
+        {
+            var navigation = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                    FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                AutoSize = false,
+                Margin = new Padding(0, 4, 0, 0),
+                Padding = new Padding(0),
+                    BackColor = Color.Transparent,
+                    RightToLeft = RightToLeft.No
+            };
+            var previous = new RoundedButton
+            {
+                Text = isRtl ? "▶" : "◀",
+                Width = 46,
+                Height = 36,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Margin = new Padding(0, 0, 10, 0),
+                Padding = new Padding(0),
+                AccentColor = Color.FromArgb(37, 99, 235)
+            };
+            var next = new RoundedButton
+            {
+                Text = isRtl ? "◀" : "▶",
+                Width = 46,
+                Height = 36,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Margin = new Padding(0),
+                Padding = new Padding(0),
+                AccentColor = Color.FromArgb(37, 99, 235)
+            };
+            var navigationToolTip = new ToolTip();
+            navigationToolTip.SetToolTip(previous, _localizationService.GetString("Previous", "Previous"));
+            navigationToolTip.SetToolTip(next, _localizationService.GetString("Next", "Next"));
+
+            previous.Click += (_, _) =>
+            {
+                var currentPageStart = (_step4ImageIndex / 4) * 4;
+                _step4ImageIndex = currentPageStart > 0
+                    ? currentPageStart - 4
+                    : ((imageFiles.Count - 1) / 4) * 4;
+                RefreshStep3Images(step3Panel, modFolder, false);
+            };
+            next.Click += (_, _) =>
+            {
+                var currentPageStart = (_step4ImageIndex / 4) * 4;
+                var nextPageStart = currentPageStart + 4;
+                _step4ImageIndex = nextPageStart < imageFiles.Count ? nextPageStart : 0;
+                RefreshStep3Images(step3Panel, modFolder, false);
+            };
+
+            navigation.Controls.Add(previous);
+            navigation.Controls.Add(next);
+            gallery.Controls.Add(navigation, 0, imageRowCount);
+            gallery.SetColumnSpan(navigation, columnCount);
         }
     }
 }

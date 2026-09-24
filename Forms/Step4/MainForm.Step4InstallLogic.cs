@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 using ModManifestModel = GtaSaModManager.Models.ModManifest;
@@ -185,6 +186,8 @@ public partial class MainForm : Form
     // -------------------------------------------------------------------------
     private void GoToStep(WizardStep step)
     {
+        _currentStep = step;
+
         foreach (var item in _wizardPanels)
         {
             item.Value.Visible = item.Key == step;
@@ -741,7 +744,7 @@ public partial class MainForm : Form
         if (step == WizardStep.Step6 && validImages.Count > 2)
         {
             var slideHost = new Panel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(255, 255, 255), Padding = new Padding(8) };
-            var preview = new PictureBox { Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Cursor = Cursors.Hand };
+            var preview = new MediaPreviewControl { Dock = DockStyle.Fill, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Cursor = Cursors.Hand };
             var controlsPanel = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, AutoSize = false };
             var prev = new Button { Text = "◀", Width = 70, Height = 34, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand };
             var next = new Button { Text = "▶", Width = 70, Height = 34, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand };
@@ -751,21 +754,11 @@ public partial class MainForm : Form
             {
                 if (validImages.Count == 0)
                 {
-                    preview.Image = null;
                     return;
                 }
 
                 var imagePath = validImages[index];
-                try
-                {
-                    var bitmap = TryLoadBitmap(imagePath);
-                    preview.Image?.Dispose();
-                    preview.Image = bitmap;
-                }
-                catch
-                {
-                    preview.Image = null;
-                }
+                preview.LoadMedia(imagePath);
             }
 
             prev.Click += (_, _) =>
@@ -780,7 +773,7 @@ public partial class MainForm : Form
                 RenderCurrentImage();
             };
 
-            preview.Click += (_, _) => OpenFullImageViewer(validImages, index, validImages[index]);
+            preview.RightClicked += (_, _) => OpenFullImageViewer(validImages, index, validImages[index]);
             controlsPanel.Controls.Add(prev);
             controlsPanel.Controls.Add(next);
             slideHost.Controls.Add(preview);
@@ -797,26 +790,23 @@ public partial class MainForm : Form
         {
             try
             {
-                var sourceImage = TryLoadBitmap(imageFile);
-                if (sourceImage == null)
-                {
-                    continue;
-                }
-
                 var imageList = validImages;
-                var pictureBox = new PictureBox
+                var preview = new MediaPreviewControl
                 {
                     Width = 280,
                     Height = 220,
-                    SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.FromArgb(245, 247, 250),
-                    Image = sourceImage,
                     Margin = new Padding(0, 0, 14, 14),
                     Cursor = Cursors.Hand
                 };
+                if (!preview.LoadMedia(imageFile))
+                {
+                    preview.Dispose();
+                    continue;
+                }
 
-                pictureBox.Click += (_, _) =>
+                preview.RightClicked += (_, _) =>
                 {
                     var selectedIndex = imageList.FindIndex(path => string.Equals(path, imageFile, StringComparison.OrdinalIgnoreCase));
                     if (selectedIndex < 0)
@@ -826,21 +816,8 @@ public partial class MainForm : Form
 
                     OpenFullImageViewer(imageList, selectedIndex, imageFile);
                 };
-                pictureBox.MouseUp += (_, e) =>
-                {
-                    if (e.Button == MouseButtons.Right)
-                    {
-                        var selectedIndex = imageList.FindIndex(path => string.Equals(path, imageFile, StringComparison.OrdinalIgnoreCase));
-                        if (selectedIndex < 0)
-                        {
-                            selectedIndex = 0;
-                        }
 
-                        OpenFullImageViewer(imageList, selectedIndex, imageFile);
-                    }
-                };
-
-                gallery.Controls.Add(pictureBox);
+                gallery.Controls.Add(preview);
             }
             catch
             {

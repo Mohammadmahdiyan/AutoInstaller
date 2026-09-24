@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 
@@ -32,7 +33,7 @@ public partial class MainForm : Form
     private Label _sidebarSelectedAssetNameLabel = null!;
     private Label _sidebarSelectedAssetIdLabel = null!;
     private TableLayoutPanel _sidebarStack = null!;
-    private PictureBox _sidebarStep4Image = null!;
+    private MediaPreviewControl _sidebarStep4Image = null!;
     private Panel _sidebarImageNavPanel = null!;
     private Button _sidebarImagePrevButton = null!;
     private Button _sidebarImageNextButton = null!;

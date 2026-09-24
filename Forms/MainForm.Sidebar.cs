@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Services;
 
 namespace GtaSaModManager.Forms;
@@ -203,7 +204,8 @@ public partial class MainForm : Form
             BackColor = Color.Transparent,
             CellBorderStyle = TableLayoutPanelCellBorderStyle.None
         };
-        _sidebarStep4Image = new PictureBox { Width = 190, Height = 110, Dock = DockStyle.Fill, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarStep4Image = new MediaPreviewControl { Width = 190, Height = 110, Dock = DockStyle.Fill, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarStep4Image.RightClicked += (_, _) => SidebarImageClick(_sidebarStep4Image, EventArgs.Empty);
         _sidebarImageNavPanel = new Panel { Dock = DockStyle.Fill, Visible = false, Height = 38, Margin = new Padding(0, 0, 0, 8), BackColor = Color.Transparent };
         _sidebarImagePrevButton = new Button { Name = "SidebarImagePrevButton", Text = "◀", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 8, 0) };
         _sidebarImageNextButton = new Button { Name = "SidebarImageNextButton", Text = "▶", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand };
@@ -572,15 +574,23 @@ public partial class MainForm : Form
             for (var i = 0; i < visibleImages.Count; i++)
             {
                 var imagePath = visibleImages[i];
-                var box = new PictureBox
+                var box = new MediaPreviewControl
                 {
                     Dock = DockStyle.Fill,
-                    SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.FromArgb(245, 247, 250),
                     Margin = new Padding(0, 0, 4, 4),
-                    Image = TryLoadBitmap(imagePath),
                     Visible = true
+                };
+                if (!box.LoadMedia(imagePath))
+                {
+                    box.Dispose();
+                    continue;
+                }
+                box.RightClicked += (_, _) =>
+                {
+                    var selectedIndex = sidebarImageFiles.FindIndex(path => string.Equals(path, imagePath, StringComparison.OrdinalIgnoreCase));
+                    OpenFullImageViewer(sidebarImageFiles, Math.Max(0, selectedIndex), imagePath);
                 };
 
                 var rowIndex = i / columnCount;
@@ -637,8 +647,7 @@ public partial class MainForm : Form
         {
             _step4ImageTimer.Stop();
             _step5ImageTimer.Stop();
-            _sidebarStep4Image.Image?.Dispose();
-            _sidebarStep4Image.Image = null;
+            _sidebarStep4Image.ClearMedia();
             _sidebarStep4Image.Visible = false;
             _sidebarImageNavPanel.Visible = false;
             _sidebarStep3GalleryPanel.Visible = false;
@@ -720,16 +729,11 @@ public partial class MainForm : Form
 
         try
         {
-            var sourceImage = TryLoadBitmap(imageFiles[_step4ImageIndex]);
-            _sidebarStep4Image.Image?.Dispose();
-            _sidebarStep4Image.Image = sourceImage;
+            var imagePath = imageFiles[_step4ImageIndex];
+            var loaded = _sidebarStep4Image.LoadMedia(imagePath);
             _sidebarStep4Image.Tag = imageFiles[_step4ImageIndex];
-            _sidebarStep4Image.Visible = sourceImage != null;
+            _sidebarStep4Image.Visible = loaded;
 
-            _sidebarStep4Image.Click -= SidebarImageClick;
-            _sidebarStep4Image.Click += SidebarImageClick;
-            _sidebarStep4Image.MouseUp -= SidebarImageMouseUp;
-            _sidebarStep4Image.MouseUp += SidebarImageMouseUp;
         }
         catch
         {
@@ -763,16 +767,11 @@ public partial class MainForm : Form
 
         try
         {
-            var sourceImage = TryLoadBitmap(imageFiles[_step4ImageIndex]);
-            _sidebarStep4Image.Image?.Dispose();
-            _sidebarStep4Image.Image = sourceImage;
+            var imagePath = imageFiles[_step4ImageIndex];
+            var loaded = _sidebarStep4Image.LoadMedia(imagePath);
             _sidebarStep4Image.Tag = imageFiles[_step4ImageIndex];
-            _sidebarStep4Image.Visible = sourceImage != null;
+            _sidebarStep4Image.Visible = loaded;
 
-            _sidebarStep4Image.Click -= SidebarImageClick;
-            _sidebarStep4Image.Click += SidebarImageClick;
-            _sidebarStep4Image.MouseUp -= SidebarImageMouseUp;
-            _sidebarStep4Image.MouseUp += SidebarImageMouseUp;
         }
         catch
         {

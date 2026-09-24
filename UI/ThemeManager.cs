@@ -391,8 +391,9 @@ public static class ThemeManager
             textBox.ForeColor =
                 palette.TextPrimary;
 
-            textBox.BorderStyle =
-                BorderStyle.FixedSingle;
+            textBox.BorderStyle = textBox.Tag?.ToString() == "BrowseInput"
+                ? BorderStyle.None
+                : BorderStyle.FixedSingle;
         }
 
         // ------------------------------------------------------------

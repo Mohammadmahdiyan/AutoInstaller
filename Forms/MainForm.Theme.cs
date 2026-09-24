@@ -187,6 +187,7 @@ public partial class MainForm : Form
         textBox.Margin = new Padding(0);
         textBox.Padding = new Padding(12, 9, 12, 9);
         textBox.BorderStyle = BorderStyle.FixedSingle;
+        textBox.Tag = "BrowseInput";
         textBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
         textBox.BackColor = Color.FromArgb(248, 250, 252);
         textBox.ForeColor = Color.FromArgb(15, 23, 42);
@@ -224,11 +225,15 @@ public partial class MainForm : Form
 
     private Panel CreateBrowseInputGroup(TextBox textBox, Button button, int textWidth)
     {
+        const int inputLeftPadding = 10;
+        const int inputRightGap = 3;
+        const int inputVerticalOffset = 3;
+
         var group = new Panel
         {
             Width = textWidth + button.Width + 9,
-            Height = 46,
-            Padding = new Padding(3),
+            Height = 48,
+            Padding = new Padding(4),
             Margin = new Padding(0),
             BackColor = Color.White,
                 BorderStyle = BorderStyle.None
@@ -236,13 +241,13 @@ public partial class MainForm : Form
 
         textBox.BorderStyle = BorderStyle.None;
         textBox.BackColor = Color.White;
-        textBox.Location = new Point(3, 3);
-        textBox.Width = textWidth;
+    textBox.Location = new Point(inputLeftPadding, Math.Max(0, (group.ClientSize.Height - textBox.Height) / 2 + inputVerticalOffset));
+    textBox.Width = textWidth - inputLeftPadding - inputRightGap;
         textBox.Height = 38;
         textBox.Margin = new Padding(0);
 
         button.Margin = new Padding(0);
-        button.Location = new Point(textWidth + 6, 3);
+        button.Location = new Point(textWidth + 7, (group.ClientSize.Height - button.Height) / 2);
         button.Width = Math.Max(120, button.Width);
         button.Height = 38;
 
@@ -250,13 +255,15 @@ public partial class MainForm : Form
         {
             if (group.Width > 0 && group.Height > 0)
             {
+                textBox.Location = new Point(inputLeftPadding, Math.Max(0, (group.ClientSize.Height - textBox.Height) / 2 + inputVerticalOffset));
+                button.Location = new Point(textWidth + 7, Math.Max(0, (group.ClientSize.Height - button.Height) / 2));
                 group.Region = new Region(CreateRoundedRectanglePath(
                     new Rectangle(0, 0, group.Width, group.Height), 8));
             }
         };
         group.Paint += (_, e) =>
         {
-            using var borderPen = new Pen(Color.FromArgb(209, 213, 219));
+            using var borderPen = new Pen(Color.FromArgb(95, 148, 163, 184));
             e.Graphics.DrawPath(borderPen, CreateRoundedRectanglePath(
                 new Rectangle(0, 0, group.Width - 1, group.Height - 1), 8));
         };

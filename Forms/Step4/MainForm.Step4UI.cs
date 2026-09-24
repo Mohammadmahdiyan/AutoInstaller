@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 using GtaSaModManager.UI;
@@ -442,18 +443,6 @@ public partial class MainForm : Form
             BackColor = Color.Black
         };
 
-        var imageBox = new PictureBox
-        {
-            Dock = DockStyle.Fill,
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BorderStyle = BorderStyle.None,
-            BackColor = Color.Black,
-            Image = TryLoadImage(validPaths[currentIndex]),
-            Cursor = Cursors.Hand
-        };
-
-        imageBox.Click += (_, _) => viewer.Close();
-
         var closeButton = new Button
         {
             Text = _localizationService.GetString("Close", "Close"),
@@ -489,12 +478,56 @@ public partial class MainForm : Form
             Cursor = Cursors.Hand
         };
 
+        var content = new Panel { Dock = DockStyle.Fill, BackColor = Color.Black, Padding = new Padding(10) };
+        Control? mediaView = null;
+
         void RenderCurrentImage()
         {
             var selectedPath = validPaths[currentIndex];
             viewer.Text = fallbackTitle ?? Path.GetFileName(selectedPath);
-            imageBox.Image?.Dispose();
-            imageBox.Image = TryLoadImage(selectedPath);
+            if (mediaView != null)
+            {
+                content.Controls.Remove(mediaView);
+                mediaView.Dispose();
+                mediaView = null;
+            }
+
+            if (MediaPreviewControl.IsVideoPath(selectedPath))
+            {
+                var videoView = new MediaPreviewControl
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.Black
+                };
+                if (videoView.LoadMedia(selectedPath))
+                {
+                    mediaView = videoView;
+                }
+                else
+                {
+                    videoView.Dispose();
+                }
+            }
+            else
+            {
+                var imageBox = new PictureBox
+                {
+                    Dock = DockStyle.Fill,
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.None,
+                    BackColor = Color.Black,
+                    Image = TryLoadImage(selectedPath),
+                    Cursor = Cursors.Hand
+                };
+                imageBox.Click += (_, _) => viewer.Close();
+                mediaView = imageBox;
+            }
+
+            if (mediaView != null)
+            {
+                content.Controls.Add(mediaView);
+            }
+
             prevButton.Visible = validPaths.Count > 1;
             nextButton.Visible = validPaths.Count > 1;
         }
@@ -524,9 +557,6 @@ public partial class MainForm : Form
         topBar.Controls.Add(closeButton);
         topBar.Controls.Add(nextButton);
         topBar.Controls.Add(prevButton);
-
-        var content = new Panel { Dock = DockStyle.Fill, BackColor = Color.Black, Padding = new Padding(10) };
-        content.Controls.Add(imageBox);
 
         viewer.Controls.Add(content);
         viewer.Controls.Add(topBar);

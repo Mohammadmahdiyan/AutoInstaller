@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Services;
 
 namespace GtaSaModManager.Forms;
@@ -165,12 +166,7 @@ public partial class MainForm : Form
         }
 
         return Directory.GetFiles(root, "*", SearchOption.AllDirectories)
-            .Where(file => file.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".gif", StringComparison.OrdinalIgnoreCase)
-                || file.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+            .Where(MediaPreviewControl.IsSupportedMediaPath)
             .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
             .ToList();
     }
