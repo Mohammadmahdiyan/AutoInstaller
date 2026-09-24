@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Diagnostics;
 using System.Text.Json;
 using GtaSaModManager.Models;
 
@@ -46,6 +47,8 @@ public sealed class AssetCatalogService
                     continue;
                 }
 
+                var catalogAssetCount = 0;
+                var catalogCategories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 foreach (var item in document.RootElement.EnumerateArray())
                 {
                     var nameFile = GetString(item, "nameFile");
@@ -55,16 +58,21 @@ public sealed class AssetCatalogService
                         continue;
                     }
 
+                    var category = ResolveCategory(item, assetType, nameFile);
+                    catalogCategories.Add(category);
                     assets.Add(new GameAsset
                     {
                         AssetType = assetType,
                         Id = GetValueAsString(item, "id"),
                         Name = GetString(item, "name") is { Length: > 0 } name ? name : nameFile,
                         NameFile = nameFile,
-                        Category = ResolveCategory(item, assetType, nameFile),
+                        Category = category,
                         Image = GetString(item, "image")
                     });
+                    catalogAssetCount++;
                 }
+
+                Debug.WriteLine($"[Assets] file={Path.GetFileName(catalogPath)}; type={assetType}; assets={catalogAssetCount}; categories={string.Join(" | ", catalogCategories.OrderBy(value => value, StringComparer.OrdinalIgnoreCase))}");
             }
             catch (JsonException ex)
             {
@@ -173,7 +181,18 @@ public sealed class AssetCatalogService
 
         if (string.Equals(assetType, "Weapon", StringComparison.OrdinalIgnoreCase))
         {
-            return "General Weapons";
+            return normalizedName.ToLowerInvariant() switch
+            {
+                "fist" or "brassknuckle" or "golfclub" or "nitestick" or "knifecur" or "bat" or "shovel" or "poolcue" or "katana" or "chnsaw" or "gun_dildo1" or "gun_dildo2" or "gun_vibe1" or "gun_vibe2" or "flowera" or "gun_cane" => "Melee",
+                "grenade" or "teargas" or "molotov" or "satchel" or "bomb" => "Thrown",
+                "colt45" or "silenced" or "desert_eagle" => "Handguns",
+                "chromegun" or "sawnoff" or "shotgspa" => "Shotguns",
+                "micro_uzi" or "mp5lng" or "tec9" => "Submachine Guns",
+                "ak47" or "m4" or "cuntgun" or "sniper" => "Rifles",
+                "rocketla" or "heatseek" or "flame" or "minigun" => "Heavy Weapons",
+                "spraycan" or "fire_ex" or "camera" or "nvgoggles" or "irgoggles" or "gun_para" or "cellphone" or "jetpack" => "Equipment",
+                _ => "General Weapons"
+            };
         }
 
         return "General";

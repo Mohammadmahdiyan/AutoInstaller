@@ -385,8 +385,9 @@ public static class ThemeManager
 
         else if (control is TextBox textBox)
         {
-            textBox.BackColor =
-                palette.SurfaceSecondary;
+            textBox.BackColor = textBox.Tag?.ToString() == "BrowseInput"
+                ? palette.Surface
+                : palette.SurfaceSecondary;
 
             textBox.ForeColor =
                 palette.TextPrimary;

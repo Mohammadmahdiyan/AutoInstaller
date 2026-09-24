@@ -154,7 +154,7 @@ public partial class MainForm : Form
 
     private Panel CreateWizardStep3()
     {
-        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
+        var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = false };
         var title = new Label { Text = _localizationService.GetString("Step3Mod", "Select mod"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
         var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold), Margin = new Padding(0, 0, 0, 8) };
         var folderText = new TextBox { Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
@@ -233,15 +233,14 @@ public partial class MainForm : Form
             BackColor = Color.Transparent
         };
         flow.Controls.Add(CreateBrowseInputGroup(folderText, browse, 520));
-        var imageGallery = new TableLayoutPanel
+        var imageGallery = new Panel
         {
             Name = "Step3ImageGallery",
             AutoSize = false,
             Dock = DockStyle.Fill,
             Margin = new Padding(0, 12, 0, 0),
             Padding = new Padding(0),
-            BackColor = Color.Transparent,
-            CellBorderStyle = TableLayoutPanelCellBorderStyle.None
+            BackColor = Color.Transparent
         };
 
         var stack = new TableLayoutPanel
@@ -272,7 +271,7 @@ public partial class MainForm : Form
 
     private void RefreshStep3Images(Control step3Panel, string modFolder, bool resetIndex = true)
     {
-        var gallery = step3Panel.Controls.Find("Step3ImageGallery", true).FirstOrDefault() as TableLayoutPanel;
+        var gallery = step3Panel.Controls.Find("Step3ImageGallery", true).FirstOrDefault() as Panel;
         if (gallery == null)
         {
             return;
@@ -301,10 +300,6 @@ public partial class MainForm : Form
 
         if (imageFiles.Count == 0)
         {
-            gallery.ColumnCount = 1;
-            gallery.RowCount = 0;
-            gallery.ColumnStyles.Clear();
-            gallery.RowStyles.Clear();
             return;
         }
 
@@ -314,7 +309,7 @@ public partial class MainForm : Form
             .Take(4)
             .ToList();
         var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
-        gallery.RightToLeft = RightToLeft.No;
+        gallery.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
         var imageCount = visibleImages.Count;
         var columnCount = imageCount switch
         {
@@ -329,26 +324,30 @@ public partial class MainForm : Form
             _ => 0
         };
         var hasNavigation = imageFiles.Count > 4;
-        var rowCount = imageRowCount + (hasNavigation ? 1 : 0);
-        gallery.ColumnCount = columnCount;
-        gallery.RowCount = rowCount;
-        gallery.ColumnStyles.Clear();
-        gallery.RowStyles.Clear();
+        var imageGrid = new TableLayoutPanel
+        {
+            Name = "Step3ImageGrid",
+            Dock = DockStyle.Fill,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            ColumnCount = columnCount,
+            RowCount = imageRowCount,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent,
+            CellBorderStyle = TableLayoutPanelCellBorderStyle.None
+        };
 
         for (var column = 0; column < columnCount; column++)
         {
-            gallery.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / columnCount));
+            imageGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / columnCount));
         }
 
         for (var row = 0; row < imageRowCount; row++)
         {
-            gallery.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / Math.Max(1, imageRowCount)));
+            imageGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / Math.Max(1, imageRowCount)));
         }
 
-        if (hasNavigation)
-        {
-            gallery.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
-        }
+        gallery.Controls.Add(imageGrid);
 
         for (var index = 0; index < visibleImages.Count; index++)
         {
@@ -384,11 +383,11 @@ public partial class MainForm : Form
                 var column = index % columnCount;
                 if (imageCount == 3 && index == 2)
                 {
-                    column = isRtl ? 0 : 1;
+                    column = 1;
                     row = 1;
                 }
 
-                gallery.Controls.Add(preview, column, row);
+                imageGrid.Controls.Add(preview, column, row);
             }
             catch
             {
@@ -398,24 +397,13 @@ public partial class MainForm : Form
 
         if (hasNavigation)
         {
-            var navigation = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                    FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                AutoSize = false,
-                Margin = new Padding(0, 4, 0, 0),
-                Padding = new Padding(0),
-                    BackColor = Color.Transparent,
-                    RightToLeft = RightToLeft.No
-            };
             var previous = new RoundedButton
             {
                 Text = isRtl ? "▶" : "◀",
                 Width = 46,
                 Height = 36,
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Margin = new Padding(0, 0, 10, 0),
+                Margin = new Padding(0),
                 Padding = new Padding(0),
                 AccentColor = Color.FromArgb(37, 99, 235)
             };
@@ -449,10 +437,30 @@ public partial class MainForm : Form
                 RefreshStep3Images(step3Panel, modFolder, false);
             };
 
-            navigation.Controls.Add(previous);
-            navigation.Controls.Add(next);
-            gallery.Controls.Add(navigation, 0, imageRowCount);
-            gallery.SetColumnSpan(navigation, columnCount);
+            previous.Anchor = isRtl
+                ? AnchorStyles.Bottom | AnchorStyles.Left
+                : AnchorStyles.Bottom | AnchorStyles.Right;
+            next.Anchor = isRtl
+                ? AnchorStyles.Bottom | AnchorStyles.Left
+                : AnchorStyles.Bottom | AnchorStyles.Right;
+            gallery.Controls.Add(previous);
+            gallery.Controls.Add(next);
+            var navigationLeft = isRtl
+                ? 10
+                : Math.Max(0, gallery.ClientSize.Width - previous.Width - next.Width - 20);
+            var navigationTop = Math.Max(0, gallery.ClientSize.Height - previous.Height - 10);
+            if (isRtl)
+            {
+                next.Location = new Point(navigationLeft, navigationTop);
+                previous.Location = new Point(navigationLeft + next.Width + 10, navigationTop);
+            }
+            else
+            {
+                previous.Location = new Point(navigationLeft, navigationTop);
+                next.Location = new Point(navigationLeft + previous.Width + 10, navigationTop);
+            }
+            previous.BringToFront();
+            next.BringToFront();
         }
     }
 }

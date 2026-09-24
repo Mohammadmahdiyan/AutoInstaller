@@ -237,7 +237,7 @@ public partial class MainForm : Form
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
         _step5CategoryFilter = !string.IsNullOrWhiteSpace(sourceAsset.Category)
-            ? sourceAsset.Category
+            ? NormalizeCategoryValue(sourceAsset.Category)
             : _localizationService.GetString("AssetAll", "All");
     }
 
@@ -435,23 +435,21 @@ public partial class MainForm : Form
             }
 
             var normalizedSelected = NormalizeCategoryValue(_step5CategoryFilter);
-            var validSelection = string.Equals(normalizedSelected, NormalizeCategoryValue(allText), StringComparison.OrdinalIgnoreCase)
-                || categories.Any(category => string.Equals(NormalizeCategoryValue(category), normalizedSelected, StringComparison.OrdinalIgnoreCase));
+            var canonicalCategory = categories.FirstOrDefault(category =>
+                string.Equals(NormalizeCategoryValue(category), normalizedSelected, StringComparison.OrdinalIgnoreCase));
+            if (string.Equals(normalizedSelected, NormalizeCategoryValue(allText), StringComparison.OrdinalIgnoreCase))
+            {
+                canonicalCategory = allText;
+            }
 
-            if (!validSelection)
+            if (canonicalCategory == null)
             {
                 Debug.WriteLine($"[Step5] category selection reset from '{_step5CategoryFilter}' to '{allText}'");
-                _step5CategoryFilter = allText;
+                canonicalCategory = allText;
             }
 
-            var selectedExists = categoryFilter.Items.Cast<object>().Any(item =>
-                string.Equals(NormalizeCategoryValue(item?.ToString()), NormalizeCategoryValue(_step5CategoryFilter), StringComparison.OrdinalIgnoreCase));
-            if (!selectedExists)
-            {
-                _step5CategoryFilter = allText;
-            }
-
-            categoryFilter.SelectedItem = _step5CategoryFilter;
+            _step5CategoryFilter = canonicalCategory;
+            categoryFilter.SelectedItem = canonicalCategory;
             if (categoryFilter.SelectedItem == null)
             {
                 categoryFilter.SelectedIndex = 0;

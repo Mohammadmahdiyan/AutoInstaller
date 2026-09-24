@@ -189,7 +189,7 @@ public partial class MainForm : Form
         textBox.BorderStyle = BorderStyle.FixedSingle;
         textBox.Tag = "BrowseInput";
         textBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        textBox.BackColor = Color.FromArgb(248, 250, 252);
+        textBox.BackColor = Color.White;
         textBox.ForeColor = Color.FromArgb(15, 23, 42);
         textBox.ReadOnly = true;
         textBox.TextAlign = HorizontalAlignment.Left;
@@ -235,7 +235,7 @@ public partial class MainForm : Form
             Height = 48,
             Padding = new Padding(4),
             Margin = new Padding(0),
-            BackColor = Color.White,
+            BackColor = Color.Transparent,
                 BorderStyle = BorderStyle.None
         };
 
