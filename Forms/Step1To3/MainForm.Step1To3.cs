@@ -49,8 +49,7 @@ public partial class MainForm : Form
             Padding = new Padding(0),
             BackColor = Color.Transparent
         };
-        flow.Controls.Add(pathText);
-        flow.Controls.Add(browse);
+        flow.Controls.Add(CreateBrowseInputGroup(pathText, browse, 560));
 
         var stack = new FlowLayoutPanel
         {
@@ -125,8 +124,7 @@ public partial class MainForm : Form
             Padding = new Padding(0),
             BackColor = Color.Transparent
         };
-        flow.Controls.Add(modBaseText);
-        flow.Controls.Add(modBaseBrowse);
+        flow.Controls.Add(CreateBrowseInputGroup(modBaseText, modBaseBrowse, 520));
 
         var stack = new FlowLayoutPanel
         {
@@ -177,6 +175,8 @@ public partial class MainForm : Form
             {
                 _selectedModName = string.Empty;
                 _selectedModPayloadPath = string.Empty;
+                _selectedReadmePath = string.Empty;
+                _selectedImageFiles = new List<string>();
                 folderText.Text = string.Empty;
                 selectedName.Text = string.Empty;
                 UpdateSidebarState();
@@ -187,6 +187,8 @@ public partial class MainForm : Form
             {
                 _selectedModName = string.Empty;
                 _selectedModPayloadPath = string.Empty;
+                _selectedReadmePath = string.Empty;
+                _selectedImageFiles = new List<string>();
                 folderText.Text = string.Empty;
                 selectedName.Text = string.Empty;
                 MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -199,6 +201,8 @@ public partial class MainForm : Form
             _selectedModPackageRoot = selected;
             _selectedModManifest = ModPackageService.ResolveManifest(selected);
             _selectedAssetForInstall = null;
+            _selectedReadmePath = FindReadmeFile(selected);
+            _selectedImageFiles = FindImageFiles(selected);
             folderText.Text = selected;
             _detectedModLabel = selectedName;
             selectedName.Text = string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName);
@@ -227,26 +231,39 @@ public partial class MainForm : Form
             Padding = new Padding(0),
             BackColor = Color.Transparent
         };
-        flow.Controls.Add(folderText);
-        flow.Controls.Add(browse);
-        var imageGallery = new FlowLayoutPanel { Name = "Step3ImageGallery", AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.LeftToRight, WrapContents = true, Margin = new Padding(0, 12, 0, 0) };
-
-        var stack = new FlowLayoutPanel
+        flow.Controls.Add(CreateBrowseInputGroup(folderText, browse, 520));
+        var imageGallery = new TableLayoutPanel
         {
-            Dock = DockStyle.Top,
-            AutoSize = true,
-            AutoSizeMode = AutoSizeMode.GrowAndShrink,
-            FlowDirection = FlowDirection.TopDown,
-            WrapContents = false,
+            Name = "Step3ImageGallery",
+            AutoSize = false,
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 12, 0, 0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent,
+            CellBorderStyle = TableLayoutPanelCellBorderStyle.None
+        };
+
+        var stack = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            AutoSize = false,
+            ColumnCount = 1,
+            RowCount = 5,
             Margin = new Padding(0),
             Padding = new Padding(0),
             BackColor = Color.Transparent
         };
-        stack.Controls.Add(title);
-        stack.Controls.Add(folderLabel);
-        stack.Controls.Add(flow);
-        stack.Controls.Add(selectedName);
-        stack.Controls.Add(imageGallery);
+        stack.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        stack.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        stack.Controls.Add(title, 0, 0);
+        stack.Controls.Add(folderLabel, 0, 1);
+        stack.Controls.Add(flow, 0, 2);
+        stack.Controls.Add(selectedName, 0, 3);
+        stack.Controls.Add(imageGallery, 0, 4);
 
         panel.Controls.Add(stack);
         return panel;
@@ -254,7 +271,7 @@ public partial class MainForm : Form
 
     private static void RefreshStep3Images(Control step3Panel, string modFolder)
     {
-        var gallery = step3Panel.Controls.Find("Step3ImageGallery", true).FirstOrDefault() as FlowLayoutPanel;
+        var gallery = step3Panel.Controls.Find("Step3ImageGallery", true).FirstOrDefault() as TableLayoutPanel;
         if (gallery == null)
         {
             return;
@@ -279,8 +296,26 @@ public partial class MainForm : Form
             .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        foreach (var imageFile in imageFiles)
+        var columnCount = imageFiles.Count >= 3 ? 2 : 1;
+        var rowCount = imageFiles.Count == 0 ? 0 : (imageFiles.Count + columnCount - 1) / columnCount;
+        gallery.ColumnCount = columnCount;
+        gallery.RowCount = rowCount;
+        gallery.ColumnStyles.Clear();
+        gallery.RowStyles.Clear();
+
+        for (var column = 0; column < columnCount; column++)
         {
+            gallery.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / columnCount));
+        }
+
+        for (var row = 0; row < rowCount; row++)
+        {
+            gallery.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / Math.Max(1, rowCount)));
+        }
+
+        for (var index = 0; index < imageFiles.Count; index++)
+        {
+            var imageFile = imageFiles[index];
             try
             {
                 var sourceImage = TryLoadBitmap(imageFile);
@@ -291,17 +326,23 @@ public partial class MainForm : Form
 
                 var preview = new PictureBox
                 {
-                    Width = 150,
-                    Height = 110,
+                    Dock = DockStyle.Fill,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
                     BackColor = Color.FromArgb(245, 247, 250),
                     Image = sourceImage,
-                    Margin = new Padding(0, 0, 10, 10)
+                    Margin = new Padding(4)
+                };
+                preview.SizeChanged += (_, _) =>
+                {
+                    if (preview.Width > 0 && preview.Height > 0)
+                    {
+                        preview.Region = new Region(CreateRoundedRectanglePath(new Rectangle(0, 0, preview.Width, preview.Height), 12));
+                    }
                 };
                 var toolTip = new ToolTip();
                 toolTip.SetToolTip(preview, Path.GetFileName(imageFile));
-                gallery.Controls.Add(preview);
+                gallery.Controls.Add(preview, index % columnCount, index / columnCount);
             }
             catch
             {

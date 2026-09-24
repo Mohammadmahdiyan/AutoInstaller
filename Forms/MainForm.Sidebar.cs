@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using GtaSaModManager.Services;
 
@@ -168,7 +169,7 @@ public partial class MainForm : Form
         {
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 3,
+            RowCount = 5,
             Padding = new Padding(0),
             Margin = new Padding(0),
             BackColor = Color.Transparent
@@ -247,16 +248,41 @@ public partial class MainForm : Form
             Multiline = true,
             ReadOnly = true,
             ScrollBars = ScrollBars.Vertical,
-            BorderStyle = BorderStyle.FixedSingle,
-            BackColor = Color.FromArgb(248, 250, 252),
+            BorderStyle = BorderStyle.None,
+            BackColor = Color.FromArgb(250, 251, 253),
             ForeColor = Color.FromArgb(30, 41, 59),
-            Font = new Font("Segoe UI", 8.5F),
+            Font = new Font("Segoe UI", 9.5F),
             Visible = false,
-            Margin = new Padding(0, 0, 0, 10),
+            Margin = new Padding(0),
+            Padding = new Padding(8, 7, 8, 7),
             Height = 120,
             WordWrap = true
         };
-        _sidebarReadmeButton = new Button { Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt"), Width = 190, Height = 36, Enabled = false, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10), Visible = false };
+        _sidebarReadmeHost = new Panel
+        {
+            Name = "SidebarReadmeHost",
+            Dock = DockStyle.Fill,
+            BackColor = Color.FromArgb(250, 251, 253),
+            Padding = new Padding(1),
+            Margin = new Padding(0, 0, 0, 10)
+        };
+        _sidebarReadmeHost.Paint += (_, e) =>
+        {
+            using var borderPen = new Pen(Color.FromArgb(90, 148, 163, 184));
+            e.Graphics.DrawRectangle(borderPen, 0, 0, _sidebarReadmeHost.Width - 1, _sidebarReadmeHost.Height - 1);
+        };
+        _sidebarReadmeHost.Controls.Add(_sidebarReadmeTextBox);
+        _sidebarReadmeButton = new Button
+        {
+            Text = _localizationService.GetString("OpenReadmeFile", "Open README").Replace(".txt", string.Empty, StringComparison.OrdinalIgnoreCase),
+            Width = 190,
+            Height = 42,
+            AutoSize = false,
+            Enabled = false,
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 0, 0, 10),
+            Visible = false
+        };
 
         _sidebarLanguageComboBox.Items.AddRange(new object[] { "English", "فارسی" });
         _sidebarThemeComboBox.Items.AddRange(new object[] { "System", "Light Blue", "Light Purple", "Light Green", "Light Orange", "Dark Blue", "Dark Purple", "Dark Green", "Dark Red" });
@@ -267,7 +293,11 @@ public partial class MainForm : Form
         {
             if (!string.IsNullOrWhiteSpace(_selectedReadmePath) && File.Exists(_selectedReadmePath))
             {
-                ShowReadmeDialog(_selectedReadmePath);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = _selectedReadmePath,
+                    UseShellExecute = true
+                });
             }
         };
         _sidebarLanguageComboBox.SelectedIndexChanged += LanguageComboBox_SelectedIndexChanged;
@@ -284,7 +314,7 @@ public partial class MainForm : Form
         _sidebarStack.Controls.Add(_sidebarStep3GalleryPanel, 0, 8);
         _sidebarStack.Controls.Add(_sidebarStep4Image, 0, 9);
         _sidebarStack.Controls.Add(_sidebarImageNavPanel, 0, 10);
-        _sidebarStack.Controls.Add(_sidebarReadmeTextBox, 0, 11);
+        _sidebarStack.Controls.Add(_sidebarReadmeHost, 0, 11);
         _sidebarStack.Controls.Add(_sidebarReadmeButton, 0, 12);
 
         _sidebarPanel.Controls.Add(_sidebarStack);
@@ -365,9 +395,11 @@ public partial class MainForm : Form
 
         var hasSidebarReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath)
             && File.Exists(_selectedReadmePath);
-        var sidebarImageFiles = (isStep3Preview || isStep4Preview)
-            ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
-            : GetStep5SidebarImageFiles();
+        var sidebarImageFiles = isStep3Preview
+            ? new List<string>()
+            : isStep4Preview
+                ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+                : GetStep5SidebarImageFiles();
         var hasSidebarImage = sidebarImageFiles.Count > 0;
         var hasStep5ModImage = isStep5Preview
             && !string.IsNullOrWhiteSpace(_selectedModPayloadPath)
@@ -377,22 +409,41 @@ public partial class MainForm : Form
         var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (isStep3Preview || isStep4Preview || isStep5Preview);
         var hasSelectedAssetModel = isStep5Preview && _selectedAssetForInstall != null;
 
-        if (_sidebarStack != null && _sidebarStack.Controls.Contains(_sidebarReadmeTextBox) && _sidebarStack.Controls.Contains(_sidebarStep4Image))
+        if (_sidebarStack != null && _sidebarStack.Controls.Contains(_sidebarReadmeHost) && _sidebarStack.Controls.Contains(_sidebarStep4Image))
         {
             if (isStep3Preview)
             {
-                _sidebarStack.Controls.SetChildIndex(_sidebarStep3GalleryPanel, 8);
-                _sidebarStack.Controls.SetChildIndex(_sidebarStep4Image, 9);
-                _sidebarStack.Controls.SetChildIndex(_sidebarImageNavPanel, 10);
-                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeTextBox, 11);
-                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeButton, 12);
+                _sidebarStack.SetCellPosition(_sidebarSelectedModelPanel, new TableLayoutPanelCellPosition(0, 7));
+                _sidebarStack.SetCellPosition(_sidebarReadmeHost, new TableLayoutPanelCellPosition(0, 7));
+                _sidebarStack.SetCellPosition(_sidebarReadmeButton, new TableLayoutPanelCellPosition(0, 8));
+                _sidebarStack.SetCellPosition(_sidebarStep3GalleryPanel, new TableLayoutPanelCellPosition(0, 9));
+                _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, 10));
+                _sidebarStack.SetCellPosition(_sidebarImageNavPanel, new TableLayoutPanelCellPosition(0, 11));
+                _sidebarSelectedModelPanel.Visible = false;
+                _sidebarStep3GalleryPanel.Visible = false;
+                _sidebarStep4Image.Visible = false;
+                _sidebarImageNavPanel.Visible = false;
             }
             else
             {
-                _sidebarStack.Controls.SetChildIndex(_sidebarStep4Image, 8);
-                _sidebarStack.Controls.SetChildIndex(_sidebarImageNavPanel, 9);
-                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeTextBox, 10);
-                _sidebarStack.Controls.SetChildIndex(_sidebarReadmeButton, 11);
+                _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, 8));
+                _sidebarStack.SetCellPosition(_sidebarImageNavPanel, new TableLayoutPanelCellPosition(0, 9));
+                _sidebarStack.SetCellPosition(_sidebarReadmeHost, new TableLayoutPanelCellPosition(0, 10));
+                _sidebarStack.SetCellPosition(_sidebarReadmeButton, new TableLayoutPanelCellPosition(0, 11));
+            }
+
+            for (var row = 0; row < _sidebarStack.RowStyles.Count; row++)
+            {
+                _sidebarStack.RowStyles[row] = new RowStyle(SizeType.AutoSize);
+            }
+
+            if (isStep3Preview && hasSidebarReadme)
+            {
+                _sidebarStack.RowStyles[7] = new RowStyle(SizeType.Percent, 100F);
+            }
+            else if (!isStep3Preview && hasSidebarImage)
+            {
+                _sidebarStack.RowStyles[8] = new RowStyle(SizeType.Percent, 100F);
             }
         }
 
@@ -473,16 +524,17 @@ public partial class MainForm : Form
         }
 
         _sidebarReadmeButton.Visible = shouldDisplaySidebarReadme;
-        _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
+        _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README").Replace(".txt", string.Empty, StringComparison.OrdinalIgnoreCase);
         _sidebarReadmeButton.Enabled = shouldDisplaySidebarReadme;
 
+        _sidebarReadmeHost.Visible = shouldDisplaySidebarReadme;
+        _sidebarReadmeHost.Enabled = shouldDisplaySidebarReadme;
         _sidebarReadmeTextBox.Visible = shouldDisplaySidebarReadme;
         _sidebarReadmeTextBox.Enabled = shouldDisplaySidebarReadme;
         _sidebarReadmeTextBox.Text = string.IsNullOrWhiteSpace(readmeText)
             ? _localizationService.GetString("ReadmeFallback", "README")
             : readmeText;
-        _sidebarReadmeTextBox.Height = shouldDisplaySidebarReadme ? GetSidebarReadmeHeight(_sidebarReadmeTextBox.Text, hasSidebarImage) : 0;
-        _sidebarReadmeTextBox.Margin = new Padding(0, 0, 0, hasSidebarImage ? 8 : 10);
+        _sidebarReadmeHost.Height = shouldDisplaySidebarReadme ? GetSidebarReadmeHeight(_sidebarReadmeTextBox.Text, hasSidebarImage) : 0;
 
         _sidebarStep3GalleryPanel.Visible = isStep3Preview && hasSidebarImage;
         _sidebarStep3GalleryPanel.Controls.Clear();

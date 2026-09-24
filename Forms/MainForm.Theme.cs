@@ -222,6 +222,50 @@ public partial class MainForm : Form
         button.EnabledChanged += (_, _) => button.Invalidate();
     }
 
+    private Panel CreateBrowseInputGroup(TextBox textBox, Button button, int textWidth)
+    {
+        var group = new Panel
+        {
+            Width = textWidth + button.Width + 9,
+            Height = 46,
+            Padding = new Padding(3),
+            Margin = new Padding(0),
+            BackColor = Color.White,
+                BorderStyle = BorderStyle.None
+        };
+
+        textBox.BorderStyle = BorderStyle.None;
+        textBox.BackColor = Color.White;
+        textBox.Location = new Point(3, 3);
+        textBox.Width = textWidth;
+        textBox.Height = 38;
+        textBox.Margin = new Padding(0);
+
+        button.Margin = new Padding(0);
+        button.Location = new Point(textWidth + 6, 3);
+        button.Width = Math.Max(120, button.Width);
+        button.Height = 38;
+
+        group.Resize += (_, _) =>
+        {
+            if (group.Width > 0 && group.Height > 0)
+            {
+                group.Region = new Region(CreateRoundedRectanglePath(
+                    new Rectangle(0, 0, group.Width, group.Height), 8));
+            }
+        };
+        group.Paint += (_, e) =>
+        {
+            using var borderPen = new Pen(Color.FromArgb(209, 213, 219));
+            e.Graphics.DrawPath(borderPen, CreateRoundedRectanglePath(
+                new Rectangle(0, 0, group.Width - 1, group.Height - 1), 8));
+        };
+
+        group.Controls.Add(textBox);
+        group.Controls.Add(button);
+        return group;
+    }
+
 
 
 

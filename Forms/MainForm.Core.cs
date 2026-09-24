@@ -23,6 +23,7 @@ public partial class MainForm : Form
     private ComboBox _sidebarThemeComboBox = null!;
     private Button _sidebarReadmeButton = null!;
     private TextBox _sidebarReadmeTextBox = null!;
+    private Panel _sidebarReadmeHost = null!;
     private TableLayoutPanel _sidebarStep3GalleryPanel = null!;
     private Panel _sidebarSelectedModelPanel = null!;
     private PictureBox _sidebarSourceModelImage = null!;
