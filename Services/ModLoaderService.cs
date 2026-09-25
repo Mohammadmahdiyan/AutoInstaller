@@ -108,6 +108,31 @@ public class ModLoaderService
         SaveInstallationManifest(manifestPath, manifest);
     }
 
+    public static void RecordGameInstallation(string gamePath, string modType, string modName, string sourcePackagePath, string installedDestination, IEnumerable<string> installedFiles)
+    {
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return;
+        }
+
+        var manifest = LoadInstallationManifest(manifestPath);
+        var modId = string.IsNullOrWhiteSpace(modName) ? Guid.NewGuid().ToString("N") : modName;
+        manifest.Entries.RemoveAll(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        manifest.Entries.Add(new InstallationManifestEntry
+        {
+            ModId = modId,
+            Type = modType,
+            SourcePackagePath = sourcePackagePath,
+            InstalledDestination = installedDestination,
+            InstalledFiles = installedFiles
+                .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList()
+        });
+        SaveInstallationManifest(manifestPath, manifest);
+    }
+
     public static void RecordUserFilesInstallation(string modName, string modType, IEnumerable<string> installedFiles)
     {
         var manifestPath = GetUserFilesInstallationsManifestPath();

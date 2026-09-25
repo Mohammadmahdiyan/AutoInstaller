@@ -61,6 +61,7 @@ public partial class MainForm : Form
     private bool _completionTimerActive;
     private bool _isApplyingLanguage;
     private bool _returnedToInstallStepFromCompletion;
+    private bool _isInstallingOptionalPackage;
     private bool _isRefreshingAssetStep;
     private Panel? _globalLoadingOverlay;
     private Label? _globalLoadingLabel;
@@ -69,6 +70,10 @@ public partial class MainForm : Form
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
+    private string _step5PreparedPayloadPath = string.Empty;
+    private string _step5DetectedAssetType = string.Empty;
+    private string _lastShownAssetCatalogError = string.Empty;
+    private bool _step5PreparationAttempted;
     private int _step5ColumnCount = 3;
     private string _step5CategoryFilter = string.Empty;
     private string _step5SortMode = "Name";
@@ -144,8 +149,6 @@ public partial class MainForm : Form
         RefreshModList();
         UpdateSidebarState();
 
-        // Synchronize UI inputs from cache for the initial step
-        SynchronizeStepInputs(_currentStep);
     }
 
     // -------------------------------------------------------------------------

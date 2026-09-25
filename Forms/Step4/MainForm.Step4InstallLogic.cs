@@ -55,26 +55,15 @@ public partial class MainForm : Form
             return;
         }
 
-        var payloadPath = ModPackageService.GetPayloadDirectory(packageRoot);
+        var manifest = ModPackageService.ResolveManifest(packageRoot);
+        var payloadPath = ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest);
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
         {
             MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected mod package does not contain a payload folder to install."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
-        var manifest = ModPackageService.ResolveManifest(packageRoot);
-        if (manifest is null)
-        {
-            MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-
         var modName = ModPackageService.ResolveModName(packageRoot, Path.GetFileName(packageRoot));
-
-        if (manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage)
-        {
-            payloadPath = packageRoot;
-        }
 
         if (!await EnsureDependenciesBeforeInstallAsync())
         {
@@ -211,9 +200,6 @@ public partial class MainForm : Form
         {
             // ignore if controls are not initialized yet
         }
-
-        // Synchronize inputs from cache for the newly visible step
-        SynchronizeStepInputs(step);
 
         if (step == WizardStep.Step5)
         {
@@ -418,15 +404,31 @@ public partial class MainForm : Form
                 return false;
             }
 
-            var installTargetRoot = GameService.GetModLoaderFolder(_selectedGamePath);
-            var targetPackageName = Path.GetFileName(requiredPackagePath);
-            var targetDirectory = Path.Combine(installTargetRoot, targetPackageName);
-            if (Directory.Exists(targetDirectory))
+            var requiredManifest = ModPackageService.ResolveManifest(requiredPackagePath);
+            var requiredPayloadPath = ModPackageService.GetInstallPayloadDirectory(requiredPackagePath, requiredManifest);
+            if (string.IsNullOrWhiteSpace(requiredPayloadPath) || !Directory.Exists(requiredPayloadPath))
             {
-                Directory.Delete(targetDirectory, true);
+                MessageBox.Show(
+                    "Required package does not contain an installable payload: " + requirement.ReqAddress,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
             }
 
-            await CopyPayloadWithProgressAsync(requiredPackagePath, targetDirectory);
+            var targetPackageName = Path.GetFileName(requiredPackagePath);
+            var targetDirectory = requiredManifest.IsModLoader
+                ? Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), targetPackageName)
+                : _selectedGamePath;
+            if (Directory.Exists(targetDirectory))
+            {
+                if (requiredManifest.IsModLoader)
+                {
+                    Directory.Delete(targetDirectory, true);
+                }
+            }
+
+            await CopyPayloadWithProgressAsync(requiredPayloadPath, targetDirectory);
             if (!RequirementEntryIsSatisfied(requirement, _selectedGamePath))
             {
                 MessageBox.Show(
@@ -448,7 +450,9 @@ public partial class MainForm : Form
             return false;
         }
 
-        foreach (var path in requirement.FilesToCheck)
+        var files = requirement.FilesToCheck;
+        var folders = requirement.FoldersToCheck;
+        var filesSatisfied = files.Count > 0 && files.All(path =>
         {
             var candidate = path;
             if (!Path.IsPathRooted(candidate))
@@ -456,13 +460,9 @@ public partial class MainForm : Form
                 candidate = Path.Combine(gameFolder, candidate);
             }
 
-            if (!File.Exists(candidate))
-            {
-                return false;
-            }
-        }
-
-        foreach (var path in requirement.FoldersToCheck)
+            return File.Exists(candidate);
+        });
+        var foldersSatisfied = folders.Count > 0 && folders.All(path =>
         {
             var candidate = path;
             if (!Path.IsPathRooted(candidate))
@@ -470,13 +470,10 @@ public partial class MainForm : Form
                 candidate = Path.Combine(gameFolder, candidate);
             }
 
-            if (!Directory.Exists(candidate))
-            {
-                return false;
-            }
-        }
+            return Directory.Exists(candidate);
+        });
 
-        return true;
+        return filesSatisfied || foldersSatisfied;
     }
 
     private static string? ResolveRequirementPackagePath(string reqAddress, string baseModsFolder)
@@ -566,6 +563,7 @@ public partial class MainForm : Form
 
             _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
             _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
+            DeleteManifestEntries(_selectedModManifest);
 
             if (_selectedModManifest.NormalizedType == "savesandmissions")
             {
@@ -581,6 +579,15 @@ public partial class MainForm : Form
 
             if (_selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage)
             {
+                if (_currentStep == WizardStep.Step3)
+                {
+                    _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+                    _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+                    PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                    GoToStep(WizardStep.Step5);
+                    return;
+                }
+
                 var preservedSelection = _selectedAssetForInstall;
 
                 if (_selectedAssetForInstall == null && !_selectedModManifest.IsMultiAssetPackage)
@@ -616,12 +623,18 @@ public partial class MainForm : Form
                     return;
                 }
 
-                GoToStep(WizardStep.Step4);
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
                 try
                 {
                     await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
                     await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
-                    GoToStep(WizardStep.Step6);
+                    if (!_isInstallingOptionalPackage)
+                    {
+                        GoToStep(WizardStep.Step6);
+                    }
                     return;
                 }
                 catch (Exception ex)
@@ -661,11 +674,23 @@ public partial class MainForm : Form
             _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
             _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
 
-            GoToStep(WizardStep.Step4);
+            if (!_isInstallingOptionalPackage)
+            {
+                GoToStep(WizardStep.Step4);
+            }
             await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir);
             ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
+            ModLoaderService.RecordPackageInstallation(
+                "putinmodloader",
+                _selectedModName,
+                _selectedModPackageRoot,
+                targetDir,
+                Directory.GetFiles(targetDir, "*", SearchOption.AllDirectories));
             await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
-            GoToStep(WizardStep.Step5);
+            if (!_isInstallingOptionalPackage)
+            {
+                GoToStep(WizardStep.Step5);
+            }
             _selectedReadmePath = FindReadmeFile(targetDir);
         }
         catch (Exception ex)

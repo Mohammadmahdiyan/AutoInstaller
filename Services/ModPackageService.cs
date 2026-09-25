@@ -196,6 +196,11 @@ public class ModPackageService
                 }
             }
 
+            if (document.RootElement.TryGetProperty("deleteThis", out var deleteThisProperty))
+            {
+                manifest.DeleteThis = ReadStringCollection(deleteThisProperty);
+            }
+
             return manifest;
         }
         catch
@@ -500,6 +505,43 @@ public class ModPackageService
         SaveReplacementRecords(records);
     }
 
+    public static bool TryRestoreReplacementInstallations(string modName)
+    {
+        var records = LoadReplacementRecords()
+            .Where(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        if (records.Count == 0)
+        {
+            return false;
+        }
+
+        var restored = false;
+        foreach (var record in records)
+        {
+            if (File.Exists(record.BackupFilePath) && !string.IsNullOrWhiteSpace(record.OriginalFilePath))
+            {
+                var directory = Path.GetDirectoryName(record.OriginalFilePath);
+                if (!string.IsNullOrWhiteSpace(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                File.Copy(record.BackupFilePath, record.OriginalFilePath, true);
+                restored = true;
+            }
+            else if (File.Exists(record.OriginalFilePath))
+            {
+                File.Delete(record.OriginalFilePath);
+                restored = true;
+            }
+        }
+
+        var remaining = LoadReplacementRecords();
+        remaining.RemoveAll(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase));
+        SaveReplacementRecords(remaining);
+        return restored;
+    }
+
     public static string BackupOriginalFileForReplacement(string gameFolder, string originalFilePath, string modName, string? backupRoot = null)
     {
         if (string.IsNullOrWhiteSpace(originalFilePath) || !File.Exists(originalFilePath))
@@ -573,19 +615,37 @@ public class ModPackageService
             return true;
         }
 
-        if (fileName.StartsWith("README", StringComparison.OrdinalIgnoreCase)
-            || fileName.StartsWith("readme", StringComparison.OrdinalIgnoreCase))
+        var normalizedName = Path.GetFileNameWithoutExtension(fileName)
+            .Replace(" ", string.Empty)
+            .Replace("_", string.Empty)
+            .Replace("-", string.Empty);
+        if (normalizedName.Contains("readme", StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
 
-        var extension = Path.GetExtension(fileName);
+        return IsMediaFile(fileName);
+    }
+
+    public static bool IsMediaFile(string path)
+    {
+        var extension = Path.GetExtension(path);
         return extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
             || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
             || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
             || extension.Equals(".webp", StringComparison.OrdinalIgnoreCase)
             || extension.Equals(".gif", StringComparison.OrdinalIgnoreCase)
             || extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public static string GetInstallPayloadDirectory(string packageRoot, ModManifest manifest)
+    {
+        if (manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage)
+        {
+            return packageRoot;
+        }
+
+        return GetPayloadDirectory(packageRoot);
     }
 
     public static string GetPayloadDirectory(string packageRoot)

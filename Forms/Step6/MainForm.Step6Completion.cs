@@ -18,6 +18,7 @@ public partial class MainForm : Form
         var countdown = new Label { Name = "CountdownLabel", AutoSize = true, Font = new Font("Segoe UI", 10F) };
         var openButton = new Button { Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
         var runButton = new Button { Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
+        var uninstallButton = new Button { Name = "UninstallCurrentModButton", Text = _localizationService.GetString("UninstallMod", "Uninstall Mod"), Width = 170, Height = 42 };
         var gallery = new FlowLayoutPanel
         {
             Name = "CompletionImageGallery",
@@ -38,10 +39,12 @@ public partial class MainForm : Form
         };
 
         runButton.Click += (_, _) => GameService.LaunchGame(_selectedGamePath);
+        uninstallButton.Click += (_, _) => UninstallCurrentMod();
 
         var flow = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
         flow.Controls.Add(openButton);
         flow.Controls.Add(runButton);
+        flow.Controls.Add(uninstallButton);
 
         panel.Controls.Add(title);
         panel.Controls.Add(description);
@@ -84,19 +87,78 @@ public partial class MainForm : Form
             return;
         }
 
-        var payloadPath = ModPackageService.GetPayloadDirectory(packageRoot);
-        if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
-        {
-            payloadPath = packageRoot;
-        }
-
+        var previousModName = _selectedModName;
+        var previousPayloadPath = _selectedModPayloadPath;
+        var previousPackageRoot = _selectedModPackageRoot;
+        var previousManifest = _selectedModManifest;
+        var previousAsset = _selectedAssetForInstall;
         _selectedModName = ResolveDirectoryName(packageRoot);
-        _selectedModPayloadPath = payloadPath;
         _selectedModPackageRoot = packageRoot;
         _selectedModManifest = ModPackageService.ResolveManifest(packageRoot);
+        _selectedModPayloadPath = ModPackageService.GetInstallPayloadDirectory(packageRoot, _selectedModManifest);
+        if (string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
+        {
+            _selectedModPayloadPath = packageRoot;
+        }
         _selectedAssetForInstall = null;
 
-        await InstallSelectedModAsync();
+        _isInstallingOptionalPackage = true;
+        try
+        {
+            await InstallSelectedModAsync();
+        }
+        finally
+        {
+            _isInstallingOptionalPackage = false;
+            _selectedModName = previousModName;
+            _selectedModPayloadPath = previousPayloadPath;
+            _selectedModPackageRoot = previousPackageRoot;
+            _selectedModManifest = previousManifest;
+            _selectedAssetForInstall = previousAsset;
+            RefreshStep6OptionalActions();
+            UpdateSidebarState();
+        }
+    }
+
+    private void UninstallCurrentMod()
+    {
+        if (string.IsNullOrWhiteSpace(_selectedModName) || string.IsNullOrWhiteSpace(_selectedGamePath))
+        {
+            return;
+        }
+
+        var type = _selectedModManifest?.NormalizedType ?? "putinmodloader";
+        if (MessageBox.Show(
+                string.Format(_localizationService.GetString("ConfirmUninstallMod", "Are you sure you want to uninstall '{0}'?"), _selectedModName),
+                _appName,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) != DialogResult.Yes)
+        {
+            return;
+        }
+
+        var isReplacementInstall = type is "replacing" or "putandreplace" or "putandreplaces";
+        var isModLoaderInstall = type is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
+        var success = isReplacementInstall
+            ? ModPackageService.TryRestoreReplacementInstallations(_selectedModName)
+            : isModLoaderInstall
+            ? ModLoaderService.TryUninstallInstalledMod(
+                _selectedModName,
+                Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), _selectedModName),
+                _selectedGamePath,
+                "putinmodloader")
+            : ModLoaderService.TryUninstallByModId(_selectedModName, type, null, _selectedGamePath);
+
+        if (!success)
+        {
+            MessageBox.Show(_localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        _completionTimer.Stop();
+        _completionTimerActive = false;
+        RefreshModList();
+        MessageBox.Show(_localizationService.GetString("UninstallCompleted", "The mod was uninstalled successfully."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private List<string> GetOptionalPackageRootsForCurrentInstall()
@@ -162,6 +224,11 @@ public partial class MainForm : Form
         if (host == null)
         {
             return;
+        }
+
+        foreach (Control control in host.Controls.Cast<Control>().ToList())
+        {
+            control.Dispose();
         }
 
         host.Controls.Clear();

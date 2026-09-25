@@ -80,7 +80,10 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
-        var selectedDirectory = Path.GetDirectoryName(folderContentsDialog.FileName);
+        var selectedPath = folderContentsDialog.FileName;
+        var selectedDirectory = Directory.Exists(selectedPath)
+            ? selectedPath
+            : Path.GetDirectoryName(selectedPath);
         return NormalizeExistingDirectory(selectedDirectory) ?? string.Empty;
     }
 
@@ -486,6 +489,8 @@ public partial class MainForm : Form
 
     private async Task InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, GtaSaModManager.Models.ModManifest manifest)
     {
+        DeleteManifestEntries(manifest);
+
         var targetRoot = manifest.NormalizedType switch
         {
             "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons" => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName),
@@ -515,10 +520,14 @@ public partial class MainForm : Form
             return;
         }
 
+        var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
         var sourceModelName = DetectSourceModelName(payloadPath);
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => Path.GetExtension(path) is ".dff" or ".txd"
-                && string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path))
+            .Where(path => !isAssetPackage
+                || ModPackageService.IsMediaFile(path)
+                || (Path.GetExtension(path) is ".dff" or ".txd"
+                    && string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase)))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -610,21 +619,23 @@ public partial class MainForm : Form
         try
         {
             var records = new List<ReplaceInstallationRecord>();
+            var installedDestinationFiles = new List<string>();
             for (var index = 0; index < packageFiles.Count; index++)
             {
                 var sourcePath = packageFiles[index];
                 var extension = Path.GetExtension(sourcePath);
                 var originalName = Path.GetFileNameWithoutExtension(sourcePath);
-                var selectedAsset = selectedTarget is not null && !string.IsNullOrWhiteSpace(selectedTarget.NameFile)
+                var isMediaFile = ModPackageService.IsMediaFile(sourcePath);
+                var selectedAsset = !isMediaFile && selectedTarget is not null && !string.IsNullOrWhiteSpace(selectedTarget.NameFile)
                     ? selectedTarget
                     : selectedAssetList.FirstOrDefault(asset => string.Equals(asset.NameFile, originalName, StringComparison.OrdinalIgnoreCase));
                 var destinationName = selectedAsset?.NameFile ?? originalName;
-                var relativePath = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
+                var relativePath = isAssetPackage && !isMediaFile
                     ? destinationName + extension
                     : Path.GetRelativePath(payloadPath, sourcePath);
                 var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)
                     ? replacementTarget
-                    : GetSafeGamePath(manifest.NormalizedType is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
+                    : GetSafeGamePath(manifest.NormalizedType is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinandweapons"
                         ? Path.Combine("modloader", modName, relativePath)
                         : relativePath);
 
@@ -647,6 +658,7 @@ public partial class MainForm : Form
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
                 File.Copy(sourcePath, destinationPath, true);
+                installedDestinationFiles.Add(destinationPath);
                 var percent = (int)((index + 1) * 100d / Math.Max(1, packageFiles.Count));
                 progressPanel.UpdateProgress(percent, sourcePath);
                 await Task.Yield();
@@ -657,13 +669,24 @@ public partial class MainForm : Form
                 ModPackageService.RecordReplacementInstallation(record);
             }
 
+            var installedFiles = installedDestinationFiles
+                .Where(File.Exists)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
             if (manifest.NormalizedType == "putinmodloader")
             {
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
+                ModLoaderService.RecordPackageInstallation(manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
             }
             else if (manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
             {
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
+                ModLoaderService.RecordPackageInstallation(manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
+            }
+            else
+            {
+                ModLoaderService.RecordGameInstallation(_selectedGamePath, manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
             }
 
             progressPanel.Complete();
@@ -692,6 +715,40 @@ public partial class MainForm : Form
     private string GetSafeGamePath(string relativePath)
     {
         return GetSafePath(_selectedGamePath, relativePath, "Game path");
+    }
+
+    private void DeleteManifestEntries(GtaSaModManager.Models.ModManifest manifest)
+    {
+        if (!manifest.HasDeleteThis)
+        {
+            return;
+        }
+
+        foreach (var relativePath in manifest.DeleteThis
+                     .Where(path => !string.IsNullOrWhiteSpace(path))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            try
+            {
+                var targetPath = GetSafeGamePath(relativePath.Trim());
+                if (File.Exists(targetPath))
+                {
+                    File.Delete(targetPath);
+                }
+                else if (Directory.Exists(targetPath))
+                {
+                    Directory.Delete(targetPath, true);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+            {
+                MessageBox.Show(
+                    "Could not remove the file or folder requested by deleteThis: " + relativePath + Environment.NewLine + ex.Message,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+        }
     }
 
     private static string GetSafePath(string root, string relativePath, string label)

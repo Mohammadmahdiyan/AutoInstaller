@@ -169,9 +169,18 @@ public partial class MainForm : Form
 
     private void PrepareDetectedAssetStep(string payloadPath, GtaSaModManager.Models.ModManifest? manifest)
     {
+        if (string.Equals(_step5PreparedPayloadPath, payloadPath, StringComparison.OrdinalIgnoreCase)
+            && _step5PreparationAttempted)
+        {
+            return;
+        }
+
         _step5DetectedAssets.Clear();
         _step5SelectedAssetKeys.Clear();
         _selectedAssetForInstall = null;
+        _step5PreparedPayloadPath = payloadPath;
+        _step5DetectedAssetType = string.Empty;
+        _step5PreparationAttempted = true;
 
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
         {
@@ -185,8 +194,20 @@ public partial class MainForm : Form
         }
 
         var detectedType = DetectAssetTypeByName(sourceModelName);
+        var typeWasUnknown = string.IsNullOrWhiteSpace(detectedType);
         if (string.IsNullOrWhiteSpace(detectedType))
         {
+            detectedType = PromptForUnknownAssetType(sourceModelName);
+        }
+
+        _step5DetectedAssetType = detectedType;
+        if (string.IsNullOrWhiteSpace(detectedType))
+        {
+            if (typeWasUnknown)
+            {
+                return;
+            }
+
             var fallbackAssets = _assetCatalogService.LoadAssets()
                 .OrderBy(asset => asset.AssetType, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
@@ -353,6 +374,14 @@ public partial class MainForm : Form
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
         }
 
+        _assetCatalogService.LoadAssets();
+        if (!string.IsNullOrWhiteSpace(_assetCatalogService.ValidationError)
+            && !string.Equals(_lastShownAssetCatalogError, _assetCatalogService.ValidationError, StringComparison.Ordinal))
+        {
+            _lastShownAssetCatalogError = _assetCatalogService.ValidationError;
+            MessageBox.Show(_assetCatalogService.ValidationError, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
         var sourceType = GetCurrentStep5AssetType();
         if (title != null)
         {
@@ -388,7 +417,7 @@ public partial class MainForm : Form
 
         _isRefreshingAssetStep = true;
         gallery.SuspendLayout();
-        gallery.Controls.Clear();
+        DisposeAssetGalleryControls(gallery);
 
         var assets = _step5DetectedAssets
             .Where(asset => string.IsNullOrWhiteSpace(sourceType) || string.Equals(asset.AssetType, sourceType, StringComparison.OrdinalIgnoreCase))
@@ -511,6 +540,77 @@ public partial class MainForm : Form
 
         gallery.ResumeLayout(true);
         _isRefreshingAssetStep = false;
+    }
+
+    private static void DisposeAssetGalleryControls(Control gallery)
+    {
+        foreach (Control control in gallery.Controls.Cast<Control>().ToList())
+        {
+            control.Dispose();
+        }
+
+        gallery.Controls.Clear();
+    }
+
+    private string PromptForUnknownAssetType(string sourceModelName)
+    {
+        using var dialog = new Form
+        {
+            Text = _localizationService.GetString("AssetTypePromptTitle", "Select asset type"),
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            ClientSize = new Size(360, 145)
+        };
+
+        var description = new Label
+        {
+            AutoSize = false,
+            Dock = DockStyle.Top,
+            Height = 48,
+            Text = string.Format(
+                _localizationService.GetString("AssetTypePrompt", "The model '{0}' was not found. Select its asset type."),
+                sourceModelName),
+            Padding = new Padding(12, 12, 12, 4)
+        };
+        var typeSelector = new ComboBox
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            Width = 180,
+            Location = new Point(12, 58)
+        };
+        typeSelector.Items.AddRange(new object[] { "Vehicle", "Skin", "Weapon" });
+        typeSelector.SelectedIndex = 0;
+
+        var okButton = new Button
+        {
+            Text = _localizationService.GetString("Continue", "Continue"),
+            DialogResult = DialogResult.OK,
+            Width = 90,
+            Height = 30,
+            Location = new Point(258, 100)
+        };
+        var cancelButton = new Button
+        {
+            Text = _localizationService.GetString("Cancel", "Cancel"),
+            DialogResult = DialogResult.Cancel,
+            Width = 90,
+            Height = 30,
+            Location = new Point(160, 100)
+        };
+
+        dialog.Controls.Add(description);
+        dialog.Controls.Add(typeSelector);
+        dialog.Controls.Add(cancelButton);
+        dialog.Controls.Add(okButton);
+        dialog.AcceptButton = okButton;
+        dialog.CancelButton = cancelButton;
+
+        return dialog.ShowDialog(this) == DialogResult.OK
+            ? typeSelector.SelectedItem?.ToString() ?? string.Empty
+            : string.Empty;
     }
 
     private static string NormalizeCategoryValue(string? category)
@@ -657,7 +757,6 @@ public partial class MainForm : Form
             card.BackColor = palette.AccentSoft;
 
             UpdateSidebarState();
-            RefreshAssetStep();
         }
 
         void ShowAssetNameHover(object? _, EventArgs __)

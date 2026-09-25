@@ -66,6 +66,8 @@ public class ModManifest
 
     public ModConflictCleanupEntry? ConflictCleanup { get; set; }
 
+    public List<string> DeleteThis { get; set; } = new();
+
     public string NormalizedType
     {
         get
@@ -100,6 +102,8 @@ public class ModManifest
     public bool HasRequirements => GetRequirements().Any();
 
     public bool HasConflictCleanup => ConflictCleanup != null && !ConflictCleanup.IsEmpty;
+
+    public bool HasDeleteThis => DeleteThis != null && DeleteThis.Any(path => !string.IsNullOrWhiteSpace(path));
 
     public IEnumerable<ModRequirementEntry> GetRequirements()
     {

@@ -10,44 +10,6 @@ public partial class MainForm : Form
     // -------------------------------------------------------------------------
     // از اینجا برای فایل MainForm.Theme.cs
     // -------------------------------------------------------------------------
-    private void SynchronizeStepInputs(WizardStep step)
-    {
-        if (step == WizardStep.Step1)
-        {
-            if (_wizardPanels.TryGetValue(WizardStep.Step1, out var panel))
-            {
-                var tb = panel.Controls.OfType<TextBox>().FirstOrDefault(t => t.Name == "Step1GamePathTextBox");
-                RestoreCachedValueIfMissing(tb, _settings.GamePath, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value) && GameService.IsValidGameFolder(value));
-            }
-
-            if (GamePathTextBox != null)
-            {
-                RestoreCachedValueIfMissing(GamePathTextBox, _settings.GamePath, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value) && GameService.IsValidGameFolder(value));
-            }
-        }
-
-        if (step == WizardStep.Step2)
-        {
-            if (_wizardPanels.TryGetValue(WizardStep.Step2, out var panel))
-            {
-                var tb = panel.Controls.OfType<TextBox>().FirstOrDefault(t => t.Name == "Step2ModLibraryPathTextBox");
-                RestoreCachedValueIfMissing(tb, _settings.ModSourceFolder, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value));
-            }
-
-            if (ModLibraryPathTextBox != null)
-            {
-                RestoreCachedValueIfMissing(ModLibraryPathTextBox, _settings.ModSourceFolder, value => !string.IsNullOrWhiteSpace(value) && Directory.Exists(value));
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // تا اینجا برای فایل MainForm.Theme.cs
-    // -------------------------------------------------------------------------
-
-        // -------------------------------------------------------------------------
-    // از اینجا برای فایل MainForm.Theme.cs
-    // -------------------------------------------------------------------------
     private void ThemeComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
         var selectedComboBox = sender as ComboBox ?? ThemeComboBox;
@@ -68,7 +30,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void ApplyComboSelectionSafely(ComboBox? comboBox, string displayValue)
+    private void ApplyComboSelectionSafely(ComboBox? comboBox, string displayValue, EventHandler selectionChangedHandler)
     {
         if (comboBox == null || comboBox.IsDisposed || !comboBox.IsHandleCreated)
         {
@@ -91,8 +53,7 @@ public partial class MainForm : Form
 
         try
         {
-            comboBox.SelectedIndexChanged -= LanguageComboBox_SelectedIndexChanged;
-            comboBox.SelectedIndexChanged -= ThemeComboBox_SelectedIndexChanged;
+            comboBox.SelectedIndexChanged -= selectionChangedHandler;
             comboBox.SelectedItem = comboBox.Items.Cast<object?>()
                 .First(item => item != null && string.Equals(comboBox.GetItemText(item), displayValue, StringComparison.Ordinal));
         }
@@ -106,8 +67,7 @@ public partial class MainForm : Form
         }
         finally
         {
-            comboBox.SelectedIndexChanged += LanguageComboBox_SelectedIndexChanged;
-            comboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
+            comboBox.SelectedIndexChanged += selectionChangedHandler;
         }
     }
 
@@ -161,20 +121,6 @@ public partial class MainForm : Form
         // -------------------------------------------------------------------------
     // از اینجا برای فایل MainForm.Theme.cs
     // -------------------------------------------------------------------------
-    private void RestoreCachedValueIfMissing(TextBox? textBox, string? cachedValue, Func<string, bool> isValidCachedValue)
-    {
-        if (textBox == null || textBox.IsDisposed || string.IsNullOrWhiteSpace(cachedValue) || !isValidCachedValue(cachedValue))
-        {
-            return;
-        }
-
-        var currentValue = textBox.Text ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(currentValue) || string.Equals(currentValue, cachedValue, StringComparison.OrdinalIgnoreCase))
-        {
-            textBox.Text = cachedValue.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        }
-    }
-
     private static void ApplyPathSelectorTextBoxStyle(TextBox textBox)
     {
         if (textBox == null || textBox.IsDisposed)

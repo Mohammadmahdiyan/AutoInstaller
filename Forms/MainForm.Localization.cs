@@ -47,6 +47,7 @@ public partial class MainForm : Form
             ShowGlobalLoadingOverlay(_localizationService.GetString("LoadingVehicles", "Loading vehicles...") /* lightweight refresh indicator */);
             _settings.Language = requestedLanguage;
             ApplyCurrentLanguage();
+            RebuildWizardPanels();
             ApplyLocalization();
             ApplyCurrentTheme();
             ApplySidebarDirection();
@@ -58,12 +59,12 @@ public partial class MainForm : Form
 
             if (LanguageComboBox != null && !LanguageComboBox.IsDisposed)
             {
-                ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
+                ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language), LanguageComboBox_SelectedIndexChanged);
             }
 
             if (_sidebarLanguageComboBox != null && !_sidebarLanguageComboBox.IsDisposed)
             {
-                ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
+                ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language), LanguageComboBox_SelectedIndexChanged);
             }
         }
         catch (ObjectDisposedException)
@@ -104,8 +105,8 @@ public partial class MainForm : Form
         if (_sidebarNextButton != null && !_sidebarNextButton.IsDisposed) _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
         if (_sidebarReadmeButton != null && !_sidebarReadmeButton.IsDisposed) _sidebarReadmeButton.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
 
-        ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
-        ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
+        ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language), LanguageComboBox_SelectedIndexChanged);
+        ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language), LanguageComboBox_SelectedIndexChanged);
 
         foreach (var root in new Control[] { this, MainPanel, _sidebarPanel, _wizardHost }.Where(control => control != null && !control.IsDisposed).ToList())
         {
@@ -140,23 +141,23 @@ public partial class MainForm : Form
         if (ThemeComboBox != null && !ThemeComboBox.IsDisposed)
         {
             var themeDisplay = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
-            ApplyComboSelectionSafely(ThemeComboBox, themeDisplay);
+            ApplyComboSelectionSafely(ThemeComboBox, themeDisplay, ThemeComboBox_SelectedIndexChanged);
         }
 
         if (LanguageComboBox != null && !LanguageComboBox.IsDisposed)
         {
-            ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language));
+            ApplyComboSelectionSafely(LanguageComboBox, GetLanguageDisplayName(_settings.Language), LanguageComboBox_SelectedIndexChanged);
         }
 
         if (_sidebarThemeComboBox != null && !_sidebarThemeComboBox.IsDisposed)
         {
             var themeDisplay = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
-            ApplyComboSelectionSafely(_sidebarThemeComboBox, themeDisplay);
+            ApplyComboSelectionSafely(_sidebarThemeComboBox, themeDisplay, ThemeComboBox_SelectedIndexChanged);
         }
 
         if (_sidebarLanguageComboBox != null && !_sidebarLanguageComboBox.IsDisposed)
         {
-            ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language));
+            ApplyComboSelectionSafely(_sidebarLanguageComboBox, GetLanguageDisplayName(_settings.Language), LanguageComboBox_SelectedIndexChanged);
         }
 
         ApplyCurrentTheme();
@@ -207,6 +208,12 @@ public partial class MainForm : Form
                     return;
                 case "Step4LoadingText":
                     label.Text = GetStep4LoadingText(GetCurrentStep5AssetType());
+                    return;
+                case "SidebarLanguageLabel":
+                    label.Text = _localizationService.GetString("Language", "Language");
+                    return;
+                case "SidebarThemeLabel":
+                    label.Text = _localizationService.GetString("Theme", "Theme");
                     return;
             }
         }

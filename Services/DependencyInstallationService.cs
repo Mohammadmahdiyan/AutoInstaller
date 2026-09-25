@@ -17,8 +17,9 @@ public static class DependencyInstallationService
 
     public static bool AreDependenciesInstalled(string gameFolder)
     {
-        return RequiredFiles.All(file => File.Exists(Path.Combine(gameFolder, file)))
-            && RequiredDirectories.All(directory => Directory.Exists(Path.Combine(gameFolder, directory)));
+        var filesInstalled = RequiredFiles.All(file => File.Exists(Path.Combine(gameFolder, file)));
+        var directoriesInstalled = RequiredDirectories.All(directory => Directory.Exists(Path.Combine(gameFolder, directory)));
+        return filesInstalled || directoriesInstalled;
     }
 
     public static async Task<DependencyInstallationResult> EnsureInstalledAsync(

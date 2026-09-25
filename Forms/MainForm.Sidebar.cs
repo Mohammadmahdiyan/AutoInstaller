@@ -307,9 +307,9 @@ public partial class MainForm : Form
 
         _sidebarStack.Controls.Add(_sidebarPreviousButton, 0, 0);
         _sidebarStack.Controls.Add(_sidebarNextButton, 0, 1);
-        _sidebarStack.Controls.Add(new Label { Text = _localizationService.GetString("Language", "Language"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 2);
+        _sidebarStack.Controls.Add(new Label { Name = "SidebarLanguageLabel", Text = _localizationService.GetString("Language", "Language"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 2);
         _sidebarStack.Controls.Add(_sidebarLanguageComboBox, 0, 3);
-        _sidebarStack.Controls.Add(new Label { Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
+        _sidebarStack.Controls.Add(new Label { Name = "SidebarThemeLabel", Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
         _sidebarStack.Controls.Add(_sidebarThemeComboBox, 0, 5);
         _sidebarStack.Controls.Add(_sidebarDetectedModLabel, 0, 6);
         _sidebarStack.Controls.Add(_sidebarSelectedModelPanel, 0, 7);

@@ -198,12 +198,16 @@ public partial class MainForm : Form
             }
 
             _selectedModName = ResolveDirectoryName(selected);
-            _selectedModPayloadPath = selected;
             _selectedModPackageRoot = selected;
             _selectedModManifest = ModPackageService.ResolveManifest(selected);
+            _selectedModPayloadPath = ModPackageService.GetInstallPayloadDirectory(selected, _selectedModManifest);
+            if (string.IsNullOrWhiteSpace(_selectedModPayloadPath) || !Directory.Exists(_selectedModPayloadPath))
+            {
+                _selectedModPayloadPath = selected;
+            }
             _selectedAssetForInstall = null;
-            _selectedReadmePath = FindReadmeFile(selected);
-            _selectedImageFiles = FindImageFiles(selected);
+            _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+            _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
             folderText.Text = selected;
             _detectedModLabel = selectedName;
             selectedName.Text = string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName);
@@ -217,7 +221,7 @@ public partial class MainForm : Form
 
             _detectedModTimer.Stop();
             _detectedModTimer.Start();
-            RefreshStep3Images(panel, selected);
+            RefreshStep3Images(panel, _selectedModPayloadPath);
             UpdateSidebarState();
         };
 
