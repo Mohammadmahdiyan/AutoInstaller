@@ -159,7 +159,18 @@ public partial class MainForm : Form
         var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold), Margin = new Padding(0, 0, 0, 8) };
         var folderText = new TextBox { Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
         var browse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
-        var selectedName = new Label { AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 12, 0, 0) };
+        var selectedName = new Label
+        {
+            Name = "Step3DetectedModStatus",
+            Text = string.IsNullOrWhiteSpace(_selectedModName)
+                ? string.Empty
+                : string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName),
+            AutoSize = true,
+            MaximumSize = new Size(700, 0),
+            Font = new Font("Segoe UI", 11F),
+            Margin = new Padding(0, 12, 0, 0),
+            Visible = _isDetectedModStatusVisible
+        };
         ApplyPathSelectorTextBoxStyle(folderText);
         ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
 
@@ -175,6 +186,7 @@ public partial class MainForm : Form
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
                 _selectedModName = string.Empty;
+                _isDetectedModStatusVisible = false;
                 _selectedModPayloadPath = string.Empty;
                 _selectedReadmePath = string.Empty;
                 _selectedImageFiles = new List<string>();
@@ -187,6 +199,7 @@ public partial class MainForm : Form
             if (!Directory.EnumerateFileSystemEntries(selected).Any())
             {
                 _selectedModName = string.Empty;
+                _isDetectedModStatusVisible = false;
                 _selectedModPayloadPath = string.Empty;
                 _selectedReadmePath = string.Empty;
                 _selectedImageFiles = new List<string>();
@@ -198,6 +211,7 @@ public partial class MainForm : Form
             }
 
             _selectedModName = ResolveDirectoryName(selected);
+            _isDetectedModStatusVisible = true;
             _selectedModPackageRoot = selected;
             _selectedModManifest = ModPackageService.ResolveManifest(selected);
             _selectedModPayloadPath = ModPackageService.GetInstallPayloadDirectory(selected, _selectedModManifest);
@@ -276,6 +290,12 @@ public partial class MainForm : Form
         stack.Controls.Add(imageGallery, 0, 4);
 
         panel.Controls.Add(stack);
+        _detectedModLabel = selectedName;
+        if (!string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
+        {
+            folderText.Text = _selectedModPackageRoot;
+            RefreshStep3Images(panel, _selectedModPayloadPath);
+        }
         return panel;
     }
 

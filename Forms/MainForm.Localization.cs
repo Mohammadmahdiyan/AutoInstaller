@@ -44,9 +44,10 @@ public partial class MainForm : Form
         _isApplyingLanguage = true;
         try
         {
-            ShowGlobalLoadingOverlay(_localizationService.GetString("LoadingVehicles", "Loading vehicles...") /* lightweight refresh indicator */);
             _settings.Language = requestedLanguage;
             ApplyCurrentLanguage();
+            ShowGlobalLoadingOverlay(_localizationService.GetString("LoadingAssets", "Loading..."));
+            await Task.Yield();
             RebuildWizardPanels();
             ApplyLocalization();
             ApplyCurrentTheme();
@@ -194,6 +195,12 @@ public partial class MainForm : Form
             {
                 case "ProfileSummary":
                     label.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+                    return;
+                case "Step3DetectedModStatus":
+                    label.Text = string.IsNullOrWhiteSpace(_selectedModName)
+                        ? string.Empty
+                        : string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName);
+                    label.Visible = _isDetectedModStatusVisible;
                     return;
                 case "AssetStepTitle":
                     label.Text = GetReplacementTitleForType(GetCurrentStep5AssetType());

@@ -408,7 +408,9 @@ public partial class MainForm : Form
             && FindImageFiles(_selectedModPayloadPath).Any(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path));
         var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
         var shouldDisplaySidebarReadme = hasSidebarReadme && !(hasStep5ModImage && isStep5Preview);
-        var hasDetectedMod = !string.IsNullOrWhiteSpace(_selectedModName) && (isStep3Preview || isStep4Preview || isStep5Preview);
+        var hasDetectedMod = _isDetectedModStatusVisible
+            && !string.IsNullOrWhiteSpace(_selectedModName)
+            && (isStep3Preview || isStep4Preview || isStep5Preview);
         var hasSelectedAssetModel = isStep5Preview && _selectedAssetForInstall != null;
 
         if (_sidebarStack != null && _sidebarStack.Controls.Contains(_sidebarReadmeHost) && _sidebarStack.Controls.Contains(_sidebarStep4Image))

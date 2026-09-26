@@ -62,6 +62,7 @@ public partial class MainForm : Form
     private bool _isApplyingLanguage;
     private bool _returnedToInstallStepFromCompletion;
     private bool _isInstallingOptionalPackage;
+    private bool _isDetectedModStatusVisible;
     private bool _isRefreshingAssetStep;
     private Panel? _globalLoadingOverlay;
     private Label? _globalLoadingLabel;
@@ -119,6 +120,8 @@ public partial class MainForm : Form
                 _detectedModLabel.Text = string.Empty;
                 _detectedModLabel.Visible = false;
             }
+
+            _isDetectedModStatusVisible = false;
 
             if (_sidebarDetectedModLabel != null && !_sidebarDetectedModLabel.IsDisposed)
             {
