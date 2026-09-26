@@ -41,7 +41,7 @@ public partial class MainForm : Form
         var sortLabel = new Label { Name = "AssetSortLabel", Text = _localizationService.GetString("AssetSort", "Sort"), AutoSize = true, Margin = new Padding(18, 7, 8, 0) };
         var allText = _localizationService.GetString("AssetAll", "All");
 
-        columns.Items.AddRange(new object[] { "2", "3", "4", "5" });
+        columns.Items.AddRange(new object[] { "2", "3", "4" });
         columns.SelectedItem = "3";
         sorting.Items.AddRange(new object[]
         {
@@ -535,10 +535,12 @@ public partial class MainForm : Form
             ? gallery.ClientSize.Width
             : Math.Max(320, panel.ClientSize.Width - 32);
 
-        var usableGalleryWidth = Math.Max(180, availableGalleryWidth - gallery.Padding.Horizontal);
-        var columnGap = 12;
+        var usableGalleryWidth = Math.Max(
+            180,
+            availableGalleryWidth - gallery.Padding.Horizontal - SystemInformation.VerticalScrollBarWidth);
         var columnCount = Math.Max(1, _step5ColumnCount);
-        var rawCardWidth = (usableGalleryWidth - (columnCount - 1) * columnGap) / (double)columnCount;
+        const int cardRightMargin = 12;
+        var rawCardWidth = (usableGalleryWidth - columnCount * cardRightMargin) / (double)columnCount;
         var baseCardWidth = Math.Max(120, (int)Math.Floor(rawCardWidth));
         var cardHeight = Math.Max(95, (int)Math.Round(baseCardWidth * 0.50d));
 

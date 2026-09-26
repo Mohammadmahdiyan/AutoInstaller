@@ -100,6 +100,7 @@ public partial class MainForm : Form
         if (ModLoaderTitleLabel != null && !ModLoaderTitleLabel.IsDisposed) ModLoaderTitleLabel.Text = _localizationService.GetString("ModLoaderMods", "ModLoader Mods");
         if (ThemeLabel != null && !ThemeLabel.IsDisposed) ThemeLabel.Text = _localizationService.GetString("Theme", "Theme");
         if (LanguageLabel != null && !LanguageLabel.IsDisposed) LanguageLabel.Text = _localizationService.GetString("Language", "Language");
+        UpdateThemeComboItems();
 
         if (_sidebarPreviousButton != null && !_sidebarPreviousButton.IsDisposed) _sidebarPreviousButton.Text = _localizationService.GetString("Previous", "Previous");
         if (_sidebarNextButton != null && !_sidebarNextButton.IsDisposed) _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
@@ -140,7 +141,7 @@ public partial class MainForm : Form
 
         if (ThemeComboBox != null && !ThemeComboBox.IsDisposed)
         {
-            var themeDisplay = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+            var themeDisplay = GetThemeDisplayName(ThemeManager.ParseTheme(_settings.Theme));
             ApplyComboSelectionSafely(ThemeComboBox, themeDisplay, ThemeComboBox_SelectedIndexChanged);
         }
 
@@ -151,7 +152,7 @@ public partial class MainForm : Form
 
         if (_sidebarThemeComboBox != null && !_sidebarThemeComboBox.IsDisposed)
         {
-            var themeDisplay = ThemeManager.GetDisplayName(ThemeManager.ParseTheme(_settings.Theme));
+            var themeDisplay = GetThemeDisplayName(ThemeManager.ParseTheme(_settings.Theme));
             ApplyComboSelectionSafely(_sidebarThemeComboBox, themeDisplay, ThemeComboBox_SelectedIndexChanged);
         }
 

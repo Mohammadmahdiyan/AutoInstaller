@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 using GtaSaModManager.UI;
 
@@ -19,7 +20,7 @@ public partial class MainForm : Form
         }
 
         var selected = selectedComboBox.SelectedItem.ToString();
-        _settings.Theme = ThemeManager.ParseTheme(selected).ToString();
+        _settings.Theme = ParseThemeDisplayName(selected).ToString();
         _settingsService.Save(_settings);
         ApplyCurrentTheme();
         ApplySidebarDirection();
@@ -81,6 +82,51 @@ public partial class MainForm : Form
     private void ApplyCurrentTheme()
     {
         ThemeManager.ApplyTheme(this, ThemeManager.ParseTheme(_settings.Theme));
+    }
+
+    private string GetThemeDisplayName(AppTheme theme)
+    {
+        return _localizationService.GetString("ThemeName" + theme, ThemeManager.GetDisplayName(theme));
+    }
+
+    private AppTheme ParseThemeDisplayName(string? displayName)
+    {
+        foreach (var theme in Enum.GetValues<AppTheme>())
+        {
+            if (string.Equals(displayName, GetThemeDisplayName(theme), StringComparison.Ordinal)
+                || string.Equals(displayName, ThemeManager.GetDisplayName(theme), StringComparison.OrdinalIgnoreCase)
+                || string.Equals(displayName, theme.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                return theme;
+            }
+        }
+
+        return AppTheme.System;
+    }
+
+    private void UpdateThemeComboItems()
+    {
+        var themes = Enum.GetValues<AppTheme>();
+        var selectedTheme = ThemeManager.ParseTheme(_settings.Theme);
+
+        void UpdateCombo(ComboBox? comboBox)
+        {
+            if (comboBox == null || comboBox.IsDisposed)
+            {
+                return;
+            }
+
+            comboBox.SelectedIndexChanged -= ThemeComboBox_SelectedIndexChanged;
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            comboBox.Items.AddRange(themes.Select(theme => (object)GetThemeDisplayName(theme)).ToArray());
+            comboBox.SelectedItem = GetThemeDisplayName(selectedTheme);
+            comboBox.EndUpdate();
+            comboBox.SelectedIndexChanged += ThemeComboBox_SelectedIndexChanged;
+        }
+
+        UpdateCombo(ThemeComboBox);
+        UpdateCombo(_sidebarThemeComboBox);
     }
 
     private void ApplyRtlForLanguage(SupportedLanguage language)
