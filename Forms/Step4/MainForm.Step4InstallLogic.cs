@@ -689,7 +689,7 @@ public partial class MainForm : Form
             await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
             if (!_isInstallingOptionalPackage)
             {
-                GoToStep(WizardStep.Step5);
+                GoToStep(WizardStep.Step6);
             }
             _selectedReadmePath = FindReadmeFile(targetDir);
         }
