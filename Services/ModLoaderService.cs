@@ -6,6 +6,7 @@ namespace GtaSaModManager.Services;
 public class ModLoaderService
 {
     private static readonly string InstalledModsFileName = "installed-mods.json";
+    private const string GameManagerDirectoryName = ".ModManager";
 
     public static string GetInstalledModsPath()
     {
@@ -21,9 +22,18 @@ public class ModLoaderService
             return string.Empty;
         }
 
-        var folder = Path.Combine(gamePath, ".zGtaSaModManager");
+        var folder = Path.Combine(gamePath, GameManagerDirectoryName);
         Directory.CreateDirectory(folder);
-        return Path.Combine(folder, "installations.json");
+        SetHidden(folder);
+
+        var manifestPath = Path.Combine(folder, "installations.json");
+        var legacyManifestPath = Path.Combine(gamePath, ".zGtaSaModManager", "installations.json");
+        if (!File.Exists(manifestPath) && File.Exists(legacyManifestPath))
+        {
+            File.Copy(legacyManifestPath, manifestPath);
+        }
+
+        return manifestPath;
     }
 
     public static string GetUserFilesInstallationsManifestPath()
@@ -32,6 +42,20 @@ public class ModLoaderService
         var folder = Path.Combine(userFilesRoot, ".zGtaSaModManager");
         Directory.CreateDirectory(folder);
         return Path.Combine(folder, "installations.json");
+    }
+
+    private static void SetHidden(string path)
+    {
+        try
+        {
+            File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
+        }
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
     }
 
     public static InstallationManifest LoadInstallationManifest(string manifestPath)
@@ -69,6 +93,16 @@ public class ModLoaderService
         if (!string.IsNullOrWhiteSpace(directory))
         {
             Directory.CreateDirectory(directory);
+        }
+
+        if (File.Exists(manifestPath))
+        {
+            var attributes = File.GetAttributes(manifestPath);
+            var writableAttributes = attributes & ~(FileAttributes.Hidden | FileAttributes.ReadOnly);
+            if (writableAttributes != attributes)
+            {
+                File.SetAttributes(manifestPath, writableAttributes);
+            }
         }
 
         var json = JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true });

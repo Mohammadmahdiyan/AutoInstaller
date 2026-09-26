@@ -65,6 +65,7 @@ public partial class MainForm : Form
     private bool _isRefreshingAssetStep;
     private Panel? _globalLoadingOverlay;
     private Label? _globalLoadingLabel;
+    private Label? _globalLoadingSpinnerLabel;
     private readonly System.Windows.Forms.Timer _loadingSpinnerTimer = new();
     private float _loadingSpinnerAngle;
     private readonly List<GameAsset> _step5DetectedAssets = new();

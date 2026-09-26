@@ -96,12 +96,20 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
-        return Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => Path.GetExtension(path) is ".dff" or ".txd")
+        var modelFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(path => string.Equals(Path.GetExtension(path), ".dff", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(Path.GetExtension(path), ".txd", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => string.Equals(Path.GetExtension(path), ".dff", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .Select(path => Path.GetFileNameWithoutExtension(path))
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .FirstOrDefault() ?? string.Empty;
+            .ToList();
+
+        var catalogAssets = _assetCatalogService.LoadAssets();
+        return modelFiles.FirstOrDefault(modelName => catalogAssets.Any(asset =>
+                   string.Equals(asset.NameFile, modelName, StringComparison.OrdinalIgnoreCase)))
+            ?? modelFiles.FirstOrDefault()
+            ?? string.Empty;
     }
 
     private string DetectAssetTypeByName(string modelName)
@@ -111,31 +119,9 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
-        var normalizedModelName = NormalizeAssetIdentifier(modelName);
-
         return _assetCatalogService.LoadAssets()
-            .FirstOrDefault(asset =>
-                string.Equals(asset.NameFile, modelName, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(asset.Name, modelName, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(NormalizeAssetIdentifier(asset.NameFile), normalizedModelName, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(NormalizeAssetIdentifier(asset.Name), normalizedModelName, StringComparison.OrdinalIgnoreCase))?
+            .FirstOrDefault(asset => string.Equals(asset.NameFile, modelName, StringComparison.OrdinalIgnoreCase))?
             .AssetType ?? string.Empty;
-    }
-
-    private static string NormalizeAssetIdentifier(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return string.Empty;
-        }
-
-        var trimmed = value.Trim();
-        trimmed = trimmed.Replace('\\', '/');
-        trimmed = trimmed.TrimEnd('/');
-        trimmed = trimmed.Replace(".dff", string.Empty, StringComparison.OrdinalIgnoreCase);
-        trimmed = trimmed.Replace(".txd", string.Empty, StringComparison.OrdinalIgnoreCase);
-        trimmed = Regex.Replace(trimmed, "[_-]+", "");
-        return trimmed.Trim();
     }
 
     private string GetReplacementTitleForType(string assetType)
@@ -151,6 +137,11 @@ public partial class MainForm : Form
 
     private string GetCurrentStep5AssetType()
     {
+        if (!string.IsNullOrWhiteSpace(_step5DetectedAssetType))
+        {
+            return _step5DetectedAssetType;
+        }
+
         if (_step5DetectedAssets.Count > 0)
         {
             return _step5DetectedAssets[0].AssetType;
@@ -163,8 +154,7 @@ public partial class MainForm : Form
             return detectedType;
         }
 
-        var fallbackAsset = _assetCatalogService.LoadAssets().FirstOrDefault();
-        return fallbackAsset?.AssetType ?? string.Empty;
+        return string.Empty;
     }
 
     private void PrepareDetectedAssetStep(string payloadPath, GtaSaModManager.Models.ModManifest? manifest)
@@ -257,9 +247,7 @@ public partial class MainForm : Form
         _step5SelectedAssetKeys.Clear();
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
-        _step5CategoryFilter = !string.IsNullOrWhiteSpace(sourceAsset.Category)
-            ? NormalizeCategoryValue(sourceAsset.Category)
-            : _localizationService.GetString("AssetAll", "All");
+        _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
     }
 
     private static string GetAssetSelectionKey(GameAsset asset)
@@ -305,6 +293,12 @@ public partial class MainForm : Form
 
         var sourceModelName = DetectSourceModelName(payloadPath);
         var sourceType = DetectAssetTypeByName(sourceModelName);
+        if (string.IsNullOrWhiteSpace(sourceType)
+            && string.Equals(_step5PreparedPayloadPath, payloadPath, StringComparison.OrdinalIgnoreCase))
+        {
+            sourceType = _step5DetectedAssetType;
+        }
+
         var availableAssets = _assetCatalogService.LoadAssets()
             .Where(asset => string.Equals(asset.AssetType, sourceType, StringComparison.OrdinalIgnoreCase))
             .OrderBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase)
@@ -346,7 +340,20 @@ public partial class MainForm : Form
         Debug.WriteLine($"[Step5] columns changed => {_step5ColumnCount}");
     }
 
-    private void RefreshAssetStep()
+    private async void RefreshAssetStep()
+    {
+        try
+        {
+            await RefreshAssetStepAsync();
+        }
+        catch (Exception ex)
+        {
+            HideGlobalLoadingOverlay();
+            MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async Task RefreshAssetStepAsync()
     {
         if (_isRefreshingAssetStep)
         {
@@ -358,16 +365,23 @@ public partial class MainForm : Form
             return;
         }
 
-        var gallery = panel.Controls.Find("AssetGallery", false).FirstOrDefault() as FlowLayoutPanel;
-        var categoryFilter = panel.Controls.Find("AssetCategoryFilter", false).FirstOrDefault() as ComboBox;
-        var categoryLabel = panel.Controls.Find("AssetCategoryLabel", false).FirstOrDefault() as Label;
-        var title = panel.Controls.Find("AssetStepTitle", false).FirstOrDefault() as Label;
-        var columns = panel.Controls.Find("AssetColumns", false).FirstOrDefault() as ComboBox;
-        var sortFilter = panel.Controls.Find("AssetSortMode", false).FirstOrDefault() as ComboBox;
+        var gallery = panel.Controls.Find("AssetGallery", true).FirstOrDefault() as FlowLayoutPanel;
+        var categoryFilter = panel.Controls.Find("AssetCategoryFilter", true).FirstOrDefault() as ComboBox;
+        var categoryLabel = panel.Controls.Find("AssetCategoryLabel", true).FirstOrDefault() as Label;
+        var title = panel.Controls.Find("AssetStepTitle", true).FirstOrDefault() as Label;
+        var columns = panel.Controls.Find("AssetColumns", true).FirstOrDefault() as ComboBox;
+        var sortFilter = panel.Controls.Find("AssetSortMode", true).FirstOrDefault() as ComboBox;
         if (gallery == null)
         {
             return;
         }
+
+        _isRefreshingAssetStep = true;
+        var galleryLayoutSuspended = false;
+        try
+        {
+        ShowGlobalLoadingOverlay(_localizationService.GetString("LoadingAssets", "Loading..."));
+        await Task.Yield();
 
         if (_step5DetectedAssets.Count == 0 && !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
         {
@@ -415,8 +429,8 @@ public partial class MainForm : Form
             }
         }
 
-        _isRefreshingAssetStep = true;
         gallery.SuspendLayout();
+        galleryLayoutSuspended = true;
         DisposeAssetGalleryControls(gallery);
 
         var assets = _step5DetectedAssets
@@ -430,17 +444,18 @@ public partial class MainForm : Form
             .OrderBy(category => category, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+        var hasCategories = categories.Count > 0;
         var hasMeaningfulCategories = categories.Count > 1;
         Debug.WriteLine($"[Step5] detectedAssets={assets.Count}; categories={categories.Count}; categoryList={string.Join(" | ", categories)}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}; meaningful={hasMeaningfulCategories}");
 
         if (categoryFilter != null)
         {
-            categoryFilter.Visible = hasMeaningfulCategories;
-            categoryFilter.Enabled = hasMeaningfulCategories;
+            categoryFilter.Visible = hasCategories;
+            categoryFilter.Enabled = hasCategories;
         }
         if (categoryLabel != null)
         {
-            categoryLabel.Visible = hasMeaningfulCategories;
+            categoryLabel.Visible = hasCategories;
         }
 
         var allText = _localizationService.GetString("AssetAll", "All");
@@ -527,19 +542,37 @@ public partial class MainForm : Form
         var baseCardWidth = Math.Max(120, (int)Math.Floor(rawCardWidth));
         var cardHeight = Math.Max(95, (int)Math.Round(baseCardWidth * 0.50d));
 
-        foreach (var asset in visibleAssets)
+        for (var index = 0; index < visibleAssets.Count; index++)
         {
+            var asset = visibleAssets[index];
             var (cardWidth, cardBodyHeight) = GetStep5CardSize(asset.AssetType, baseCardWidth, cardHeight);
             gallery.Controls.Add(CreateAssetCard(asset, cardWidth, cardBodyHeight));
+
+            if ((index + 1) % 8 == 0 && index + 1 < visibleAssets.Count)
+            {
+                gallery.ResumeLayout(true);
+                galleryLayoutSuspended = false;
+                await Task.Delay(16);
+                gallery.SuspendLayout();
+                galleryLayoutSuspended = true;
+            }
         }
 
         if (visibleAssets.Count == 0)
         {
             gallery.Controls.Add(new Label { Text = _localizationService.GetString("AssetNoMatching", "No matching assets were found in this Mod."), AutoSize = true, Font = new Font("Segoe UI", 10F), Margin = new Padding(0, 12, 0, 0) });
         }
+        }
+        finally
+        {
+            if (galleryLayoutSuspended && !gallery.IsDisposed)
+            {
+                gallery.ResumeLayout(true);
+            }
 
-        gallery.ResumeLayout(true);
-        _isRefreshingAssetStep = false;
+            _isRefreshingAssetStep = false;
+            HideGlobalLoadingOverlay();
+        }
     }
 
     private static void DisposeAssetGalleryControls(Control gallery)
@@ -581,7 +614,10 @@ public partial class MainForm : Form
             Width = 180,
             Location = new Point(12, 58)
         };
-        typeSelector.Items.AddRange(new object[] { "Vehicle", "Skin", "Weapon" });
+        var assetTypes = new[] { "Vehicle", "Skin", "Weapon" };
+        typeSelector.Items.AddRange(assetTypes
+            .Select(type => (object)_localizationService.GetString("AssetType" + type, type))
+            .ToArray());
         typeSelector.SelectedIndex = 0;
 
         var okButton = new Button
@@ -609,7 +645,7 @@ public partial class MainForm : Form
         dialog.CancelButton = cancelButton;
 
         return dialog.ShowDialog(this) == DialogResult.OK
-            ? typeSelector.SelectedItem?.ToString() ?? string.Empty
+            ? typeSelector.SelectedIndex >= 0 ? assetTypes[typeSelector.SelectedIndex] : string.Empty
             : string.Empty;
     }
 
@@ -668,42 +704,56 @@ public partial class MainForm : Form
             Padding = new Padding(0)
         };
         var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
-        var fileName = new Label { Text = asset.NameFile, AutoSize = false, Width = innerWidth, Height = 22, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = palette.TextPrimary, Cursor = Cursors.Hand };
-        var name = new Label { Text = asset.Name, AutoSize = false, Width = innerWidth, Height = 20, Location = new Point(8, cardHeight - 28), TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = palette.TextSecondary, Visible = false, Cursor = Cursors.Hand };
+        var caption = new AssetCardCaption(asset.NameFile, asset.Name, palette.TextPrimary, palette.TextSecondary)
+        {
+            Width = innerWidth,
+            Height = 22,
+            Location = new Point(8, cardHeight - 28),
+            Cursor = Cursors.Hand
+        };
         var idText = string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id;
-        var id = string.IsNullOrWhiteSpace(idText)
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        var idBadge = string.IsNullOrWhiteSpace(idText)
             ? null
-            : new Label
+            : new Panel
             {
-                Text = idText,
-                Width = 44,
-                Height = 22,
-                Location = new Point(8, previewHeight + 6),
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
+                Width = 36,
+                Height = 36,
+                Location = new Point(isRtl ? cardWidth - 44 : 8, 8),
                 BackColor = GetAssetTypeColor(asset.AssetType, palette),
-                Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
-                AutoSize = false,
-                BorderStyle = BorderStyle.None,
                 Cursor = Cursors.Hand,
-                Padding = new Padding(0),
-                Anchor = AnchorStyles.Left | AnchorStyles.Top,
-                Visible = true,
                 Tag = $"AssetId:{idText}"
             };
 
-        if (id != null)
+        if (idBadge != null)
         {
-            id.TextAlign = ContentAlignment.MiddleCenter;
-            id.Margin = new Padding(0);
+            SetAssetIdBadgeRegion(idBadge);
+            idBadge.Resize += (_, _) =>
+            {
+                SetAssetIdBadgeRegion(idBadge);
+            };
+            idBadge.Controls.Add(new Label
+            {
+                Text = idText,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold),
+                Cursor = Cursors.Hand
+            });
         }
 
         var imagePath = _assetCatalogService.ResolveImagePath(asset);
         var cachedImage = LoadCachedImage(imagePath);
         if (cachedImage == null)
         {
+            cachedImage = LoadCachedImage(ResolveUnavailableAssetImagePath());
+        }
+
+        if (cachedImage == null)
+        {
             preview.Image = null;
-            preview.BackColor = palette.SurfaceSecondary;
             preview.Controls.Add(new Label
             {
                 Text = _localizationService.GetString("ImageUnavailableFriendly", "No image available"),
@@ -722,11 +772,11 @@ public partial class MainForm : Form
         }
 
         card.Controls.Add(preview);
-        card.Controls.Add(fileName);
-        card.Controls.Add(name);
-        if (id != null)
+        card.Controls.Add(caption);
+        if (idBadge != null)
         {
-            card.Controls.Add(id);
+            card.Controls.Add(idBadge);
+            idBadge.BringToFront();
         }
 
         var tooltip = new ToolTip
@@ -736,10 +786,10 @@ public partial class MainForm : Form
             ReshowDelay = 100,
             ShowAlways = true
         };
-        tooltip.SetToolTip(preview, $"{asset.NameFile}\nID: {asset.Id}");
-        if (id != null)
+        tooltip.SetToolTip(preview, string.IsNullOrWhiteSpace(asset.Id) ? asset.NameFile : $"{asset.NameFile}\nID: {asset.Id}");
+        if (idBadge != null)
         {
-            tooltip.SetToolTip(id, $"{asset.NameFile}\nID: {asset.Id}");
+            tooltip.SetToolTip(idBadge, $"{asset.NameFile}\nID: {asset.Id}");
         }
 
         void ToggleSelection(object? _, EventArgs __)
@@ -755,20 +805,14 @@ public partial class MainForm : Form
             }
 
             card.BackColor = palette.AccentSoft;
+            caption.BackColor = palette.AccentSoft;
 
             UpdateSidebarState();
         }
 
         void ShowAssetNameHover(object? _, EventArgs __)
         {
-            fileName.Visible = false;
-            name.Visible = true;
-        }
-
-        void ShowAssetFileNameHover(object? _, EventArgs __)
-        {
-            fileName.Visible = true;
-            name.Visible = false;
+            caption.SetHovered(true);
         }
 
         preview.MouseUp += (_, e) =>
@@ -809,21 +853,130 @@ public partial class MainForm : Form
 
         card.Click += ToggleSelection;
         preview.Click += ToggleSelection;
-        fileName.Click += ToggleSelection;
-        name.Click += ToggleSelection;
-        if (id != null)
+        caption.Click += ToggleSelection;
+        if (idBadge != null)
         {
-            id.Click += ToggleSelection;
+            idBadge.Click += ToggleSelection;
+            foreach (Control child in idBadge.Controls)
+            {
+                child.Click += ToggleSelection;
+            }
         }
         card.MouseEnter += ShowAssetNameHover;
-        card.MouseLeave += ShowAssetFileNameHover;
+        card.MouseLeave += (_, _) => caption.SetHovered(false);
         preview.MouseEnter += ShowAssetNameHover;
-        preview.MouseLeave += ShowAssetFileNameHover;
-        fileName.MouseEnter += ShowAssetNameHover;
-        fileName.MouseLeave += ShowAssetFileNameHover;
-        name.MouseEnter += ShowAssetNameHover;
-        name.MouseLeave += ShowAssetFileNameHover;
+        preview.MouseLeave += (_, _) => caption.SetHovered(false);
+        if (idBadge != null)
+        {
+            idBadge.MouseEnter += ShowAssetNameHover;
+            idBadge.MouseLeave += (_, _) => caption.SetHovered(false);
+        }
+
         return card;
+    }
+
+    private static void SetAssetIdBadgeRegion(Control badge)
+    {
+        badge.Region?.Dispose();
+        using var path = new System.Drawing.Drawing2D.GraphicsPath();
+        path.AddEllipse(0, 0, badge.Width, badge.Height);
+        badge.Region = new Region(path);
+    }
+
+    private string? ResolveUnavailableAssetImagePath()
+    {
+        var isPersian = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        var imageNames = isPersian
+            ? new[] { "Image_not_available_Persion.png", "Image_not_available_English.png" }
+            : new[] { "Image_not_available_English.png", "Image_not_available_Persion.png" };
+
+        return imageNames
+            .Select(name => Path.Combine(AppContext.BaseDirectory, "Assets", name))
+            .FirstOrDefault(File.Exists);
+    }
+
+    private sealed class AssetCardCaption : Control
+    {
+        private readonly string _fileName;
+        private readonly string _displayName;
+        private readonly Color _fileNameColor;
+        private readonly Color _displayNameColor;
+        private readonly System.Windows.Forms.Timer _animationTimer = new() { Interval = 16 };
+        private float _transition;
+        private bool _hovered;
+
+        private bool HasDisplayName => !string.IsNullOrWhiteSpace(_displayName)
+            && !string.Equals(_displayName, _fileName, StringComparison.OrdinalIgnoreCase);
+
+        public AssetCardCaption(string? fileName, string? displayName, Color fileNameColor, Color displayNameColor)
+        {
+            _fileName = fileName ?? string.Empty;
+            _displayName = displayName ?? string.Empty;
+            _fileNameColor = fileNameColor;
+            _displayNameColor = displayNameColor;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+            Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            BackColor = Color.Transparent;
+            _animationTimer.Tick += (_, _) => AdvanceTransition();
+            MouseEnter += (_, _) => SetHovered(true);
+            MouseLeave += (_, _) => SetHovered(false);
+        }
+
+        public void SetHovered(bool hovered)
+        {
+            if (!HasDisplayName || IsDisposed)
+            {
+                return;
+            }
+
+            _hovered = hovered;
+            if (!_animationTimer.Enabled)
+            {
+                _animationTimer.Start();
+            }
+        }
+
+        private void AdvanceTransition()
+        {
+            var target = _hovered ? 1f : 0f;
+            _transition = Math.Clamp(_transition + Math.Sign(target - _transition) * 0.16f, 0f, 1f);
+            Invalidate();
+            if (Math.Abs(_transition - target) < 0.001f)
+            {
+                _transition = target;
+                _animationTimer.Stop();
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            using var format = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center,
+                Trimming = StringTrimming.EllipsisCharacter,
+                FormatFlags = StringFormatFlags.NoWrap
+            };
+            using var fileBrush = new SolidBrush(Color.FromArgb((int)Math.Round(255 * (1f - _transition)), _fileNameColor));
+            e.Graphics.DrawString(_fileName, Font, fileBrush, ClientRectangle, format);
+            if (HasDisplayName)
+            {
+                using var nameBrush = new SolidBrush(Color.FromArgb((int)Math.Round(255 * _transition), _displayNameColor));
+                e.Graphics.DrawString(_displayName, Font, nameBrush, ClientRectangle, format);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _animationTimer.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 
     // -------------------------------------------------------------------------

@@ -205,6 +205,12 @@ public partial class MainForm : Form
             {
                 _selectedModPayloadPath = selected;
             }
+            _step5PreparedPayloadPath = string.Empty;
+            _step5PreparationAttempted = false;
+            _step5DetectedAssetType = string.Empty;
+            _step5DetectedAssets.Clear();
+            _step5SelectedAssetKeys.Clear();
+            _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
             _selectedAssetForInstall = null;
             _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
             _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
@@ -396,7 +402,7 @@ public partial class MainForm : Form
                 var column = index % columnCount;
                 if (imageCount == 3 && index == 2)
                 {
-                    column = 1;
+                    column = 0;
                     row = 1;
                 }
 

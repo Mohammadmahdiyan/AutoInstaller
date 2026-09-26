@@ -597,7 +597,7 @@ public partial class MainForm : Form
                 var columnIndex = i % columnCount;
                 if (imageCount == 3 && i == 2)
                 {
-                    columnIndex = isRtl ? 0 : 1;
+                    columnIndex = 0;
                     rowIndex = 1;
                 }
 

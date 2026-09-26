@@ -8,7 +8,6 @@ namespace GtaSaModManager.Forms;
 
 public partial class MainForm : Form
 {
-    // -------------------------------------------------------------------------
     // از اینجا
     // -------------------------------------------------------------------------
     private void EnsureGlobalLoadingOverlay()
@@ -32,20 +31,44 @@ public partial class MainForm : Form
         {
             Name = "GlobalLoadingLabel",
             AutoSize = true,
-            Text = "Loading...",
-            Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+            Text = string.Empty,
+            Font = new Font("Segoe UI", 12F, FontStyle.Bold),
             ForeColor = Color.FromArgb(15, 23, 42),
             TextAlign = ContentAlignment.MiddleCenter
         };
 
-        _globalLoadingOverlay.Controls.Add(_globalLoadingLabel);
+        _globalLoadingSpinnerLabel = new Label
+        {
+            Name = "GlobalLoadingSpinner",
+            AutoSize = true,
+            Text = GetLoadingSpinnerGlyph(_loadingSpinnerAngle),
+            Font = new Font("Segoe UI", 34F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(37, 99, 235),
+            TextAlign = ContentAlignment.MiddleCenter
+        };
+
+        var loadingContent = new Panel
+        {
+            Name = "GlobalLoadingContent",
+            Size = new Size(360, 120),
+            BackColor = Color.Transparent
+        };
+        loadingContent.Controls.Add(_globalLoadingSpinnerLabel);
+        loadingContent.Controls.Add(_globalLoadingLabel);
+        _globalLoadingOverlay.Controls.Add(loadingContent);
         _globalLoadingOverlay.Resize += (_, _) =>
         {
-            if (_globalLoadingLabel != null && _globalLoadingOverlay != null)
+            if (_globalLoadingLabel != null && _globalLoadingSpinnerLabel != null && _globalLoadingOverlay != null)
             {
+                loadingContent.Location = new Point(
+                    (_globalLoadingOverlay.Width - loadingContent.Width) / 2,
+                    (_globalLoadingOverlay.Height - loadingContent.Height) / 2);
+                _globalLoadingSpinnerLabel.Location = new Point(
+                    (loadingContent.Width - _globalLoadingSpinnerLabel.Width) / 2,
+                    0);
                 _globalLoadingLabel.Location = new Point(
-                    (_globalLoadingOverlay.Width - _globalLoadingLabel.Width) / 2,
-                    (_globalLoadingOverlay.Height - _globalLoadingLabel.Height) / 2);
+                    (loadingContent.Width - _globalLoadingLabel.Width) / 2,
+                    _globalLoadingSpinnerLabel.Bottom + 8);
             }
         };
 
@@ -69,7 +92,10 @@ public partial class MainForm : Form
             _globalLoadingOverlay.Visible = true;
             _globalLoadingOverlay.Enabled = true;
             _globalLoadingOverlay.BringToFront();
+            _globalLoadingOverlay.PerformLayout();
             _globalLoadingOverlay.Refresh();
+            _globalLoadingSpinnerLabel?.Refresh();
+            _globalLoadingLabel?.Refresh();
             _loadingSpinnerTimer.Start();
         }
     }
@@ -81,7 +107,9 @@ public partial class MainForm : Form
         {
             _globalLoadingOverlay.Visible = false;
             _globalLoadingOverlay.Enabled = false;
+            var background = _globalLoadingOverlay.BackgroundImage;
             _globalLoadingOverlay.BackgroundImage = null;
+            background?.Dispose();
         }
     }
 
@@ -89,9 +117,17 @@ public partial class MainForm : Form
     {
         foreach (var control in Application.OpenForms.Cast<Form>().SelectMany(form => form.Controls.Cast<Control>()))
         {
-            if (control is Label label && label.Name is "Step4LoadingSpinner")
+            if (control is Label label && label.Name is "Step4LoadingSpinner" or "GlobalLoadingSpinner")
             {
                 yield return label;
+            }
+
+            foreach (var childSpinner in control.Controls.Find("GlobalLoadingSpinner", true))
+            {
+                if (childSpinner is Label childLabel)
+                {
+                    yield return childLabel;
+                }
             }
         }
     }
@@ -112,24 +148,24 @@ public partial class MainForm : Form
 
         try
         {
-            var image = new Bitmap(target.Width, target.Height, PixelFormat.Format32bppArgb);
+            using var image = new Bitmap(target.Width, target.Height, PixelFormat.Format32bppArgb);
             using var g = Graphics.FromImage(image);
             g.CopyFromScreen(target.PointToScreen(new Point(0, 0)), new Point(0, 0), target.Size);
 
+            var previewSize = new Size(Math.Max(1, image.Width / 14), Math.Max(1, image.Height / 14));
+            using var previewImage = new Bitmap(previewSize.Width, previewSize.Height, PixelFormat.Format32bppArgb);
+            using (var previewGraphics = Graphics.FromImage(previewImage))
+            {
+                previewGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                previewGraphics.DrawImage(image, new Rectangle(Point.Empty, previewSize));
+            }
+
             var blurred = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
             using var blurredGraphics = Graphics.FromImage(blurred);
-            var preview = new Rectangle(0, 0, image.Width, image.Height);
-            var attrs = new ImageAttributes();
-            var matrix = new ColorMatrix(new[]
-            {
-                new[] { 0.7f, 0, 0, 0, 0 },
-                new[] { 0, 0.7f, 0, 0, 0 },
-                new[] { 0, 0, 0.7f, 0, 0 },
-                new[] { 0, 0, 0, 1f, 0 },
-                new[] { 0, 0, 0, 0, 1f }
-            });
-            attrs.SetColorMatrix(matrix);
-            blurredGraphics.DrawImage(image, preview, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attrs);
+            blurredGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            blurredGraphics.DrawImage(previewImage, new Rectangle(0, 0, image.Width, image.Height));
+            using var tintBrush = new SolidBrush(Color.FromArgb(48, 15, 23, 42));
+            blurredGraphics.FillRectangle(tintBrush, new Rectangle(0, 0, image.Width, image.Height));
             return blurred;
         }
         catch

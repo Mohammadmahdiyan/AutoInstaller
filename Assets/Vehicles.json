@@ -1,1140 +1,1483 @@
 [
   {
-    "id": 406,
-    "category": "Industrial",
-    "name": "Dumper",
-    "nameFile": "dumper",
-    "image": "Assets/Vehicles/Dumper-GTASA-front.webp"
-  },
-  {
-    "id": 455,
-    "category": "Industrial",
-    "name": "Flatbed",
-    "nameFile": "flatbed",
-    "image": "Assets/Vehicles/Flatbed-GTASA-front.webp"
-  },
-  {
-    "id": 530,
-    "category": "Industrial",
-    "name": "Forklift",
-    "nameFile": "forklift",
-    "image": "Assets/Vehicles/Forklift-GTASA-front.webp"
-  },
-  {
-    "id": 403,
-    "category": "Industrial",
-    "name": "Linerunner",
-    "nameFile": "linerun",
-    "image": "Assets/Vehicles/Linerunner-GTASA-front.webp"
-  },
-  {
-    "id": 414,
-    "category": "Industrial",
-    "name": "Mule",
-    "nameFile": "mule",
-    "image": "Assets/Vehicles/Mule-GTASA-front.webp"
-  },
-  {
-    "id": 443,
-    "category": "Industrial",
-    "name": "Packer",
-    "nameFile": "packer",
-    "image": "Assets/Vehicles/Packer-GTASA-front.webp"
-  },
-  {
-    "id": 515,
-    "category": "Industrial",
-    "name": "Roadtrain",
-    "nameFile": "rdtrain",
-    "image": "Assets/Vehicles/Roadtrain-GTASA-front.webp"
-  },
-  {
-    "id": 514,
-    "category": "Industrial",
-    "name": "Tanker",
-    "nameFile": "petro",
-    "image": "Assets/Vehicles/Tanker-GTASA-front.webp"
-  },
-  {
-    "id": 531,
-    "category": "Industrial",
-    "name": "Tractor",
-    "nameFile": "tractor",
-    "image": "Assets/Vehicles/Tractor-GTASA-front.webp"
-  },
-  {
-    "id": 456,
-    "category": "Industrial",
-    "name": "Yankee",
-    "nameFile": "yankee",
-    "image": "Assets/Vehicles/Yankee-GTASA-front.webp"
-  },
-  {
-    "id": 496,
-    "category": "Coupes & Hatchbacks",
-    "name": "Blista Compact",
-    "nameFile": "blistac",
-    "image": "Assets/Vehicles/BlistaCompact-GTASA-front.webp"
+    "id": 400,
+    "category": "car",
+    "name": "Landstalker",
+    "nameFile": "landstal",
+    "image": "Assets/Vehicles/Landstalker-GTASA-front.webp"
   },
   {
     "id": 401,
-    "category": "Coupes & Hatchbacks",
+    "category": "car",
     "name": "Bravura",
     "nameFile": "bravura",
     "image": "Assets/Vehicles/Bravura-GTASA-front.webp"
   },
   {
-    "id": 518,
-    "category": "Coupes & Hatchbacks",
-    "name": "Buccaneer",
-    "nameFile": "buccanee",
-    "image": "Assets/Vehicles/Buccaneer-GTASA-front.webp"
+    "id": 402,
+    "category": "car",
+    "name": "Buffalo",
+    "nameFile": "buffalo",
+    "image": "Assets/Vehicles/Buffalo-GTASA-front.webp"
   },
   {
-    "id": 527,
-    "category": "Coupes & Hatchbacks",
-    "name": "Cadrona",
-    "nameFile": "cadrona",
-    "image": "Assets/Vehicles/Cadrona-GTASA-front.webp"
-  },
-  {
-    "id": 542,
-    "category": "Coupes & Hatchbacks",
-    "name": "Clover",
-    "nameFile": "clover",
-    "image": "Assets/Vehicles/Clover-GTASA-front.webp"
-  },
-  {
-    "id": 589,
-    "category": "Coupes & Hatchbacks",
-    "name": "Club",
-    "nameFile": "club",
-    "image": "Assets/Vehicles/Club-GTASA-front.webp"
-  },
-  {
-    "id": 419,
-    "category": "Coupes & Hatchbacks",
-    "name": "Esperanto",
-    "nameFile": "esperant",
-    "image": "Assets/Vehicles/Esperanto-GTASA-front.webp"
-  },
-  {
-    "id": 533,
-    "category": "Coupes & Hatchbacks",
-    "name": "Feltzer",
-    "nameFile": "feltzer",
-    "image": "Assets/Vehicles/Feltzer-GTASA-front.webp"
-  },
-  {
-    "id": 526,
-    "category": "Coupes & Hatchbacks",
-    "name": "Fortune",
-    "nameFile": "fortune",
-    "image": "Assets/Vehicles/Fortune-GTASA-front.webp"
-  },
-  {
-    "id": 474,
-    "category": "Coupes & Hatchbacks",
-    "name": "Hermes",
-    "nameFile": "hermes",
-    "image": "Assets/Vehicles/Hermes-GTASA-front.webp"
-  },
-  {
-    "id": 545,
-    "category": "Coupes & Hatchbacks",
-    "name": "Hustler",
-    "nameFile": "hustler",
-    "image": "Assets/Vehicles/Hustler-GTASA-front.webp"
-  },
-  {
-    "id": 517,
-    "category": "Coupes & Hatchbacks",
-    "name": "Majestic",
-    "nameFile": "majestic",
-    "image": "Assets/Vehicles/Majestic-GTASA-front.webp"
-  },
-  {
-    "id": 410,
-    "category": "Coupes & Hatchbacks",
-    "name": "Manana",
-    "nameFile": "manana",
-    "image": "Assets/Vehicles/Manana-GTASA-front.webp"
-  },
-  {
-    "id": 436,
-    "category": "Coupes & Hatchbacks",
-    "name": "Previon",
-    "nameFile": "previon",
-    "image": "Assets/Vehicles/Previon-GTASA-front.webp"
-  },
-  {
-    "id": 475,
-    "category": "Coupes & Hatchbacks",
-    "name": "Sabre",
-    "nameFile": "sabre",
-    "image": "Assets/Vehicles/Sabre-GTASA-front.webp"
-  },
-  {
-    "id": 439,
-    "category": "Coupes & Hatchbacks",
-    "name": "Stallion",
-    "nameFile": "stallion",
-    "image": "Assets/Vehicles/Stallion-GTASA-front.webp"
-  },
-  {
-    "id": 549,
-    "category": "Coupes & Hatchbacks",
-    "name": "Tampa",
-    "nameFile": "tampa",
-    "image": "Assets/Vehicles/Tampa-GTASA-front.webp"
-  },
-  {
-    "id": 491,
-    "category": "Coupes & Hatchbacks",
-    "name": "Virgo",
-    "nameFile": "virgo",
-    "image": "Assets/Vehicles/Virgo-GTASA-front.webp"
-  },
-  {
-    "id": 445,
-    "category": "Sedans & Station Wagons",
-    "name": "Admiral",
-    "nameFile": "admiral",
-    "image": "Assets/Vehicles/Admiral-GTASA-front.webp"
-  },
-  {
-    "id": 507,
-    "category": "Sedans & Station Wagons",
-    "name": "Elegant",
-    "nameFile": "elegant",
-    "image": "Assets/Vehicles/Elegant-GTASA-front.webp"
-  },
-  {
-    "id": 585,
-    "category": "Sedans & Station Wagons",
-    "name": "Emperor",
-    "nameFile": "emperor",
-    "image": "Assets/Vehicles/Emperor-GTASA-front.webp"
-  },
-  {
-    "id": 466,
-    "category": "Sedans & Station Wagons",
-    "name": "Glendale",
-    "nameFile": "glendale",
-    "image": "Assets/Vehicles/Glendale-GTASA-front.webp"
-  },
-  {
-    "id": 604,
-    "category": "Sedans & Station Wagons",
-    "name": "Glendale (beater)",
-    "nameFile": "glenshit",
-    "image": "Assets/Vehicles/Glendale-GTASA-beater-front.webp"
-  },
-  {
-    "id": 492,
-    "category": "Sedans & Station Wagons",
-    "name": "Greenwood",
-    "nameFile": "greenwoo",
-    "image": "Assets/Vehicles/Greenwood-GTASA-front.webp"
-  },
-  {
-    "id": 546,
-    "category": "Sedans & Station Wagons",
-    "name": "Intruder",
-    "nameFile": "intruder",
-    "image": "Assets/Vehicles/Intruder-GTASA-front.webp"
-  },
-  {
-    "id": 551,
-    "category": "Sedans & Station Wagons",
-    "name": "Merit",
-    "nameFile": "merit",
-    "image": "Assets/Vehicles/Merit-GTASA-front.webp"
-  },
-  {
-    "id": 516,
-    "category": "Sedans & Station Wagons",
-    "name": "Nebula",
-    "nameFile": "nebula",
-    "image": "Assets/Vehicles/Nebula-GTASA-front.webp"
-  },
-  {
-    "id": 467,
-    "category": "Sedans & Station Wagons",
-    "name": "Oceanic",
-    "nameFile": "oceanic",
-    "image": "Assets/Vehicles/Oceanic-GTASA-front.webp"
+    "id": 403,
+    "category": "car",
+    "name": "Linerunner",
+    "nameFile": "linerun",
+    "image": "Assets/Vehicles/Linerunner-GTASA-front.webp"
   },
   {
     "id": 404,
-    "category": "Sedans & Station Wagons",
+    "category": "car",
     "name": "Perennial",
     "nameFile": "peren",
     "image": "Assets/Vehicles/Perennial-GTASA-front.webp"
   },
   {
-    "id": 426,
-    "category": "Sedans & Station Wagons",
-    "name": "Premier",
-    "nameFile": "premier",
-    "image": "Assets/Vehicles/Premier-GTASA-front.webp"
-  },
-  {
-    "id": 547,
-    "category": "Sedans & Station Wagons",
-    "name": "Primo",
-    "nameFile": "primo",
-    "image": "Assets/Vehicles/Primo-GTASA-front.webp"
-  },
-  {
-    "id": 479,
-    "category": "Sedans & Station Wagons",
-    "name": "Regina",
-    "nameFile": "regina",
-    "image": "Assets/Vehicles/Regina-GTASA-front.webp"
-  },
-  {
-    "id": 442,
-    "category": "Sedans & Station Wagons",
-    "name": "Romero",
-    "nameFile": "romero",
-    "image": "Assets/Vehicles/Romero-GTASA-front.webp"
-  },
-  {
     "id": 405,
-    "category": "Sedans & Station Wagons",
+    "category": "car",
     "name": "Sentinel",
     "nameFile": "sentinel",
     "image": "Assets/Vehicles/Sentinel-GTASA-front.webp"
   },
   {
-    "id": 458,
-    "category": "Sedans & Station Wagons",
-    "name": "Solair",
-    "nameFile": "solair",
-    "image": "Assets/Vehicles/Solair-GTASA-front.webp"
+    "id": 406,
+    "category": "mtruck",
+    "name": "Dumper",
+    "nameFile": "dumper",
+    "image": "Assets/Vehicles/Dumper-GTASA-front.webp"
   },
   {
-    "id": 580,
-    "category": "Sedans & Station Wagons",
-    "name": "Stafford",
-    "nameFile": "stafford",
-    "image": "Assets/Vehicles/Stafford-GTASA-front.webp"
-  },
-  {
-    "id": 409,
-    "category": "Sedans & Station Wagons",
-    "name": "Stretch",
-    "nameFile": "stretch",
-    "image": "Assets/Vehicles/Stretch-GTASA-front.webp"
-  },
-  {
-    "id": 550,
-    "category": "Sedans & Station Wagons",
-    "name": "Sunrise",
-    "nameFile": "sunrise",
-    "image": "Assets/Vehicles/Sunrise-GTASA-front.webp"
-  },
-  {
-    "id": 540,
-    "category": "Sedans & Station Wagons",
-    "name": "Vincent",
-    "nameFile": "vincent",
-    "image": "Assets/Vehicles/Vincent-GTASA-front.webp"
-  },
-  {
-    "id": 421,
-    "category": "Sedans & Station Wagons",
-    "name": "Washington",
-    "nameFile": "washing",
-    "image": "Assets/Vehicles/Washington-GTASA-front.webp"
-  },
-  {
-    "id": 529,
-    "category": "Sedans & Station Wagons",
-    "name": "Willard",
-    "nameFile": "willard",
-    "image": "Assets/Vehicles/Willard-GTASA-front.webp"
-  },
-  {
-    "id": 538,
-    "category": "Trains/Rolling Stock",
-    "name": "Brown Streak",
-    "nameFile": "streak",
-    "image": "Assets/Vehicles/BrownStreak-GTASA-front.webp"
-  },
-  {
-    "id": 570,
-    "category": "Trains/Rolling Stock",
-    "name": "Brown Streak (coach)",
-    "nameFile": "streakc",
-    "image": "Assets/Vehicles/streakc.jpg"
-  },
-  {
-    "id": 537,
-    "category": "Trains/Rolling Stock",
-    "name": "Freight",
-    "nameFile": "freight",
-    "image": "Assets/Vehicles/Freight-GTASA-front.webp"
-  },
-  {
-    "id": 569,
-    "category": "Trains/Rolling Stock",
-    "name": "Freight (flatcar)",
-    "nameFile": "freiflat",
-    "image": "Assets/Vehicles/Freiflat-GTASA-front.webp"
-  },
-  {
-    "id": 590,
-    "category": "Trains/Rolling Stock",
-    "name": "Freight Box",
-    "nameFile": "freibox",
-    "image": "Assets/Vehicles/Freibox-GTASA.png"
-  },
-  {
-    "id": 449,
-    "category": "Trains/Rolling Stock",
-    "name": "Tram",
-    "nameFile": "tram",
-    "image": "Assets/Vehicles/Tram-GTASA-front.webp"
-  },
-  {
-    "id": 485,
-    "category": "Public Service",
-    "name": "Baggage",
-    "nameFile": "baggage",
-    "image": "Assets/Vehicles/Baggage-GTASA-front.webp"
-  },
-  {
-    "id": 431,
-    "category": "Public Service",
-    "name": "Bus",
-    "nameFile": "bus",
-    "image": "Assets/Vehicles/Bus-GTASA-front.webp"
-  },
-  {
-    "id": 438,
-    "category": "Public Service",
-    "name": "Cabbie",
-    "nameFile": "cabbie",
-    "image": "Assets/Vehicles/Cabbie-GTASA-front.webp"
-  },
-  {
-    "id": 413,
-    "category": "Vans",
-    "name": "Pony",
-    "nameFile": "pony",
-    "image": "Assets/Vehicles/Pony-GTASA-front.webp"
-  },
-  {
-    "id": 440,
-    "category": "Vans",
-    "name": "Rumpo",
-    "nameFile": "rumpo",
-    "image": "Assets/Vehicles/Rumpo-GTASA-front.webp"
-  },
-  {
-    "id": 428,
-    "category": "Vans",
-    "name": "Securicar",
-    "nameFile": "securica",
-    "image": "Assets/Vehicles/Securicar-GTASA-FrontQuarter.webp"
-  },
-  {
-    "id": 499,
-    "category": "Industrial",
-    "name": "Benson",
-    "nameFile": "benson",
-    "image": "Assets/Vehicles/Benson-GTASA-front.webp"
-  },
-  {
-    "id": 498,
-    "category": "Industrial",
-    "name": "Boxville",
-    "nameFile": "boxville",
-    "image": "Assets/Vehicles/Boxville-GTASA-front.webp"
-  },
-  {
-    "id": 609,
-    "category": "Industrial",
-    "name": "BoxBurg",
-    "nameFile": "boxburg",
-    "image": "Assets/Vehicles/Boxville-GTASA-burglary-front.webp"
-  },
-  {
-    "id": 524,
-    "category": "Industrial",
-    "name": "Cement Truck",
-    "nameFile": "cement",
-    "image": "Assets/Vehicles/CementTruck-GTASA-front.webp"
-  },
-  {
-    "id": 532,
-    "category": "Industrial",
-    "name": "Combine Harvester",
-    "nameFile": "combine",
-    "image": "Assets/Vehicles/CombineHarvester-GTASA-front.webp"
-  },
-  {
-    "id": 578,
-    "category": "Industrial",
-    "name": "DFT-30",
-    "nameFile": "dft30",
-    "image": "Assets/Vehicles/DFT-30-GTASA-front.webp"
-  },
-  {
-    "id": 486,
-    "category": "Industrial",
-    "name": "Dozer",
-    "nameFile": "dozer",
-    "image": "Assets/Vehicles/Dozer-GTASA-front.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Coach",
-    "nameFile": "coach",
-    "id": 437,
-    "image": "Assets/Vehicles/Coach-GTASA-FrontQuarter.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Sweeper",
-    "nameFile": "sweeper",
-    "id": 574,
-    "image": "Assets/Vehicles/Sweeper-GTASA-front.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Taxi",
-    "nameFile": "taxi",
-    "id": 420,
-    "image": "Assets/Vehicles/Taxi-GTASA-front.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Tow Truck",
-    "nameFile": "towtruck",
-    "id": 525,
-    "image": "Assets/Vehicles/Towtruck-GTASA-front.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Trashmaster",
-    "nameFile": "trash",
-    "id": 408,
-    "image": "Assets/Vehicles/Trashmaster-GTASA-front.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Tug",
-    "nameFile": "tug",
-    "id": 583,
-    "image": "Assets/Vehicles/Tug-GTASA-front.webp"
-  },
-  {
-    "category": "Public Service",
-    "name": "Utility Van",
-    "nameFile": "utility",
-    "id": 552,
-    "image": "Assets/Vehicles/UtilityVan-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Bandito",
-    "nameFile": "bandito",
-    "id": 568,
-    "image": "Assets/Vehicles/Bandito-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "BF Injection",
-    "nameFile": "bfinject",
-    "id": 424,
-    "image": "Assets/Vehicles/BFInjection-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Caddy",
-    "nameFile": "caddy",
-    "id": 457,
-    "image": "Assets/Vehicles/Caddy-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Camper",
-    "nameFile": "camper",
-    "id": 483,
-    "image": "Assets/Vehicles/Camper-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Dune",
-    "nameFile": "duneride",
-    "id": 573,
-    "image": "Assets/Vehicles/Dune-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Journey",
-    "nameFile": "journey",
-    "id": 508,
-    "image": "Assets/Vehicles/Journey-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Kart",
-    "nameFile": "kart",
-    "id": 571,
-    "image": "Assets/Vehicles/Kart-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Mower",
-    "nameFile": "mower",
-    "id": 572,
-    "image": "Assets/Vehicles/Mower-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Quad",
-    "nameFile": "quad",
-    "id": 471,
-    "image": "Assets/Vehicles/Quad-GTASA-front.webp"
-  },
-  {
-    "category": "Novelty",
-    "name": "Vortex",
-    "nameFile": "vortex",
-    "id": 539,
-    "image": "Assets/Vehicles/Vortex-GTASA-front.webp"
-  },
-  {
-    "category": "Government",
-    "name": "Ambulance",
-    "nameFile": "ambulan",
-    "id": 416,
-    "image": "Assets/Vehicles/Ambulance-GTASA-front.webp"
-  },
-  {
-    "category": "Government",
-    "name": "Barracks",
-    "nameFile": "barracks",
-    "id": 433,
-    "image": "Assets/Vehicles/Barracks-GTASA-front.webp"
-  },
-  {
-    "category": "Government",
-    "name": "Enforcer",
-    "nameFile": "enforcer",
-    "id": 427,
-    "image": "Assets/Vehicles/Enforcer-GTASA-front.webp"
-  },
-  {
-    "category": "Government",
-    "name": "FBI Rancher",
-    "nameFile": "fbiranch",
-    "id": 490,
-    "image": "Assets/Vehicles/FBIRancher-GTASA-front.webp"
-  },
-  {
-    "category": "Government",
-    "name": "FBI Truck",
-    "nameFile": "fbitruck",
-    "id": 528,
-    "image": "Assets/Vehicles/FBITruck-GTASA.png"
-  },
-  {
-    "category": "Government",
+    "category": "car",
     "name": "Fire Truck",
     "nameFile": "firetruk",
     "id": 407,
     "image": "Assets/Vehicles/FireTruck-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "Fire Truck (ladder)",
-    "nameFile": "firela",
-    "id": 544,
-    "image": "Assets/Vehicles/FireTruck-GTASA-ladder-front.webp"
+    "category": "car",
+    "name": "Trashmaster",
+    "nameFile": "trash",
+    "id": 408,
+    "image": "Assets/Vehicles/Trashmaster-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "HPV1000",
-    "nameFile": "copbike",
-    "id": 523,
-    "image": "Assets/Vehicles/HPV-1000-GTASA-front.webp"
+    "id": 409,
+    "category": "car",
+    "name": "Stretch",
+    "nameFile": "stretch",
+    "image": "Assets/Vehicles/Stretch-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "Police (LSPD)",
-    "nameFile": "copcarla",
-    "id": 596,
-    "image": "Assets/Vehicles/Police-GTASA-LSPD-front.webp"
+    "id": 410,
+    "category": "car",
+    "name": "Manana",
+    "nameFile": "manana",
+    "image": "Assets/Vehicles/Manana-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "Police (SFPD)",
-    "nameFile": "copcarsf",
-    "id": 597,
-    "image": "Assets/Vehicles/Police-GTASA-SFPD-front.webp"
+    "id": 411,
+    "category": "car",
+    "name": "Infernus",
+    "nameFile": "infernus",
+    "image": "Assets/Vehicles/Infernus-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "Police (LVPD)",
-    "nameFile": "copcarvg",
-    "id": 598,
-    "image": "Assets/Vehicles/Police-GTASA-LVPD-front.webp"
+    "id": 412,
+    "category": "car",
+    "name": "Voodoo",
+    "nameFile": "voodoo",
+    "image": "Assets/Vehicles/Voodoo-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "Ranger",
-    "nameFile": "copcarru",
-    "id": 599,
-    "image": "Assets/Vehicles/Ranger-GTASA-front.webp"
+    "id": 413,
+    "category": "car",
+    "name": "Pony",
+    "nameFile": "pony",
+    "image": "Assets/Vehicles/Pony-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "Rhino",
-    "nameFile": "rhino",
-    "id": 432,
-    "image": "Assets/Vehicles/Rhino-GTASA-front.webp"
+    "id": 414,
+    "category": "car",
+    "name": "Mule",
+    "nameFile": "mule",
+    "image": "Assets/Vehicles/Mule-GTASA-front.webp"
   },
   {
-    "category": "Government",
-    "name": "S.W.A.T.",
-    "nameFile": "swatvan",
-    "id": 601,
-    "image": "Assets/Vehicles/SWAT-GTASA-front.webp"
+    "id": 415,
+    "category": "car",
+    "name": "Cheetah",
+    "nameFile": "cheetah",
+    "image": "Assets/Vehicles/Cheetah-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Andromada",
-    "nameFile": "androm",
-    "id": 592,
-    "image": "Assets/Vehicles/Andromada-GTASA-front.webp"
+    "category": "car",
+    "name": "Ambulance",
+    "nameFile": "ambulan",
+    "id": 416,
+    "image": "Assets/Vehicles/Ambulance-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "AT-400",
-    "nameFile": "at400",
-    "id": 577,
-    "image": "Assets/Vehicles/AT400-GTASA-inflight.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Beagle",
-    "nameFile": "beagle",
-    "id": 511,
-    "image": "Assets/Vehicles/Beagle-GTASA-front.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Cargobob",
-    "nameFile": "cargobob",
-    "id": 548,
-    "image": "Assets/Vehicles/Cargobob-GTASA-front.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Cropduster",
-    "nameFile": "cropdust",
-    "id": 512,
-    "image": "Assets/Vehicles/Cropduster-GTASA-front.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Dodo",
-    "nameFile": "dodo",
-    "id": 593,
-    "image": "Assets/Vehicles/Dodo-GTASA-front.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Hunter",
-    "nameFile": "hunter",
-    "id": 425,
-    "image": "Assets/Vehicles/Hunter-GTASA-front.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Hydra",
-    "nameFile": "hydra",
-    "id": 520,
-    "image": "Assets/Vehicles/Hydra-GTASA-inflight.webp"
-  },
-  {
-    "category": "Aircraft",
-    "name": "Jetpack",
-    "nameFile": "jetpack",
-    "id": 370,
-    "image": "Assets/Vehicles/Jetpack-GTASA.webp"
-  },
-  {
-    "category": "Aircraft",
+    "category": "heli",
     "name": "Leviathan",
     "nameFile": "leviathn",
     "id": 417,
     "image": "Assets/Vehicles/Leviathan-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Maverick",
-    "nameFile": "maverick",
-    "id": 487,
-    "image": "Assets/Vehicles/Maverick-GTASA-front.webp"
+    "id": 418,
+    "category": "car",
+    "name": "Moonbeam",
+    "nameFile": "moonbeam",
+    "image": "Assets/Vehicles/Moonbeam-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Nevada",
-    "nameFile": "nevada",
-    "id": 553,
-    "image": "Assets/Vehicles/Nevada-GTASA-inflight.webp"
+    "id": 419,
+    "category": "car",
+    "name": "Esperanto",
+    "nameFile": "esperant",
+    "image": "Assets/Vehicles/Esperanto-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "News Chopper",
-    "nameFile": "vcnmav",
-    "id": 488,
-    "image": "Assets/Vehicles/NewsChopper-GTASA-front.webp"
+    "category": "car",
+    "name": "Taxi",
+    "nameFile": "taxi",
+    "id": 420,
+    "image": "Assets/Vehicles/Taxi-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Police Maverick",
-    "nameFile": "polmav",
-    "id": 497,
-    "image": "Assets/Vehicles/PoliceMaverick-GTASA-front.webp"
+    "id": 421,
+    "category": "car",
+    "name": "Washington",
+    "nameFile": "washing",
+    "image": "Assets/Vehicles/Washington-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Raindance",
-    "nameFile": "raindanc",
-    "id": 563,
-    "image": "Assets/Vehicles/Raindance-GTASA-front.webp"
+    "id": 422,
+    "category": "car",
+    "name": "Bobcat",
+    "nameFile": "bobcat",
+    "image": "Assets/Vehicles/Bobcat-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Rustler",
-    "nameFile": "rustler",
-    "id": 476,
-    "image": "Assets/Vehicles/Rustler-GTASA-front.webp"
+    "id": 423,
+    "category": "car",
+    "name": "Mr. Whoopee",
+    "nameFile": "mrwhoop",
+    "image": "Assets/Vehicles/MrWhoopee-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Seasparrow",
-    "nameFile": "seaspar",
-    "id": 447,
-    "image": "Assets/Vehicles/Seasparrow-GTASA-front.webp"
+    "category": "car",
+    "name": "BF Injection",
+    "nameFile": "bfinject",
+    "id": 424,
+    "image": "Assets/Vehicles/BFInjection-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Shamal",
-    "nameFile": "shamal",
-    "id": 519,
-    "image": "Assets/Vehicles/Shamal-GTASA-parked.webp"
+    "category": "heli",
+    "name": "Hunter",
+    "nameFile": "hunter",
+    "id": 425,
+    "image": "Assets/Vehicles/Hunter-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Skimmer",
-    "nameFile": "skimmer",
-    "id": 460,
-    "image": "Assets/Vehicles/Skimmer-GTASA-front.webp"
+    "id": 426,
+    "category": "car",
+    "name": "Premier",
+    "nameFile": "premier",
+    "image": "Assets/Vehicles/Premier-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Sparrow",
-    "nameFile": "sparrow",
-    "id": 469,
-    "image": "Assets/Vehicles/Sparrow-GTASA-front.webp"
+    "category": "car",
+    "name": "Enforcer",
+    "nameFile": "enforcer",
+    "id": 427,
+    "image": "Assets/Vehicles/Enforcer-GTASA-front.webp"
   },
   {
-    "category": "Aircraft",
-    "name": "Stuntplane",
-    "nameFile": "stunt",
-    "id": 513,
-    "image": "Assets/Vehicles/Stuntplane-GTASA-inflight.webp"
+    "id": 428,
+    "category": "car",
+    "name": "Securicar",
+    "nameFile": "securica",
+    "image": "Assets/Vehicles/Securicar-GTASA-FrontQuarter.webp"
   },
   {
-    "category": "Boats",
-    "name": "Coastguard",
-    "nameFile": "coastg",
-    "id": 472,
-    "image": "Assets/Vehicles/Coastguard-GTASA-front.webp"
+    "id": 429,
+    "category": "car",
+    "name": "Banshee",
+    "nameFile": "banshee",
+    "image": "Assets/Vehicles/Banshee-GTASA-front.webp"
   },
   {
-    "category": "Boats",
-    "name": "Dinghy",
-    "nameFile": "dinghy",
-    "id": 473,
-    "image": "Assets/Vehicles/Dinghy-GTASA-front.webp"
-  },
-  {
-    "category": "Boats",
-    "name": "Jetmax",
-    "nameFile": "jetmax",
-    "id": 493,
-    "image": "Assets/Vehicles/Jetmax-GTASA-front.webp"
-  },
-  {
-    "category": "Boats",
-    "name": "Launch",
-    "nameFile": "launch",
-    "id": 595,
-    "image": "Assets/Vehicles/Launch-GTASA-front.webp"
-  },
-  {
-    "category": "Boats",
-    "name": "Marquis",
-    "nameFile": "marquis",
-    "id": 484,
-    "image": "Assets/Vehicles/Marquis-GTASA-front.webp"
-  },
-  {
-    "category": "Boats",
+    "category": "boat",
     "name": "Predator",
     "nameFile": "predator",
     "id": 430,
     "image": "Assets/Vehicles/Predator-GTASA-front.webp"
   },
   {
-    "category": "Boats",
-    "name": "Reefer",
-    "nameFile": "reefer",
-    "id": 453,
-    "image": "Assets/Vehicles/Reefer-GTASA-front.webp"
+    "id": 431,
+    "category": "car",
+    "name": "Bus",
+    "nameFile": "bus",
+    "image": "Assets/Vehicles/Bus-GTASA-front.webp"
   },
   {
-    "category": "Boats",
-    "name": "Speeder",
-    "nameFile": "speeder",
-    "id": 452,
-    "image": "Assets/Vehicles/Speeder-GTASA-front.webp"
+    "category": "car",
+    "name": "Rhino",
+    "nameFile": "rhino",
+    "id": 432,
+    "image": "Assets/Vehicles/Rhino-GTASA-front.webp"
   },
   {
-    "category": "Boats",
-    "name": "Squalo",
-    "nameFile": "squalo",
-    "id": 446,
-    "image": "Assets/Vehicles/Squalo-GTASA-front.webp"
+    "category": "car",
+    "name": "Barracks",
+    "nameFile": "barracks",
+    "id": 433,
+    "image": "Assets/Vehicles/Barracks-GTASA-front.webp"
   },
   {
-    "category": "Boats",
-    "name": "Tropic",
-    "nameFile": "tropic",
-    "id": 454,
-    "image": "Assets/Vehicles/Tropic-GTASA-front.webp"
+    "id": 434,
+    "category": "car",
+    "name": "Hotknife",
+    "nameFile": "hotknife",
+    "image": "Assets/Vehicles/Hotknife-GTASA-front.webp"
   },
   {
-    "category": "Motorcycles & Bicycles",
-    "name": "BF-400",
-    "nameFile": "bf400",
-    "id": 581,
-    "image": "Assets/Vehicles/BF-400-GTASA-variant2-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Bike",
-    "nameFile": "bike",
-    "id": 509,
-    "image": "Assets/Vehicles/Bike-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "BMX",
-    "nameFile": "bmx",
-    "id": 481,
-    "image": "Assets/Vehicles/BMX-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Faggio",
-    "nameFile": "faggio",
-    "id": 462,
-    "image": "Assets/Vehicles/Faggio-GTASA-singletone-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "FCR-900",
-    "nameFile": "fcr900",
-    "id": 521,
-    "image": "Assets/Vehicles/FCR-900-GTASA-variant2-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Freeway",
-    "nameFile": "freeway",
-    "id": 463,
-    "image": "Assets/Vehicles/Freeway-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Mountain Bike",
-    "nameFile": "mtbike",
-    "id": 510,
-    "image": "Assets/Vehicles/MountainBike-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "NRG-500",
-    "nameFile": "nrg500",
-    "id": 522,
-    "image": "Assets/Vehicles/NRG-500-GTASA-variant1-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "PCJ-600",
-    "nameFile": "pcj600",
-    "id": 461,
-    "image": "Assets/Vehicles/PCJ-600-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Pizzaboy",
-    "nameFile": "pizzaboy",
-    "id": 448,
-    "image": "Assets/Vehicles/Pizzaboy-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Sanchez",
-    "nameFile": "sanchez",
-    "id": 468,
-    "image": "Assets/Vehicles/Sanchez-GTASA-front.webp"
-  },
-  {
-    "category": "Motorcycles & Bicycles",
-    "name": "Wayfarer",
-    "nameFile": "wayfarer",
-    "id": 586,
-    "image": "Assets/Vehicles/Wayfarer-GTASA-front.webp"
-  },
-  {
-    "category": "Remote Control",
-    "name": "RC Bandit",
-    "nameFile": "rcbandit",
-    "id": 441,
-    "image": "Assets/Vehicles/RCBandit-GTASA-front.webp"
-  },
-  {
-    "category": "Remote Control",
-    "name": "RC Baron",
-    "nameFile": "rcbaron",
-    "id": 464,
-    "image": "Assets/Vehicles/RCBaron-GTASA-front.webp"
-  },
-  {
-    "category": "Remote Control",
-    "name": "RC Goblin",
-    "nameFile": "rcgoblin",
-    "id": 501,
-    "image": "Assets/Vehicles/RCGoblin-GTASA-front.webp"
-  },
-  {
-    "category": "Remote Control",
-    "name": "RC Raider",
-    "nameFile": "rcraider",
-    "id": 465,
-    "image": "Assets/Vehicles/RCRaider-GTASA-front.webp"
-  },
-  {
-    "category": "Remote Control",
-    "name": "RC Tiger",
-    "nameFile": "rctiger",
-    "id": 564,
-    "image": "Assets/Vehicles/RCTiger-GTASA-front.webp"
-  },
-  {
-    "category": "Miscellaneous",
-    "name": "Bloodring Banger",
-    "nameFile": "bloodra",
-    "id": 504,
-    "image": "Assets/Vehicles/BloodringBanger-GTASA-front2.webp"
-  },
-  {
-    "category": "Miscellaneous",
-    "name": "Hotring Racer",
-    "nameFile": "hotring",
-    "id": 494,
-    "image": "Assets/Vehicles/HotringRacer-GTASA-hotring-front.webp"
-  },
-  {
-    "category": "Miscellaneous",
-    "name": "Hotring Racer (hotrina)",
-    "nameFile": "hotrina",
-    "id": 502,
-    "image": "Assets/Vehicles/HotringRacer-GTASA-hotrina-front.webp"
-  },
-  {
-    "category": "Miscellaneous",
-    "name": "Hotring Racer (hotrinb)",
-    "nameFile": "hotrinb",
-    "id": 503,
-    "image": "Assets/Vehicles/HotringRacer-GTASA-hotrinb-front.webp"
-  },
-  {
-    "category": "Miscellaneous",
-    "name": "RC Cam",
-    "nameFile": "rccam",
-    "id": 594,
-    "image": "Assets/Vehicles/RCCam-GTASA.png"
-  },
-  {
-    "category": "Trailers",
+    "category": "trailer",
     "name": "Articulated Trailer",
     "nameFile": "artict1",
     "id": 435,
     "image": "Assets/Vehicles/ArticulatedTrailer-GTASA-artict1-front.webp"
   },
   {
-    "category": "Trailers",
+    "id": 436,
+    "category": "car",
+    "name": "Previon",
+    "nameFile": "previon",
+    "image": "Assets/Vehicles/Previon-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Coach",
+    "nameFile": "coach",
+    "id": 437,
+    "image": "Assets/Vehicles/Coach-GTASA-FrontQuarter.webp"
+  },
+  {
+    "id": 438,
+    "category": "car",
+    "name": "Cabbie",
+    "nameFile": "cabbie",
+    "image": "Assets/Vehicles/Cabbie-GTASA-front.webp"
+  },
+  {
+    "id": 439,
+    "category": "car",
+    "name": "Stallion",
+    "nameFile": "stallion",
+    "image": "Assets/Vehicles/Stallion-GTASA-front.webp"
+  },
+  {
+    "id": 440,
+    "category": "car",
+    "name": "Rumpo",
+    "nameFile": "rumpo",
+    "image": "Assets/Vehicles/Rumpo-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "RC Bandit",
+    "nameFile": "rcbandit",
+    "id": 441,
+    "image": "Assets/Vehicles/RCBandit-GTASA-front.webp"
+  },
+  {
+    "id": 442,
+    "category": "car",
+    "name": "Romero",
+    "nameFile": "romero",
+    "image": "Assets/Vehicles/Romero-GTASA-front.webp"
+  },
+  {
+    "id": 443,
+    "category": "car",
+    "name": "Packer",
+    "nameFile": "packer",
+    "image": "Assets/Vehicles/Packer-GTASA-front.webp"
+  },
+  {
+    "id": 444,
+    "category": "mtruck",
+    "name": "Monster",
+    "nameFile": "monster",
+    "image": "Assets/Vehicles/Monster-GTASA-monster-front.webp"
+  },
+  {
+    "id": 445,
+    "category": "car",
+    "name": "Admiral",
+    "nameFile": "admiral",
+    "image": "Assets/Vehicles/Admiral-GTASA-front.webp"
+  },
+  {
+    "category": "boat",
+    "name": "Squalo",
+    "nameFile": "squalo",
+    "id": 446,
+    "image": "Assets/Vehicles/Squalo-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "Seasparrow",
+    "nameFile": "seaspar",
+    "id": 447,
+    "image": "Assets/Vehicles/Seasparrow-GTASA-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "Pizzaboy",
+    "nameFile": "pizzaboy",
+    "id": 448,
+    "image": "Assets/Vehicles/Pizzaboy-GTASA-front.webp"
+  },
+  {
+    "id": 449,
+    "category": "train",
+    "name": "Tram",
+    "nameFile": "tram",
+    "image": "Assets/Vehicles/Tram-GTASA-front.webp"
+  },
+  {
+    "category": "trailer",
     "name": "Articulated Trailer (hopper)",
     "nameFile": "artict2",
     "id": 450,
     "image": "Assets/Vehicles/ArticulatedTrailer-GTASA-artict2-front.webp"
   },
   {
-    "category": "Trailers",
-    "name": "Articulated Trailer (short)",
-    "nameFile": "artict3",
-    "id": 591,
-    "image": "Assets/Vehicles/ArticulatedTrailer-GTASA-artict3-front.webp"
+    "id": 451,
+    "category": "car",
+    "name": "Turismo",
+    "nameFile": "turismo",
+    "image": "Assets/Vehicles/Turismo-GTASA-front.webp"
   },
   {
-    "category": "Trailers",
-    "name": "Baggage Box",
-    "nameFile": "bagboxa",
-    "id": 606,
-    "image": "Assets/Vehicles/BaggageBox-GTASA-bagboxa-front.webp"
+    "category": "boat",
+    "name": "Speeder",
+    "nameFile": "speeder",
+    "id": 452,
+    "image": "Assets/Vehicles/Speeder-GTASA-front.webp"
   },
   {
-    "category": "Trailers",
-    "name": "Baggage Box (open)",
-    "nameFile": "bagboxb",
-    "id": 607,
-    "image": "Assets/Vehicles/BaggageBox-GTASA-bagboxb-front.webp"
+    "category": "boat",
+    "name": "Reefer",
+    "nameFile": "reefer",
+    "id": 453,
+    "image": "Assets/Vehicles/Reefer-GTASA-front.webp"
   },
   {
-    "category": "Trailers",
-    "name": "Farm Trailer",
-    "nameFile": "farmtr1",
-    "id": 610,
-    "image": "Assets/Vehicles/FarmTrailer-GTASA-front.webp"
+    "category": "boat",
+    "name": "Tropic",
+    "nameFile": "tropic",
+    "id": 454,
+    "image": "Assets/Vehicles/Tropic-GTASA-front.webp"
   },
   {
-    "category": "Trailers",
+    "id": 455,
+    "category": "car",
+    "name": "Flatbed",
+    "nameFile": "flatbed",
+    "image": "Assets/Vehicles/Flatbed-GTASA-front.webp"
+  },
+  {
+    "id": 456,
+    "category": "car",
+    "name": "Yankee",
+    "nameFile": "yankee",
+    "image": "Assets/Vehicles/Yankee-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Caddy",
+    "nameFile": "caddy",
+    "id": 457,
+    "image": "Assets/Vehicles/Caddy-GTASA-front.webp"
+  },
+  {
+    "id": 458,
+    "category": "car",
+    "name": "Solair",
+    "nameFile": "solair",
+    "image": "Assets/Vehicles/Solair-GTASA-front.webp"
+  },
+  {
+    "id": 459,
+    "category": "car",
+    "name": "Top Fun",
+    "nameFile": "topfun",
+    "image": "Assets/Vehicles/TopFun-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Skimmer",
+    "nameFile": "skimmer",
+    "id": 460,
+    "image": "Assets/Vehicles/Skimmer-GTASA-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "PCJ-600",
+    "nameFile": "pcj600",
+    "id": 461,
+    "image": "Assets/Vehicles/PCJ-600-GTASA-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "Faggio",
+    "nameFile": "faggio",
+    "id": 462,
+    "image": "Assets/Vehicles/Faggio-GTASA-singletone-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "Freeway",
+    "nameFile": "freeway",
+    "id": 463,
+    "image": "Assets/Vehicles/Freeway-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "RC Baron",
+    "nameFile": "rcbaron",
+    "id": 464,
+    "image": "Assets/Vehicles/RCBaron-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "RC Raider",
+    "nameFile": "rcraider",
+    "id": 465,
+    "image": "Assets/Vehicles/RCRaider-GTASA-front.webp"
+  },
+  {
+    "id": 466,
+    "category": "car",
+    "name": "Glendale",
+    "nameFile": "glendale",
+    "image": "Assets/Vehicles/Glendale-GTASA-front.webp"
+  },
+  {
+    "id": 467,
+    "category": "car",
+    "name": "Oceanic",
+    "nameFile": "oceanic",
+    "image": "Assets/Vehicles/Oceanic-GTASA-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "Sanchez",
+    "nameFile": "sanchez",
+    "id": 468,
+    "image": "Assets/Vehicles/Sanchez-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "Sparrow",
+    "nameFile": "sparrow",
+    "id": 469,
+    "image": "Assets/Vehicles/Sparrow-GTASA-front.webp"
+  },
+  {
+    "id": 470,
+    "category": "car",
+    "name": "Patriot",
+    "nameFile": "patriot",
+    "image": "Assets/Vehicles/Patriot-GTASA-front.webp"
+  },
+  {
+    "category": "quad",
+    "name": "Quad",
+    "nameFile": "quad",
+    "id": 471,
+    "image": "Assets/Vehicles/Quad-GTASA-front.webp"
+  },
+  {
+    "category": "boat",
+    "name": "Coastguard",
+    "nameFile": "coastg",
+    "id": 472,
+    "image": "Assets/Vehicles/Coastguard-GTASA-front.webp"
+  },
+  {
+    "category": "boat",
+    "name": "Dinghy",
+    "nameFile": "dinghy",
+    "id": 473,
+    "image": "Assets/Vehicles/Dinghy-GTASA-front.webp"
+  },
+  {
+    "id": 474,
+    "category": "car",
+    "name": "Hermes",
+    "nameFile": "hermes",
+    "image": "Assets/Vehicles/Hermes-GTASA-front.webp"
+  },
+  {
+    "id": 475,
+    "category": "car",
+    "name": "Sabre",
+    "nameFile": "sabre",
+    "image": "Assets/Vehicles/Sabre-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Rustler",
+    "nameFile": "rustler",
+    "id": 476,
+    "image": "Assets/Vehicles/Rustler-GTASA-front.webp"
+  },
+  {
+    "id": 477,
+    "category": "car",
+    "name": "ZR-350",
+    "nameFile": "zr350",
+    "image": "Assets/Vehicles/ZR350-GTASA-front.webp"
+  },
+  {
+    "id": 478,
+    "category": "car",
+    "name": "Walton",
+    "nameFile": "walton",
+    "image": "Assets/Vehicles/Walton-GTASA-front.webp"
+  },
+  {
+    "id": 479,
+    "category": "car",
+    "name": "Regina",
+    "nameFile": "regina",
+    "image": "Assets/Vehicles/Regina-GTASA-front.webp"
+  },
+  {
+    "id": 480,
+    "category": "car",
+    "name": "Comet",
+    "nameFile": "comet",
+    "image": "Assets/Vehicles/Comet-GTASA-front.webp"
+  },
+  {
+    "category": "bmx",
+    "name": "BMX",
+    "nameFile": "bmx",
+    "id": 481,
+    "image": "Assets/Vehicles/BMX-GTASA-front.webp"
+  },
+  {
+    "id": 482,
+    "category": "car",
+    "name": "Burrito",
+    "nameFile": "burrito",
+    "image": "Assets/Vehicles/Burrito-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Camper",
+    "nameFile": "camper",
+    "id": 483,
+    "image": "Assets/Vehicles/Camper-GTASA-front.webp"
+  },
+  {
+    "category": "boat",
+    "name": "Marquis",
+    "nameFile": "marquis",
+    "id": 484,
+    "image": "Assets/Vehicles/Marquis-GTASA-front.webp"
+  },
+  {
+    "id": 485,
+    "category": "car",
+    "name": "Baggage",
+    "nameFile": "baggage",
+    "image": "Assets/Vehicles/Baggage-GTASA-front.webp"
+  },
+  {
+    "id": 486,
+    "category": "car",
+    "name": "Dozer",
+    "nameFile": "dozer",
+    "image": "Assets/Vehicles/Dozer-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "Maverick",
+    "nameFile": "maverick",
+    "id": 487,
+    "image": "Assets/Vehicles/Maverick-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "News Chopper",
+    "nameFile": "vcnmav",
+    "id": 488,
+    "image": "Assets/Vehicles/NewsChopper-GTASA-front.webp"
+  },
+  {
+    "id": 489,
+    "category": "car",
+    "name": "Rancher",
+    "nameFile": "rancher",
+    "image": "Assets/Vehicles/Rancher-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "FBI Rancher",
+    "nameFile": "fbiranch",
+    "id": 490,
+    "image": "Assets/Vehicles/FBIRancher-GTASA-front.webp"
+  },
+  {
+    "id": 491,
+    "category": "car",
+    "name": "Virgo",
+    "nameFile": "virgo",
+    "image": "Assets/Vehicles/Virgo-GTASA-front.webp"
+  },
+  {
+    "id": 492,
+    "category": "car",
+    "name": "Greenwood",
+    "nameFile": "greenwoo",
+    "image": "Assets/Vehicles/Greenwood-GTASA-front.webp"
+  },
+  {
+    "category": "boat",
+    "name": "Jetmax",
+    "nameFile": "jetmax",
+    "id": 493,
+    "image": "Assets/Vehicles/Jetmax-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Hotring Racer",
+    "nameFile": "hotring",
+    "id": 494,
+    "image": "Assets/Vehicles/HotringRacer-GTASA-hotring-front.webp"
+  },
+  {
+    "id": 495,
+    "category": "car",
+    "name": "Sandking",
+    "nameFile": "sandking",
+    "image": "Assets/Vehicles/Sandking-GTASA-front.webp"
+  },
+  {
+    "id": 496,
+    "category": "car",
+    "name": "Blista Compact",
+    "nameFile": "blistac",
+    "image": "Assets/Vehicles/BlistaCompact-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "Police Maverick",
+    "nameFile": "polmav",
+    "id": 497,
+    "image": "Assets/Vehicles/PoliceMaverick-GTASA-front.webp"
+  },
+  {
+    "id": 498,
+    "category": "car",
+    "name": "Boxville",
+    "nameFile": "boxville",
+    "image": "Assets/Vehicles/Boxville-GTASA-front.webp"
+  },
+  {
+    "id": 499,
+    "category": "car",
+    "name": "Benson",
+    "nameFile": "benson",
+    "image": "Assets/Vehicles/Benson-GTASA-front.webp"
+  },
+  {
+    "id": 500,
+    "category": "car",
+    "name": "Mesa",
+    "nameFile": "mesa",
+    "image": "Assets/Vehicles/Mesa-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "RC Goblin",
+    "nameFile": "rcgoblin",
+    "id": 501,
+    "image": "Assets/Vehicles/RCGoblin-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Hotring Racer (hotrina)",
+    "nameFile": "hotrina",
+    "id": 502,
+    "image": "Assets/Vehicles/HotringRacer-GTASA-hotrina-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Hotring Racer (hotrinb)",
+    "nameFile": "hotrinb",
+    "id": 503,
+    "image": "Assets/Vehicles/HotringRacer-GTASA-hotrinb-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Bloodring Banger",
+    "nameFile": "bloodra",
+    "id": 504,
+    "image": "Assets/Vehicles/BloodringBanger-GTASA-front2.webp"
+  },
+  {
+    "id": 505,
+    "category": "car",
+    "name": "Rancher (lure)",
+    "nameFile": "rnchlure",
+    "image": "Assets/Vehicles/Rancher-GTASA-front.webp"
+  },
+  {
+    "id": 506,
+    "category": "car",
+    "name": "Super GT",
+    "nameFile": "supergt",
+    "image": "Assets/Vehicles/SuperGT-GTASA-front.webp"
+  },
+  {
+    "id": 507,
+    "category": "car",
+    "name": "Elegant",
+    "nameFile": "elegant",
+    "image": "Assets/Vehicles/Elegant-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Journey",
+    "nameFile": "journey",
+    "id": 508,
+    "image": "Assets/Vehicles/Journey-GTASA-front.webp"
+  },
+  {
+    "category": "bmx",
+    "name": "Bike",
+    "nameFile": "bike",
+    "id": 509,
+    "image": "Assets/Vehicles/Bike-GTASA-front.webp"
+  },
+  {
+    "category": "bmx",
+    "name": "Mountain Bike",
+    "nameFile": "mtbike",
+    "id": 510,
+    "image": "Assets/Vehicles/MountainBike-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Beagle",
+    "nameFile": "beagle",
+    "id": 511,
+    "image": "Assets/Vehicles/Beagle-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Cropduster",
+    "nameFile": "cropdust",
+    "id": 512,
+    "image": "Assets/Vehicles/Cropduster-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Stuntplane",
+    "nameFile": "stunt",
+    "id": 513,
+    "image": "Assets/Vehicles/Stuntplane-GTASA-inflight.webp"
+  },
+  {
+    "id": 514,
+    "category": "car",
+    "name": "Tanker",
+    "nameFile": "petro",
+    "image": "Assets/Vehicles/Tanker-GTASA-front.webp"
+  },
+  {
+    "id": 515,
+    "category": "car",
+    "name": "Roadtrain",
+    "nameFile": "rdtrain",
+    "image": "Assets/Vehicles/Roadtrain-GTASA-front.webp"
+  },
+  {
+    "id": 516,
+    "category": "car",
+    "name": "Nebula",
+    "nameFile": "nebula",
+    "image": "Assets/Vehicles/Nebula-GTASA-front.webp"
+  },
+  {
+    "id": 517,
+    "category": "car",
+    "name": "Majestic",
+    "nameFile": "majestic",
+    "image": "Assets/Vehicles/Majestic-GTASA-front.webp"
+  },
+  {
+    "id": 518,
+    "category": "car",
+    "name": "Buccaneer",
+    "nameFile": "buccanee",
+    "image": "Assets/Vehicles/Buccaneer-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Shamal",
+    "nameFile": "shamal",
+    "id": 519,
+    "image": "Assets/Vehicles/Shamal-GTASA-parked.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Hydra",
+    "nameFile": "hydra",
+    "id": 520,
+    "image": "Assets/Vehicles/Hydra-GTASA-inflight.webp"
+  },
+  {
+    "category": "bike",
+    "name": "FCR-900",
+    "nameFile": "fcr900",
+    "id": 521,
+    "image": "Assets/Vehicles/FCR-900-GTASA-variant2-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "NRG-500",
+    "nameFile": "nrg500",
+    "id": 522,
+    "image": "Assets/Vehicles/NRG-500-GTASA-variant1-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "HPV1000",
+    "nameFile": "copbike",
+    "id": 523,
+    "image": "Assets/Vehicles/HPV-1000-GTASA-front.webp"
+  },
+  {
+    "id": 524,
+    "category": "car",
+    "name": "Cement Truck",
+    "nameFile": "cement",
+    "image": "Assets/Vehicles/CementTruck-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Tow Truck",
+    "nameFile": "towtruck",
+    "id": 525,
+    "image": "Assets/Vehicles/Towtruck-GTASA-front.webp"
+  },
+  {
+    "id": 526,
+    "category": "car",
+    "name": "Fortune",
+    "nameFile": "fortune",
+    "image": "Assets/Vehicles/Fortune-GTASA-front.webp"
+  },
+  {
+    "id": 527,
+    "category": "car",
+    "name": "Cadrona",
+    "nameFile": "cadrona",
+    "image": "Assets/Vehicles/Cadrona-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "FBI Truck",
+    "nameFile": "fbitruck",
+    "id": 528,
+    "image": "Assets/Vehicles/FBITruck-GTASA.png"
+  },
+  {
+    "id": 529,
+    "category": "car",
+    "name": "Willard",
+    "nameFile": "willard",
+    "image": "Assets/Vehicles/Willard-GTASA-front.webp"
+  },
+  {
+    "id": 530,
+    "category": "car",
+    "name": "Forklift",
+    "nameFile": "forklift",
+    "image": "Assets/Vehicles/Forklift-GTASA-front.webp"
+  },
+  {
+    "id": 531,
+    "category": "car",
+    "name": "Tractor",
+    "nameFile": "tractor",
+    "image": "Assets/Vehicles/Tractor-GTASA-front.webp"
+  },
+  {
+    "id": 532,
+    "category": "car",
+    "name": "Combine Harvester",
+    "nameFile": "combine",
+    "image": "Assets/Vehicles/CombineHarvester-GTASA-front.webp"
+  },
+  {
+    "id": 533,
+    "category": "car",
+    "name": "Feltzer",
+    "nameFile": "feltzer",
+    "image": "Assets/Vehicles/Feltzer-GTASA-front.webp"
+  },
+  {
+    "id": 534,
+    "category": "car",
+    "name": "Remington",
+    "nameFile": "remingtn",
+    "image": "Assets/Vehicles/Remington-GTASA-front.webp"
+  },
+  {
+    "id": 535,
+    "category": "car",
+    "name": "Slamvan",
+    "nameFile": "slamvan",
+    "image": "Assets/Vehicles/Slamvan-GTASA-front.webp"
+  },
+  {
+    "id": 536,
+    "category": "car",
+    "name": "Blade",
+    "nameFile": "blade",
+    "image": "Assets/Vehicles/Blade-GTASA-front.webp"
+  },
+  {
+    "id": 537,
+    "category": "train",
+    "name": "Freight",
+    "nameFile": "freight",
+    "image": "Assets/Vehicles/Freight-GTASA-front.webp"
+  },
+  {
+    "id": 538,
+    "category": "train",
+    "name": "Brown Streak",
+    "nameFile": "streak",
+    "image": "Assets/Vehicles/BrownStreak-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Vortex",
+    "nameFile": "vortex",
+    "id": 539,
+    "image": "Assets/Vehicles/Vortex-GTASA-front.webp"
+  },
+  {
+    "id": 540,
+    "category": "car",
+    "name": "Vincent",
+    "nameFile": "vincent",
+    "image": "Assets/Vehicles/Vincent-GTASA-front.webp"
+  },
+  {
+    "id": 541,
+    "category": "car",
+    "name": "Bullet",
+    "nameFile": "bullet",
+    "image": "Assets/Vehicles/Bullet-GTASA-front.webp"
+  },
+  {
+    "id": 542,
+    "category": "car",
+    "name": "Clover",
+    "nameFile": "clover",
+    "image": "Assets/Vehicles/Clover-GTASA-front.webp"
+  },
+  {
+    "id": 543,
+    "category": "car",
+    "name": "Sadler",
+    "nameFile": "sadler",
+    "image": "Assets/Vehicles/Sadler-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Fire Truck (ladder)",
+    "nameFile": "firela",
+    "id": 544,
+    "image": "Assets/Vehicles/FireTruck-GTASA-ladder-front.webp"
+  },
+  {
+    "id": 545,
+    "category": "car",
+    "name": "Hustler",
+    "nameFile": "hustler",
+    "image": "Assets/Vehicles/Hustler-GTASA-front.webp"
+  },
+  {
+    "id": 546,
+    "category": "car",
+    "name": "Intruder",
+    "nameFile": "intruder",
+    "image": "Assets/Vehicles/Intruder-GTASA-front.webp"
+  },
+  {
+    "id": 547,
+    "category": "car",
+    "name": "Primo",
+    "nameFile": "primo",
+    "image": "Assets/Vehicles/Primo-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "Cargobob",
+    "nameFile": "cargobob",
+    "id": 548,
+    "image": "Assets/Vehicles/Cargobob-GTASA-front.webp"
+  },
+  {
+    "id": 549,
+    "category": "car",
+    "name": "Tampa",
+    "nameFile": "tampa",
+    "image": "Assets/Vehicles/Tampa-GTASA-front.webp"
+  },
+  {
+    "id": 550,
+    "category": "car",
+    "name": "Sunrise",
+    "nameFile": "sunrise",
+    "image": "Assets/Vehicles/Sunrise-GTASA-front.webp"
+  },
+  {
+    "id": 551,
+    "category": "car",
+    "name": "Merit",
+    "nameFile": "merit",
+    "image": "Assets/Vehicles/Merit-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Utility Van",
+    "nameFile": "utility",
+    "id": 552,
+    "image": "Assets/Vehicles/UtilityVan-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Nevada",
+    "nameFile": "nevada",
+    "id": 553,
+    "image": "Assets/Vehicles/Nevada-GTASA-inflight.webp"
+  },
+  {
+    "id": 554,
+    "category": "car",
+    "name": "Yosemite",
+    "nameFile": "yosemite",
+    "image": "Assets/Vehicles/Yosemite-GTASA-front.webp"
+  },
+  {
+    "id": 555,
+    "category": "car",
+    "name": "Windsor",
+    "nameFile": "windsor",
+    "image": "Assets/Vehicles/Windsor-GTASA-front.webp"
+  },
+  {
+    "id": 556,
+    "category": "mtruck",
+    "name": "Monster A",
+    "nameFile": "monstera",
+    "image": "Assets/Vehicles/Monster-GTASA-monstera-front.webp"
+  },
+  {
+    "id": 557,
+    "category": "mtruck",
+    "name": "Monster B",
+    "nameFile": "monsterb",
+    "image": "Assets/Vehicles/Monster-GTASA-monsterb-front.webp"
+  },
+  {
+    "id": 558,
+    "category": "car",
+    "name": "Uranus",
+    "nameFile": "uranus",
+    "image": "Assets/Vehicles/Uranus-GTASA-front.webp"
+  },
+  {
+    "id": 559,
+    "category": "car",
+    "name": "Jester",
+    "nameFile": "jester",
+    "image": "Assets/Vehicles/Jester-GTASA-front.webp"
+  },
+  {
+    "id": 560,
+    "category": "car",
+    "name": "Sultan",
+    "nameFile": "sultan",
+    "image": "Assets/Vehicles/Sultan-GTASA-front.webp"
+  },
+  {
+    "id": 561,
+    "category": "car",
+    "name": "Stratum",
+    "nameFile": "stratum",
+    "image": "Assets/Vehicles/Stratum-GTASA-front.webp"
+  },
+  {
+    "id": 562,
+    "category": "car",
+    "name": "Elegy",
+    "nameFile": "elegy",
+    "image": "Assets/Vehicles/Elegy-GTASA-front.webp"
+  },
+  {
+    "category": "heli",
+    "name": "Raindance",
+    "nameFile": "raindanc",
+    "id": 563,
+    "image": "Assets/Vehicles/Raindance-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "RC Tiger",
+    "nameFile": "rctiger",
+    "id": 564,
+    "image": "Assets/Vehicles/RCTiger-GTASA-front.webp"
+  },
+  {
+    "id": 565,
+    "category": "car",
+    "name": "Flash",
+    "nameFile": "flash",
+    "image": "Assets/Vehicles/Flash-GTASA-front.webp"
+  },
+  {
+    "id": 566,
+    "category": "car",
+    "name": "Tahoma",
+    "nameFile": "tahoma",
+    "image": "Assets/Vehicles/Tahoma-GTASA-front.webp"
+  },
+  {
+    "id": 567,
+    "category": "car",
+    "name": "Savanna",
+    "nameFile": "savanna",
+    "image": "Assets/Vehicles/Savanna-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Bandito",
+    "nameFile": "bandito",
+    "id": 568,
+    "image": "Assets/Vehicles/Bandito-GTASA-front.webp"
+  },
+  {
+    "id": 569,
+    "category": "train",
+    "name": "Freight (flatcar)",
+    "nameFile": "freiflat",
+    "image": "Assets/Vehicles/Freiflat-GTASA-front.webp"
+  },
+  {
+    "id": 570,
+    "category": "train",
+    "name": "Brown Streak (coach)",
+    "nameFile": "streakc",
+    "image": "Assets/Vehicles/streakc.jpg"
+  },
+  {
+    "category": "car",
+    "name": "Kart",
+    "nameFile": "kart",
+    "id": 571,
+    "image": "Assets/Vehicles/Kart-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Mower",
+    "nameFile": "mower",
+    "id": 572,
+    "image": "Assets/Vehicles/Mower-GTASA-front.webp"
+  },
+  {
+    "category": "mtruck",
+    "name": "Dune",
+    "nameFile": "duneride",
+    "id": 573,
+    "image": "Assets/Vehicles/Dune-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Sweeper",
+    "nameFile": "sweeper",
+    "id": 574,
+    "image": "Assets/Vehicles/Sweeper-GTASA-front.webp"
+  },
+  {
+    "id": 575,
+    "category": "car",
+    "name": "Broadway",
+    "nameFile": "broadway",
+    "image": "Assets/Vehicles/Broadway-GTASA-front.webp"
+  },
+  {
+    "id": 576,
+    "category": "car",
+    "name": "Tornado",
+    "nameFile": "tornado",
+    "image": "Assets/Vehicles/Tornado-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "AT-400",
+    "nameFile": "at400",
+    "id": 577,
+    "image": "Assets/Vehicles/AT400-GTASA-inflight.webp"
+  },
+  {
+    "id": 578,
+    "category": "car",
+    "name": "DFT-30",
+    "nameFile": "dft30",
+    "image": "Assets/Vehicles/DFT-30-GTASA-front.webp"
+  },
+  {
+    "id": 579,
+    "category": "car",
+    "name": "Huntley",
+    "nameFile": "huntley",
+    "image": "Assets/Vehicles/Huntley-GTASA-front.webp"
+  },
+  {
+    "id": 580,
+    "category": "car",
+    "name": "Stafford",
+    "nameFile": "stafford",
+    "image": "Assets/Vehicles/Stafford-GTASA-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "BF-400",
+    "nameFile": "bf400",
+    "id": 581,
+    "image": "Assets/Vehicles/BF-400-GTASA-variant2-front.webp"
+  },
+  {
+    "id": 582,
+    "category": "car",
+    "name": "News Van",
+    "nameFile": "newsvan",
+    "image": "Assets/Vehicles/Newsvan-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Tug",
+    "nameFile": "tug",
+    "id": 583,
+    "image": "Assets/Vehicles/Tug-GTASA-front.webp"
+  },
+  {
+    "category": "trailer",
     "name": "Petrol Truck",
     "nameFile": "petrotr",
     "id": 584,
     "image": "Assets/Vehicles/PetrolTruck-GTASA-front.webp"
   },
   {
-    "category": "Trailers",
+    "id": 585,
+    "category": "car",
+    "name": "Emperor",
+    "nameFile": "emperor",
+    "image": "Assets/Vehicles/Emperor-GTASA-front.webp"
+  },
+  {
+    "category": "bike",
+    "name": "Wayfarer",
+    "nameFile": "wayfarer",
+    "id": 586,
+    "image": "Assets/Vehicles/Wayfarer-GTASA-front.webp"
+  },
+  {
+    "id": 587,
+    "category": "car",
+    "name": "Euros",
+    "nameFile": "euros",
+    "image": "Assets/Vehicles/Euros-GTASA-front.webp"
+  },
+  {
+    "id": 588,
+    "category": "car",
+    "name": "Hotdog",
+    "nameFile": "hotdog",
+    "image": "Assets/Vehicles/Hotdog-GTASA-front.webp"
+  },
+  {
+    "id": 589,
+    "category": "car",
+    "name": "Club",
+    "nameFile": "club",
+    "image": "Assets/Vehicles/Club-GTASA-front.webp"
+  },
+  {
+    "id": 590,
+    "category": "train",
+    "name": "Freight Box",
+    "nameFile": "freibox",
+    "image": "Assets/Vehicles/Freibox-GTASA.png"
+  },
+  {
+    "category": "trailer",
+    "name": "Articulated Trailer (short)",
+    "nameFile": "artict3",
+    "id": 591,
+    "image": "Assets/Vehicles/ArticulatedTrailer-GTASA-artict3-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Andromada",
+    "nameFile": "androm",
+    "id": 592,
+    "image": "Assets/Vehicles/Andromada-GTASA-front.webp"
+  },
+  {
+    "category": "plane",
+    "name": "Dodo",
+    "nameFile": "dodo",
+    "id": 593,
+    "image": "Assets/Vehicles/Dodo-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "RC Cam",
+    "nameFile": "rccam",
+    "id": 594,
+    "image": "Assets/Vehicles/RCCam-GTASA.png"
+  },
+  {
+    "category": "boat",
+    "name": "Launch",
+    "nameFile": "launch",
+    "id": 595,
+    "image": "Assets/Vehicles/Launch-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Police (LSPD)",
+    "nameFile": "copcarla",
+    "id": 596,
+    "image": "Assets/Vehicles/Police-GTASA-LSPD-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Police (SFPD)",
+    "nameFile": "copcarsf",
+    "id": 597,
+    "image": "Assets/Vehicles/Police-GTASA-SFPD-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Police (LVPD)",
+    "nameFile": "copcarvg",
+    "id": 598,
+    "image": "Assets/Vehicles/Police-GTASA-LVPD-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "Ranger",
+    "nameFile": "copcarru",
+    "id": 599,
+    "image": "Assets/Vehicles/Ranger-GTASA-front.webp"
+  },
+  {
+    "id": 600,
+    "category": "car",
+    "name": "Picador",
+    "nameFile": "picador",
+    "image": "Assets/Vehicles/Picador-GTASA-front.webp"
+  },
+  {
+    "category": "car",
+    "name": "S.W.A.T.",
+    "nameFile": "swatvan",
+    "id": 601,
+    "image": "Assets/Vehicles/SWAT-GTASA-front.webp"
+  },
+  {
+    "id": 602,
+    "category": "car",
+    "name": "Alpha",
+    "nameFile": "alpha",
+    "image": "Assets/Vehicles/Alpha-GTASA-front.webp"
+  },
+  {
+    "id": 603,
+    "category": "car",
+    "name": "Phoenix",
+    "nameFile": "phoenix",
+    "image": "Assets/Vehicles/Phoenix-GTASA-front.webp"
+  },
+  {
+    "id": 604,
+    "category": "car",
+    "name": "Glendale (beater)",
+    "nameFile": "glenshit",
+    "image": "Assets/Vehicles/Glendale-GTASA-beater-front.webp"
+  },
+  {
+    "id": 605,
+    "category": "car",
+    "name": "Sadler (beater)",
+    "nameFile": "sadlshit",
+    "image": "Assets/Vehicles/Sadler-GTASA-beater-front.webp"
+  },
+  {
+    "category": "trailer",
+    "name": "Baggage Box",
+    "nameFile": "bagboxa",
+    "id": 606,
+    "image": "Assets/Vehicles/BaggageBox-GTASA-bagboxa-front.webp"
+  },
+  {
+    "category": "trailer",
+    "name": "Baggage Box (open)",
+    "nameFile": "bagboxb",
+    "id": 607,
+    "image": "Assets/Vehicles/BaggageBox-GTASA-bagboxb-front.webp"
+  },
+  {
+    "category": "trailer",
     "name": "Tug Stairs",
     "nameFile": "tugstair",
     "id": 608,
     "image": "Assets/Vehicles/TugStairs-GTASA-front.webp"
   },
   {
-    "category": "Trailers",
+    "id": 609,
+    "category": "car",
+    "name": "BoxBurg",
+    "nameFile": "boxburg",
+    "image": "Assets/Vehicles/Boxville-GTASA-burglary-front.webp"
+  },
+  {
+    "category": "trailer",
+    "name": "Farm Trailer",
+    "nameFile": "farmtr1",
+    "id": 610,
+    "image": "Assets/Vehicles/FarmTrailer-GTASA-front.webp"
+  },
+  {
+    "category": "trailer",
     "name": "Utility Trailer",
     "nameFile": "utiltr1",
     "id": 611,

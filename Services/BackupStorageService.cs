@@ -12,7 +12,9 @@ public sealed class BackupStoragePlan
 
 public static class BackupStorageService
 {
-    private const string IdentityFileName = ".zGtaSaModManager.json";
+    private const string ManagerDirectoryName = ".ModManager";
+    private const string IdentityFileName = "BackupStorageIdentity.json";
+    private const string LegacyIdentityFileName = ".zGtaSaModManager.json";
     private const string BackupFolderName = "zBackupFiles";
     private const string ExternalBackupBase = @"C:\Program Files (x86)\GTA San Andreas\zBackupFiles";
 
@@ -64,7 +66,18 @@ public static class BackupStorageService
 
     private static string GetOrCreateGameInstanceId(string gameFolder)
     {
-        var identityPath = Path.Combine(gameFolder, IdentityFileName);
+        var managerDirectory = Path.Combine(gameFolder, ManagerDirectoryName);
+        Directory.CreateDirectory(managerDirectory);
+        SetHidden(managerDirectory);
+
+        var identityPath = Path.Combine(managerDirectory, IdentityFileName);
+        var legacyIdentityPath = Path.Combine(gameFolder, LegacyIdentityFileName);
+        if (!File.Exists(identityPath) && File.Exists(legacyIdentityPath))
+        {
+            File.Copy(legacyIdentityPath, identityPath);
+            SetHidden(identityPath);
+        }
+
         if (File.Exists(identityPath))
         {
             try
