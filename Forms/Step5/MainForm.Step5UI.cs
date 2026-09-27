@@ -253,7 +253,20 @@ public partial class MainForm : Form
         _step5SelectedAssetKeys.Clear();
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
-        _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
+        _step5CategoryFilter = GetDefaultStep5Category(detectedType, sourceModelName);
+    }
+
+    private string GetDefaultStep5Category(string assetType, string sourceModelName)
+    {
+        var allText = _localizationService.GetString("AssetAll", "All");
+        if (string.Equals(assetType, "Weapon", StringComparison.OrdinalIgnoreCase))
+        {
+            return allText;
+        }
+
+        return _step5DetectedAssets
+            .FirstOrDefault(asset => string.Equals(asset.NameFile, sourceModelName, StringComparison.OrdinalIgnoreCase))?
+            .Category ?? allText;
     }
 
     private static string GetAssetSelectionKey(GameAsset asset)
