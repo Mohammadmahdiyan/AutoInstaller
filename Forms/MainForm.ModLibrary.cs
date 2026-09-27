@@ -521,6 +521,7 @@ public partial class MainForm : Form
         }
 
         var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
+        var isAssetSelectionInstall = isAssetPackage || _selectedAssetForInstall != null;
         var sourceModelName = DetectSourceModelName(payloadPath);
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path))
@@ -630,7 +631,9 @@ public partial class MainForm : Form
                     ? selectedTarget
                     : selectedAssetList.FirstOrDefault(asset => string.Equals(asset.NameFile, originalName, StringComparison.OrdinalIgnoreCase));
                 var destinationName = selectedAsset?.NameFile ?? originalName;
-                var relativePath = isAssetPackage && !isMediaFile
+                var isSourceModelFile = Path.GetExtension(sourcePath) is ".dff" or ".txd"
+                    && string.Equals(Path.GetFileNameWithoutExtension(sourcePath), sourceModelName, StringComparison.OrdinalIgnoreCase);
+                var relativePath = isAssetSelectionInstall && !isMediaFile && isSourceModelFile
                     ? destinationName + extension
                     : Path.GetRelativePath(payloadPath, sourcePath);
                 var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)

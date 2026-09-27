@@ -577,7 +577,12 @@ public partial class MainForm : Form
                 return;
             }
 
-            if (_selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage)
+            var sourceAssetType = DetectAssetTypeByName(DetectSourceModelName(_selectedModPayloadPath));
+            var requiresAssetSelection = _selectedModManifest.IsSingleAssetPackage
+                || _selectedModManifest.IsMultiAssetPackage
+                || _selectedAssetForInstall != null
+                || !string.IsNullOrWhiteSpace(sourceAssetType);
+            if (requiresAssetSelection)
             {
                 if (_currentStep == WizardStep.Step3)
                 {

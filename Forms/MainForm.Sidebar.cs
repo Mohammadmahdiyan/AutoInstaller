@@ -834,7 +834,9 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step6)
         {
-            if (_selectedModManifest?.IsSingleAssetPackage == true || _selectedModManifest?.IsMultiAssetPackage == true)
+            if (_selectedModManifest?.IsSingleAssetPackage == true
+                || _selectedModManifest?.IsMultiAssetPackage == true
+                || _selectedAssetForInstall != null)
             {
                 _returnedToInstallStepFromCompletion = true;
                 NavigateToStep(WizardStep.Step5);
