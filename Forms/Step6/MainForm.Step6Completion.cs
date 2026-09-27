@@ -138,7 +138,8 @@ public partial class MainForm : Form
         }
 
         var isReplacementInstall = type is "replacing" or "putandreplace" or "putandreplaces";
-        var isModLoaderInstall = type is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
+        var isModLoaderInstall = type is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
+            || _selectedAssetForInstall != null;
         var success = isReplacementInstall
             ? ModPackageService.TryRestoreReplacementInstallations(_selectedModName)
             : isModLoaderInstall

@@ -487,19 +487,24 @@ public partial class MainForm : Form
         GoToStep(WizardStep.Step6);
     }
 
-    private async Task InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, GtaSaModManager.Models.ModManifest manifest)
+    private async Task<bool> InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, GtaSaModManager.Models.ModManifest manifest)
     {
         DeleteManifestEntries(manifest);
 
-        var targetRoot = manifest.NormalizedType switch
-        {
-            "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons" => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName),
-            "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
-            _ => string.Empty
-        };
+        var installAsModLoader = manifest.IsModLoader
+            || manifest.IsSingleAssetPackage
+            || manifest.IsMultiAssetPackage
+            || _selectedAssetForInstall != null;
+        var targetRoot = installAsModLoader
+            ? Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName)
+            : manifest.NormalizedType switch
+            {
+                "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
+                _ => string.Empty
+            };
         if (string.IsNullOrWhiteSpace(targetRoot))
         {
-            return;
+            return false;
         }
 
         if (manifest.NormalizedType == "putinmodloader" && Directory.Exists(targetRoot))
@@ -507,7 +512,7 @@ public partial class MainForm : Form
             var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), modName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result != DialogResult.Yes)
             {
-                return;
+                return false;
             }
 
             Directory.Delete(targetRoot, true);
@@ -517,17 +522,18 @@ public partial class MainForm : Form
         if ((manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons") && selectedAssetList.Count == 0)
         {
             MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "No matching asset was detected in the package."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
+            return false;
         }
 
         var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
         var isAssetSelectionInstall = isAssetPackage || _selectedAssetForInstall != null;
         var sourceModelName = DetectSourceModelName(payloadPath);
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path))
+            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path)
+                || isAssetSelectionInstall && ModPackageService.IsMediaFile(path))
             .Where(path => !isAssetPackage
                 || ModPackageService.IsMediaFile(path)
-                || (Path.GetExtension(path) is ".dff" or ".txd"
+                || (IsModelFile(path)
                     && string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase)))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
@@ -539,7 +545,7 @@ public partial class MainForm : Form
         if (packageFiles.Count == 0)
         {
             MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected mod package does not contain installable files."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
+            return false;
         }
 
         var replacementTargets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -551,7 +557,7 @@ public partial class MainForm : Form
                 if (!File.Exists(sourcePath))
                 {
                     MessageBox.Show("Replacement source was not found: " + replacement.Source, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    return false;
                 }
 
                 replacementTargets[sourcePath] = GetSafeGamePath(replacement.Target);
@@ -586,19 +592,19 @@ public partial class MainForm : Form
                 var alternativeRoot = PromptForFolderSelection("Choose another backup location", _selectedGamePath);
                 if (string.IsNullOrWhiteSpace(alternativeRoot))
                 {
-                    return;
+                    return false;
                 }
 
                 backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, replacementTargets.Values, alternativeRoot);
                 if (!backupPlan.HasBackup)
                 {
                     MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    return false;
                 }
             }
             else if (MessageBox.Show("No backup will be created. Continue?", _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
-                return;
+                return false;
             }
         }
 
@@ -631,14 +637,14 @@ public partial class MainForm : Form
                     ? selectedTarget
                     : selectedAssetList.FirstOrDefault(asset => string.Equals(asset.NameFile, originalName, StringComparison.OrdinalIgnoreCase));
                 var destinationName = selectedAsset?.NameFile ?? originalName;
-                var isSourceModelFile = Path.GetExtension(sourcePath) is ".dff" or ".txd"
+                var isSourceModelFile = IsModelFile(sourcePath)
                     && string.Equals(Path.GetFileNameWithoutExtension(sourcePath), sourceModelName, StringComparison.OrdinalIgnoreCase);
                 var relativePath = isAssetSelectionInstall && !isMediaFile && isSourceModelFile
                     ? destinationName + extension
                     : Path.GetRelativePath(payloadPath, sourcePath);
                 var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)
                     ? replacementTarget
-                    : GetSafeGamePath(manifest.NormalizedType is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinandweapons"
+                    : GetSafeGamePath(installAsModLoader
                         ? Path.Combine("modloader", modName, relativePath)
                         : relativePath);
 
@@ -677,15 +683,13 @@ public partial class MainForm : Form
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            if (manifest.NormalizedType == "putinmodloader")
+            if (installAsModLoader)
             {
+                var installType = manifest.IsModLoader || manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage
+                    ? manifest.NormalizedType
+                    : "putinmodloader";
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
-                ModLoaderService.RecordPackageInstallation(manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
-            }
-            else if (manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
-            {
-                ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
-                ModLoaderService.RecordPackageInstallation(manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
+                ModLoaderService.RecordPackageInstallation(installType, modName, packageRoot, targetRoot, installedFiles);
             }
             else
             {
@@ -694,11 +698,13 @@ public partial class MainForm : Form
 
             progressPanel.Complete();
             RefreshModList();
+            return true;
         }
         catch (Exception ex)
         {
             progressPanel.Fail();
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
         finally
         {

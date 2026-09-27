@@ -97,8 +97,7 @@ public partial class MainForm : Form
         }
 
         var modelFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => string.Equals(Path.GetExtension(path), ".dff", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(Path.GetExtension(path), ".txd", StringComparison.OrdinalIgnoreCase))
+            .Where(IsModelFile)
             .OrderBy(path => string.Equals(Path.GetExtension(path), ".dff", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .Select(path => Path.GetFileNameWithoutExtension(path))
             .Where(name => !string.IsNullOrWhiteSpace(name))
@@ -110,6 +109,13 @@ public partial class MainForm : Form
                    string.Equals(asset.NameFile, modelName, StringComparison.OrdinalIgnoreCase)))
             ?? modelFiles.FirstOrDefault()
             ?? string.Empty;
+    }
+
+    private static bool IsModelFile(string path)
+    {
+        var extension = Path.GetExtension(path);
+        return extension.Equals(".dff", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".txd", StringComparison.OrdinalIgnoreCase);
     }
 
     private string DetectAssetTypeByName(string modelName)

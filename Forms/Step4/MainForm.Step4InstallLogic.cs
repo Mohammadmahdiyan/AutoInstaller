@@ -577,10 +577,12 @@ public partial class MainForm : Form
                 return;
             }
 
-            var sourceAssetType = DetectAssetTypeByName(DetectSourceModelName(_selectedModPayloadPath));
+            var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
+            var sourceAssetType = DetectAssetTypeByName(sourceModelName);
             var requiresAssetSelection = _selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null
+                || !string.IsNullOrWhiteSpace(sourceModelName)
                 || !string.IsNullOrWhiteSpace(sourceAssetType);
             if (requiresAssetSelection)
             {
@@ -634,7 +636,17 @@ public partial class MainForm : Form
                 }
                 try
                 {
-                    await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
+                    var installed = await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
+                    if (!installed)
+                    {
+                        if (!_isInstallingOptionalPackage)
+                        {
+                            GoToStep(WizardStep.Step5);
+                        }
+
+                        return;
+                    }
+
                     await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
                     if (!_isInstallingOptionalPackage)
                     {
