@@ -206,17 +206,12 @@ public partial class MainForm : Form
        // -------------------------------------------------------------------------
     // از اینجا برای فایل MainForm.Readme.cs
     // -------------------------------------------------------------------------
-    private List<string> GetStep5SidebarImageFiles()
+    private List<string> GetStep5ModImageFiles()
     {
-        if (_selectedAssetForInstall == null)
-        {
-            return new List<string>();
-        }
-
-        var imagePath = _assetCatalogService.ResolveImagePath(_selectedAssetForInstall);
-        return string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath)
-            ? new List<string>()
-            : new List<string> { imagePath };
+        return _selectedImageFiles
+            .Where(File.Exists)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private string TryReadTextFile(string path)

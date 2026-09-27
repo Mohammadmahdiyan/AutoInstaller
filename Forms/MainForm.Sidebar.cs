@@ -161,36 +161,53 @@ public partial class MainForm : Form
         {
             Name = "SidebarSelectedModelPanel",
             Visible = false,
-            Dock = DockStyle.Fill,
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
             Margin = new Padding(0, 0, 0, 8),
             BackColor = Color.Transparent,
             Padding = new Padding(0)
         };
         var selectedModelLayout = new TableLayoutPanel
         {
-            Dock = DockStyle.Fill,
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
             ColumnCount = 1,
-            RowCount = 5,
+            RowCount = 4,
             Padding = new Padding(0),
             Margin = new Padding(0),
             BackColor = Color.Transparent
         };
         selectedModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 46F));
-        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 54F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 46F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 128F));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        selectedModelLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-        _sidebarSourceModelImage = new PictureBox { Dock = DockStyle.Fill, Height = 80, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0, 0, 0, 6), Visible = false };
-        _sidebarSelectedAssetImage = new PictureBox { Dock = DockStyle.Fill, Height = 80, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0, 6, 0, 0), Visible = false };
-        _sidebarSelectedModelArrowLabel = new Label { Text = "→", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 18F, FontStyle.Bold), ForeColor = Color.FromArgb(37, 99, 235), Margin = new Padding(0, 4, 0, 4), Visible = false };
+        _sidebarSelectedAssetImage = new PictureBox { Dock = DockStyle.Fill, Height = 128, SizeMode = PictureBoxSizeMode.Zoom, BorderStyle = BorderStyle.FixedSingle, BackColor = Color.FromArgb(245, 247, 250), Margin = new Padding(0), Visible = false };
+        _sidebarSelectedAssetImage.MouseUp += (_, e) =>
+        {
+            if (e.Button != MouseButtons.Right || _selectedAssetForInstall == null)
+            {
+                return;
+            }
+
+            var imagePath = _assetCatalogService.ResolveImagePath(_selectedAssetForInstall);
+            if (!string.IsNullOrWhiteSpace(imagePath) && File.Exists(imagePath))
+            {
+                OpenFullImageViewer(new List<string> { imagePath }, 0, _selectedAssetForInstall.Name);
+            }
+        };
+        _sidebarSelectedModelArrowLabel = new Label { Text = string.Empty, Dock = DockStyle.Fill, Margin = new Padding(0), Visible = false };
+        _sidebarSelectedModelArrowLabel.Paint += (_, e) => PaintStep5SelectionArrow(e);
         _sidebarSelectedAssetNameLabel = new Label { Dock = DockStyle.Fill, AutoSize = true, Font = new Font("Segoe UI", 8.5F, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42), Visible = false, Text = string.Empty };
         _sidebarSelectedAssetIdLabel = new Label { Dock = DockStyle.Fill, AutoSize = true, Font = new Font("Segoe UI", 7.5F), ForeColor = Color.FromArgb(71, 85, 105), Visible = false, Text = string.Empty };
 
-        selectedModelLayout.Controls.Add(_sidebarSourceModelImage, 0, 0);
-        selectedModelLayout.Controls.Add(_sidebarSelectedModelArrowLabel, 0, 1);
-        selectedModelLayout.Controls.Add(_sidebarSelectedAssetImage, 0, 2);
-        selectedModelLayout.Controls.Add(_sidebarSelectedAssetNameLabel, 0, 3);
-        selectedModelLayout.Controls.Add(_sidebarSelectedAssetIdLabel, 0, 4);
+        selectedModelLayout.Controls.Add(_sidebarSelectedModelArrowLabel, 0, 0);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetImage, 0, 1);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetNameLabel, 0, 2);
+        selectedModelLayout.Controls.Add(_sidebarSelectedAssetIdLabel, 0, 3);
 
         _sidebarSelectedModelPanel.Controls.Add(selectedModelLayout);
         _sidebarStep3GalleryPanel = new TableLayoutPanel
@@ -204,7 +221,7 @@ public partial class MainForm : Form
             BackColor = Color.Transparent,
             CellBorderStyle = TableLayoutPanelCellBorderStyle.None
         };
-        _sidebarStep4Image = new MediaPreviewControl { Width = 190, Height = 110, Dock = DockStyle.Fill, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
+        _sidebarStep4Image = new MediaPreviewControl { Width = 190, Height = 128, Dock = DockStyle.Fill, BackColor = Color.FromArgb(245, 247, 250), Visible = false, Margin = new Padding(0, 0, 0, 10) };
         _sidebarStep4Image.RightClicked += (_, _) => SidebarImageClick(_sidebarStep4Image, EventArgs.Empty);
         _sidebarImageNavPanel = new Panel { Dock = DockStyle.Fill, Visible = false, Height = 38, Margin = new Padding(0, 0, 0, 8), BackColor = Color.Transparent };
         _sidebarImagePrevButton = new Button { Name = "SidebarImagePrevButton", Text = "◀", Width = 36, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(37, 99, 235), ForeColor = Color.White, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 8, 0) };
@@ -327,8 +344,38 @@ public partial class MainForm : Form
 
         _step4ImageTimer.Interval = 1800;
         _step4ImageTimer.Tick += (_, _) => ShowNextStep4Image();
-        _step5ImageTimer.Interval = 3200;
+        _step5ImageTimer.Interval = 6000;
         _step5ImageTimer.Tick += (_, _) => ShowNextStep5Image();
+        _step5ArrowTimer.Interval = 16;
+        _step5ArrowTimer.Tick += (_, _) =>
+        {
+            _step5ArrowPhase = (_step5ArrowPhase + 0.035f) % (MathF.PI * 2f);
+            if (!_sidebarSelectedModelArrowLabel.IsDisposed)
+            {
+                _sidebarSelectedModelArrowLabel.Invalidate();
+            }
+        };
+    }
+
+    private void PaintStep5SelectionArrow(PaintEventArgs e)
+    {
+        const float arrowHeight = 18f;
+        const float arrowHalfWidth = 7f;
+        var progress = (1d - Math.Cos(_step5ArrowPhase)) / 2d;
+        var travel = Math.Max(0, _sidebarSelectedModelArrowLabel.ClientSize.Height - arrowHeight);
+        var top = (float)(travel * progress);
+        var centerX = _sidebarSelectedModelArrowLabel.ClientSize.Width / 2f;
+
+        e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+        using var pen = new Pen(_sidebarSelectedModelArrowLabel.ForeColor, 3f)
+        {
+            StartCap = System.Drawing.Drawing2D.LineCap.Round,
+            EndCap = System.Drawing.Drawing2D.LineCap.Round,
+            LineJoin = System.Drawing.Drawing2D.LineJoin.Round
+        };
+        e.Graphics.DrawLine(pen, centerX, top, centerX, top + arrowHeight - 5f);
+        e.Graphics.DrawLine(pen, centerX - arrowHalfWidth, top + arrowHeight - 10f, centerX, top + arrowHeight - 2f);
+        e.Graphics.DrawLine(pen, centerX + arrowHalfWidth, top + arrowHeight - 10f, centerX, top + arrowHeight - 2f);
     }
 
     // -------------------------------------------------------------------------
@@ -401,11 +448,11 @@ public partial class MainForm : Form
             ? new List<string>()
             : isStep4Preview
                 ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
-                : GetStep5SidebarImageFiles();
+                : isStep5Preview
+                    ? GetStep5ModImageFiles()
+                    : new List<string>();
         var hasSidebarImage = sidebarImageFiles.Count > 0;
-        var hasStep5ModImage = isStep5Preview
-            && !string.IsNullOrWhiteSpace(_selectedModPayloadPath)
-            && FindImageFiles(_selectedModPayloadPath).Any(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path));
+        var hasStep5ModImage = isStep5Preview && hasSidebarImage;
         var readmeText = hasSidebarReadme ? TryReadTextFile(_selectedReadmePath) : string.Empty;
         var shouldDisplaySidebarReadme = hasSidebarReadme && !(hasStep5ModImage && isStep5Preview);
         var hasDetectedMod = _isDetectedModStatusVisible
@@ -421,7 +468,7 @@ public partial class MainForm : Form
                 _sidebarStack.SetCellPosition(_sidebarReadmeHost, new TableLayoutPanelCellPosition(0, 7));
                 _sidebarStack.SetCellPosition(_sidebarReadmeButton, new TableLayoutPanelCellPosition(0, 8));
                 _sidebarStack.SetCellPosition(_sidebarStep3GalleryPanel, new TableLayoutPanelCellPosition(0, 9));
-                _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, 10));
+                    _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, 10));
                 _sidebarStack.SetCellPosition(_sidebarImageNavPanel, new TableLayoutPanelCellPosition(0, 11));
                 _sidebarSelectedModelPanel.Visible = false;
                 _sidebarStep3GalleryPanel.Visible = false;
@@ -430,7 +477,8 @@ public partial class MainForm : Form
             }
             else
             {
-                _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, 8));
+                _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, isStep5Preview ? 7 : 8));
+                _sidebarStack.SetCellPosition(_sidebarSelectedModelPanel, new TableLayoutPanelCellPosition(0, isStep5Preview ? 8 : 7));
                 _sidebarStack.SetCellPosition(_sidebarImageNavPanel, new TableLayoutPanelCellPosition(0, 9));
                 _sidebarStack.SetCellPosition(_sidebarReadmeHost, new TableLayoutPanelCellPosition(0, 10));
                 _sidebarStack.SetCellPosition(_sidebarReadmeButton, new TableLayoutPanelCellPosition(0, 11));
@@ -445,7 +493,7 @@ public partial class MainForm : Form
             {
                 _sidebarStack.RowStyles[7] = new RowStyle(SizeType.Percent, 100F);
             }
-            else if (!isStep3Preview && hasSidebarImage)
+            else if (isStep4Preview && hasSidebarImage)
             {
                 _sidebarStack.RowStyles[8] = new RowStyle(SizeType.Percent, 100F);
             }
@@ -460,46 +508,27 @@ public partial class MainForm : Form
             if (selectedAsset is null)
             {
                 _sidebarSelectedModelPanel.Visible = false;
-                _sidebarSourceModelImage.Visible = false;
                 _sidebarSelectedAssetImage.Visible = false;
                 _sidebarSelectedModelArrowLabel.Visible = false;
                 _sidebarSelectedAssetNameLabel.Visible = false;
                 _sidebarSelectedAssetIdLabel.Visible = false;
-                _sidebarSourceModelImage.Image?.Dispose();
-                _sidebarSourceModelImage.Image = null;
                 _sidebarSelectedAssetImage.Image?.Dispose();
                 _sidebarSelectedAssetImage.Image = null;
             }
             else
             {
-                var sourceFiles = FindImageFiles(_selectedModPayloadPath);
-                var sourceImagePath = sourceFiles.FirstOrDefault(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path));
                 var selectedAssetImagePath = _assetCatalogService.ResolveImagePath(selectedAsset);
 
                 _sidebarSelectedModelPanel.Visible = true;
                 _sidebarSelectedModelArrowLabel.Visible = true;
-                _sidebarSelectedModelArrowLabel.Text = isRtl ? "←" : "→";
                 _sidebarSelectedAssetNameLabel.Visible = true;
                 _sidebarSelectedAssetNameLabel.Text = selectedAsset.NameFile ?? _selectedModName;
                 _sidebarSelectedAssetIdLabel.Visible = !string.IsNullOrWhiteSpace(selectedAsset.Id);
                 _sidebarSelectedAssetIdLabel.Text = string.IsNullOrWhiteSpace(selectedAsset.Id) ? string.Empty : "ID: " + selectedAsset.Id;
 
-                var hasSourceImage = !string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath);
                 var hasSelectedAssetImage = !string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath);
 
-                _sidebarSourceModelImage.Visible = hasSourceImage;
                 _sidebarSelectedAssetImage.Visible = hasSelectedAssetImage;
-
-                if (hasSourceImage && !string.IsNullOrWhiteSpace(sourceImagePath) && File.Exists(sourceImagePath))
-                {
-                    _sidebarSourceModelImage.Image?.Dispose();
-                    _sidebarSourceModelImage.Image = TryLoadBitmap(sourceImagePath);
-                }
-                else
-                {
-                    _sidebarSourceModelImage.Image?.Dispose();
-                    _sidebarSourceModelImage.Image = null;
-                }
 
                 if (hasSelectedAssetImage && !string.IsNullOrWhiteSpace(selectedAssetImagePath) && File.Exists(selectedAssetImagePath))
                 {
@@ -516,13 +545,10 @@ public partial class MainForm : Form
         else
         {
             _sidebarSelectedModelPanel.Visible = false;
-            _sidebarSourceModelImage.Visible = false;
             _sidebarSelectedAssetImage.Visible = false;
             _sidebarSelectedModelArrowLabel.Visible = false;
             _sidebarSelectedAssetNameLabel.Visible = false;
             _sidebarSelectedAssetIdLabel.Visible = false;
-            _sidebarSourceModelImage.Image?.Dispose();
-            _sidebarSourceModelImage.Image = null;
             _sidebarSelectedAssetImage.Image?.Dispose();
             _sidebarSelectedAssetImage.Image = null;
         }
@@ -612,10 +638,14 @@ public partial class MainForm : Form
 
         _sidebarStep4Image.Visible = hasSidebarImage && !isStep3Preview;
         _sidebarStep4Image.Enabled = hasSidebarImage && !isStep3Preview;
-        _sidebarStep4Image.Height = hasSidebarImage && !isStep3Preview ? GetSidebarImageHeight(hasSidebarReadme) + (sidebarImageFiles.Count > 1 ? 10 : 0) : 0;
+        _sidebarStep4Image.Height = hasSidebarImage && isStep5Preview
+            ? 128
+            : hasSidebarImage && isStep4Preview
+                ? GetSidebarImageHeight(hasSidebarReadme) + (sidebarImageFiles.Count > 1 ? 10 : 0)
+                : 0;
         _sidebarStep4Image.Margin = new Padding(0, 0, 0, hasSidebarReadme ? 8 : 10);
 
-        var shouldShowImageNavigation = hasSidebarImage && sidebarImageFiles.Count > 4 && !isStep3Preview;
+        var shouldShowImageNavigation = hasSidebarImage && sidebarImageFiles.Count > 4 && !isStep3Preview && !isStep5Preview;
         _sidebarImageNavPanel.Visible = shouldShowImageNavigation;
         _sidebarImagePrevButton.Visible = shouldShowImageNavigation;
         _sidebarImageNextButton.Visible = shouldShowImageNavigation;
@@ -653,6 +683,15 @@ public partial class MainForm : Form
             _sidebarStep4Image.Visible = false;
             _sidebarImageNavPanel.Visible = false;
             _sidebarStep3GalleryPanel.Visible = false;
+        }
+
+        if (isStep5Preview && hasSelectedAssetModel)
+        {
+            _step5ArrowTimer.Start();
+        }
+        else
+        {
+            _step5ArrowTimer.Stop();
         }
 
         switch (_currentStep)
@@ -750,7 +789,7 @@ public partial class MainForm : Form
             return;
         }
 
-        var imageFiles = GetStep5SidebarImageFiles();
+        var imageFiles = GetStep5ModImageFiles();
         if (imageFiles.Count == 0)
         {
             _sidebarStep4Image.Visible = false;
@@ -790,7 +829,7 @@ public partial class MainForm : Form
 
         var imageFiles = _currentStep == WizardStep.Step4
             ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
-            : GetStep5SidebarImageFiles();
+            : GetStep5ModImageFiles();
 
         if (imageFiles.Count == 0)
         {

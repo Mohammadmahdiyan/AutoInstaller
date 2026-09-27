@@ -27,7 +27,6 @@ public partial class MainForm : Form
     private Panel _sidebarReadmeHost = null!;
     private TableLayoutPanel _sidebarStep3GalleryPanel = null!;
     private Panel _sidebarSelectedModelPanel = null!;
-    private PictureBox _sidebarSourceModelImage = null!;
     private PictureBox _sidebarSelectedAssetImage = null!;
     private Label _sidebarSelectedModelArrowLabel = null!;
     private Label _sidebarSelectedAssetNameLabel = null!;
@@ -40,9 +39,11 @@ public partial class MainForm : Form
     private Label _sidebarDetectedModLabel = null!;
     private readonly System.Windows.Forms.Timer _step4ImageTimer = new();
     private readonly System.Windows.Forms.Timer _step5ImageTimer = new();
+    private readonly System.Windows.Forms.Timer _step5ArrowTimer = new();
     private readonly System.Windows.Forms.Timer _detectedModTimer = new();
     private Label? _detectedModLabel;
     private int _step4ImageIndex;
+    private float _step5ArrowPhase;
     private AppSettings _settings;
     private readonly string _appName = "Mod Manager";
     private string _selectedGamePath = string.Empty;
