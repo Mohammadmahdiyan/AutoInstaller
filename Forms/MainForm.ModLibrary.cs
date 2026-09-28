@@ -687,8 +687,9 @@ public partial class MainForm : Form
                 var installType = manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage || _selectedAssetForInstall != null
                     ? "vehicleandskinandweapon"
                     : "putinmodloader";
+                var packageModId = GetPackageModId(packageRoot);
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
-                ModLoaderService.RecordPackageInstallation(installType, modName, packageRoot, targetRoot, installedFiles);
+                ModLoaderService.RecordPackageInstallation(installType, packageModId, packageRoot, targetRoot, installedFiles);
             }
             else
             {
@@ -712,6 +713,34 @@ public partial class MainForm : Form
                 previewRoot.Controls.Remove(progressPanel);
                 progressPanel.Dispose();
             }
+        }
+    }
+
+    private string GetPackageModId(string packageRoot)
+    {
+        var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(baseModsFolder) && Directory.Exists(baseModsFolder))
+        {
+            var relativePath = Path.GetRelativePath(baseModsFolder, packageRoot);
+            if (!Path.IsPathRooted(relativePath)
+                && relativePath != "."
+                && relativePath != ".."
+                && !relativePath.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal)
+                && !relativePath.StartsWith(".." + Path.AltDirectorySeparatorChar, StringComparison.Ordinal))
+            {
+                return relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            }
+        }
+
+        return Path.GetFileName(packageRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+            ?? modNameFallback(packageRoot);
+
+        static string modNameFallback(string path)
+        {
+            var name = Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            return string.IsNullOrWhiteSpace(name) ? Guid.NewGuid().ToString("N") : name;
         }
     }
 

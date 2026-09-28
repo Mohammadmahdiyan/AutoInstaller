@@ -109,7 +109,7 @@ public class ModLoaderService
         File.WriteAllText(manifestPath, json);
     }
 
-    public static void RecordPackageInstallation(string modType, string modName, string sourcePackagePath, string installedDestination, IEnumerable<string> installedFiles)
+    public static void RecordPackageInstallation(string modType, string modId, string sourcePackagePath, string installedDestination, IEnumerable<string> installedFiles)
     {
         var gamePath = Path.GetDirectoryName(installedDestination);
         var manifestGamePath = !string.IsNullOrWhiteSpace(gamePath) && Directory.Exists(gamePath) && gamePath.Contains("modloader", StringComparison.OrdinalIgnoreCase)
@@ -126,8 +126,10 @@ public class ModLoaderService
         }
 
         var manifest = LoadInstallationManifest(manifestPath);
-        var modId = string.IsNullOrWhiteSpace(modName) ? Guid.NewGuid().ToString("N") : modName;
-        manifest.Entries.RemoveAll(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        modId = string.IsNullOrWhiteSpace(modId) ? Guid.NewGuid().ToString("N") : modId;
+        manifest.Entries.RemoveAll(entry =>
+            string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(entry.InstalledDestination, installedDestination, StringComparison.OrdinalIgnoreCase));
         manifest.Entries.Add(new InstallationManifestEntry
         {
             ModId = modId,
@@ -221,10 +223,32 @@ public class ModLoaderService
 
         if (!string.IsNullOrWhiteSpace(gamePath))
         {
+            RemovePackageInstallationByDestination(gamePath, destination);
             TryUninstallByModId(normalizedName, modType, destination, gamePath);
         }
 
         return removedRecord || (!string.IsNullOrWhiteSpace(destination) && !Directory.Exists(destination));
+    }
+
+    private static void RemovePackageInstallationByDestination(string gamePath, string installedDestination)
+    {
+        if (string.IsNullOrWhiteSpace(installedDestination))
+        {
+            return;
+        }
+
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return;
+        }
+
+        var manifest = LoadInstallationManifest(manifestPath);
+        if (manifest.Entries.RemoveAll(entry =>
+                string.Equals(entry.InstalledDestination, installedDestination, StringComparison.OrdinalIgnoreCase)) > 0)
+        {
+            SaveInstallationManifest(manifestPath, manifest);
+        }
     }
 
     public static bool TryUninstallByModId(string modId, string modType, string? installedDestination = null, string? gamePath = null)

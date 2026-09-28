@@ -681,7 +681,7 @@ public partial class MainForm : Form
             var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
             var targetDir = Path.Combine(modLoaderFolder, _selectedModName);
 
-            if (Directory.Exists(targetDir))
+            if (Directory.Exists(targetDir) && !_step5UnknownAssetTypeCancelled)
             {
                 var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), _selectedModName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result != DialogResult.Yes)
@@ -690,6 +690,10 @@ public partial class MainForm : Form
                 }
 
                 Directory.Delete(targetDir, true);
+            }
+            else
+            {
+                Directory.CreateDirectory(targetDir);
             }
 
             _installPaths = Directory.GetFiles(_selectedModPayloadPath, "*", SearchOption.AllDirectories)
@@ -706,11 +710,13 @@ public partial class MainForm : Form
             await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir, _step5UnknownAssetTypeCancelled);
             ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
             var installRecordType = _selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage
+                || _step5UnknownAssetTypeCancelled
                 ? "vehicleandskinandweapon"
                 : "putinmodloader";
+            var packageModId = GetPackageModId(_selectedModPackageRoot);
             ModLoaderService.RecordPackageInstallation(
                 installRecordType,
-                _selectedModName,
+                packageModId,
                 _selectedModPackageRoot,
                 targetDir,
                 Directory.GetFiles(targetDir, "*", SearchOption.AllDirectories));
