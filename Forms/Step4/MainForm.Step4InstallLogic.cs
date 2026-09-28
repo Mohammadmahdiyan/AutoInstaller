@@ -545,7 +545,7 @@ public partial class MainForm : Form
                         return;
                     }
 
-                    if (action != DialogResult.Yes)
+                    if (action is not (DialogResult.Yes or DialogResult.No))
                     {
                         return;
                     }
@@ -557,7 +557,7 @@ public partial class MainForm : Form
                         _selectedModName = existingDirectoryName;
                     }
 
-                    if (Directory.Exists(existingDestination))
+                    if (action == DialogResult.Yes && Directory.Exists(existingDestination))
                     {
                         var existingModelFiles = Directory.GetFiles(existingDestination, "*", SearchOption.AllDirectories)
                             .Where(IsModelFile)
@@ -856,7 +856,6 @@ public partial class MainForm : Form
             Text = _localizationService.GetString("KeepPreviousInstallAnotherModel", "Keep Previous & Install as Another Model"),
             Width = 270,
             Height = 48,
-            Enabled = false,
             DialogResult = DialogResult.No
         };
         var cancelButton = new Button
