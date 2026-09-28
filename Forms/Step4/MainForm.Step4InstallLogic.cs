@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GtaSaModManager.Controls;
 using GtaSaModManager.Models;
 using GtaSaModManager.Services;
+using GtaSaModManager.UI;
 using ModManifestModel = GtaSaModManager.Models.ModManifest;
 
 namespace GtaSaModManager.Forms;
@@ -526,6 +527,56 @@ public partial class MainForm : Form
                 return;
             }
 
+            _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
+            _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
+            var previousModelFiles = new List<string>();
+            var assetInstallFlow = _selectedModManifest.IsSingleAssetPackage
+                || _selectedModManifest.IsMultiAssetPackage
+                || _selectedAssetForInstall != null;
+            if (_currentStep == WizardStep.Step5 && assetInstallFlow)
+            {
+                var existingInstallation = FindExistingAssetInstallation(_selectedModPackageRoot);
+                if (existingInstallation != null)
+                {
+                    var action = PromptForExistingAssetInstallAction(_selectedModName);
+                    if (action == DialogResult.Cancel)
+                    {
+                        GoToStep(WizardStep.Step6);
+                        return;
+                    }
+
+                    if (action != DialogResult.Yes)
+                    {
+                        return;
+                    }
+
+                    var existingDestination = existingInstallation.InstalledDestination;
+                    var existingDirectoryName = Path.GetFileName(existingDestination.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                    if (!string.IsNullOrWhiteSpace(existingDirectoryName))
+                    {
+                        _selectedModName = existingDirectoryName;
+                    }
+
+                    if (Directory.Exists(existingDestination))
+                    {
+                        var existingModelFiles = Directory.GetFiles(existingDestination, "*", SearchOption.AllDirectories)
+                            .Where(IsModelFile)
+                            .ToList();
+                        var selectedAssetName = _selectedAssetForInstall?.NameFile
+                            ?? GetSelectedAssetListForInstall(_selectedModManifest, _selectedModPayloadPath).FirstOrDefault()?.NameFile;
+                        var replacementModelPaths = string.IsNullOrWhiteSpace(selectedAssetName)
+                            ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                            : GetSourceModelFilePaths(_selectedModPayloadPath, DetectSourceModelName(_selectedModPayloadPath))
+                                .Select(sourcePath => Path.Combine(existingDestination, selectedAssetName + Path.GetExtension(sourcePath)))
+                                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                        previousModelFiles = existingModelFiles
+                            .Where(path => !replacementModelPaths.Contains(path))
+                            .ToList();
+                    }
+                }
+            }
+
             if (!await EnsureRequiredPackagesBeforeInstallAsync())
             {
                 return;
@@ -561,18 +612,16 @@ public partial class MainForm : Form
                 }
             }
 
-            _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
-            _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
-            DeleteManifestEntries(_selectedModManifest);
-
             if (_selectedModManifest.NormalizedType == "savesandmissions")
             {
+                DeleteManifestEntries(_selectedModManifest);
                 await InstallSaveOrDyomPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModManifest);
                 return;
             }
 
             if (_selectedModManifest.NormalizedType == "missiondsl")
             {
+                DeleteManifestEntries(_selectedModManifest);
                 await InstallMissionDslPackageAsync(_selectedModPayloadPath, _selectedModName);
                 return;
             }
@@ -638,6 +687,8 @@ public partial class MainForm : Form
                     return;
                 }
 
+                DeleteManifestEntries(_selectedModManifest);
+
                 if (!_isInstallingOptionalPackage)
                 {
                     GoToStep(WizardStep.Step4);
@@ -655,6 +706,7 @@ public partial class MainForm : Form
                         return;
                     }
 
+                    RemovePreviousAssetModels(previousModelFiles);
                     await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
                     if (!_isInstallingOptionalPackage)
                     {
@@ -678,6 +730,7 @@ public partial class MainForm : Form
                 }
             }
 
+            DeleteManifestEntries(_selectedModManifest);
             var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
             var targetDir = Path.Combine(modLoaderFolder, _selectedModName);
 
@@ -740,6 +793,107 @@ public partial class MainForm : Form
             }
 
             MessageBox.Show($"Installation failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}More details were written to:{Environment.NewLine}{logPath}", _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private InstallationManifestEntry? FindExistingAssetInstallation(string packageRoot)
+    {
+        if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
+        {
+            return null;
+        }
+
+        var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
+        var manifest = ModLoaderService.LoadInstallationManifest(manifestPath);
+        var packageModId = GetPackageModId(packageRoot);
+        return manifest.Entries.LastOrDefault(entry =>
+            !string.IsNullOrWhiteSpace(entry.InstalledDestination)
+            && Directory.Exists(entry.InstalledDestination)
+            && (string.Equals(entry.ModId, packageModId, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(entry.SourcePackagePath, packageRoot, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private DialogResult PromptForExistingAssetInstallAction(string modName)
+    {
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        using var dialog = new Form
+        {
+            Text = _localizationService.GetString("AssetAlreadyInstalledTitle", "Asset mod already installed"),
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            RightToLeftLayout = isRtl,
+            ClientSize = new Size(720, 220)
+        };
+
+        var message = new Label
+        {
+            Text = string.Format(_localizationService.GetString("AssetAlreadyInstalledPrompt", "'{0}' is already installed. Choose what to do with its model."), modName),
+            Dock = DockStyle.Fill,
+            Padding = new Padding(18),
+            TextAlign = ContentAlignment.MiddleLeft
+        };
+        var buttons = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 82,
+            Padding = new Padding(12),
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+        var replaceButton = new Button
+        {
+            Text = _localizationService.GetString("RenamePreviousModel", "Rename the Previous Model"),
+            Width = 220,
+            Height = 48,
+            DialogResult = DialogResult.Yes
+        };
+        var keepPreviousButton = new Button
+        {
+            Text = _localizationService.GetString("KeepPreviousInstallAnotherModel", "Keep Previous & Install as Another Model"),
+            Width = 270,
+            Height = 48,
+            Enabled = false,
+            DialogResult = DialogResult.No
+        };
+        var cancelButton = new Button
+        {
+            Text = _localizationService.GetString("Cancel", "Cancel"),
+            Width = 120,
+            Height = 48,
+            DialogResult = DialogResult.Cancel
+        };
+
+        buttons.Controls.Add(replaceButton);
+        buttons.Controls.Add(keepPreviousButton);
+        buttons.Controls.Add(cancelButton);
+        dialog.Controls.Add(message);
+        dialog.Controls.Add(buttons);
+        dialog.CancelButton = cancelButton;
+        ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
+
+        return dialog.ShowDialog(this);
+    }
+
+    private void RemovePreviousAssetModels(IEnumerable<string> modelFiles)
+    {
+        foreach (var modelFile in modelFiles.Where(File.Exists))
+        {
+            try
+            {
+                File.Delete(modelFile);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                MessageBox.Show(
+                    _localizationService.GetString("PreviousModelRemoveFailed", "The previous model file could not be removed.") + Environment.NewLine + modelFile + Environment.NewLine + ex.Message,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
         }
     }
 
