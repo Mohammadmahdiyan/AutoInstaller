@@ -18,7 +18,7 @@ public partial class MainForm : Form
         var countdown = new Label { Name = "CountdownLabel", AutoSize = true, Font = new Font("Segoe UI", 10F) };
         var openButton = new Button { Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
         var runButton = new Button { Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
-        var uninstallButton = new Button { Name = "UninstallCurrentModButton", Text = _localizationService.GetString("UninstallMod", "Uninstall Mod"), Width = 170, Height = 42 };
+        var installMoreButton = new Button { Name = "InstallMoreModsButton", Text = _localizationService.GetString("WannaInstallMoreMods", "Wanna install more mods?"), Width = 210, Height = 42 };
         var gallery = new FlowLayoutPanel
         {
             Name = "CompletionImageGallery",
@@ -39,12 +39,30 @@ public partial class MainForm : Form
         };
 
         runButton.Click += (_, _) => GameService.LaunchGame(_selectedGamePath);
-        uninstallButton.Click += (_, _) => UninstallCurrentMod();
+        installMoreButton.Click += (_, _) =>
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = Application.ExecutablePath,
+                    WorkingDirectory = AppContext.BaseDirectory,
+                    UseShellExecute = true
+                });
+                _completionTimer.Stop();
+                _completionTimerActive = false;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        };
 
         var flow = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
         flow.Controls.Add(openButton);
         flow.Controls.Add(runButton);
-        flow.Controls.Add(uninstallButton);
+        flow.Controls.Add(installMoreButton);
 
         panel.Controls.Add(title);
         panel.Controls.Add(description);
