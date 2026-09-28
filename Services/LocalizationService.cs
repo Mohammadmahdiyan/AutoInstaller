@@ -251,7 +251,17 @@ public class LocalizationService
     public string GetString(string key, string fallback = "")
     {
         var currentLanguage = ParseLanguage(CultureInfo.CurrentUICulture.Name);
-        var dictionary = currentLanguage == SupportedLanguage.Persian ? PersianStrings : EnglishStrings;
+        return GetStringForLanguage(key, currentLanguage, fallback);
+    }
+
+    public string GetStringForLanguage(string key, string language, string fallback = "")
+    {
+        return GetStringForLanguage(key, ParseLanguage(language), fallback);
+    }
+
+    private static string GetStringForLanguage(string key, SupportedLanguage language, string fallback)
+    {
+        var dictionary = language == SupportedLanguage.Persian ? PersianStrings : EnglishStrings;
         return dictionary.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
     }
 

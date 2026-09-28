@@ -118,6 +118,36 @@ public partial class MainForm : Form
             || extension.Equals(".txd", StringComparison.OrdinalIgnoreCase);
     }
 
+    private static HashSet<string> GetSourceModelFilePaths(string payloadPath, string sourceModelName)
+    {
+        if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath) || string.IsNullOrWhiteSpace(sourceModelName))
+        {
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        var modelFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(IsModelFile)
+            .ToList();
+        var sourceFiles = modelFiles
+            .Where(path => string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var sourceDff = sourceFiles.FirstOrDefault(path => Path.GetExtension(path).Equals(".dff", StringComparison.OrdinalIgnoreCase));
+        var sourceTxd = sourceFiles.FirstOrDefault(path => Path.GetExtension(path).Equals(".txd", StringComparison.OrdinalIgnoreCase));
+        if (sourceDff != null && sourceTxd == null)
+        {
+            var dffFiles = modelFiles.Where(path => Path.GetExtension(path).Equals(".dff", StringComparison.OrdinalIgnoreCase)).ToList();
+            var txdFiles = modelFiles.Where(path => Path.GetExtension(path).Equals(".txd", StringComparison.OrdinalIgnoreCase)).ToList();
+            if (dffFiles.Count == 1 && txdFiles.Count == 1)
+            {
+                sourceFiles.Add(txdFiles[0]);
+                Debug.WriteLine($"[Assets] paired DFF '{Path.GetFileName(sourceDff)}' with differently named TXD '{Path.GetFileName(txdFiles[0])}'");
+            }
+        }
+
+        return sourceFiles;
+    }
+
     private string DetectAssetTypeByName(string modelName)
     {
         if (string.IsNullOrWhiteSpace(modelName))
@@ -176,6 +206,7 @@ public partial class MainForm : Form
         _selectedAssetForInstall = null;
         _step5PreparedPayloadPath = payloadPath;
         _step5DetectedAssetType = string.Empty;
+        _step5UnknownAssetTypeCancelled = false;
         _step5PreparationAttempted = true;
 
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
@@ -194,6 +225,7 @@ public partial class MainForm : Form
         if (string.IsNullOrWhiteSpace(detectedType))
         {
             detectedType = PromptForUnknownAssetType(sourceModelName);
+            _step5UnknownAssetTypeCancelled = string.IsNullOrWhiteSpace(detectedType);
         }
 
         _step5DetectedAssetType = detectedType;
@@ -610,12 +642,14 @@ public partial class MainForm : Form
     {
         using var dialog = new Form
         {
-            Text = _localizationService.GetString("AssetTypePromptTitle", "Select asset type"),
+            Text = _localizationService.GetStringForLanguage("AssetTypePromptTitle", _settings.Language, "Select asset type"),
             StartPosition = FormStartPosition.CenterParent,
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MinimizeBox = false,
             MaximizeBox = false,
             ShowInTaskbar = false,
+            RightToLeft = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian ? RightToLeft.Yes : RightToLeft.No,
+            RightToLeftLayout = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian,
             ClientSize = new Size(360, 145)
         };
 
@@ -625,7 +659,7 @@ public partial class MainForm : Form
             Dock = DockStyle.Top,
             Height = 48,
             Text = string.Format(
-                _localizationService.GetString("AssetTypePrompt", "The model '{0}' was not found. Select its asset type."),
+                _localizationService.GetStringForLanguage("AssetTypePrompt", _settings.Language, "The model '{0}' was not found. Select its asset type."),
                 sourceModelName),
             Padding = new Padding(12, 12, 12, 4)
         };
@@ -637,13 +671,13 @@ public partial class MainForm : Form
         };
         var assetTypes = new[] { "Vehicle", "Skin", "Weapon" };
         typeSelector.Items.AddRange(assetTypes
-            .Select(type => (object)_localizationService.GetString("AssetType" + type, type))
+            .Select(type => (object)_localizationService.GetStringForLanguage("AssetType" + type, _settings.Language, type))
             .ToArray());
         typeSelector.SelectedIndex = 0;
 
         var okButton = new Button
         {
-            Text = _localizationService.GetString("Continue", "Continue"),
+            Text = _localizationService.GetStringForLanguage("Continue", _settings.Language, "Continue"),
             DialogResult = DialogResult.OK,
             Width = 90,
             Height = 30,
@@ -651,7 +685,7 @@ public partial class MainForm : Form
         };
         var cancelButton = new Button
         {
-            Text = _localizationService.GetString("Cancel", "Cancel"),
+            Text = _localizationService.GetStringForLanguage("Cancel", _settings.Language, "Cancel"),
             DialogResult = DialogResult.Cancel,
             Width = 90,
             Height = 30,

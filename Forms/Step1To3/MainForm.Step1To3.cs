@@ -222,6 +222,7 @@ public partial class MainForm : Form
             _step5PreparedPayloadPath = string.Empty;
             _step5PreparationAttempted = false;
             _step5DetectedAssetType = string.Empty;
+            _step5UnknownAssetTypeCancelled = false;
             _step5DetectedAssets.Clear();
             _step5SelectedAssetKeys.Clear();
             _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");

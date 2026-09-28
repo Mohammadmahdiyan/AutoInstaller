@@ -584,17 +584,25 @@ public partial class MainForm : Form
                 || _selectedAssetForInstall != null
                 || !string.IsNullOrWhiteSpace(sourceModelName)
                 || !string.IsNullOrWhiteSpace(sourceAssetType);
-            if (requiresAssetSelection)
+            if (requiresAssetSelection && _currentStep == WizardStep.Step3)
             {
-                if (_currentStep == WizardStep.Step3)
+                _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+                _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+                PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                if (_step5UnknownAssetTypeCancelled)
                 {
-                    _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
-                    _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
-                    PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                    _selectedModName = UnknownAssetCancelModName;
+                    requiresAssetSelection = false;
+                }
+                else
+                {
                     GoToStep(WizardStep.Step5);
                     return;
                 }
+            }
 
+            if (requiresAssetSelection)
+            {
                 var preservedSelection = _selectedAssetForInstall;
 
                 if (_selectedAssetForInstall == null && !_selectedModManifest.IsMultiAssetPackage)
@@ -695,14 +703,18 @@ public partial class MainForm : Form
             {
                 GoToStep(WizardStep.Step4);
             }
-            await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir);
+            await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir, _step5UnknownAssetTypeCancelled);
             ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
+            var installRecordType = _selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage
+                ? "vehicleandskinandweapon"
+                : "putinmodloader";
             ModLoaderService.RecordPackageInstallation(
-                "putinmodloader",
+                installRecordType,
                 _selectedModName,
                 _selectedModPackageRoot,
                 targetDir,
                 Directory.GetFiles(targetDir, "*", SearchOption.AllDirectories));
+            _step5UnknownAssetTypeCancelled = false;
             await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
             if (!_isInstallingOptionalPackage)
             {
@@ -873,10 +885,11 @@ public partial class MainForm : Form
         return ModPackageService.IsMetadataOrNonInstallableFile(path);
     }
 
-    private async Task CopyPayloadWithProgressAsync(string sourceDir, string targetDir)
+    private async Task CopyPayloadWithProgressAsync(string sourceDir, string targetDir, bool includeGalleryMedia = false)
     {
         var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories)
-            .Where(path => !IsMetadataOrNonInstallableFile(path))
+            .Where(path => !IsMetadataOrNonInstallableFile(path)
+                || includeGalleryMedia && MediaPreviewControl.IsSupportedMediaPath(path))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
         var total = files.Count;

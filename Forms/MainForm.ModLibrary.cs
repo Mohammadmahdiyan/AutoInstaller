@@ -528,13 +528,13 @@ public partial class MainForm : Form
         var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
         var isAssetSelectionInstall = isAssetPackage || _selectedAssetForInstall != null;
         var sourceModelName = DetectSourceModelName(payloadPath);
+        var sourceModelFiles = GetSourceModelFilePaths(payloadPath, sourceModelName);
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path)
                 || isAssetSelectionInstall && ModPackageService.IsMediaFile(path))
             .Where(path => !isAssetPackage
                 || ModPackageService.IsMediaFile(path)
-                || (IsModelFile(path)
-                    && string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase)))
+                || sourceModelFiles.Contains(path))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -637,8 +637,7 @@ public partial class MainForm : Form
                     ? selectedTarget
                     : selectedAssetList.FirstOrDefault(asset => string.Equals(asset.NameFile, originalName, StringComparison.OrdinalIgnoreCase));
                 var destinationName = selectedAsset?.NameFile ?? originalName;
-                var isSourceModelFile = IsModelFile(sourcePath)
-                    && string.Equals(Path.GetFileNameWithoutExtension(sourcePath), sourceModelName, StringComparison.OrdinalIgnoreCase);
+                var isSourceModelFile = sourceModelFiles.Contains(sourcePath);
                 var relativePath = isAssetSelectionInstall && !isMediaFile && isSourceModelFile
                     ? destinationName + extension
                     : Path.GetRelativePath(payloadPath, sourcePath);
@@ -685,8 +684,8 @@ public partial class MainForm : Form
 
             if (installAsModLoader)
             {
-                var installType = manifest.IsModLoader || manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage
-                    ? manifest.NormalizedType
+                var installType = manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage || _selectedAssetForInstall != null
+                    ? "vehicleandskinandweapon"
                     : "putinmodloader";
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
                 ModLoaderService.RecordPackageInstallation(installType, modName, packageRoot, targetRoot, installedFiles);

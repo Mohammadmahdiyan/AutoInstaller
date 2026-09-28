@@ -75,6 +75,7 @@ public partial class MainForm : Form
     private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
     private string _step5PreparedPayloadPath = string.Empty;
     private string _step5DetectedAssetType = string.Empty;
+    private bool _step5UnknownAssetTypeCancelled;
     private string _lastShownAssetCatalogError = string.Empty;
     private bool _step5PreparationAttempted;
     private int _step5ColumnCount = 3;
@@ -82,6 +83,7 @@ public partial class MainForm : Form
     private string _step5SortMode = "Name";
     private const string Step5SortByName = "Name";
     private const string Step5SortById = "Id";
+    private const string UnknownAssetCancelModName = "RZL-Skin";
 
     private enum WizardStep
     {
