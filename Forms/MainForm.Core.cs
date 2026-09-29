@@ -64,9 +64,11 @@ public partial class MainForm : Form
     private bool _returnedToInstallStepFromCompletion;
     private bool _isInstallingOptionalPackage;
     private bool _isDetectedModStatusVisible;
+    private bool _lastActionWasDelete;
     private bool _isCheckingPreviousAssetInstallation;
     private bool _isRefreshingAssetStep;
     private DialogResult? _pendingExistingAssetInstallAction;
+    private List<string> _pendingAssetModelFilesToDelete = new();
     private Panel? _globalLoadingOverlay;
     private Label? _globalLoadingLabel;
     private Label? _globalLoadingSpinnerLabel;

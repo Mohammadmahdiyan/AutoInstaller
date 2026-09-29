@@ -219,6 +219,23 @@ public partial class MainForm : Form
 
         if (step == WizardStep.Step6)
         {
+            var completionPanel = _wizardPanels[WizardStep.Step6];
+            var completionTitle = completionPanel.Controls.OfType<Label>().FirstOrDefault(label => label.Name == "CompletionTitle");
+            var completionDescription = completionPanel.Controls.OfType<Label>().FirstOrDefault(label => label.Name == "CompletionDescription");
+            if (completionTitle != null)
+            {
+                completionTitle.Text = _localizationService.GetString(
+                    _lastActionWasDelete ? "ModDeletedTitle" : "Completed",
+                    _lastActionWasDelete ? "Mod deleted" : "Completed");
+            }
+
+            if (completionDescription != null)
+            {
+                completionDescription.Text = _localizationService.GetString(
+                    _lastActionWasDelete ? "ModDeletedDescription" : "InstallationComplete",
+                    _lastActionWasDelete ? "The mod and its files were deleted." : "Installation complete.");
+            }
+
             var hasOptionalPackages = GetOptionalPackageRootsForCurrentInstall().Count > 0;
             _completionSecondsLeft = hasOptionalPackages ? 15 : 6;
             _completionTimerActive = true;
@@ -562,7 +579,19 @@ public partial class MainForm : Form
                 {
                     if (existingAssetInstallation != null)
                     {
-                        var action = PromptForExistingAssetInstallAction(_selectedModName);
+                        var action = PromptForExistingAssetInstallAction(_selectedModName, existingAssetInstallation);
+                        if (action == DialogResult.Retry)
+                        {
+                            await DeleteSelectedAssetModelsAsync(existingAssetInstallation, _selectedModName);
+                            return;
+                        }
+
+                        if (action == DialogResult.Abort)
+                        {
+                            await DeleteExistingAssetInstallationAsync(existingAssetInstallation, _selectedModName);
+                            return;
+                        }
+
                         if (action == DialogResult.Cancel)
                         {
                             _pendingExistingAssetInstallAction = null;
@@ -718,7 +747,19 @@ public partial class MainForm : Form
 
                 if (existingAssetInstallation != null && existingAssetAction is null)
                 {
-                    var action = PromptForExistingAssetInstallAction(_selectedModName);
+                    var action = PromptForExistingAssetInstallAction(_selectedModName, existingAssetInstallation);
+                    if (action == DialogResult.Retry)
+                    {
+                        await DeleteSelectedAssetModelsAsync(existingAssetInstallation, _selectedModName);
+                        return;
+                    }
+
+                    if (action == DialogResult.Abort)
+                    {
+                        await DeleteExistingAssetInstallationAsync(existingAssetInstallation, _selectedModName);
+                        return;
+                    }
+
                     if (action == DialogResult.Cancel)
                     {
                         _pendingExistingAssetInstallAction = null;
@@ -897,12 +938,148 @@ public partial class MainForm : Form
                     StringComparison.OrdinalIgnoreCase)));
     }
 
-    private DialogResult PromptForExistingAssetInstallAction(string modName)
+    private DialogResult PromptForExistingAssetInstallAction(string modName, InstallationManifestEntry installation)
     {
+        var models = GetInstalledAssetModels(installation);
         var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+
+        while (true)
+        {
+            using var dialog = new Form
+            {
+                Text = _localizationService.GetString("AssetAlreadyInstalledTitle", "Asset mod already installed"),
+                StartPosition = FormStartPosition.CenterParent,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                MinimizeBox = false,
+                MaximizeBox = false,
+                ShowInTaskbar = false,
+                RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+                RightToLeftLayout = isRtl,
+                ClientSize = new Size(1100, 220)
+            };
+
+            var message = new Label
+            {
+                Text = string.Format(_localizationService.GetString("AssetAlreadyInstalledPrompt", "This package is already installed. Choose what to do with its model."), modName),
+                Dock = DockStyle.Fill,
+                Padding = new Padding(18),
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            var buttons = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 82,
+                Padding = new Padding(12),
+                FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+                WrapContents = false
+            };
+            var replaceButton = new Button
+            {
+                Text = _localizationService.GetString("RenamePreviousModel", "Rename the Previous Model"),
+                Width = 220,
+                Height = 48,
+                DialogResult = DialogResult.Yes
+            };
+            var keepPreviousButton = new Button
+            {
+                Text = _localizationService.GetString("KeepPreviousInstallAnotherModel", "Keep Previous & Install as Another Model"),
+                Width = 270,
+                Height = 48,
+                DialogResult = DialogResult.No
+            };
+            var deleteSomeModelsButton = new Button
+            {
+                Text = _localizationService.GetString("DeleteSomeModels", "Delete Some Models"),
+                Width = 160,
+                Height = 48,
+                Visible = models.Count > 1,
+                DialogResult = DialogResult.Retry
+            };
+            var deleteButton = new Button
+            {
+                Text = _localizationService.GetString("Delete", "Delete"),
+                Width = 120,
+                Height = 48,
+                DialogResult = DialogResult.Abort
+            };
+            var cancelButton = new Button
+            {
+                Text = _localizationService.GetString("Cancel", "Cancel"),
+                Width = 120,
+                Height = 48,
+                DialogResult = DialogResult.Cancel
+            };
+
+            buttons.Controls.Add(replaceButton);
+            buttons.Controls.Add(keepPreviousButton);
+            if (deleteSomeModelsButton.Visible)
+            {
+                buttons.Controls.Add(deleteSomeModelsButton);
+            }
+            buttons.Controls.Add(deleteButton);
+            buttons.Controls.Add(cancelButton);
+            dialog.Controls.Add(message);
+            dialog.Controls.Add(buttons);
+            dialog.CancelButton = cancelButton;
+            ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
+
+            var action = dialog.ShowDialog(this);
+            if (action != DialogResult.Retry)
+            {
+                return action;
+            }
+
+            var selectedModels = PromptForAssetModelsToDelete(models, isRtl);
+            if (selectedModels == null)
+            {
+                continue;
+            }
+
+            if (selectedModels.Count == models.Count)
+            {
+                return DialogResult.Abort;
+            }
+
+            _pendingAssetModelFilesToDelete = selectedModels
+                .SelectMany(model => model.Files)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            return DialogResult.Retry;
+        }
+    }
+
+    private static List<(string BaseName, List<string> Files)> GetInstalledAssetModels(InstallationManifestEntry installation)
+    {
+        IEnumerable<string> modelPaths;
+        if (installation.InstalledFiles is { Count: > 0 })
+        {
+            modelPaths = installation.InstalledFiles.Where(File.Exists);
+        }
+        else if (Directory.Exists(installation.InstalledDestination))
+        {
+            modelPaths = Directory.GetFiles(installation.InstalledDestination, "*", SearchOption.AllDirectories);
+        }
+        else
+        {
+            return new List<(string BaseName, List<string> Files)>();
+        }
+
+        return modelPaths
+            .Where(IsModelFile)
+            .GroupBy(Path.GetFileNameWithoutExtension, StringComparer.OrdinalIgnoreCase)
+            .Where(group => !string.IsNullOrWhiteSpace(group.Key))
+            .Select(group => (BaseName: group.Key!, Files: group.Distinct(StringComparer.OrdinalIgnoreCase).ToList()))
+            .OrderBy(model => model.BaseName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private List<(string BaseName, List<string> Files)>? PromptForAssetModelsToDelete(
+        IReadOnlyList<(string BaseName, List<string> Files)> models,
+        bool isRtl)
+    {
         using var dialog = new Form
         {
-            Text = _localizationService.GetString("AssetAlreadyInstalledTitle", "Asset mod already installed"),
+            Text = _localizationService.GetString("DeleteSomeModels", "Delete Some Models"),
             StartPosition = FormStartPosition.CenterParent,
             FormBorderStyle = FormBorderStyle.FixedDialog,
             MinimizeBox = false,
@@ -910,55 +1087,344 @@ public partial class MainForm : Form
             ShowInTaskbar = false,
             RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
             RightToLeftLayout = isRtl,
-            ClientSize = new Size(720, 220)
+            ClientSize = new Size(420, 380)
         };
-
-        var message = new Label
+        var prompt = new Label
         {
-            Text = string.Format(_localizationService.GetString("AssetAlreadyInstalledPrompt", "'{0}' is already installed. Choose what to do with its model."), modName),
-            Dock = DockStyle.Fill,
-            Padding = new Padding(18),
-            TextAlign = ContentAlignment.MiddleLeft
+            Text = _localizationService.GetString("SelectModelsToDelete", "Select models to delete"),
+            Dock = DockStyle.Top,
+            Height = 42,
+            TextAlign = ContentAlignment.MiddleLeft,
+            Padding = new Padding(12, 6, 12, 6)
         };
+        var modelList = new CheckedListBox
+        {
+            Dock = DockStyle.Fill,
+            CheckOnClick = true,
+            IntegralHeight = false
+        };
+        foreach (var model in models)
+        {
+            modelList.Items.Add(model.BaseName, false);
+        }
+
         var buttons = new FlowLayoutPanel
         {
             Dock = DockStyle.Bottom,
-            Height = 82,
-            Padding = new Padding(12),
+            Height = 58,
+            Padding = new Padding(8),
             FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
             WrapContents = false
         };
-        var replaceButton = new Button
+        var deleteSelectedButton = new Button
         {
-            Text = _localizationService.GetString("RenamePreviousModel", "Rename the Previous Model"),
-            Width = 220,
-            Height = 48,
-            DialogResult = DialogResult.Yes
+            Text = _localizationService.GetString("DeleteSelectedModels", "Delete Selected"),
+            Width = 150,
+            Height = 38,
+            Enabled = false,
+            DialogResult = DialogResult.OK
         };
-        var keepPreviousButton = new Button
+        var backButton = new Button
         {
-            Text = _localizationService.GetString("KeepPreviousInstallAnotherModel", "Keep Previous & Install as Another Model"),
-            Width = 270,
-            Height = 48,
-            DialogResult = DialogResult.No
-        };
-        var cancelButton = new Button
-        {
-            Text = _localizationService.GetString("Cancel", "Cancel"),
-            Width = 120,
-            Height = 48,
+            Text = _localizationService.GetString("Back", "Back"),
+            Width = 100,
+            Height = 38,
             DialogResult = DialogResult.Cancel
         };
-
-        buttons.Controls.Add(replaceButton);
-        buttons.Controls.Add(keepPreviousButton);
-        buttons.Controls.Add(cancelButton);
-        dialog.Controls.Add(message);
+        modelList.ItemCheck += (_, _) => modelList.BeginInvoke(new Action(() =>
+            deleteSelectedButton.Enabled = modelList.CheckedItems.Count > 0));
+        buttons.Controls.Add(deleteSelectedButton);
+        buttons.Controls.Add(backButton);
+        dialog.Controls.Add(modelList);
         dialog.Controls.Add(buttons);
-        dialog.CancelButton = cancelButton;
+        dialog.Controls.Add(prompt);
+        dialog.AcceptButton = deleteSelectedButton;
+        dialog.CancelButton = backButton;
         ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
 
-        return dialog.ShowDialog(this);
+        if (dialog.ShowDialog(this) != DialogResult.OK)
+        {
+            return null;
+        }
+
+        return modelList.CheckedIndices
+            .Cast<int>()
+            .Select(index => models[index])
+            .ToList();
+    }
+
+    private async Task DeleteSelectedAssetModelsAsync(InstallationManifestEntry installation, string modName)
+    {
+        var eligibleFiles = GetInstalledAssetModels(installation)
+            .SelectMany(model => model.Files)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var filesToDelete = _pendingAssetModelFilesToDelete
+            .Where(eligibleFiles.Contains)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        _pendingAssetModelFilesToDelete.Clear();
+        if (filesToDelete.Count == 0)
+        {
+            GoToStep(WizardStep.Step3);
+            return;
+        }
+
+        GoToStep(WizardStep.Step4);
+        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var panel) ? panel : null;
+        var previewRoot = step4Panel?.Controls.OfType<Panel>()
+            .FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+        if (previewRoot == null)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete '{0}' from modloader.")
+                    .Replace("{0}", modName, StringComparison.Ordinal),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            GoToStep(WizardStep.Step3);
+            return;
+        }
+
+        previewRoot.Controls.Clear();
+        var progressPanel = new InstallProgressPanel(
+            _localizationService,
+            modName,
+            _localizationService.GetString("DeletingSelectedModels", "Deleting selected models"))
+        {
+            Name = "Step4DeleteSelectedProgressPanel",
+            Dock = DockStyle.Fill
+        };
+        previewRoot.Controls.Add(progressPanel);
+        progressPanel.BringToFront();
+
+        var deletedFiles = new List<string>();
+        for (var index = 0; index < filesToDelete.Count; index++)
+        {
+            var filePath = filesToDelete[index];
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                if (File.Exists(filePath))
+                {
+                    throw new IOException("The file still exists after deletion was attempted.");
+                }
+
+                deletedFiles.Add(filePath);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                var errorMessage = ex.Message;
+                try
+                {
+                    ModLoaderService.RemoveInstalledPackageFiles(
+                        _selectedGamePath,
+                        installation.InstalledDestination,
+                        deletedFiles);
+                }
+                catch (Exception manifestException)
+                {
+                    errorMessage += Environment.NewLine + manifestException.Message;
+                }
+
+                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                MessageBox.Show(
+                    string.Format(
+                        _localizationService.GetString("DeleteFileFailed", "Could not delete file: {0}"),
+                        filePath) + Environment.NewLine + errorMessage,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                GoToStep(WizardStep.Step3);
+                return;
+            }
+
+            var percent = (int)((index + 1) * 100d / Math.Max(1, filesToDelete.Count));
+            progressPanel.UpdateProgress(percent, filePath);
+            await Task.Yield();
+        }
+
+        try
+        {
+            if (!ModLoaderService.RemoveInstalledPackageFiles(
+                    _selectedGamePath,
+                    installation.InstalledDestination,
+                    deletedFiles))
+            {
+                throw new InvalidOperationException("The installation entry could not be found in installations.json.");
+            }
+        }
+        catch (Exception ex)
+        {
+            progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            MessageBox.Show(
+                string.Format(
+                    _localizationService.GetString("DeleteManifestUpdateFailed", "Could not update installation records for: {0}"),
+                    installation.InstalledDestination) + Environment.NewLine + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            GoToStep(WizardStep.Step3);
+            return;
+        }
+
+        progressPanel.Complete(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
+        _pendingExistingAssetInstallAction = null;
+        GoToStep(WizardStep.Step3);
+        MessageBox.Show(
+            _localizationService.GetString("DeleteSelectedModelsSucceeded", "Selected models were deleted."),
+            _appName,
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
+    }
+
+    private async Task DeleteExistingAssetInstallationAsync(InstallationManifestEntry installation, string modName)
+    {
+        GoToStep(WizardStep.Step4);
+
+        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var panel) ? panel : null;
+        var previewRoot = step4Panel?.Controls.OfType<Panel>()
+            .FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+        if (previewRoot == null)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete the mod from modloader."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            GoToStep(WizardStep.Step3);
+            return;
+        }
+
+        previewRoot.Controls.Clear();
+        var deletingText = _localizationService.GetString("Deleting", "Deleting");
+        var progressPanel = new InstallProgressPanel(_localizationService, modName, deletingText)
+        {
+            Name = "Step4DeleteProgressPanel",
+            Dock = DockStyle.Fill
+        };
+        previewRoot.Controls.Add(progressPanel);
+        progressPanel.BringToFront();
+        progressPanel.SetStatus(string.Format(
+            _localizationService.GetString("DeletingMod", "Deleting {0}"),
+            modName));
+
+        string[] files;
+        string[] directories;
+        try
+        {
+            files = Directory.GetFiles(installation.InstalledDestination, "*", SearchOption.AllDirectories);
+            directories = Directory.GetDirectories(installation.InstalledDestination, "*", SearchOption.AllDirectories)
+                .OrderByDescending(directory => directory.Length)
+                .ToArray();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            MessageBox.Show(
+                string.Format(
+                    _localizationService.GetString("DeleteFolderReadFailed", "Could not read folder: {0}"),
+                    installation.InstalledDestination) + Environment.NewLine + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            GoToStep(WizardStep.Step3);
+            return;
+        }
+
+        for (var index = 0; index < files.Length; index++)
+        {
+            var filePath = files[index];
+            try
+            {
+                File.Delete(filePath);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                MessageBox.Show(
+                    string.Format(
+                        _localizationService.GetString("DeleteFileFailed", "Could not delete file: {0}"),
+                        filePath) + Environment.NewLine + ex.Message,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                GoToStep(WizardStep.Step3);
+                return;
+            }
+
+            var percent = (int)((index + 1) * 100d / Math.Max(1, files.Length));
+            progressPanel.UpdateProgress(percent, filePath);
+            await Task.Yield();
+        }
+
+        foreach (var directory in directories.Append(installation.InstalledDestination))
+        {
+            try
+            {
+                if (Directory.Exists(directory))
+                {
+                    Directory.Delete(directory);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                MessageBox.Show(
+                    string.Format(
+                        _localizationService.GetString("DeleteFolderFailed", "Could not delete folder: {0}"),
+                        directory) + Environment.NewLine + ex.Message,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                GoToStep(WizardStep.Step3);
+                return;
+            }
+        }
+
+        try
+        {
+            var deleted = ModLoaderService.TryUninstallInstalledMod(
+                modName,
+                installation.InstalledDestination,
+                _selectedGamePath,
+                installation.Type);
+            if (!deleted || Directory.Exists(installation.InstalledDestination))
+            {
+                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                MessageBox.Show(
+                    string.Format(
+                        _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete '{0}' from modloader."),
+                        modName),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                GoToStep(WizardStep.Step3);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            MessageBox.Show(
+                string.Format(
+                    _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete '{0}' from modloader."),
+                    modName) + Environment.NewLine + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            GoToStep(WizardStep.Step3);
+            return;
+        }
+
+        progressPanel.Complete(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
+        _pendingExistingAssetInstallAction = null;
+        _lastActionWasDelete = true;
+        GoToStep(WizardStep.Step6);
     }
 
     private void RemovePreviousAssetModels(IEnumerable<string> modelFiles)

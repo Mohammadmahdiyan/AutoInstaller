@@ -224,6 +224,8 @@ public partial class MainForm : Form
             _step5DetectedAssetType = string.Empty;
             _step5UnknownAssetTypeCancelled = false;
             _pendingExistingAssetInstallAction = null;
+            _pendingAssetModelFilesToDelete.Clear();
+            _lastActionWasDelete = false;
             _isCheckingPreviousAssetInstallation = false;
             _step5DetectedAssets.Clear();
             _step5SelectedAssetKeys.Clear();

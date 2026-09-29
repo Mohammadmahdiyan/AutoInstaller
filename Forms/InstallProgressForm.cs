@@ -9,10 +9,14 @@ public class InstallProgressPanel : Panel
     private readonly ProgressBar _progressBar;
     private readonly Label _statusLabel;
     private readonly Label _currentFileLabel;
+    private readonly string _operationText;
 
-    public InstallProgressPanel(LocalizationService localizationService, string modName)
+    public InstallProgressPanel(LocalizationService localizationService, string modName, string? operationText = null)
     {
         _localizationService = localizationService;
+        _operationText = string.IsNullOrWhiteSpace(operationText)
+            ? localizationService.GetString("Installing", "Installing")
+            : operationText;
 
         BorderStyle = BorderStyle.FixedSingle;
         BackColor = Color.FromArgb(248, 250, 252);
@@ -25,7 +29,7 @@ public class InstallProgressPanel : Panel
             AutoSize = true,
             Font = new Font("Segoe UI", 16F, FontStyle.Bold),
             Dock = DockStyle.Top,
-            Text = localizationService.GetString("Installing", "Installing") + " " + modName
+            Text = _operationText + " " + modName
         };
 
         _progressBar = new ProgressBar
@@ -45,7 +49,7 @@ public class InstallProgressPanel : Panel
             Font = new Font("Segoe UI", 10F),
             Dock = DockStyle.Top,
             Margin = new Padding(0, 10, 0, 0),
-            Text = localizationService.GetString("Installing", "Installing")
+            Text = _operationText
         };
 
         _currentFileLabel = new Label
@@ -77,23 +81,24 @@ public class InstallProgressPanel : Panel
         if (!string.IsNullOrWhiteSpace(fileName))
         {
             _currentFileLabel.Text = fileName;
-            _statusLabel.Text = _localizationService.GetString("Installing", "Installing") + " " + fileName;
+            _statusLabel.Text = _operationText + " " + fileName;
         }
         else
         {
-            _statusLabel.Text = _localizationService.GetString("Installing", "Installing");
+            _statusLabel.Text = _operationText;
         }
     }
 
-    public void Complete()
+    public void Complete(string? completedMessage = null)
     {
+        var message = completedMessage ?? _localizationService.GetString("InstallationCompleted", "Installation completed successfully.");
         _progressBar.Value = 100;
-        _statusLabel.Text = _localizationService.GetString("InstallationCompleted", "Installation completed successfully.");
-        _currentFileLabel.Text = _localizationService.GetString("InstallationCompleted", "Installation completed successfully.");
+        _statusLabel.Text = message;
+        _currentFileLabel.Text = message;
     }
 
-    public void Fail()
+    public void Fail(string? failedMessage = null)
     {
-        _statusLabel.Text = _localizationService.GetString("InstallationFailed", "The mod could not be installed.");
+        _statusLabel.Text = failedMessage ?? _localizationService.GetString("InstallationFailed", "The mod could not be installed.");
     }
 }
