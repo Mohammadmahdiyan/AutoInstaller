@@ -76,8 +76,13 @@ public partial class MainForm : Form
     private float _loadingSpinnerAngle;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, List<string>> _step5OccupiedAssetFolders = new(StringComparer.OrdinalIgnoreCase);
+    private string _step5OccupiedScanKey = string.Empty;
+    private bool _step5OccupiedScanComplete;
+    private bool _occupiedAssetInstallWarningAcknowledged;
     private readonly Dictionary<string, Image> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
     private string _step5PreparedPayloadPath = string.Empty;
+    private string _step5ExistingInstallationDestination = string.Empty;
     private string _step5DetectedAssetType = string.Empty;
     private bool _step5UnknownAssetTypeCancelled;
     private string _lastShownAssetCatalogError = string.Empty;

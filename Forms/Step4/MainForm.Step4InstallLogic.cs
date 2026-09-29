@@ -176,6 +176,13 @@ public partial class MainForm : Form
     // -------------------------------------------------------------------------
     private void GoToStep(WizardStep step)
     {
+        if (step == WizardStep.Step5 && _currentStep != WizardStep.Step5)
+        {
+            _step5OccupiedAssetFolders.Clear();
+            _step5OccupiedScanKey = string.Empty;
+            _step5OccupiedScanComplete = false;
+        }
+
         _currentStep = step;
 
         foreach (var item in _wizardPanels)
@@ -564,6 +571,8 @@ public partial class MainForm : Form
                 existingAssetInstallation = FindExistingAssetInstallation(_selectedModPackageRoot);
             }
 
+            _step5ExistingInstallationDestination = existingAssetInstallation?.InstalledDestination ?? string.Empty;
+
             if (_currentStep == WizardStep.Step3 && requiresAssetSelection)
             {
                 _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
@@ -704,6 +713,54 @@ public partial class MainForm : Form
                 {
                     MessageBox.Show(_localizationService.GetString("NoAssetSelected", "Please select an asset before starting the installation."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
+                }
+
+                if (!_occupiedAssetInstallWarningAcknowledged)
+                {
+                    var selectedAssets = _step5DetectedAssets
+                        .Where(asset => _step5SelectedAssetKeys.Contains(GetAssetSelectionKey(asset)))
+                        .ToList();
+                    if (selectedAssets.Count == 0 && _selectedAssetForInstall != null)
+                    {
+                        selectedAssets.Add(_selectedAssetForInstall);
+                    }
+
+                    if (selectedAssets.Count == 0)
+                    {
+                        selectedAssets = GetSelectedAssetListForInstall(_selectedModManifest, _selectedModPayloadPath);
+                    }
+
+                    var conflictingFolders = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var selectedAsset in selectedAssets)
+                    {
+                        if (string.IsNullOrWhiteSpace(selectedAsset.NameFile)
+                            || !_step5OccupiedAssetFolders.TryGetValue(selectedAsset.NameFile, out var folders))
+                        {
+                            continue;
+                        }
+
+                        if (!conflictingFolders.TryGetValue(selectedAsset.NameFile, out var distinctFolders))
+                        {
+                            distinctFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                            conflictingFolders[selectedAsset.NameFile] = distinctFolders;
+                        }
+
+                        distinctFolders.UnionWith(folders);
+                    }
+
+                    var conflicts = conflictingFolders
+                        .Select(entry => (NameFile: entry.Key, Folders: entry.Value.OrderBy(folder => folder, StringComparer.OrdinalIgnoreCase).ToList()))
+                        .ToList();
+                    if (conflicts.Count > 0)
+                    {
+                        var choice = PromptForOccupiedAssetInstallWarning(conflicts);
+                        if (choice != DialogResult.Yes)
+                        {
+                            return;
+                        }
+
+                        _occupiedAssetInstallWarningAcknowledged = true;
+                    }
                 }
 
                 if (existingAssetInstallation != null && existingAssetAction == DialogResult.No
@@ -938,6 +995,78 @@ public partial class MainForm : Form
                     StringComparison.OrdinalIgnoreCase)));
     }
 
+    private DialogResult PromptForOccupiedAssetInstallWarning(
+        IReadOnlyList<(string NameFile, List<string> Folders)> conflicts)
+    {
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        var conflictLines = conflicts.Select(conflict => string.Format(
+            _localizationService.GetString("AssetAlsoUsedBy", "'{0}' is also used by: {1}"),
+            conflict.NameFile,
+            string.Join(", ", conflict.Folders)));
+        using var dialog = new Form
+        {
+            Text = _localizationService.GetString("AssetConflictTitle", "Possible mod conflict"),
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            RightToLeftLayout = isRtl,
+            ClientSize = new Size(820, 360)
+        };
+        var message = new Label
+        {
+            Text = string.Format(
+                _localizationService.GetString(
+                    "AssetConflictWarning",
+                    "These models may conflict; only one copy of each may work in the game:\n{0}"),
+                string.Join(Environment.NewLine, conflictLines)),
+            Dock = DockStyle.Fill,
+            Padding = new Padding(18),
+            TextAlign = isRtl ? ContentAlignment.MiddleRight : ContentAlignment.MiddleLeft,
+            AutoEllipsis = false
+        };
+        var buttons = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 64,
+            Padding = new Padding(10),
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+        var installAnywayButton = new Button
+        {
+            Text = _localizationService.GetString("InstallAnyway", "Install Anyway"),
+            Width = 170,
+            Height = 40,
+            DialogResult = DialogResult.Yes
+        };
+        var chooseAnotherButton = new Button
+        {
+            Text = _localizationService.GetString("ChooseAnother", "Choose Another"),
+            Width = 160,
+            Height = 40,
+            DialogResult = DialogResult.No
+        };
+        var cancelButton = new Button
+        {
+            Text = _localizationService.GetString("Cancel", "Cancel"),
+            Width = 120,
+            Height = 40,
+            DialogResult = DialogResult.Cancel
+        };
+
+        buttons.Controls.Add(installAnywayButton);
+        buttons.Controls.Add(chooseAnotherButton);
+        buttons.Controls.Add(cancelButton);
+        dialog.Controls.Add(message);
+        dialog.Controls.Add(buttons);
+        dialog.CancelButton = cancelButton;
+        ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
+        return dialog.ShowDialog(this);
+    }
+
     private DialogResult PromptForExistingAssetInstallAction(string modName, InstallationManifestEntry installation)
     {
         var models = GetInstalledAssetModels(installation);
@@ -963,7 +1092,7 @@ public partial class MainForm : Form
                 Text = string.Format(_localizationService.GetString("AssetAlreadyInstalledPrompt", "This package is already installed. Choose what to do with its model."), modName),
                 Dock = DockStyle.Fill,
                 Padding = new Padding(18),
-                TextAlign = ContentAlignment.MiddleLeft
+                TextAlign = isRtl ? ContentAlignment.MiddleRight : ContentAlignment.MiddleLeft
             };
             var buttons = new FlowLayoutPanel
             {
@@ -1094,7 +1223,7 @@ public partial class MainForm : Form
             Text = _localizationService.GetString("SelectModelsToDelete", "Select models to delete"),
             Dock = DockStyle.Top,
             Height = 42,
-            TextAlign = ContentAlignment.MiddleLeft,
+            TextAlign = isRtl ? ContentAlignment.MiddleRight : ContentAlignment.MiddleLeft,
             Padding = new Padding(12, 6, 12, 6)
         };
         var modelList = new CheckedListBox

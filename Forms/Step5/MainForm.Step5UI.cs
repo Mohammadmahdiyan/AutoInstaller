@@ -439,6 +439,8 @@ public partial class MainForm : Form
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
         }
 
+        await EnsureStep5OccupiedAssetFoldersAsync();
+
         _assetCatalogService.LoadAssets();
         if (!string.IsNullOrWhiteSpace(_assetCatalogService.ValidationError)
             && !string.Equals(_lastShownAssetCatalogError, _assetCatalogService.ValidationError, StringComparison.Ordinal))
@@ -628,6 +630,86 @@ public partial class MainForm : Form
         }
     }
 
+    private async Task EnsureStep5OccupiedAssetFoldersAsync()
+    {
+        var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
+        var candidateFolder = Path.Combine(modLoaderFolder, _selectedModName);
+        var excludedFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (Directory.Exists(candidateFolder))
+        {
+            excludedFolders.Add(Path.GetFullPath(candidateFolder));
+        }
+
+        if (!string.IsNullOrWhiteSpace(_step5ExistingInstallationDestination)
+            && Directory.Exists(_step5ExistingInstallationDestination))
+        {
+            excludedFolders.Add(Path.GetFullPath(_step5ExistingInstallationDestination));
+        }
+
+        var cacheKey = string.Join("|", new[]
+        {
+            Path.GetFullPath(_selectedGamePath),
+            Path.GetFullPath(_selectedModPackageRoot),
+            Path.GetFullPath(candidateFolder),
+            string.Join("|", excludedFolders.OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
+        });
+        if (_step5OccupiedScanComplete && string.Equals(_step5OccupiedScanKey, cacheKey, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        _step5OccupiedAssetFolders = await Task.Run(() => ScanOccupiedAssetFolders(modLoaderFolder, excludedFolders));
+        _step5OccupiedScanKey = cacheKey;
+        _step5OccupiedScanComplete = true;
+    }
+
+    private static Dictionary<string, List<string>> ScanOccupiedAssetFolders(
+        string modLoaderFolder,
+        HashSet<string> excludedFolders)
+    {
+        var foldersByModel = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
+        if (!Directory.Exists(modLoaderFolder))
+        {
+            return new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        foreach (var filePath in Directory.GetFiles(modLoaderFolder, "*", SearchOption.AllDirectories).Where(IsModelFile))
+        {
+            var relativePath = Path.GetRelativePath(modLoaderFolder, filePath);
+            var separatorIndex = relativePath.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+            if (separatorIndex <= 0)
+            {
+                continue;
+            }
+
+            var folderName = relativePath[..separatorIndex];
+            var topLevelFolderPath = Path.GetFullPath(Path.Combine(modLoaderFolder, folderName));
+            if (excludedFolders.Contains(topLevelFolderPath))
+            {
+                continue;
+            }
+
+            var modelName = Path.GetFileNameWithoutExtension(filePath).ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(modelName))
+            {
+                continue;
+            }
+
+            if (!foldersByModel.TryGetValue(modelName, out var folderNames))
+            {
+                folderNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foldersByModel[modelName] = folderNames;
+            }
+
+            folderNames.Add(folderName);
+        }
+
+        return foldersByModel.ToDictionary(
+            pair => pair.Key,
+            pair => pair.Value.OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToList(),
+            StringComparer.OrdinalIgnoreCase);
+    }
+
     private static void DisposeAssetGalleryControls(Control gallery)
     {
         foreach (Control control in gallery.Controls.Cast<Control>().ToList())
@@ -747,6 +829,11 @@ public partial class MainForm : Form
         var previewHeight = Math.Max(62, cardHeight - 38);
         var selectionKey = GetAssetSelectionKey(asset);
         var isSelected = _step5SelectedAssetKeys.Contains(selectionKey);
+        var occupiedFolders = _step5OccupiedAssetFolders.TryGetValue(asset.NameFile, out var folders)
+            ? folders
+            : new List<string>();
+        var isOccupied = occupiedFolders.Count > 0;
+        var occupiedCaption = isOccupied ? occupiedFolders[0] : asset.NameFile;
         var card = new Panel
         {
             Width = cardWidth,
@@ -758,8 +845,22 @@ public partial class MainForm : Form
             Cursor = Cursors.Hand,
             Padding = new Padding(0)
         };
+        Label? occupiedUseLabel = null;
+        if (isOccupied)
+        {
+            card.Paint += (_, e) => ControlPaint.DrawBorder(
+                e.Graphics,
+                card.ClientRectangle,
+                palette.Warning,
+                ButtonBorderStyle.Solid);
+        }
+
         var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
-        var caption = new AssetCardCaption(asset.NameFile, asset.Name, palette.TextPrimary, palette.TextSecondary)
+        var caption = new AssetCardCaption(
+            occupiedCaption,
+            isOccupied ? occupiedCaption : asset.Name,
+            palette.TextPrimary,
+            palette.TextSecondary)
         {
             Width = innerWidth,
             Height = 22,
@@ -799,8 +900,40 @@ public partial class MainForm : Form
             });
         }
 
-        var imagePath = _assetCatalogService.ResolveImagePath(asset);
-        var cachedImage = LoadCachedImage(imagePath);
+        if (isOccupied)
+        {
+            var isBadgeOnLeft = idBadge != null && !isRtl;
+            var isBadgeOnRight = idBadge != null && isRtl;
+            var headerLeft = isBadgeOnLeft ? 48 : 8;
+            var headerRight = isBadgeOnRight ? 48 : 8;
+            var folderText = occupiedFolders.Count == 1
+                ? occupiedFolders[0]
+                : occupiedFolders[0] + " +" + (occupiedFolders.Count - 1);
+            occupiedUseLabel = new Label
+            {
+                Text = string.Format(_localizationService.GetString("AssetUsedBy", "Used by: {0}"), folderText),
+                AutoEllipsis = true,
+                AutoSize = false,
+                Width = Math.Max(40, cardWidth - headerLeft - headerRight),
+                Height = 18,
+                Location = new Point(headerLeft, 8),
+                Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
+                ForeColor = palette.Warning,
+                BackColor = palette.Card,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Cursor = Cursors.Hand
+            };
+            card.Controls.Add(occupiedUseLabel);
+            occupiedUseLabel.BringToFront();
+        }
+
+        var catalogImagePath = _assetCatalogService.ResolveImagePath(asset);
+        var catalogImage = LoadCachedImage(catalogImagePath);
+        var occupiedImagePath = isOccupied
+            ? FindOccupiedAssetImagePath(occupiedFolders[0], asset.NameFile)
+            : null;
+        var occupiedImage = LoadCachedImage(occupiedImagePath);
+        var cachedImage = occupiedImage ?? catalogImage;
         if (cachedImage == null)
         {
             cachedImage = LoadCachedImage(ResolveUnavailableAssetImagePath());
@@ -833,6 +966,7 @@ public partial class MainForm : Form
             card.Controls.Add(idBadge);
             idBadge.BringToFront();
         }
+        occupiedUseLabel?.BringToFront();
 
         var tooltip = new ToolTip
         {
@@ -841,14 +975,34 @@ public partial class MainForm : Form
             ReshowDelay = 100,
             ShowAlways = true
         };
-        tooltip.SetToolTip(preview, string.IsNullOrWhiteSpace(asset.Id) ? asset.NameFile : $"{asset.NameFile}\nID: {asset.Id}");
+        var assetTooltip = isOccupied
+            ? asset.NameFile + Environment.NewLine + asset.Name
+            : string.IsNullOrWhiteSpace(asset.Id) ? asset.NameFile : $"{asset.NameFile}\nID: {asset.Id}";
+        tooltip.SetToolTip(preview, assetTooltip);
+        if (isOccupied)
+        {
+            tooltip.SetToolTip(card, assetTooltip);
+            tooltip.SetToolTip(caption, assetTooltip);
+            if (occupiedUseLabel != null)
+            {
+                tooltip.SetToolTip(occupiedUseLabel, assetTooltip);
+            }
+        }
         if (idBadge != null)
         {
-            tooltip.SetToolTip(idBadge, $"{asset.NameFile}\nID: {asset.Id}");
+            tooltip.SetToolTip(idBadge, isOccupied
+                ? $"{asset.NameFile}\n{asset.Name}\nID: {asset.Id}"
+                : $"{asset.NameFile}\nID: {asset.Id}");
         }
 
         void ToggleSelection(object? _, EventArgs __)
         {
+            if (_selectedAssetForInstall == null
+                || !string.Equals(GetAssetSelectionKey(_selectedAssetForInstall), selectionKey, StringComparison.OrdinalIgnoreCase))
+            {
+                _occupiedAssetInstallWarningAcknowledged = false;
+            }
+
             _step5SelectedAssetKeys.Clear();
             _step5SelectedAssetKeys.Add(selectionKey);
             _selectedAssetForInstall = asset;
@@ -868,6 +1022,32 @@ public partial class MainForm : Form
         void ShowAssetNameHover(object? _, EventArgs __)
         {
             caption.SetHovered(true);
+            if (occupiedImage != null && catalogImage != null)
+            {
+                preview.Image = catalogImage;
+            }
+        }
+
+        void HandleCardMouseLeave(object? _, EventArgs __)
+        {
+            if (card.IsDisposed || !card.IsHandleCreated)
+            {
+                return;
+            }
+
+            card.BeginInvoke(new Action(() =>
+            {
+                if (card.IsDisposed || card.ClientRectangle.Contains(card.PointToClient(Cursor.Position)))
+                {
+                    return;
+                }
+
+                caption.SetHovered(false);
+                if (occupiedImage != null)
+                {
+                    preview.Image = occupiedImage;
+                }
+            }));
         }
 
         preview.MouseUp += (_, e) =>
@@ -903,31 +1083,81 @@ public partial class MainForm : Form
                 selectedIndex = 0;
             }
 
-            OpenFullImageViewer(imageList, selectedIndex, imagePath);
+            OpenFullImageViewer(imageList, selectedIndex, catalogImagePath);
         };
 
         card.Click += ToggleSelection;
         preview.Click += ToggleSelection;
         caption.Click += ToggleSelection;
+        if (occupiedUseLabel != null)
+        {
+            occupiedUseLabel.Click += ToggleSelection;
+            occupiedUseLabel.MouseEnter += ShowAssetNameHover;
+            occupiedUseLabel.MouseLeave += HandleCardMouseLeave;
+        }
+
         if (idBadge != null)
         {
             idBadge.Click += ToggleSelection;
+            idBadge.MouseEnter += ShowAssetNameHover;
+            idBadge.MouseLeave += HandleCardMouseLeave;
             foreach (Control child in idBadge.Controls)
             {
                 child.Click += ToggleSelection;
+                child.MouseEnter += ShowAssetNameHover;
+                child.MouseLeave += HandleCardMouseLeave;
             }
         }
+
         card.MouseEnter += ShowAssetNameHover;
-        card.MouseLeave += (_, _) => caption.SetHovered(false);
+        card.MouseLeave += HandleCardMouseLeave;
         preview.MouseEnter += ShowAssetNameHover;
-        preview.MouseLeave += (_, _) => caption.SetHovered(false);
-        if (idBadge != null)
+        preview.MouseLeave += HandleCardMouseLeave;
+        foreach (Control child in preview.Controls)
         {
-            idBadge.MouseEnter += ShowAssetNameHover;
-            idBadge.MouseLeave += (_, _) => caption.SetHovered(false);
+            child.MouseEnter += ShowAssetNameHover;
+            child.MouseLeave += HandleCardMouseLeave;
         }
+        caption.MouseEnter += ShowAssetNameHover;
+        caption.MouseLeave += HandleCardMouseLeave;
 
         return card;
+    }
+
+    private string? FindOccupiedAssetImagePath(string modFolderName, string nameFile)
+    {
+        if (string.IsNullOrWhiteSpace(modFolderName) || string.IsNullOrWhiteSpace(nameFile))
+        {
+            return null;
+        }
+
+        var modFolderPath = Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modFolderName);
+        if (!Directory.Exists(modFolderPath))
+        {
+            return null;
+        }
+
+        try
+        {
+            return Directory.GetFiles(modFolderPath, "*", SearchOption.AllDirectories)
+                .Where(path => IsOccupiedAssetImage(path, nameFile))
+                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static bool IsOccupiedAssetImage(string path, string nameFile)
+    {
+        var extension = Path.GetExtension(path);
+        return (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
+                || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+                || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+                || extension.Equals(".webp", StringComparison.OrdinalIgnoreCase))
+            && string.Equals(Path.GetFileNameWithoutExtension(path), nameFile, StringComparison.OrdinalIgnoreCase);
     }
 
     private static void SetAssetIdBadgeRegion(Control badge)

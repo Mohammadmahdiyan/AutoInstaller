@@ -220,10 +220,15 @@ public partial class MainForm : Form
                 _selectedModPayloadPath = selected;
             }
             _step5PreparedPayloadPath = string.Empty;
+            _step5ExistingInstallationDestination = string.Empty;
             _step5PreparationAttempted = false;
             _step5DetectedAssetType = string.Empty;
             _step5UnknownAssetTypeCancelled = false;
             _pendingExistingAssetInstallAction = null;
+            _step5OccupiedAssetFolders.Clear();
+            _step5OccupiedScanKey = string.Empty;
+            _step5OccupiedScanComplete = false;
+            _occupiedAssetInstallWarningAcknowledged = false;
             _pendingAssetModelFilesToDelete.Clear();
             _lastActionWasDelete = false;
             _isCheckingPreviousAssetInstallation = false;
