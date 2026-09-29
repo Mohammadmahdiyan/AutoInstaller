@@ -109,7 +109,13 @@ public class ModLoaderService
         File.WriteAllText(manifestPath, json);
     }
 
-    public static void RecordPackageInstallation(string modType, string modId, string sourcePackagePath, string installedDestination, IEnumerable<string> installedFiles)
+    public static void RecordPackageInstallation(
+        string modType,
+        string modId,
+        string sourcePackagePath,
+        string installedDestination,
+        IEnumerable<string> installedFiles,
+        bool mergeExistingFiles = false)
     {
         var gamePath = Path.GetDirectoryName(installedDestination);
         var manifestGamePath = !string.IsNullOrWhiteSpace(gamePath) && Directory.Exists(gamePath) && gamePath.Contains("modloader", StringComparison.OrdinalIgnoreCase)
@@ -127,6 +133,17 @@ public class ModLoaderService
 
         var manifest = LoadInstallationManifest(manifestPath);
         modId = string.IsNullOrWhiteSpace(modId) ? Guid.NewGuid().ToString("N") : modId;
+        var matchingEntries = manifest.Entries
+            .Where(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(entry.InstalledDestination, installedDestination, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var filesToRecord = (mergeExistingFiles
+                ? matchingEntries.SelectMany(entry => entry.InstalledFiles ?? new List<string>())
+                : Enumerable.Empty<string>())
+            .Concat(installedFiles)
+            .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
         manifest.Entries.RemoveAll(entry =>
             string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)
             || string.Equals(entry.InstalledDestination, installedDestination, StringComparison.OrdinalIgnoreCase));
@@ -136,10 +153,7 @@ public class ModLoaderService
             Type = modType,
             SourcePackagePath = sourcePackagePath,
             InstalledDestination = installedDestination,
-            InstalledFiles = installedFiles
-                .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList()
+            InstalledFiles = filesToRecord
         });
         SaveInstallationManifest(manifestPath, manifest);
     }

@@ -90,8 +90,7 @@ public class ModManifest
                 "putingamefolder" or "pgf" => "putingamefolder",
                 "putandreplace" or "par" => "putandreplace",
                 "putandreplaces" or "prs" => "putandreplaces",
-                "vehicleandskinandweapon" or "vsw" => "vehicleandskinandweapon",
-                "vehiclesandskinsandweapons" or "vss" => "vehiclesandskinsandweapons",
+                "vehicleandskinandweapon" or "vehicleandskinsandweapons" or "vsw" or "vss" => "vehicleandskinandweapon",
                 "savesandmissions" or "saw" => "savesandmissions",
                 "missiondsl" or "dsl" => "missiondsl",
                 _ => normalized

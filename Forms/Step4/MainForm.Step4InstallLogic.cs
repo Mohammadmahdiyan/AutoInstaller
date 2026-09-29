@@ -541,7 +541,8 @@ public partial class MainForm : Form
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null;
             InstallationManifestEntry? existingAssetInstallation = null;
-            if (assetInstallFlow && (_currentStep == WizardStep.Step3 || _currentStep == WizardStep.Step5))
+            if ((assetInstallFlow || requiresAssetSelection)
+                && (_currentStep == WizardStep.Step3 || _currentStep == WizardStep.Step5))
             {
                 existingAssetInstallation = FindExistingAssetInstallation(_selectedModPackageRoot);
             }
@@ -561,21 +562,16 @@ public partial class MainForm : Form
                 {
                     if (existingAssetInstallation != null)
                     {
-                        GoToStep(WizardStep.Step4);
-                        await Task.Delay(60);
-                        _wizardPanels[WizardStep.Step4].Refresh();
-                        Update();
-
                         var action = PromptForExistingAssetInstallAction(_selectedModName);
                         if (action == DialogResult.Cancel)
                         {
+                            _pendingExistingAssetInstallAction = null;
                             GoToStep(WizardStep.Step6);
                             return;
                         }
 
                         if (action is not (DialogResult.Yes or DialogResult.No))
                         {
-                            GoToStep(WizardStep.Step3);
                             return;
                         }
 
@@ -681,6 +677,34 @@ public partial class MainForm : Form
                     return;
                 }
 
+                if (existingAssetInstallation != null && existingAssetAction == DialogResult.No
+                    && !string.IsNullOrWhiteSpace(_selectedAssetForInstall?.NameFile))
+                {
+                    var incomingModelPaths = GetSourceModelFilePaths(
+                            _selectedModPayloadPath,
+                            DetectSourceModelName(_selectedModPayloadPath))
+                        .Select(sourcePath => Path.Combine(
+                            existingAssetInstallation.InstalledDestination,
+                            _selectedAssetForInstall.NameFile + Path.GetExtension(sourcePath)))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList();
+                    var existingModelPaths = incomingModelPaths.Where(File.Exists).ToList();
+
+                    if (existingModelPaths.Count > 0
+                        && MessageBox.Show(
+                            string.Format(
+                                _localizationService.GetString(
+                                    "AssetModelAlreadyExists",
+                                    "'{0}' already exists in this mod folder. Replace its model files?"),
+                                _selectedAssetForInstall.NameFile),
+                            _appName,
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                }
+
                 if (!_isInstallingOptionalPackage)
                 {
                     GoToStep(WizardStep.Step4);
@@ -697,11 +721,8 @@ public partial class MainForm : Form
                     var action = PromptForExistingAssetInstallAction(_selectedModName);
                     if (action == DialogResult.Cancel)
                     {
-                        if (!_isInstallingOptionalPackage)
-                        {
-                            GoToStep(WizardStep.Step6);
-                        }
-
+                        _pendingExistingAssetInstallAction = null;
+                        GoToStep(WizardStep.Step6);
                         return;
                     }
 

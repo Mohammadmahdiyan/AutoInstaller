@@ -708,8 +708,12 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step3:
                 _sidebarPreviousButton.Enabled = true;
-                _sidebarNextButton.Enabled = !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath);
-                _sidebarNextButton.Text = _localizationService.GetString("InstallMod", "Install Mod");
+                _sidebarNextButton.Enabled = !_isCheckingPreviousAssetInstallation
+                    && !string.IsNullOrWhiteSpace(_selectedModPayloadPath)
+                    && Directory.Exists(_selectedModPayloadPath);
+                _sidebarNextButton.Text = _isCheckingPreviousAssetInstallation
+                    ? GetLoadingSpinnerGlyph(_loadingSpinnerAngle) + " " + _localizationService.GetString("CheckingPreviousInstallation", "Checking previous installation")
+                    : _localizationService.GetString("InstallMod", "Install Mod");
                 break;
             case WizardStep.Step4:
                 _sidebarPreviousButton.Enabled = false;
@@ -912,7 +916,9 @@ public partial class MainForm : Form
                     NavigateToStep(WizardStep.Step3);
                     break;
                 case WizardStep.Step3:
-                    if (!string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
+                    if (!_isCheckingPreviousAssetInstallation
+                        && !string.IsNullOrWhiteSpace(_selectedModPayloadPath)
+                        && Directory.Exists(_selectedModPayloadPath))
                     {
                         await InstallSelectedModAsync();
                     }

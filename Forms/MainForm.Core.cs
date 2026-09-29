@@ -64,6 +64,7 @@ public partial class MainForm : Form
     private bool _returnedToInstallStepFromCompletion;
     private bool _isInstallingOptionalPackage;
     private bool _isDetectedModStatusVisible;
+    private bool _isCheckingPreviousAssetInstallation;
     private bool _isRefreshingAssetStep;
     private DialogResult? _pendingExistingAssetInstallAction;
     private Panel? _globalLoadingOverlay;
@@ -149,6 +150,13 @@ public partial class MainForm : Form
                     spinner.Text = spinnerText;
                     spinner.Refresh();
                 }
+            }
+
+            if (_isCheckingPreviousAssetInstallation && _currentStep == WizardStep.Step3
+                && _sidebarNextButton != null && !_sidebarNextButton.IsDisposed)
+            {
+                _sidebarNextButton.Text = spinnerText + " " + _localizationService.GetString("CheckingPreviousInstallation", "Checking previous installation");
+                _sidebarNextButton.Refresh();
             }
         };
 

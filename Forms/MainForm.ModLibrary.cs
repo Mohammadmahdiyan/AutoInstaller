@@ -689,7 +689,13 @@ public partial class MainForm : Form
                     : "putinmodloader";
                 var packageModId = GetPackageModId(packageRoot);
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
-                ModLoaderService.RecordPackageInstallation(installType, packageModId, packageRoot, targetRoot, installedFiles);
+                ModLoaderService.RecordPackageInstallation(
+                    installType,
+                    packageModId,
+                    packageRoot,
+                    targetRoot,
+                    installedFiles,
+                    mergeExistingFiles: _pendingExistingAssetInstallAction == DialogResult.No);
             }
             else
             {

@@ -174,7 +174,7 @@ public partial class MainForm : Form
         ApplyPathSelectorTextBoxStyle(folderText);
         ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
 
-        browse.Click += (_, _) =>
+        browse.Click += async (_, _) =>
         {
             var initial = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
                 ? _selectedModSourcePath
@@ -224,12 +224,13 @@ public partial class MainForm : Form
             _step5DetectedAssetType = string.Empty;
             _step5UnknownAssetTypeCancelled = false;
             _pendingExistingAssetInstallAction = null;
+            _isCheckingPreviousAssetInstallation = false;
             _step5DetectedAssets.Clear();
             _step5SelectedAssetKeys.Clear();
             _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
             _selectedAssetForInstall = null;
-            _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
-            _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+            _selectedReadmePath = string.Empty;
+            _selectedImageFiles = new List<string>();
             folderText.Text = selected;
             _detectedModLabel = selectedName;
             selectedName.Text = string.Format(_localizationService.GetString("DetectedModStatus", "Detected mod: {0} ✓"), _selectedModName);
@@ -243,8 +244,54 @@ public partial class MainForm : Form
 
             _detectedModTimer.Stop();
             _detectedModTimer.Start();
-            RefreshStep3Images(panel, _selectedModPayloadPath);
-            UpdateSidebarState();
+
+            if (_selectedModManifest?.IsSingleAssetPackage == true || _selectedModManifest?.IsMultiAssetPackage == true)
+            {
+                _isCheckingPreviousAssetInstallation = true;
+                _sidebarNextButton.Enabled = false;
+                _sidebarNextButton.Text = GetLoadingSpinnerGlyph(_loadingSpinnerAngle) + " " + _localizationService.GetString("CheckingPreviousInstallation", "Checking previous installation");
+                _loadingSpinnerTimer.Start();
+                UpdateSidebarState();
+                _sidebarNextButton.Refresh();
+                _sidebarNextButton.Update();
+
+                try
+                {
+                    await Task.Yield();
+                    var packageRoot = _selectedModPackageRoot;
+                    var payloadPath = _selectedModPayloadPath;
+                    var checkTask = Task.Run(() => (
+                        ExistingInstallation: FindExistingAssetInstallation(packageRoot),
+                        ReadmePath: FindReadmeFile(payloadPath),
+                        ImageFiles: FindImageFiles(payloadPath)));
+                    await Task.WhenAll(checkTask, Task.Delay(1000));
+                    var checkResult = await checkTask;
+                    _selectedReadmePath = checkResult.ReadmePath;
+                    _selectedImageFiles = checkResult.ImageFiles;
+                    RefreshStep3Images(panel, payloadPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        _localizationService.GetString("PreviousInstallationCheckFailed", "Could not check for a previous installation.") + Environment.NewLine + ex.Message,
+                        _appName,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+                finally
+                {
+                    _isCheckingPreviousAssetInstallation = false;
+                    _loadingSpinnerTimer.Stop();
+                    UpdateSidebarState();
+                }
+            }
+            else
+            {
+                _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+                _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+                UpdateSidebarState();
+                RefreshStep3Images(panel, _selectedModPayloadPath);
+            }
         };
 
         var flow = new FlowLayoutPanel
