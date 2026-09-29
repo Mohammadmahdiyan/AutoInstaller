@@ -65,6 +65,7 @@ public partial class MainForm : Form
     private bool _isInstallingOptionalPackage;
     private bool _isDetectedModStatusVisible;
     private bool _isRefreshingAssetStep;
+    private DialogResult? _pendingExistingAssetInstallAction;
     private Panel? _globalLoadingOverlay;
     private Label? _globalLoadingLabel;
     private Label? _globalLoadingSpinnerLabel;

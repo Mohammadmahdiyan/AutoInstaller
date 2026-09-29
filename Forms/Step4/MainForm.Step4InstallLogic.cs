@@ -530,52 +530,64 @@ public partial class MainForm : Form
             _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
             _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
             var previousModelFiles = new List<string>();
+            var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
+            var sourceAssetType = DetectAssetTypeByName(sourceModelName);
+            var requiresAssetSelection = _selectedModManifest.IsSingleAssetPackage
+                || _selectedModManifest.IsMultiAssetPackage
+                || _selectedAssetForInstall != null
+                || !string.IsNullOrWhiteSpace(sourceModelName)
+                || !string.IsNullOrWhiteSpace(sourceAssetType);
             var assetInstallFlow = _selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null;
-            if (_currentStep == WizardStep.Step5 && assetInstallFlow)
+            InstallationManifestEntry? existingAssetInstallation = null;
+            if (assetInstallFlow && (_currentStep == WizardStep.Step3 || _currentStep == WizardStep.Step5))
             {
-                var existingInstallation = FindExistingAssetInstallation(_selectedModPackageRoot);
-                if (existingInstallation != null)
+                existingAssetInstallation = FindExistingAssetInstallation(_selectedModPackageRoot);
+            }
+
+            if (_currentStep == WizardStep.Step3 && requiresAssetSelection)
+            {
+                _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
+                _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+                PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+
+                if (_step5UnknownAssetTypeCancelled)
                 {
-                    var action = PromptForExistingAssetInstallAction(_selectedModName);
-                    if (action == DialogResult.Cancel)
+                    _selectedModName = UnknownAssetCancelModName;
+                    requiresAssetSelection = false;
+                }
+                else
+                {
+                    if (existingAssetInstallation != null)
                     {
-                        GoToStep(WizardStep.Step6);
-                        return;
+                        GoToStep(WizardStep.Step4);
+                        await Task.Delay(60);
+                        _wizardPanels[WizardStep.Step4].Refresh();
+                        Update();
+
+                        var action = PromptForExistingAssetInstallAction(_selectedModName);
+                        if (action == DialogResult.Cancel)
+                        {
+                            GoToStep(WizardStep.Step6);
+                            return;
+                        }
+
+                        if (action is not (DialogResult.Yes or DialogResult.No))
+                        {
+                            GoToStep(WizardStep.Step3);
+                            return;
+                        }
+
+                        _pendingExistingAssetInstallAction = action;
                     }
 
-                    if (action is not (DialogResult.Yes or DialogResult.No))
-                    {
-                        return;
-                    }
-
-                    var existingDestination = existingInstallation.InstalledDestination;
-                    var existingDirectoryName = Path.GetFileName(existingDestination.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-                    if (!string.IsNullOrWhiteSpace(existingDirectoryName))
-                    {
-                        _selectedModName = existingDirectoryName;
-                    }
-
-                    if (action == DialogResult.Yes && Directory.Exists(existingDestination))
-                    {
-                        var existingModelFiles = Directory.GetFiles(existingDestination, "*", SearchOption.AllDirectories)
-                            .Where(IsModelFile)
-                            .ToList();
-                        var selectedAssetName = _selectedAssetForInstall?.NameFile
-                            ?? GetSelectedAssetListForInstall(_selectedModManifest, _selectedModPayloadPath).FirstOrDefault()?.NameFile;
-                        var replacementModelPaths = string.IsNullOrWhiteSpace(selectedAssetName)
-                            ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                            : GetSourceModelFilePaths(_selectedModPayloadPath, DetectSourceModelName(_selectedModPayloadPath))
-                                .Select(sourcePath => Path.Combine(existingDestination, selectedAssetName + Path.GetExtension(sourcePath)))
-                                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-                        previousModelFiles = existingModelFiles
-                            .Where(path => !replacementModelPaths.Contains(path))
-                            .ToList();
-                    }
+                    GoToStep(WizardStep.Step5);
+                    return;
                 }
             }
+
+            var existingAssetAction = _pendingExistingAssetInstallAction;
 
             if (!await EnsureRequiredPackagesBeforeInstallAsync())
             {
@@ -626,28 +638,10 @@ public partial class MainForm : Form
                 return;
             }
 
-            var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
-            var sourceAssetType = DetectAssetTypeByName(sourceModelName);
-            var requiresAssetSelection = _selectedModManifest.IsSingleAssetPackage
-                || _selectedModManifest.IsMultiAssetPackage
-                || _selectedAssetForInstall != null
-                || !string.IsNullOrWhiteSpace(sourceModelName)
-                || !string.IsNullOrWhiteSpace(sourceAssetType);
-            if (requiresAssetSelection && _currentStep == WizardStep.Step3)
+            if (_step5UnknownAssetTypeCancelled)
             {
-                _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
-                _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
-                PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
-                if (_step5UnknownAssetTypeCancelled)
-                {
-                    _selectedModName = UnknownAssetCancelModName;
-                    requiresAssetSelection = false;
-                }
-                else
-                {
-                    GoToStep(WizardStep.Step5);
-                    return;
-                }
+                _selectedModName = UnknownAssetCancelModName;
+                requiresAssetSelection = false;
             }
 
             if (requiresAssetSelection)
@@ -687,12 +681,74 @@ public partial class MainForm : Form
                     return;
                 }
 
-                DeleteManifestEntries(_selectedModManifest);
-
                 if (!_isInstallingOptionalPackage)
                 {
                     GoToStep(WizardStep.Step4);
+                    if (existingAssetInstallation != null)
+                    {
+                        await Task.Delay(60);
+                        _wizardPanels[WizardStep.Step4].Refresh();
+                        Update();
+                    }
                 }
+
+                if (existingAssetInstallation != null && existingAssetAction is null)
+                {
+                    var action = PromptForExistingAssetInstallAction(_selectedModName);
+                    if (action == DialogResult.Cancel)
+                    {
+                        if (!_isInstallingOptionalPackage)
+                        {
+                            GoToStep(WizardStep.Step6);
+                        }
+
+                        return;
+                    }
+
+                    if (action is not (DialogResult.Yes or DialogResult.No))
+                    {
+                        if (!_isInstallingOptionalPackage)
+                        {
+                            GoToStep(WizardStep.Step5);
+                        }
+
+                        return;
+                    }
+
+                    existingAssetAction = action;
+                    _pendingExistingAssetInstallAction = action;
+                }
+
+                if (existingAssetInstallation != null)
+                {
+                    var existingDestination = existingAssetInstallation.InstalledDestination;
+                    var existingDirectoryName = Path.GetFileName(existingDestination.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                    if (!string.IsNullOrWhiteSpace(existingDirectoryName))
+                    {
+                        _selectedModName = existingDirectoryName;
+                    }
+
+                    if (existingAssetAction == DialogResult.Yes && Directory.Exists(existingDestination))
+                    {
+                        var existingModelFiles = Directory.GetFiles(existingDestination, "*", SearchOption.AllDirectories)
+                            .Where(IsModelFile)
+                            .ToList();
+                        var selectedAssetName = _selectedAssetForInstall?.NameFile
+                            ?? GetSelectedAssetListForInstall(_selectedModManifest, _selectedModPayloadPath).FirstOrDefault()?.NameFile;
+                        var replacementModelPaths = string.IsNullOrWhiteSpace(selectedAssetName)
+                            ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                            : GetSourceModelFilePaths(_selectedModPayloadPath, DetectSourceModelName(_selectedModPayloadPath))
+                                .Select(sourcePath => Path.Combine(existingDestination, selectedAssetName + Path.GetExtension(sourcePath)))
+                                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                        previousModelFiles = existingModelFiles
+                            .Where(path => !replacementModelPaths.Contains(path))
+                            .ToList();
+                    }
+                }
+
+                DeleteManifestEntries(_selectedModManifest);
+
                 try
                 {
                     var installed = await InstallTypedPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModPackageRoot, _selectedModManifest);
@@ -707,6 +763,7 @@ public partial class MainForm : Form
                     }
 
                     RemovePreviousAssetModels(previousModelFiles);
+                    _pendingExistingAssetInstallAction = null;
                     await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
                     if (!_isInstallingOptionalPackage)
                     {
@@ -806,11 +863,17 @@ public partial class MainForm : Form
         var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
         var manifest = ModLoaderService.LoadInstallationManifest(manifestPath);
         var packageModId = GetPackageModId(packageRoot);
+        var expectedDestination = Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), _selectedModName)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         return manifest.Entries.LastOrDefault(entry =>
             !string.IsNullOrWhiteSpace(entry.InstalledDestination)
             && Directory.Exists(entry.InstalledDestination)
             && (string.Equals(entry.ModId, packageModId, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(entry.SourcePackagePath, packageRoot, StringComparison.OrdinalIgnoreCase)));
+                || string.Equals(entry.SourcePackagePath, packageRoot, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(
+                    Path.TrimEndingDirectorySeparator(entry.InstalledDestination),
+                    expectedDestination,
+                    StringComparison.OrdinalIgnoreCase)));
     }
 
     private DialogResult PromptForExistingAssetInstallAction(string modName)
