@@ -1062,6 +1062,8 @@ public partial class MainForm : Form
                 return;
             }
 
+            var isMouseInsideCard = card.ClientRectangle.Contains(card.PointToClient(Cursor.Position));
+            Debug.WriteLine($"[Step5Hover] isOccupied={isOccupied}; isMouseInsideCard={isMouseInsideCard}");
             card.BeginInvoke(new Action(() =>
             {
                 if (card.IsDisposed)
@@ -1069,15 +1071,14 @@ public partial class MainForm : Form
                     return;
                 }
 
-                var isMouseInsideCard = card.ClientRectangle.Contains(card.PointToClient(Cursor.Position));
-                Debug.WriteLine($"[Step5Hover] isOccupied={isOccupied}; isMouseInsideCard={isMouseInsideCard}");
-                caption.SetHovered(isMouseInsideCard);
+                var mouseIsInsideCard = card.ClientRectangle.Contains(card.PointToClient(Cursor.Position));
+                caption.SetHovered(mouseIsInsideCard);
                 if (!isOccupied)
                 {
                     return;
                 }
 
-                if (!isMouseInsideCard)
+                if (!mouseIsInsideCard)
                 {
                     preview.Image = catalogImage;
                     if (unavailableImageLabel != null)
@@ -1178,52 +1179,163 @@ public partial class MainForm : Form
         }
 
         var modFolderPath = Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modFolderName);
-        var cacheKey = "occupied|" + Path.GetFullPath(modFolderPath) + "|" + nameFile;
+        var normalizedModFolderPath = Path.GetFullPath(modFolderPath);
+        var folderCacheKey = "occupied|" + normalizedModFolderPath;
+        var assetCacheKey = folderCacheKey + "|" + nameFile;
+        var searchedFolders = new List<string> { normalizedModFolderPath };
+
+        var installedImages = GetCachedOccupiedAssetImageFiles(normalizedModFolderPath);
+        var imagePath = installedImages.FirstOrDefault(path => IsOccupiedAssetImage(path, nameFile));
+        if (imagePath != null)
+        {
+            var image = LoadCachedOccupiedAssetImage(assetCacheKey, imagePath);
+            WriteOccupiedAssetImageDiagnostic("1", nameFile, imagePath, image, searchedFolders);
+            return image;
+        }
+
+        imagePath = GetPreferredOccupiedAssetImage(installedImages, normalizedModFolderPath);
+        if (imagePath != null)
+        {
+            var image = LoadCachedOccupiedAssetImage(folderCacheKey, imagePath);
+            WriteOccupiedAssetImageDiagnostic("2", nameFile, imagePath, image, searchedFolders);
+            return image;
+        }
+
+        var sourcePackagePath = GetCachedOccupiedAssetSourceFolder(normalizedModFolderPath);
+        if (!string.IsNullOrWhiteSpace(sourcePackagePath))
+        {
+            var normalizedSourcePath = Path.GetFullPath(sourcePackagePath);
+            searchedFolders.Add(normalizedSourcePath);
+            var sourceImages = GetCachedOccupiedAssetImageFiles(normalizedSourcePath);
+            imagePath = sourceImages.FirstOrDefault(path => IsOccupiedAssetImage(path, nameFile))
+                ?? GetPreferredOccupiedAssetImage(sourceImages, normalizedSourcePath);
+            if (imagePath != null)
+            {
+                var image = LoadCachedOccupiedAssetImage(
+                    IsOccupiedAssetImage(imagePath, nameFile) ? assetCacheKey : folderCacheKey,
+                    imagePath);
+                WriteOccupiedAssetImageDiagnostic("3", nameFile, imagePath, image, searchedFolders);
+                return image;
+            }
+        }
+
+        if (_assetImageCache.TryGetValue(folderCacheKey, out var cachedFolderImage))
+        {
+            WriteOccupiedAssetImageDiagnostic("none", nameFile, null, cachedFolderImage, searchedFolders);
+            return cachedFolderImage;
+        }
+
+        _assetImageCache[folderCacheKey] = null;
+        WriteOccupiedAssetImageDiagnostic("none", nameFile, null, null, searchedFolders);
+        return null;
+    }
+
+    private List<string> GetCachedOccupiedAssetImageFiles(string folderPath)
+    {
+        var normalizedPath = Path.GetFullPath(folderPath);
+        if (_occupiedAssetImageFiles.TryGetValue(normalizedPath, out var cachedFiles))
+        {
+            return cachedFiles;
+        }
+
+        List<string> imageFiles;
+        try
+        {
+            imageFiles = FindImageFiles(normalizedPath)
+                .Where(IsSupportedOccupiedAssetImage)
+                .ToList();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            imageFiles = new List<string>();
+        }
+
+        _occupiedAssetImageFiles[normalizedPath] = imageFiles;
+        return imageFiles;
+    }
+
+    private string? GetCachedOccupiedAssetSourceFolder(string installedFolderPath)
+    {
+        var normalizedInstalledPath = Path.GetFullPath(installedFolderPath);
+        if (_occupiedAssetSourceFolders.TryGetValue(normalizedInstalledPath, out var cachedSourcePath))
+        {
+            return cachedSourcePath;
+        }
+
+        string? sourcePath = null;
+        try
+        {
+            var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
+            var manifest = ModLoaderService.LoadInstallationManifest(manifestPath);
+            var entry = manifest.Entries.LastOrDefault(item =>
+                !string.IsNullOrWhiteSpace(item.InstalledDestination)
+                && string.Equals(
+                    Path.TrimEndingDirectorySeparator(Path.GetFullPath(item.InstalledDestination)),
+                    Path.TrimEndingDirectorySeparator(normalizedInstalledPath),
+                    StringComparison.OrdinalIgnoreCase));
+            if (entry != null && Directory.Exists(entry.SourcePackagePath))
+            {
+                sourcePath = Path.GetFullPath(entry.SourcePackagePath);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or System.Security.SecurityException)
+        {
+        }
+
+        _occupiedAssetSourceFolders[normalizedInstalledPath] = sourcePath;
+        return sourcePath;
+    }
+
+    private Image? LoadCachedOccupiedAssetImage(string cacheKey, string imagePath)
+    {
         if (_assetImageCache.TryGetValue(cacheKey, out var cachedImage))
         {
             return cachedImage;
         }
 
-        var imagePath = FindOccupiedAssetImagePath(modFolderName, nameFile);
         var image = LoadCachedImage(imagePath);
         _assetImageCache[cacheKey] = image;
-        Debug.WriteLine($"[Step5Hover] folderPath='{modFolderPath}'; NameFile='{nameFile}'; imagePath='{imagePath ?? "not found"}'; LoadCachedImage returned null={image is null}");
         return image;
     }
 
-    private string? FindOccupiedAssetImagePath(string modFolderName, string nameFile)
+    private void WriteOccupiedAssetImageDiagnostic(
+        string step,
+        string nameFile,
+        string? imagePath,
+        Image? image,
+        IReadOnlyCollection<string>? searchedFolders = null)
     {
-        if (string.IsNullOrWhiteSpace(modFolderName) || string.IsNullOrWhiteSpace(nameFile))
-        {
-            return null;
-        }
+        var folders = searchedFolders ?? Array.Empty<string>();
+        Debug.WriteLine($"[Step5Hover] foldersSearched='{string.Join(" | ", folders)}'; NameFile='{nameFile}'; step={step}; imagePath='{imagePath ?? "not found"}'; LoadCachedImage returned null={image is null}");
+    }
 
-        var modFolderPath = Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modFolderName);
-        if (!Directory.Exists(modFolderPath))
+    private static string? GetPreferredOccupiedAssetImage(IReadOnlyList<string> imageFiles, string folderPath)
+    {
+        return imageFiles.FirstOrDefault(path =>
         {
-            return null;
-        }
+            var relativeParts = Path.GetRelativePath(folderPath, path);
+            var fileName = Path.GetFileName(path);
+            return fileName.StartsWith("preview", StringComparison.OrdinalIgnoreCase)
+                || fileName.StartsWith("screen", StringComparison.OrdinalIgnoreCase)
+                || relativeParts.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+                    .SkipLast(1)
+                    .Any(part => part.Equals("preview", StringComparison.OrdinalIgnoreCase)
+                        || part.Equals("screen", StringComparison.OrdinalIgnoreCase)
+                        || part.Equals("screens", StringComparison.OrdinalIgnoreCase));
+        }) ?? imageFiles.FirstOrDefault();
+    }
 
-        try
-        {
-            return Directory.GetFiles(modFolderPath, "*", SearchOption.AllDirectories)
-                .Where(path => IsOccupiedAssetImage(path, nameFile))
-                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
-                .FirstOrDefault();
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            return null;
-        }
+    private static bool IsSupportedOccupiedAssetImage(string path)
+    {
+        var extension = Path.GetExtension(path);
+        return extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsOccupiedAssetImage(string path, string nameFile)
     {
-        var extension = Path.GetExtension(path);
-        return (extension.Equals(".png", StringComparison.OrdinalIgnoreCase)
-                || extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
-                || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
-                || extension.Equals(".webp", StringComparison.OrdinalIgnoreCase))
+        return IsSupportedOccupiedAssetImage(path)
             && string.Equals(Path.GetFileNameWithoutExtension(path), nameFile, StringComparison.OrdinalIgnoreCase);
     }
 

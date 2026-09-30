@@ -81,6 +81,8 @@ public partial class MainForm : Form
     private bool _step5OccupiedScanComplete;
     private bool _occupiedAssetInstallWarningAcknowledged;
     private readonly Dictionary<string, Image?> _assetImageCache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, List<string>> _occupiedAssetImageFiles = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string?> _occupiedAssetSourceFolders = new(StringComparer.OrdinalIgnoreCase);
     private string _step5PreparedPayloadPath = string.Empty;
     private string _step5ExistingInstallationDestination = string.Empty;
     private string _step5DetectedAssetType = string.Empty;
