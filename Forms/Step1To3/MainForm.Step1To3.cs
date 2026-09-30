@@ -185,6 +185,8 @@ public partial class MainForm : Form
             var selected = PromptForModFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
+                _multiSourceModels.Clear();
+                _multiIndex = 0;
                 _selectedModName = string.Empty;
                 _isDetectedModStatusVisible = false;
                 _selectedModPayloadPath = string.Empty;
@@ -198,6 +200,8 @@ public partial class MainForm : Form
 
             if (!Directory.EnumerateFileSystemEntries(selected).Any())
             {
+                _multiSourceModels.Clear();
+                _multiIndex = 0;
                 _selectedModName = string.Empty;
                 _isDetectedModStatusVisible = false;
                 _selectedModPayloadPath = string.Empty;
@@ -234,6 +238,17 @@ public partial class MainForm : Form
             _isCheckingPreviousAssetInstallation = false;
             _step5DetectedAssets.Clear();
             _step5SelectedAssetKeys.Clear();
+            _multiSourceModels.Clear();
+            _multiLastUsedAssetType = "Vehicle";
+            var isMultiAssetPackage = _selectedModManifest?.IsMultiAssetPackage == true;
+            if (isMultiAssetPackage)
+            {
+                _multiSourceModels.AddRange(BuildSourceModels(_selectedModPayloadPath));
+            }
+
+            _multiIndex = 0;
+            System.Diagnostics.Debug.WriteLine(
+                $"[MultiAssetDetection] isMulti={isMultiAssetPackage}; models={string.Join(", ", _multiSourceModels.Select(model => $"{model.BaseName}:{model.DetectedAssetType}"))}");
             _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
             _selectedAssetForInstall = null;
             _selectedReadmePath = string.Empty;

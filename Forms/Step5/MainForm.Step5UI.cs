@@ -21,12 +21,15 @@ public partial class MainForm : Form
             Name = "AssetStepLayout",
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 3,
+            RowCount = 6,
             Padding = new Padding(0),
             Margin = new Padding(0),
             BackColor = Color.Transparent
         };
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -50,6 +53,84 @@ public partial class MainForm : Form
         });
         sorting.SelectedItem = _localizationService.GetString("SortByFileName", "Sort by file name");
         _step5SortMode = Step5SortByName;
+
+        var multiAssetActions = new FlowLayoutPanel
+        {
+            Name = "MultiAssetActions",
+            Dock = DockStyle.Fill,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight,
+            WrapContents = true,
+            Padding = new Padding(0),
+            Margin = new Padding(0, 0, 0, 8),
+            Visible = false
+        };
+        var multiAssetTabs = new TabControl
+        {
+            Name = "MultiAssetTypeTabs",
+            Dock = DockStyle.Top,
+            Height = 34,
+            Visible = false,
+            RightToLeft = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian
+                ? RightToLeft.Yes
+                : RightToLeft.No,
+            RightToLeftLayout = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian
+        };
+        foreach (var assetType in new[] { "Vehicle", "Skin", "Weapon" })
+        {
+            multiAssetTabs.TabPages.Add(new TabPage
+            {
+                Name = "MultiAssetType" + assetType,
+                Text = _localizationService.GetString("AssetType" + assetType, assetType),
+                Tag = assetType
+            });
+        }
+        multiAssetTabs.SelectedIndexChanged += MultiAssetTypeTabs_SelectedIndexChanged;
+        var unknownModelNotice = new Label
+        {
+            Name = "MultiAssetUnknownNotice",
+            AutoSize = true,
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 0, 0, 6),
+            Visible = false
+        };
+        var keepOriginalButton = new Button
+        {
+            Name = "MultiAssetKeepOriginalButton",
+            Text = _localizationService.GetString("KeepOriginalName", "Keep original name"),
+            AutoSize = true,
+            Height = 34,
+            Padding = new Padding(8, 4, 8, 4),
+            Margin = new Padding(0, 0, 8, 4)
+        };
+        var skipModelButton = new Button
+        {
+            Name = "MultiAssetSkipModelButton",
+            Text = _localizationService.GetString("SkipThisModel", "Skip this model"),
+            AutoSize = true,
+            Height = 34,
+            Padding = new Padding(8, 4, 8, 4),
+            Margin = new Padding(0, 0, 8, 4)
+        };
+        var installRemainingButton = new Button
+        {
+            Name = "MultiAssetInstallRemainingButton",
+            Text = _localizationService.GetString("InstallRemainingOriginalNames", "Install the remaining {0} with original names"),
+            AutoSize = true,
+            Height = 34,
+            Padding = new Padding(8, 4, 8, 4),
+            Margin = new Padding(0, 0, 8, 4),
+            Visible = false
+        };
+        keepOriginalButton.Click += async (_, _) => await KeepCurrentMultiAssetModelAsync();
+        skipModelButton.Click += async (_, _) => await SkipCurrentMultiAssetModelAsync();
+        installRemainingButton.Click += async (_, _) => await InstallRemainingMultiModelsWithOriginalNamesAsync();
+        multiAssetActions.Controls.Add(keepOriginalButton);
+        multiAssetActions.Controls.Add(skipModelButton);
+        multiAssetActions.Controls.Add(installRemainingButton);
 
         filters.Controls.Add(categoryLabel);
         filters.Controls.Add(categoryFilter);
@@ -84,7 +165,10 @@ public partial class MainForm : Form
 
         layout.Controls.Add(title, 0, 0);
         layout.Controls.Add(filters, 0, 1);
-        layout.Controls.Add(gallery, 0, 2);
+        layout.Controls.Add(multiAssetTabs, 0, 2);
+        layout.Controls.Add(unknownModelNotice, 0, 3);
+        layout.Controls.Add(multiAssetActions, 0, 4);
+        layout.Controls.Add(gallery, 0, 5);
         panel.Controls.Add(layout);
         return panel;
     }
@@ -116,6 +200,45 @@ public partial class MainForm : Form
         var extension = Path.GetExtension(path);
         return extension.Equals(".dff", StringComparison.OrdinalIgnoreCase)
             || extension.Equals(".txd", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private List<SourceModel> BuildSourceModels(string payloadPath)
+    {
+        if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
+        {
+            return new List<SourceModel>();
+        }
+
+        var catalogAssets = _assetCatalogService.LoadAssets();
+        return Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(path => IsModelFile(path) && !ModPackageService.IsMetadataOrNonInstallableFile(path))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .GroupBy(path => Path.GetFileNameWithoutExtension(path) ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+            .Where(group => !string.IsNullOrWhiteSpace(group.Key))
+            .Select(group =>
+            {
+                var dffPath = group.FirstOrDefault(path => Path.GetExtension(path).Equals(".dff", StringComparison.OrdinalIgnoreCase));
+                var txdPath = group.FirstOrDefault(path => Path.GetExtension(path).Equals(".txd", StringComparison.OrdinalIgnoreCase));
+                var matchingAsset = catalogAssets.FirstOrDefault(asset =>
+                    string.Equals(asset.NameFile, group.Key, StringComparison.OrdinalIgnoreCase));
+                var detectedAssetType = matchingAsset?.AssetType.ToLowerInvariant() switch
+                {
+                    "vehicle" => "Vehicle",
+                    "skin" => "Skin",
+                    "weapon" => "Weapon",
+                    _ => "Unknown"
+                };
+
+                return new SourceModel
+                {
+                    BaseName = group.Key,
+                    DffPath = dffPath,
+                    TxdPath = txdPath,
+                    DetectedAssetType = detectedAssetType
+                };
+            })
+            .OrderBy(model => model.BaseName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private static HashSet<string> GetSourceModelFilePaths(string payloadPath, string sourceModelName)
@@ -195,6 +318,12 @@ public partial class MainForm : Form
 
     private void PrepareDetectedAssetStep(string payloadPath, GtaSaModManager.Models.ModManifest? manifest)
     {
+        if (manifest?.IsMultiAssetPackage == true && _multiSourceModels.Count > 0)
+        {
+            PrepareMultiSourceModelStep(payloadPath);
+            return;
+        }
+
         if (string.Equals(_step5PreparedPayloadPath, payloadPath, StringComparison.OrdinalIgnoreCase)
             && _step5PreparationAttempted)
         {
@@ -286,6 +415,337 @@ public partial class MainForm : Form
         _step5SelectedAssetKeys.Add(GetAssetSelectionKey(sourceAsset));
         _selectedAssetForInstall = sourceAsset;
         _step5CategoryFilter = GetDefaultStep5Category(detectedType, sourceModelName);
+    }
+
+    private void PrepareMultiSourceModelStep(string payloadPath)
+    {
+        _step5PreparedPayloadPath = payloadPath;
+        _step5UnknownAssetTypeCancelled = false;
+        _step5PreparationAttempted = true;
+        var model = _multiSourceModels[_multiIndex];
+        var initialType = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
+            ? model.TargetAsset.AssetType
+            : model.DetectedAssetType == "Unknown"
+                ? _multiLastUsedAssetType
+                : model.DetectedAssetType;
+        SetMultiAssetTypeTab(initialType, refresh: false);
+
+        var notice = _wizardPanels[WizardStep.Step5].Controls.Find("MultiAssetUnknownNotice", true)
+            .FirstOrDefault() as Label;
+        if (notice != null)
+        {
+            notice.Text = string.Format(
+                _localizationService.GetString("UnknownMultiAssetModel", "'{0}' is not in the asset catalog."),
+                model.BaseName);
+            notice.Visible = model.DetectedAssetType == "Unknown";
+        }
+    }
+
+    private void MultiAssetTypeTabs_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (_isUpdatingMultiAssetTabs || !IsMultiAssetModelMode() || sender is not TabControl tabs
+            || tabs.SelectedTab?.Tag is not string assetType)
+        {
+            return;
+        }
+
+        SetMultiAssetTypeTab(assetType, refresh: true);
+    }
+
+    private void SetMultiAssetTypeTab(string assetType, bool refresh)
+    {
+        if (!new[] { "Vehicle", "Skin", "Weapon" }.Contains(assetType, StringComparer.OrdinalIgnoreCase))
+        {
+            assetType = "Vehicle";
+        }
+
+        _multiLastUsedAssetType = assetType;
+        _step5DetectedAssetType = assetType;
+        _step5DetectedAssets.Clear();
+        _step5DetectedAssets.AddRange(_assetCatalogService.LoadAssets()
+            .Where(asset => string.Equals(asset.AssetType, assetType, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(asset => asset.NameFile, StringComparer.OrdinalIgnoreCase));
+        _step5SelectedAssetKeys.Clear();
+        _selectedAssetForInstall = null;
+
+        var model = _multiSourceModels[_multiIndex];
+        var selectedAsset = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
+            ? _step5DetectedAssets.FirstOrDefault(asset =>
+                string.Equals(GetAssetSelectionKey(asset), GetAssetSelectionKey(model.TargetAsset), StringComparison.OrdinalIgnoreCase))
+            : model.Status == SourceModelStatus.Pending
+                && string.Equals(model.DetectedAssetType, assetType, StringComparison.OrdinalIgnoreCase)
+                    ? _step5DetectedAssets.FirstOrDefault(asset =>
+                        string.Equals(asset.NameFile, model.BaseName, StringComparison.OrdinalIgnoreCase))
+                    : null;
+        if (selectedAsset != null && !IsMultiAssetTargetUsedByAnotherModel(selectedAsset))
+        {
+            _selectedAssetForInstall = selectedAsset;
+            _step5SelectedAssetKeys.Add(GetAssetSelectionKey(selectedAsset));
+            _step5CategoryFilter = selectedAsset.Category;
+        }
+        else
+        {
+            _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
+        }
+
+        if (_wizardPanels.TryGetValue(WizardStep.Step5, out var panel)
+            && panel.Controls.Find("MultiAssetTypeTabs", true).FirstOrDefault() is TabControl tabs)
+        {
+            _isUpdatingMultiAssetTabs = true;
+            try
+            {
+                tabs.SelectedTab = tabs.TabPages.Cast<TabPage>()
+                    .FirstOrDefault(page => string.Equals(page.Tag?.ToString(), assetType, StringComparison.OrdinalIgnoreCase));
+            }
+            finally
+            {
+                _isUpdatingMultiAssetTabs = false;
+            }
+        }
+
+        if (refresh)
+        {
+            RefreshAssetStep();
+            UpdateSidebarState();
+        }
+    }
+
+    private bool IsMultiAssetModelMode()
+    {
+        return _selectedModManifest?.IsMultiAssetPackage == true
+            && _multiSourceModels.Count > 0
+            && _multiIndex >= 0
+            && _multiIndex < _multiSourceModels.Count;
+    }
+
+    private bool IsMultiAssetTargetUsedByAnotherModel(GameAsset asset)
+    {
+        var selectionKey = GetAssetSelectionKey(asset);
+        return _multiSourceModels
+            .Where((model, index) => index != _multiIndex)
+            .Any(model => model.Status == SourceModelStatus.Mapped
+                && model.TargetAsset != null
+                && string.Equals(GetAssetSelectionKey(model.TargetAsset), selectionKey, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private bool TryStoreCurrentMultiSourceModelChoice()
+    {
+        if (!IsMultiAssetModelMode())
+        {
+            return false;
+        }
+
+        var model = _multiSourceModels[_multiIndex];
+        if (_selectedAssetForInstall == null)
+        {
+            return model.Status is SourceModelStatus.KeepOriginal or SourceModelStatus.Skipped;
+        }
+
+        if (IsMultiAssetTargetUsedByAnotherModel(_selectedAssetForInstall))
+        {
+            MessageBox.Show(
+                _localizationService.GetString(
+                    "MultiAssetTargetAlreadyMapped",
+                    "This asset is already mapped to another model in this package. Choose a different asset."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        model.Status = SourceModelStatus.Mapped;
+        model.TargetAsset = _selectedAssetForInstall;
+        return true;
+    }
+
+    private async Task AdvanceMultiAssetModelAsync()
+    {
+        if (!TryStoreCurrentMultiSourceModelChoice())
+        {
+            return;
+        }
+
+        if (_multiIndex < _multiSourceModels.Count - 1)
+        {
+            _multiIndex++;
+            PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+            RefreshAssetStep();
+            UpdateSidebarState();
+        }
+        else
+        {
+            await ShowMultiAssetSummaryAsync();
+        }
+    }
+
+    private async Task KeepCurrentMultiAssetModelAsync()
+    {
+        if (!IsMultiAssetModelMode())
+        {
+            return;
+        }
+
+        var model = _multiSourceModels[_multiIndex];
+        model.Status = SourceModelStatus.KeepOriginal;
+        model.TargetAsset = null;
+        _selectedAssetForInstall = null;
+        _step5SelectedAssetKeys.Clear();
+        await AdvanceMultiAssetModelAsync();
+    }
+
+    private async Task SkipCurrentMultiAssetModelAsync()
+    {
+        if (!IsMultiAssetModelMode())
+        {
+            return;
+        }
+
+        var model = _multiSourceModels[_multiIndex];
+        model.Status = SourceModelStatus.Skipped;
+        model.TargetAsset = null;
+        _selectedAssetForInstall = null;
+        _step5SelectedAssetKeys.Clear();
+        await AdvanceMultiAssetModelAsync();
+    }
+
+    private async Task InstallRemainingMultiModelsWithOriginalNamesAsync()
+    {
+        if (!IsMultiAssetModelMode()
+            || _multiIndex < 1
+            || _multiIndex >= _multiSourceModels.Count - 1)
+        {
+            return;
+        }
+
+        var currentModel = _multiSourceModels[_multiIndex];
+        if (_selectedAssetForInstall == null)
+        {
+            currentModel.Status = SourceModelStatus.KeepOriginal;
+            currentModel.TargetAsset = null;
+        }
+        else if (!TryStoreCurrentMultiSourceModelChoice())
+        {
+            return;
+        }
+
+        for (var index = _multiIndex + 1; index < _multiSourceModels.Count; index++)
+        {
+            var model = _multiSourceModels[index];
+            if (model.Status == SourceModelStatus.Pending)
+            {
+                model.Status = SourceModelStatus.KeepOriginal;
+                model.TargetAsset = null;
+            }
+        }
+
+        await ShowMultiAssetSummaryAsync();
+    }
+
+    private async Task ShowMultiAssetSummaryAsync()
+    {
+        var resultLines = _multiSourceModels.Select(model => model.Status switch
+        {
+            SourceModelStatus.Mapped => string.Format(
+                _localizationService.GetString("MultiAssetSummaryMapped", "Mapped: {0} -> {1}"),
+                model.BaseName,
+                model.TargetAsset?.NameFile ?? model.TargetAsset?.Name ?? "?"),
+            SourceModelStatus.KeepOriginal => string.Format(
+                _localizationService.GetString("MultiAssetSummaryKeep", "Keep: {0}"),
+                model.BaseName),
+            SourceModelStatus.Skipped => string.Format(
+                _localizationService.GetString("MultiAssetSummarySkipped", "Skipped: {0}"),
+                model.BaseName),
+            _ => string.Format(
+                _localizationService.GetString("MultiAssetSummaryPending", "Unresolved: {0}"),
+                model.BaseName)
+        }).ToList();
+
+        var filesLeftOut = _multiSourceModels
+            .Where(model => model.Status is SourceModelStatus.Skipped or SourceModelStatus.Pending
+                || model.Status == SourceModelStatus.Mapped && model.TargetAsset == null)
+            .SelectMany(model => new[] { model.DffPath, model.TxdPath }
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Select(path => Path.GetFileName(path)!))
+            .ToList();
+        if (filesLeftOut.Count > 0)
+        {
+            resultLines.Add(string.Empty);
+            resultLines.Add(_localizationService.GetString("MultiAssetFilesLeftOut", "Files left out:"));
+            resultLines.AddRange(filesLeftOut);
+        }
+
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        using var dialog = new Form
+        {
+            Text = _localizationService.GetString("MultiAssetSummaryTitle", "Review model mappings"),
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            RightToLeftLayout = isRtl,
+            ClientSize = new Size(520, 390)
+        };
+        var summary = new TextBox
+        {
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            WordWrap = true,
+            Dock = DockStyle.Fill,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            Text = string.Join(Environment.NewLine, resultLines),
+            Margin = new Padding(12)
+        };
+        var buttons = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 48,
+            Padding = new Padding(8),
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+        var installButton = new Button
+        {
+            Text = _localizationService.GetString("Install", "Install"),
+            AutoSize = true,
+            DialogResult = DialogResult.OK,
+            Enabled = !_multiSourceModels.Any(model => model.Status == SourceModelStatus.Pending
+                || model.Status == SourceModelStatus.Mapped && model.TargetAsset == null)
+        };
+        var backButton = new Button
+        {
+            Text = _localizationService.GetString("Back", "Back"),
+            AutoSize = true,
+            DialogResult = DialogResult.Cancel
+        };
+        buttons.Controls.Add(installButton);
+        buttons.Controls.Add(backButton);
+        dialog.Controls.Add(summary);
+        dialog.Controls.Add(buttons);
+        dialog.AcceptButton = installButton;
+        dialog.CancelButton = backButton;
+        ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
+
+        if (dialog.ShowDialog(this) == DialogResult.OK)
+        {
+            await InstallSelectedModAsync();
+            return;
+        }
+
+        _multiIndex = _multiSourceModels.Count - 1;
+        GoToStep(WizardStep.Step5);
+    }
+
+    private string GetMultiSourceModelTitle()
+    {
+        var model = _multiSourceModels[_multiIndex];
+        return string.Format(
+            _localizationService.GetString("MultiModelStepTitle", "Model {0} of {1}: {2}"),
+            _multiIndex + 1,
+            _multiSourceModels.Count,
+            model.BaseName);
     }
 
     private string GetDefaultStep5Category(string assetType, string sourceModelName)
@@ -452,7 +912,9 @@ public partial class MainForm : Form
         var sourceType = GetCurrentStep5AssetType();
         if (title != null)
         {
-            title.Text = GetReplacementTitleForType(sourceType);
+            title.Text = IsMultiAssetModelMode()
+                ? GetMultiSourceModelTitle()
+                : GetReplacementTitleForType(sourceType);
         }
 
         if (columns != null && columns.SelectedItem == null)
@@ -1032,6 +1494,18 @@ public partial class MainForm : Form
 
         void ToggleSelection(object? _, EventArgs __)
         {
+            if (IsMultiAssetModelMode() && IsMultiAssetTargetUsedByAnotherModel(asset))
+            {
+                MessageBox.Show(
+                    _localizationService.GetString(
+                        "MultiAssetTargetAlreadyMapped",
+                        "This asset is already mapped to another model in this package. Choose a different asset."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
             if (_selectedAssetForInstall == null
                 || !string.Equals(GetAssetSelectionKey(_selectedAssetForInstall), selectionKey, StringComparison.OrdinalIgnoreCase))
             {

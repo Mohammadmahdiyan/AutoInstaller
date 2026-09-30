@@ -441,6 +441,44 @@ public partial class MainForm : Form
         var isStep3Preview = _currentStep == WizardStep.Step3;
         var isStep4Preview = _currentStep == WizardStep.Step4;
         var isStep5Preview = _currentStep == WizardStep.Step5;
+        _wizardPanels.TryGetValue(WizardStep.Step5, out var step5Panel);
+        var multiAssetActions = isStep5Preview
+            ? step5Panel?.Controls.Find("MultiAssetActions", true).FirstOrDefault() as FlowLayoutPanel
+            : null;
+        if (multiAssetActions != null && step5Panel != null)
+        {
+            var isMultiAssetMode = IsMultiAssetModelMode();
+            multiAssetActions.Visible = isMultiAssetMode;
+            multiAssetActions.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            multiAssetActions.FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+
+            if (step5Panel.Controls.Find("MultiAssetTypeTabs", true).FirstOrDefault() is TabControl multiAssetTabs)
+            {
+                multiAssetTabs.Visible = isMultiAssetMode;
+                multiAssetTabs.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+                multiAssetTabs.RightToLeftLayout = isRtl;
+            }
+
+            if (step5Panel.Controls.Find("MultiAssetUnknownNotice", true).FirstOrDefault() is Label unknownNotice)
+            {
+                unknownNotice.Visible = isMultiAssetMode
+                    && _multiSourceModels[_multiIndex].DetectedAssetType == "Unknown";
+                unknownNotice.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            }
+
+            var installRemainingButton = multiAssetActions.Controls.Find("MultiAssetInstallRemainingButton", false)
+                .FirstOrDefault() as Button;
+            if (installRemainingButton != null)
+            {
+                var remainingCount = Math.Max(0, _multiSourceModels.Count - _multiIndex - 1);
+                installRemainingButton.Visible = isMultiAssetMode && _multiIndex >= 1 && remainingCount > 0;
+                installRemainingButton.Text = string.Format(
+                    _localizationService.GetString(
+                        "InstallRemainingOriginalNames",
+                        "Install the remaining {0} with original names"),
+                    remainingCount);
+            }
+        }
 
         var hasSidebarReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath)
             && File.Exists(_selectedReadmePath);
@@ -724,10 +762,26 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step5:
                 _sidebarPreviousButton.Enabled = true;
-                _sidebarNextButton.Enabled = _selectedAssetForInstall != null;
-                _sidebarNextButton.Text = _selectedModManifest?.IsMultiAssetPackage == true
-                    ? _localizationService.GetString("Next", "Next")
-                    : _localizationService.GetString("InstallMod", "Install Mod");
+                if (IsMultiAssetModelMode())
+                {
+                    var currentModel = _multiSourceModels[_multiIndex];
+                    var canContinueWithoutMapping = currentModel.Status is GtaSaModManager.Models.SourceModelStatus.KeepOriginal or GtaSaModManager.Models.SourceModelStatus.Skipped;
+                    var isLastModel = _multiIndex == _multiSourceModels.Count - 1;
+                    _sidebarNextButton.Enabled = _selectedAssetForInstall != null || canContinueWithoutMapping;
+                    _sidebarNextButton.Text = isLastModel
+                        ? _localizationService.GetString("Install", "Install")
+                        : string.Format(
+                            _localizationService.GetString("NextModel", "Next model ({0}/{1})"),
+                            _multiIndex + 1,
+                            _multiSourceModels.Count);
+                }
+                else
+                {
+                    _sidebarNextButton.Enabled = _selectedAssetForInstall != null;
+                    _sidebarNextButton.Text = _selectedModManifest?.IsMultiAssetPackage == true
+                        ? _localizationService.GetString("Next", "Next")
+                        : _localizationService.GetString("InstallMod", "Install Mod");
+                }
                 break;
             case WizardStep.Step6:
                 _sidebarPreviousButton.Enabled = true;
@@ -870,6 +924,22 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step5)
         {
+            if (IsMultiAssetModelMode())
+            {
+                if (_multiIndex > 0)
+                {
+                    _multiIndex--;
+                    PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                    RefreshAssetStep();
+                    UpdateSidebarState();
+                }
+                else
+                {
+                    NavigateToStep(WizardStep.Step3);
+                }
+                return;
+            }
+
             _returnedToInstallStepFromCompletion = true;
             NavigateToStep(WizardStep.Step4);
             return;
@@ -924,7 +994,11 @@ public partial class MainForm : Form
                     }
                     break;
                 case WizardStep.Step5:
-                    if (_selectedAssetForInstall != null)
+                    if (IsMultiAssetModelMode())
+                    {
+                        await AdvanceMultiAssetModelAsync();
+                    }
+                    else if (_selectedAssetForInstall != null)
                     {
                         await InstallSelectedModAsync();
                     }

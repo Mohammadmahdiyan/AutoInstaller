@@ -526,15 +526,24 @@ public partial class MainForm : Form
         }
 
         var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
+        var isMultiAssetModelInstall = manifest.IsMultiAssetPackage && _multiSourceModels.Count > 0;
         var isAssetSelectionInstall = isAssetPackage || _selectedAssetForInstall != null;
         var sourceModelName = DetectSourceModelName(payloadPath);
         var sourceModelFiles = GetSourceModelFilePaths(payloadPath, sourceModelName);
+        var multiSourceModelFiles = isMultiAssetModelInstall
+            ? _multiSourceModels
+                .Where(model => model.Status is SourceModelStatus.Mapped or SourceModelStatus.KeepOriginal)
+                .SelectMany(model => new[] { model.DffPath, model.TxdPath })
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Select(path => path!)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase)
+            : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path)
                 || isAssetSelectionInstall && ModPackageService.IsMediaFile(path))
             .Where(path => !isAssetPackage
                 || ModPackageService.IsMediaFile(path)
-                || sourceModelFiles.Contains(path))
+                || (isMultiAssetModelInstall ? multiSourceModelFiles.Contains(path) : sourceModelFiles.Contains(path)))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -633,11 +642,22 @@ public partial class MainForm : Form
                 var extension = Path.GetExtension(sourcePath);
                 var originalName = Path.GetFileNameWithoutExtension(sourcePath);
                 var isMediaFile = ModPackageService.IsMediaFile(sourcePath);
-                var selectedAsset = !isMediaFile && selectedTarget is not null && !string.IsNullOrWhiteSpace(selectedTarget.NameFile)
-                    ? selectedTarget
-                    : selectedAssetList.FirstOrDefault(asset => string.Equals(asset.NameFile, originalName, StringComparison.OrdinalIgnoreCase));
-                var destinationName = selectedAsset?.NameFile ?? originalName;
-                var isSourceModelFile = sourceModelFiles.Contains(sourcePath);
+                var sourceModel = isMultiAssetModelInstall
+                    ? _multiSourceModels.FirstOrDefault(model =>
+                        string.Equals(model.DffPath, sourcePath, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(model.TxdPath, sourcePath, StringComparison.OrdinalIgnoreCase))
+                    : null;
+                var selectedAsset = sourceModel != null
+                    ? sourceModel.Status == SourceModelStatus.Mapped ? sourceModel.TargetAsset : null
+                    : !isMediaFile && selectedTarget is not null && !string.IsNullOrWhiteSpace(selectedTarget.NameFile)
+                        ? selectedTarget
+                        : selectedAssetList.FirstOrDefault(asset => string.Equals(asset.NameFile, originalName, StringComparison.OrdinalIgnoreCase));
+                var destinationName = sourceModel == null
+                    ? selectedAsset?.NameFile ?? originalName
+                    : sourceModel.Status == SourceModelStatus.Mapped
+                        ? sourceModel.TargetAsset?.NameFile ?? sourceModel.BaseName
+                        : sourceModel.BaseName;
+                var isSourceModelFile = sourceModel != null || sourceModelFiles.Contains(sourcePath);
                 var relativePath = isAssetSelectionInstall && !isMediaFile && isSourceModelFile
                     ? destinationName + extension
                     : Path.GetRelativePath(payloadPath, sourcePath);

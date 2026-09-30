@@ -76,6 +76,10 @@ public partial class MainForm : Form
     private float _loadingSpinnerAngle;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<SourceModel> _multiSourceModels = new();
+    private int _multiIndex;
+    private string _multiLastUsedAssetType = "Vehicle";
+    private bool _isUpdatingMultiAssetTabs;
     private Dictionary<string, List<string>> _step5OccupiedAssetFolders = new(StringComparer.OrdinalIgnoreCase);
     private string _step5OccupiedScanKey = string.Empty;
     private bool _step5OccupiedScanComplete;
