@@ -822,6 +822,33 @@ public partial class MainForm : Form
         return (width, baseHeight);
     }
 
+    private void ApplyCardVisualState(Panel card, bool isSelected)
+    {
+        if (card.Tag is not AssetCardVisualState state)
+        {
+            return;
+        }
+
+        card.BackColor = isSelected ? state.SelectedColor : state.NormalCardColor;
+        state.Caption.BackColor = isSelected ? state.SelectedColor : state.NormalCaptionColor;
+        state.Preview.BackColor = isSelected ? state.SelectedColor : state.NormalPreviewColor;
+
+        if (state.OccupiedUseLabel != null)
+        {
+            state.OccupiedUseLabel.BackColor = isSelected ? state.SelectedColor : state.NormalOccupiedLabelColor;
+        }
+
+        if (state.IdBadge != null)
+        {
+            state.IdBadge.BackColor = isSelected ? state.SelectedColor : state.NormalIdBadgeColor;
+        }
+
+        if (state.UnavailableImageLabel != null)
+        {
+            state.UnavailableImageLabel.BackColor = isSelected ? state.SelectedColor : state.NormalUnavailableImageColor;
+        }
+    }
+
     private Control CreateAssetCard(GameAsset asset, int cardWidth, int cardHeight)
     {
         var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
@@ -840,7 +867,7 @@ public partial class MainForm : Form
             Height = cardHeight,
             BorderStyle = BorderStyle.FixedSingle,
             Margin = new Padding(0, 0, 12, 12),
-            BackColor = isSelected ? palette.AccentSoft : palette.Card,
+            BackColor = palette.Card,
             ForeColor = palette.TextPrimary,
             Cursor = Cursors.Hand,
             Padding = new Padding(0)
@@ -928,21 +955,13 @@ public partial class MainForm : Form
         }
 
         var catalogImagePath = _assetCatalogService.ResolveImagePath(asset);
-        var catalogImage = LoadCachedImage(catalogImagePath);
-        var occupiedImagePath = isOccupied
-            ? FindOccupiedAssetImagePath(occupiedFolders[0], asset.NameFile)
-            : null;
-        var occupiedImage = LoadCachedImage(occupiedImagePath);
-        var cachedImage = occupiedImage ?? catalogImage;
-        if (cachedImage == null)
-        {
-            cachedImage = LoadCachedImage(ResolveUnavailableAssetImagePath());
-        }
-
-        if (cachedImage == null)
+        var catalogImage = LoadCachedImage(catalogImagePath)
+            ?? LoadCachedImage(ResolveUnavailableAssetImagePath());
+        Label? unavailableImageLabel = null;
+        if (catalogImage == null)
         {
             preview.Image = null;
-            preview.Controls.Add(new Label
+            unavailableImageLabel = new Label
             {
                 Text = _localizationService.GetString("ImageUnavailableFriendly", "No image available"),
                 AutoSize = false,
@@ -951,11 +970,12 @@ public partial class MainForm : Form
                 Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
                 ForeColor = palette.TextSecondary,
                 BackColor = palette.SurfaceSecondary
-            });
+            };
+            preview.Controls.Add(unavailableImageLabel);
         }
         else
         {
-            preview.Image = cachedImage;
+            preview.Image = catalogImage;
             preview.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
@@ -967,6 +987,21 @@ public partial class MainForm : Form
             idBadge.BringToFront();
         }
         occupiedUseLabel?.BringToFront();
+
+        card.Tag = new AssetCardVisualState(
+            caption,
+            preview,
+            occupiedUseLabel,
+            idBadge,
+            unavailableImageLabel,
+            palette.AccentSoft,
+            palette.Card,
+            caption.BackColor,
+            preview.BackColor,
+            occupiedUseLabel?.BackColor ?? palette.Card,
+            idBadge?.BackColor ?? palette.Card,
+            unavailableImageLabel?.BackColor ?? preview.BackColor);
+        ApplyCardVisualState(card, isSelected);
 
         var tooltip = new ToolTip
         {
@@ -1009,26 +1044,18 @@ public partial class MainForm : Form
 
             foreach (var sibling in card.Parent?.Controls.OfType<Panel>() ?? Enumerable.Empty<Panel>())
             {
-                sibling.BackColor = sibling == card ? palette.AccentSoft : palette.Card;
-                sibling.ForeColor = palette.TextPrimary;
+                if (sibling != card)
+                {
+                    ApplyCardVisualState(sibling, false);
+                }
             }
 
-            card.BackColor = palette.AccentSoft;
-            caption.BackColor = palette.AccentSoft;
+            ApplyCardVisualState(card, true);
 
             UpdateSidebarState();
         }
 
-        void ShowAssetNameHover(object? _, EventArgs __)
-        {
-            caption.SetHovered(true);
-            if (occupiedImage != null && catalogImage != null)
-            {
-                preview.Image = catalogImage;
-            }
-        }
-
-        void HandleCardMouseLeave(object? _, EventArgs __)
+        void UpdateCardHoverState(object? _, EventArgs __)
         {
             if (card.IsDisposed || !card.IsHandleCreated)
             {
@@ -1037,17 +1064,52 @@ public partial class MainForm : Form
 
             card.BeginInvoke(new Action(() =>
             {
-                if (card.IsDisposed || card.ClientRectangle.Contains(card.PointToClient(Cursor.Position)))
+                if (card.IsDisposed)
                 {
                     return;
                 }
 
-                caption.SetHovered(false);
-                if (occupiedImage != null)
+                var isMouseInsideCard = card.ClientRectangle.Contains(card.PointToClient(Cursor.Position));
+                Debug.WriteLine($"[Step5Hover] isOccupied={isOccupied}; isMouseInsideCard={isMouseInsideCard}");
+                caption.SetHovered(isMouseInsideCard);
+                if (!isOccupied)
                 {
-                    preview.Image = occupiedImage;
+                    return;
+                }
+
+                if (!isMouseInsideCard)
+                {
+                    preview.Image = catalogImage;
+                    if (unavailableImageLabel != null)
+                    {
+                        unavailableImageLabel.Visible = catalogImage == null;
+                    }
+
+                    return;
+                }
+
+                var occupiedImage = GetCachedOccupiedAssetImage(occupiedFolders[0], asset.NameFile);
+                if (occupiedImage == null)
+                {
+                    return;
+                }
+
+                preview.Image = occupiedImage;
+                if (unavailableImageLabel != null)
+                {
+                    unavailableImageLabel.Visible = false;
                 }
             }));
+        }
+
+        void WireCardMouseTracking(Control control)
+        {
+            control.MouseEnter += UpdateCardHoverState;
+            control.MouseLeave += UpdateCardHoverState;
+            foreach (Control child in control.Controls)
+            {
+                WireCardMouseTracking(child);
+            }
         }
 
         preview.MouseUp += (_, e) =>
@@ -1092,36 +1154,41 @@ public partial class MainForm : Form
         if (occupiedUseLabel != null)
         {
             occupiedUseLabel.Click += ToggleSelection;
-            occupiedUseLabel.MouseEnter += ShowAssetNameHover;
-            occupiedUseLabel.MouseLeave += HandleCardMouseLeave;
         }
 
         if (idBadge != null)
         {
             idBadge.Click += ToggleSelection;
-            idBadge.MouseEnter += ShowAssetNameHover;
-            idBadge.MouseLeave += HandleCardMouseLeave;
             foreach (Control child in idBadge.Controls)
             {
                 child.Click += ToggleSelection;
-                child.MouseEnter += ShowAssetNameHover;
-                child.MouseLeave += HandleCardMouseLeave;
             }
         }
 
-        card.MouseEnter += ShowAssetNameHover;
-        card.MouseLeave += HandleCardMouseLeave;
-        preview.MouseEnter += ShowAssetNameHover;
-        preview.MouseLeave += HandleCardMouseLeave;
-        foreach (Control child in preview.Controls)
-        {
-            child.MouseEnter += ShowAssetNameHover;
-            child.MouseLeave += HandleCardMouseLeave;
-        }
-        caption.MouseEnter += ShowAssetNameHover;
-        caption.MouseLeave += HandleCardMouseLeave;
+        WireCardMouseTracking(card);
 
         return card;
+    }
+
+    private Image? GetCachedOccupiedAssetImage(string modFolderName, string nameFile)
+    {
+        if (string.IsNullOrWhiteSpace(modFolderName) || string.IsNullOrWhiteSpace(nameFile))
+        {
+            return null;
+        }
+
+        var modFolderPath = Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modFolderName);
+        var cacheKey = "occupied|" + Path.GetFullPath(modFolderPath) + "|" + nameFile;
+        if (_assetImageCache.TryGetValue(cacheKey, out var cachedImage))
+        {
+            return cachedImage;
+        }
+
+        var imagePath = FindOccupiedAssetImagePath(modFolderName, nameFile);
+        var image = LoadCachedImage(imagePath);
+        _assetImageCache[cacheKey] = image;
+        Debug.WriteLine($"[Step5Hover] folderPath='{modFolderPath}'; NameFile='{nameFile}'; imagePath='{imagePath ?? "not found"}'; LoadCachedImage returned null={image is null}");
+        return image;
     }
 
     private string? FindOccupiedAssetImagePath(string modFolderName, string nameFile)
@@ -1179,6 +1246,20 @@ public partial class MainForm : Form
             .Select(name => Path.Combine(AppContext.BaseDirectory, "Assets", name))
             .FirstOrDefault(File.Exists);
     }
+
+    private sealed record AssetCardVisualState(
+        AssetCardCaption Caption,
+        PictureBox Preview,
+        Label? OccupiedUseLabel,
+        Panel? IdBadge,
+        Label? UnavailableImageLabel,
+        Color SelectedColor,
+        Color NormalCardColor,
+        Color NormalCaptionColor,
+        Color NormalPreviewColor,
+        Color NormalOccupiedLabelColor,
+        Color NormalIdBadgeColor,
+        Color NormalUnavailableImageColor);
 
     private sealed class AssetCardCaption : Control
     {
