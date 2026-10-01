@@ -128,18 +128,19 @@ public partial class MainForm : Form
             return string.Empty;
         }
 
-        var text = content.Replace("\r\n", "\n");
+        var text = content.Replace("\r\n", "\n").Replace('\r', '\n');
         text = Regex.Replace(text, @"```[\s\S]*?```", string.Empty, RegexOptions.Multiline);
-        text = Regex.Replace(text, @"^\s{0,3}#{1,6}\s*", string.Empty, RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^[ \t]{0,3}#{1,6}[ \t]*", string.Empty, RegexOptions.Multiline);
         text = Regex.Replace(text, @"\*\*(.+?)\*\*", "$1");
         text = Regex.Replace(text, @"\*(.+?)\*", "$1");
         text = Regex.Replace(text, @"_([^_]+)_", "$1");
         text = Regex.Replace(text, @"\[([^\]]+)\]\([^\)]+\)", "$1");
-        text = Regex.Replace(text, @"^\s*[-*+]\s+", "- ", RegexOptions.Multiline);
-        text = Regex.Replace(text, @"^\s*\d+\.\s+", string.Empty, RegexOptions.Multiline);
-        text = Regex.Replace(text, @"^>\s*", string.Empty, RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^[ \t]*[-*+][ \t]+", "- ", RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^[ \t]*\d+\.[ \t]+", string.Empty, RegexOptions.Multiline);
+        text = Regex.Replace(text, @"^>[ \t]*", string.Empty, RegexOptions.Multiline);
         text = text.Replace("\t", "    ");
-        return text.Trim();
+        // WinForms TextBox only treats "\r\n" as a line break; a bare "\n" is rendered with no break.
+        return text.Trim().Replace("\n", "\r\n");
     }
 
     private static string FindReadmeFile(string root)
