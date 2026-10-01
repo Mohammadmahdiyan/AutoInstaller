@@ -14,7 +14,7 @@ The normalized type values accepted by the validator are:
 - `PutAndReplaces` (`PRS`)
 - `VehicleAndSkinAndWeapon` (`VSW` / `VSS`)
 - `VehiclesAndSkinsAndWeapons`
-- `SavesAndMissions` (`SAW`)
+- `SavesAndMissions` (`SAM`)
 - `MissionDsl` (`DSL`)
 
 Type matching removes spaces, `_`, and `-`, then compares case-insensitively. Note: the current `NormalizedType` implementation maps both vehicle/skin/weapon spellings to the single-asset normalized type; do not assume they activate distinct flows.

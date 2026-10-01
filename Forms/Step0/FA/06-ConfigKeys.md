@@ -14,7 +14,7 @@
 - `PutAndReplaces` (`PRS`)
 - `VehicleAndSkinAndWeapon` (`VSW` / `VSS`)
 - `VehiclesAndSkinsAndWeapons`
-- `SavesAndMissions` (`SAW`)
+- `SavesAndMissions` (`SAM`)
 - `MissionDsl` (`DSL`)
 
 مقایسهٔ نوع، فاصله و نویسه‌های `_` و `-` را حذف می‌کند و به بزرگی/کوچکی حروف حساس نیست. نکته: پیاده‌سازی فعلی `NormalizedType` هر دو املای نوع وسیله/شخصیت/اسلحه را به مقدار نوع تک‌مدلی تبدیل می‌کند؛ فرض نکنید که فعلاً دو جریان جدا دارند.
