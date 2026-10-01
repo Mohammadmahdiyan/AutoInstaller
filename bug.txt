@@ -1,4 +1,130 @@
-1. vehiclesandskinsandweapons در این تایپ در step 5 برای تمام ایتم ها تمام وسیله نقلیه و اسلحه و شخصیت هارو میاره ولی درصورتی که من میخام اگر لا بین ایتم ها ایتم ناشناخته ای بود یعنی اسمش نه در وسیله نقلیه نه در اسلحه نه در شخصیت ها نباشه بین فایل ها فایل اون لیستی که در 
-vehicleandskinandweapon میاره step 3 که اگر ایتم ناشناخته بود کاربر بگه وسیله نفلیه هست یا اسلحه یا شخصیت این باید برای vehiclesandskinsandweapons هم باشه ولی در step 5 وقتی به ایتم ناشناخته یا همون فایل با اسم ناشناخته رسید مثلا 
+
+1. vehiclesandskinsandweapons در این تایپ در step 5 برای تمام فایل ها تمام وسیله نقلیه و اسلحه و شخصیت هارو میاره ولی درصورتی که من میخام اگر لا بین فایل ها فایل ناشناخته ای بود یعنی اسمش نه در وسیله نقلیه نه در اسلحه نه در شخصیت ها نباشه بین فایل ها فایل اون لیستی که در 
+vehicleandskinandweapon میاره step 3 که اگر فایل ناشناخته بود کاربر بگه وسیله نفلیه هست یا اسلحه یا شخصیت این باید برای vehiclesandskinsandweapons هم باشه ولی در step 5 وقتی به ایتم ناشناخته یا همون فایل با اسم ناشناخته رسید مثلا 
 xaa.dff
 xaa.txd
+2. میخام تایپ 
+{
+    "type": "PutInCleo"
+}
+منطقش رو پیاده سازی کنم گر چه از اسمش مشخصه
+محتویات داخلش رو بریز داخل پوشه cleo 
+یعنی مثلا 
+Base Mods address\Trains\RZL Triner v5.0.1\
+    RZL Triner.cs
+    config.json
+بریزع داخل 
+game address\cleo\
+    RZL Triner.cs
+
+و ممکنه فایل های اضافی داشته باشه میایم میگیم فقط فلان فایل رو بریز
+
+Base Mods address\Trains\RZL Triner v5.0.1\
+    RZL Triner.cs
+    _change.log
+    config.json
+و نمیخایم change.log ریخته بشه اینجوری میایم میگیم اینجوری میایم میگیم 
+
+```json
+{
+    "type":"PutinCleo",
+    "InstallFile": "RZL-Trainer.cs"
+}
+```
+
+(نکته اگر یک فایل بود داخل InstalledFile داخل دابل کوتیشن اگر بیشتر بود InstalledFiles  داخل براکت)
+و ممکنه این فایلی که نمیخایم بریزیم داخل پوشه مثلا
+Base Mods address\Trains\RZL Triner v5.0.1\
+    logs\
+        _rzl1.log
+        _rzl2.log
+        memory2026.cs
+        traficFix.cs
+     crash.log
+    RZL Triner.cs
+    config.json
+باید در کانفیگ جیسون باشه 
+
+```json
+{
+    "type":"PutinCleo",
+    "InstallFiles": [
+        "logs\\memory2026.cs",
+        "logs\\traficFix.cs",
+        "RZL Triner.cs"
+    ]
+}
+```
+
+نصب میشن در 
+game address\cleo\
+    memory2026.cs
+    traficFix.cs
+    RZL Triner.cs
+و همینطور میشه پوشه و پوشه ها هم نصب کنه 
+مثلا
+
+Base Mods address\Trains\RZL Triner v5.0.1\
+    .vscode\
+    sorce\
+    RZL Trainer\
+    RZL Triner.cs
+    config.json
+باید در config باشه 
+
+```json
+{
+    "type":"PutinCleo",
+    "InstallFolder": "RZL Trainer"
+}
+```
+و در خروجی
+game address\cleo\
+   RZL Trainer\
+   RZL Triner.cs
+(نکته اگر یک فولدر بود داخل InstallFolderداخل دابل کوتیشن اگر بیشتر بود InstallFolders  داخل براکت)
+وقتی هایی هم هست دقیقا برعکس اینا ولی چون جزییات رو توضیح دادم IgnoreFile رو بیشتر نمیگم تو IgnoreFiles و IgnoreFolder و IgnoreFolders رو طبق چیزی که گفتم خودت بساز
+
+IgnoreFile میگه تمام متحوایت پوشه رو بریز بجز این فایل مثلاداریم
+Base Mods address\Trains\RZL Triner v5.0.1\
+     memory2026.cs
+     traficFix.cs
+     crash.log
+    RZL Triner.cs
+    config.json
+میخایم همرو بریزه بجز crash.log 
+باید در config.json باشه 
+
+```json
+{
+    "type":"PutinCleo",
+    "IgnoreFile": "crash.log"
+}
+```
+
+و خروجی باید این باشه
+game address\cleo\
+     memory2026.cs
+     traficFix.cs
+    RZL Triner.cs
+(نکته این کی ولیو install file و installfiles و InstallFolder و InstallFolders و IgnoreFile و IgnoreFiles و IgnoreFolder و IgnoreFolders مختصPutinCleo نیست )
+(این کی ولیو ها نباید به کوچک بزرگ حساس باشن یعنی اگه نوشته بود مثلا iGNoreFiles هم باید قبول باشه)
+
+(و یک باگ هم فیکس کن این اخری 
+اگر در پوشه مد فایل config اسمش بود mod یا اسم پوشه هم باید قبول بکنه مثلا
+config.json
+mod.json
+RZL Triner v5.0.1.json
+
+)
+
+هر بخش رو داخل یک پراپمت جدا بنویس و دقیق به coplit توضیح بده فیکس کنه همشون رو اینگلیسی بنویس
+3. میخام Step0 رو پیاده سازی کنیم step که فقط اولین بار بیاد بالا اگر بار اول نبود نشون نده ولی اگر مثلا step 3 بود دکمه prev و بازم دکمه prev اینجا step 0 رو نشون بده 
+محتوای این step باید تعداد زیادی اکاردعون باشه که نحوه کار با برنامه رو توضیح میده
+میخام محتویات هر اکاردعون یک فایل md باشه که داخل Forms\Step0\ 
+اکاردعون اول توضیحات برنامه این برنامه چیه کاربردش چیه ورژن سازنده
+مثلا یک اکاردعون برای توضیح تمام کی ولیو هایی که داخل config.json پیاده سازی کردیم 
+مثلا یک اکاردعون برای اموزش تصویری کار با برنامه game address و base mods address کجاست mod address کجاست step 4 step 5 step 6 توضیح این استپ ها
+مثلا یک اکادوعون برای دکمه ها چیکار میکنن
+مثلا یک اکاردعون برای انتظار برنامه از فایل های داخل مد 
+و باید تعداد اکاردعون هارو از روی تعداد فایل های md درست کنه خط اول فایل ام دی که با یک شارپ شروع میشه میشه متن اکاردعون باقی فایل md میشه محتویات اکاردعون
