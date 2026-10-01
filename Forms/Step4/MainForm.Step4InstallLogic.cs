@@ -71,13 +71,25 @@ public partial class MainForm : Form
             return;
         }
 
+        if (manifest.NormalizedType == "putincleo")
+        {
+            GoToStep(WizardStep.Step4);
+            if (await InstallPutInCleoPackageAsync(packageRoot, modName, manifest))
+            {
+                await ShowStep4LoadingTransitionAsync(string.Empty);
+                GoToStep(WizardStep.Step6);
+            }
+
+            return;
+        }
+
         if (manifest.IsReplacing)
         {
             await InstallReplacingPackageAsync(payloadPath, modName, packageRoot);
             return;
         }
 
-        if (manifest.NormalizedType is "putinmodloader" or "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
+        if (manifest.NormalizedType is "putinmodloader" or "putingamefolder" or "putandreplace" or "putandreplaces" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
         {
             await InstallTypedPackageAsync(payloadPath, modName, packageRoot, manifest);
             return;
@@ -453,7 +465,7 @@ public partial class MainForm : Form
                 }
             }
 
-            await CopyPayloadWithProgressAsync(requiredPayloadPath, targetDirectory);
+            await CopyPayloadWithProgressAsync(requiredPayloadPath, targetDirectory, packageRoot: requiredPackagePath);
             if (!RequirementEntryIsSatisfied(requirement, _selectedGamePath))
             {
                 MessageBox.Show(
@@ -553,17 +565,18 @@ public partial class MainForm : Form
 
             _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
             _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
+            var isPutInCleoPackage = _selectedModManifest.NormalizedType == "putincleo";
             var previousModelFiles = new List<string>();
             var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
             var sourceAssetType = DetectAssetTypeByName(sourceModelName);
-            var requiresAssetSelection = _selectedModManifest.IsSingleAssetPackage
+            var requiresAssetSelection = !isPutInCleoPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null
                 || !string.IsNullOrWhiteSpace(sourceModelName)
-                || !string.IsNullOrWhiteSpace(sourceAssetType);
-            var assetInstallFlow = _selectedModManifest.IsSingleAssetPackage
+                || !string.IsNullOrWhiteSpace(sourceAssetType));
+            var assetInstallFlow = !isPutInCleoPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
-                || _selectedAssetForInstall != null;
+                || _selectedAssetForInstall != null);
             InstallationManifestEntry? existingAssetInstallation = null;
             if ((assetInstallFlow || requiresAssetSelection)
                 && (_currentStep == WizardStep.Step3 || _currentStep == WizardStep.Step5))
@@ -639,22 +652,23 @@ public partial class MainForm : Form
                 return;
             }
 
-            var modJsonPath = Path.Combine(_selectedModPayloadPath, "mod.json");
-            if (File.Exists(modJsonPath))
+            var manifestRoot = Directory.Exists(_selectedModPackageRoot) ? _selectedModPackageRoot : _selectedModPayloadPath;
+            var manifestPath = ModPackageService.GetManifestPath(manifestRoot);
+            if (!string.IsNullOrWhiteSpace(manifestPath))
             {
                 try
                 {
-                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(modJsonPath));
+                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(manifestPath));
                     var root = jsonDoc.RootElement;
                     var hasAnyProperties = root.ValueKind == System.Text.Json.JsonValueKind.Object && root.EnumerateObject().Any();
                     if (root.ValueKind != System.Text.Json.JsonValueKind.Object || !hasAnyProperties)
                     {
-                        MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "The package manifest is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "mod.json is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "The package manifest is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
 
@@ -669,6 +683,25 @@ public partial class MainForm : Form
             {
                 DeleteManifestEntries(_selectedModManifest);
                 await InstallMissionDslPackageAsync(_selectedModPayloadPath, _selectedModName);
+                return;
+            }
+
+            if (_selectedModManifest.NormalizedType == "putincleo")
+            {
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
+
+                if (await InstallPutInCleoPackageAsync(_selectedModPackageRoot, _selectedModName, _selectedModManifest))
+                {
+                    await ShowStep4LoadingTransitionAsync(string.Empty);
+                    if (!_isInstallingOptionalPackage)
+                    {
+                        GoToStep(WizardStep.Step6);
+                    }
+                }
+
                 return;
             }
 
@@ -936,7 +969,11 @@ public partial class MainForm : Form
             {
                 GoToStep(WizardStep.Step4);
             }
-            await CopyPayloadWithProgressAsync(_selectedModPayloadPath, targetDir, _step5UnknownAssetTypeCancelled);
+            await CopyPayloadWithProgressAsync(
+                _selectedModPayloadPath,
+                targetDir,
+                _step5UnknownAssetTypeCancelled,
+                _selectedModPackageRoot);
             ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
             var installRecordType = _selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage
                 || _step5UnknownAssetTypeCancelled
@@ -1723,10 +1760,19 @@ public partial class MainForm : Form
         return ModPackageService.IsMetadataOrNonInstallableFile(path);
     }
 
-    private async Task CopyPayloadWithProgressAsync(string sourceDir, string targetDir, bool includeGalleryMedia = false)
+    private static bool IsMetadataOrNonInstallableFile(string path, string? packageRoot)
+    {
+        return ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot);
+    }
+
+    private async Task CopyPayloadWithProgressAsync(
+        string sourceDir,
+        string targetDir,
+        bool includeGalleryMedia = false,
+        string? packageRoot = null)
     {
         var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories)
-            .Where(path => !IsMetadataOrNonInstallableFile(path)
+            .Where(path => !IsMetadataOrNonInstallableFile(path, packageRoot ?? sourceDir)
                 || includeGalleryMedia && MediaPreviewControl.IsSupportedMediaPath(path))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();

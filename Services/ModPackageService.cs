@@ -4,6 +4,8 @@ using GtaSaModManager.Models;
 
 namespace GtaSaModManager.Services;
 
+public sealed record SelectedInstallEntry(string SourcePath, string RelativeDestination);
+
 public class ModPackageService
 {
     public static bool IsArchive(string path)
@@ -59,8 +61,7 @@ public class ModPackageService
             return false;
         }
 
-        var modJsonPath = Path.Combine(directoryPath, "mod.json");
-        if (!File.Exists(modJsonPath))
+        if (GetManifestPath(directoryPath) == null)
         {
             return true;
         }
@@ -87,7 +88,7 @@ public class ModPackageService
             using var document = JsonDocument.Parse(File.ReadAllText(manifestPath));
             if (document.RootElement.ValueKind != JsonValueKind.Object)
             {
-                error = "mod.json must contain a JSON object.";
+                error = "The package manifest must contain a JSON object.";
                 return false;
             }
 
@@ -97,10 +98,15 @@ public class ModPackageService
                 return true;
             }
 
-            if (!document.RootElement.TryGetProperty("type", out var typeProperty) ||
+            if (!ValidateManifestPathListProperties(document.RootElement, out error))
+            {
+                return false;
+            }
+
+            if (!TryGetPropertyIgnoreCase(document.RootElement, "type", out var typeProperty) ||
                 typeProperty.ValueKind != JsonValueKind.String)
             {
-                error = "mod.json must contain a string type property.";
+                error = "The package manifest must contain a string type property.";
                 return false;
             }
 
@@ -112,7 +118,7 @@ public class ModPackageService
                     "vehiclesandskinsandweapons", "savesandmissions", "missiondsl"
                 }.Contains(manifest.NormalizedType, StringComparer.OrdinalIgnoreCase))
             {
-                error = "mod.json contains an unsupported type.";
+                error = "The package manifest contains an unsupported type.";
                 return false;
             }
 
@@ -163,11 +169,16 @@ public class ModPackageService
             }
 
             var manifest = new ModManifest();
-            if (document.RootElement.TryGetProperty("type", out var typeProperty) &&
+            if (TryGetPropertyIgnoreCase(document.RootElement, "type", out var typeProperty) &&
                 typeProperty.ValueKind == JsonValueKind.String)
             {
                 manifest.Type = typeProperty.GetString() ?? string.Empty;
             }
+
+            manifest.InstallFiles = ReadManifestPathCollections(document.RootElement, "InstallFile", "InstallFiles");
+            manifest.InstallFolders = ReadManifestPathCollections(document.RootElement, "InstallFolder", "InstallFolders");
+            manifest.IgnoreFiles = ReadManifestPathCollections(document.RootElement, "IgnoreFile", "IgnoreFiles");
+            manifest.IgnoreFolders = ReadManifestPathCollections(document.RootElement, "IgnoreFolder", "IgnoreFolders");
 
             if (document.RootElement.TryGetProperty("require", out var requireProperty))
             {
@@ -358,6 +369,84 @@ public class ModPackageService
         return null;
     }
 
+    private static bool TryGetPropertyIgnoreCase(JsonElement obj, string name, out JsonElement value)
+    {
+        if (obj.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in obj.EnumerateObject())
+            {
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    value = property.Value;
+                    return true;
+                }
+            }
+        }
+
+        value = default;
+        return false;
+    }
+
+    private static bool ValidateManifestPathListProperties(JsonElement obj, out string? error)
+    {
+        var pathListKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "installfile", "installfiles",
+            "installfolder", "installfolders",
+            "ignorefile", "ignorefiles",
+            "ignorefolder", "ignorefolders"
+        };
+
+        foreach (var property in obj.EnumerateObject())
+        {
+            if (!pathListKeys.Contains(property.Name))
+            {
+                continue;
+            }
+
+            if (property.Value.ValueKind == JsonValueKind.String)
+            {
+                continue;
+            }
+
+            if (property.Value.ValueKind == JsonValueKind.Array
+                && property.Value.EnumerateArray().All(item => item.ValueKind == JsonValueKind.String))
+            {
+                continue;
+            }
+
+            error = $"Manifest key '{property.Name}' must be a string or an array of strings.";
+            return false;
+        }
+
+        error = null;
+        return true;
+    }
+
+    private static List<string> ReadManifestPathCollections(JsonElement obj, string singularName, string pluralName)
+    {
+        var values = new List<string>();
+        if (TryGetPropertyIgnoreCase(obj, singularName, out var singularValue))
+        {
+            values.AddRange(ReadStringCollection(singularValue));
+        }
+
+        if (TryGetPropertyIgnoreCase(obj, pluralName, out var pluralValue))
+        {
+            values.AddRange(ReadStringCollection(pluralValue));
+        }
+
+        return values
+            .Select(value =>
+            {
+                var normalized = value.Trim().Replace('/', '\\');
+                return Path.IsPathRooted(normalized) ? normalized : normalized.Trim('\\');
+            })
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     private static List<string> ReadStringCollection(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.String)
@@ -379,16 +468,38 @@ public class ModPackageService
             .ToList();
     }
 
-    private static string? GetManifestPath(string basePath)
+    public static string? GetManifestPath(string basePath)
     {
-        var modJsonPath = Path.Combine(basePath, "mod.json");
-        if (File.Exists(modJsonPath))
+        if (string.IsNullOrWhiteSpace(basePath) || !Directory.Exists(basePath))
         {
-            return modJsonPath;
+            return null;
         }
 
-        var configJsonPath = Path.Combine(basePath, "config.json");
-        return File.Exists(configJsonPath) ? configJsonPath : null;
+        var folderName = Path.GetFileName(basePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        var candidateNames = new[] { "mod.json", "config.json", folderName + ".json" };
+        try
+        {
+            var files = Directory.EnumerateFiles(basePath, "*", SearchOption.TopDirectoryOnly).ToList();
+            foreach (var candidateName in candidateNames)
+            {
+                var match = files.FirstOrDefault(file =>
+                    string.Equals(Path.GetFileName(file), candidateName, StringComparison.OrdinalIgnoreCase));
+                if (match != null)
+                {
+                    return match;
+                }
+            }
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return null;
+        }
+
+        return null;
     }
 
     public static ModManifest ResolveManifest(string basePath)
@@ -598,6 +709,11 @@ public class ModPackageService
 
     public static bool IsMetadataOrNonInstallableFile(string path)
     {
+        return IsMetadataOrNonInstallableFile(path, null);
+    }
+
+    public static bool IsMetadataOrNonInstallableFile(string path, string? packageRoot)
+    {
         if (string.IsNullOrWhiteSpace(path))
         {
             return true;
@@ -609,7 +725,16 @@ public class ModPackageService
             return true;
         }
 
-        if (string.Equals(fileName, "mod.json", StringComparison.OrdinalIgnoreCase)
+        if (!string.IsNullOrWhiteSpace(packageRoot))
+        {
+            var manifestPath = GetManifestPath(packageRoot);
+            if (!string.IsNullOrWhiteSpace(manifestPath)
+                && string.Equals(Path.GetFullPath(path), Path.GetFullPath(manifestPath), StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+        else if (string.Equals(fileName, "mod.json", StringComparison.OrdinalIgnoreCase)
             || string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase))
         {
             return true;
@@ -640,12 +765,254 @@ public class ModPackageService
 
     public static string GetInstallPayloadDirectory(string packageRoot, ModManifest manifest)
     {
-        if (manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage)
+        if (manifest.NormalizedType == "putincleo"
+            || manifest.IsSingleAssetPackage
+            || manifest.IsMultiAssetPackage)
         {
             return packageRoot;
         }
 
         return GetPayloadDirectory(packageRoot);
+    }
+
+    public static List<SelectedInstallEntry> ResolveInstallSelection(string packageRoot, ModManifest manifest)
+    {
+        if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
+        {
+            throw new InvalidDataException("The package root does not exist: " + packageRoot);
+        }
+
+        var root = Path.GetFullPath(packageRoot);
+        var installFiles = NormalizeSelectionPaths(manifest.InstallFiles, "InstallFiles", root);
+        var installFolders = NormalizeSelectionPaths(manifest.InstallFolders, "InstallFolders", root);
+        var ignoreFiles = NormalizeSelectionPaths(manifest.IgnoreFiles, "IgnoreFiles", root);
+        var ignoreFolders = NormalizeSelectionPaths(manifest.IgnoreFolders, "IgnoreFolders", root);
+        var explicitlyInstalledFolders = installFolders.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var entries = new List<SelectedInstallEntry>();
+        var entryKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        void AddFile(string sourcePath, string relativeDestination)
+        {
+            var sourceRelativePath = GetPackageRelativePath(root, sourcePath);
+            if (IsMetadataOrNonInstallableFile(sourcePath, root)
+                || IsMediaFile(sourcePath)
+                || IsIgnoredFile(sourceRelativePath, ignoreFiles)
+                || IsInIgnoredFolder(sourceRelativePath, ignoreFolders)
+                || ContainsImplicitlyExcludedFolder(sourceRelativePath, explicitlyInstalledFolders))
+            {
+                return;
+            }
+
+            var normalizedDestination = NormalizeRelativeDestination(relativeDestination);
+            var key = Path.GetFullPath(sourcePath) + "\0" + normalizedDestination;
+            if (entryKeys.Add(key))
+            {
+                entries.Add(new SelectedInstallEntry(Path.GetFullPath(sourcePath), normalizedDestination));
+            }
+        }
+
+        if (manifest.HasInstallFiles)
+        {
+            foreach (var relativePath in installFiles)
+            {
+                var sourcePath = ResolveSafePackagePath(root, relativePath, "InstallFiles");
+                if (!File.Exists(sourcePath))
+                {
+                    throw new InvalidDataException("InstallFiles entry was not found: " + relativePath);
+                }
+
+                AddFile(sourcePath, Path.GetFileName(sourcePath));
+            }
+        }
+        else
+        {
+            foreach (var sourcePath in Directory.GetFiles(root, "*", SearchOption.TopDirectoryOnly)
+                         .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
+            {
+                AddFile(sourcePath, Path.GetFileName(sourcePath));
+            }
+        }
+
+        if (manifest.HasInstallFolders)
+        {
+            foreach (var relativeFolder in installFolders)
+            {
+                var folderPath = ResolveSafePackagePath(root, relativeFolder, "InstallFolders");
+                if (!Directory.Exists(folderPath))
+                {
+                    throw new InvalidDataException("InstallFolders entry was not found: " + relativeFolder);
+                }
+
+                AddFolderFiles(folderPath);
+            }
+        }
+        else if (manifest.HasIgnoreFolders)
+        {
+            foreach (var folderPath in Directory.GetDirectories(root, "*", SearchOption.TopDirectoryOnly)
+                         .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
+            {
+                var relativeFolder = GetPackageRelativePath(root, folderPath);
+                if (IsInIgnoredFolder(relativeFolder, ignoreFolders)
+                    || IsProtectedFolderName(Path.GetFileName(folderPath)))
+                {
+                    continue;
+                }
+
+                AddFolderFiles(folderPath);
+            }
+        }
+
+        void AddFolderFiles(string folderPath)
+        {
+            foreach (var sourcePath in Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories)
+                         .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
+            {
+                var relativePath = GetPackageRelativePath(root, sourcePath);
+                if (!IsInIgnoredFolder(relativePath, ignoreFolders)
+                    && !ContainsImplicitlyExcludedFolder(relativePath, explicitlyInstalledFolders))
+                {
+                    AddFile(sourcePath, relativePath);
+                }
+            }
+        }
+
+        var destinationCollision = entries
+            .GroupBy(entry => entry.RelativeDestination, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.Select(entry => entry.SourcePath).Distinct(StringComparer.OrdinalIgnoreCase).ToList())
+            .FirstOrDefault(sources => sources.Count > 1);
+        if (destinationCollision != null)
+        {
+            throw new InvalidDataException(
+                "Install destination collision between '" + destinationCollision[0] + "' and '" + destinationCollision[1] + "'.");
+        }
+
+        return entries;
+    }
+
+    private static List<string> NormalizeSelectionPaths(IEnumerable<string>? paths, string propertyName, string packageRoot)
+    {
+        var normalizedPaths = new List<string>();
+        foreach (var path in paths ?? Enumerable.Empty<string>())
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                continue;
+            }
+
+            normalizedPaths.Add(ResolveSafePackageRelativePath(packageRoot, path, propertyName));
+        }
+
+        return normalizedPaths.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+    }
+
+    private static string ResolveSafePackagePath(string packageRoot, string relativePath, string propertyName)
+    {
+        var safeRelativePath = ResolveSafePackageRelativePath(packageRoot, relativePath, propertyName);
+        return Path.GetFullPath(Path.Combine(packageRoot, safeRelativePath.Replace('\\', Path.DirectorySeparatorChar)));
+    }
+
+    private static string ResolveSafePackageRelativePath(string packageRoot, string relativePath, string propertyName)
+    {
+        var normalizedPath = relativePath.Replace('/', '\\');
+        if (Path.IsPathRooted(relativePath)
+            || Path.IsPathRooted(normalizedPath)
+            || normalizedPath.Split('\\', StringSplitOptions.RemoveEmptyEntries).Any(part => part == ".."))
+        {
+            throw new InvalidDataException(propertyName + " contains a path outside the package root: " + relativePath);
+        }
+
+        var fullRoot = Path.GetFullPath(packageRoot);
+        var fullPath = Path.GetFullPath(Path.Combine(fullRoot, normalizedPath.Replace('\\', Path.DirectorySeparatorChar)));
+        if (!IsPathWithinRoot(fullRoot, fullPath))
+        {
+            throw new InvalidDataException(propertyName + " contains a path outside the package root: " + relativePath);
+        }
+
+        return NormalizeRelativeDestination(Path.GetRelativePath(fullRoot, fullPath));
+    }
+
+    private static bool IsPathWithinRoot(string root, string path)
+    {
+        var normalizedRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(root));
+        var normalizedPath = Path.TrimEndingDirectorySeparator(Path.GetFullPath(path));
+        if (string.Equals(normalizedRoot, normalizedPath, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var rootPrefix = Path.EndsInDirectorySeparator(normalizedRoot)
+            ? normalizedRoot
+            : normalizedRoot + Path.DirectorySeparatorChar;
+        return normalizedPath.StartsWith(rootPrefix, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GetPackageRelativePath(string packageRoot, string path)
+    {
+        return NormalizeRelativeDestination(Path.GetRelativePath(packageRoot, path));
+    }
+
+    private static string NormalizeRelativeDestination(string path)
+    {
+        return path.Replace('/', '\\').Trim('\\');
+    }
+
+    private static bool IsIgnoredFile(string relativePath, IEnumerable<string> ignoreFiles)
+    {
+        var fileName = Path.GetFileName(relativePath);
+        foreach (var ignoredPath in ignoreFiles)
+        {
+            if (ignoredPath.Contains('\\'))
+            {
+                if (string.Equals(relativePath, ignoredPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            else if (string.Equals(fileName, ignoredPath, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsInIgnoredFolder(string relativePath, IEnumerable<string> ignoreFolders)
+    {
+        foreach (var ignoredFolder in ignoreFolders)
+        {
+            if (string.Equals(relativePath, ignoredFolder, StringComparison.OrdinalIgnoreCase)
+                || relativePath.StartsWith(ignoredFolder + "\\", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool ContainsImplicitlyExcludedFolder(string relativeFilePath, HashSet<string> explicitlyInstalledFolders)
+    {
+        var segments = relativeFilePath.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+        var folderSegments = segments.Take(Math.Max(0, segments.Length - 1));
+        var currentPath = string.Empty;
+        foreach (var segment in folderSegments)
+        {
+            currentPath = string.IsNullOrEmpty(currentPath) ? segment : currentPath + "\\" + segment;
+            if (IsProtectedFolderName(segment) && !explicitlyInstalledFolders.Contains(currentPath))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsProtectedFolderName(string folderName)
+    {
+        return folderName.Equals(".git", StringComparison.OrdinalIgnoreCase)
+            || folderName.Equals(".vscode", StringComparison.OrdinalIgnoreCase)
+            || folderName.Equals(".vs", StringComparison.OrdinalIgnoreCase);
     }
 
     public static string GetPayloadDirectory(string packageRoot)
@@ -685,7 +1052,7 @@ public class ModPackageService
         }
 
         var filesAtRoot = Directory.GetFiles(packageRoot)
-            .Where(path => !string.Equals(Path.GetFileName(path), "mod.json", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !IsResolvedManifestFile(path, packageRoot))
             .ToList();
 
         if (filesAtRoot.Count > 0)
@@ -694,6 +1061,13 @@ public class ModPackageService
         }
 
         return string.Empty;
+    }
+
+    private static bool IsResolvedManifestFile(string path, string packageRoot)
+    {
+        var manifestPath = GetManifestPath(packageRoot);
+        return !string.IsNullOrWhiteSpace(manifestPath)
+            && string.Equals(Path.GetFullPath(path), Path.GetFullPath(manifestPath), StringComparison.OrdinalIgnoreCase);
     }
 
     public static string? ResolvePackageRoot(string selectedPath)
@@ -760,7 +1134,7 @@ public class ModPackageService
         Directory.CreateDirectory(destinationDir);
 
         var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories)
-            .Where(file => !excludeMetadataFiles || !IsMetadataOrNonInstallableFile(file))
+            .Where(file => !excludeMetadataFiles || !IsMetadataOrNonInstallableFile(file, sourceDir))
             .ToArray();
 
         for (var i = 0; i < files.Length; i++)

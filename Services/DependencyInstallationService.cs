@@ -38,10 +38,10 @@ public static class DependencyInstallationService
         }
 
         var dependencyRoot = Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles");
-        var configPath = Path.Combine(dependencyRoot, "config.json");
-        if (!Directory.Exists(dependencyRoot) || !File.Exists(configPath))
+        var configPath = ModPackageService.GetManifestPath(dependencyRoot);
+        if (!Directory.Exists(dependencyRoot) || string.IsNullOrWhiteSpace(configPath))
         {
-            return Failure("Missing dependency package or config.json: " + dependencyRoot);
+            return Failure("Missing dependency package manifest: " + dependencyRoot);
         }
 
         try
@@ -70,7 +70,7 @@ public static class DependencyInstallationService
             var entries = ReadEntries(document.RootElement);
             if (entries.Count == 0)
             {
-                return Failure("The dependency config.json does not contain install entries.");
+                return Failure("The dependency manifest does not contain install entries.");
             }
 
             var installedEntries = 0;
@@ -114,7 +114,7 @@ public static class DependencyInstallationService
         }
         catch (JsonException ex)
         {
-            return Failure("The dependency config.json is invalid: " + ex.Message);
+            return Failure("The dependency manifest is invalid: " + ex.Message);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
         {
@@ -147,7 +147,7 @@ public static class DependencyInstallationService
             {
                 AddArrayEntries(property.Value, entries);
             }
-            else if (property.NameEquals("type"))
+            else if (string.Equals(property.Name, "type", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
@@ -162,11 +162,16 @@ public static class DependencyInstallationService
 
     private static string ReadType(JsonElement root)
     {
-        if (root.ValueKind == JsonValueKind.Object
-            && root.TryGetProperty("type", out var typeProperty)
-            && typeProperty.ValueKind == JsonValueKind.String)
+        if (root.ValueKind == JsonValueKind.Object)
         {
-            return typeProperty.GetString()?.Trim().ToLowerInvariant() ?? string.Empty;
+            foreach (var property in root.EnumerateObject())
+            {
+                if (string.Equals(property.Name, "type", StringComparison.OrdinalIgnoreCase)
+                    && property.Value.ValueKind == JsonValueKind.String)
+                {
+                    return property.Value.GetString()?.Trim().ToLowerInvariant() ?? string.Empty;
+                }
+            }
         }
 
         return string.Empty;

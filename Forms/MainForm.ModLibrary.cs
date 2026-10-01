@@ -487,6 +487,114 @@ public partial class MainForm : Form
         GoToStep(WizardStep.Step6);
     }
 
+    private async Task<bool> InstallPutInCleoPackageAsync(
+        string packageRoot,
+        string modName,
+        GtaSaModManager.Models.ModManifest manifest)
+    {
+        DeleteManifestEntries(manifest);
+        var cleoRoot = Path.Combine(_selectedGamePath, "cleo");
+        Directory.CreateDirectory(cleoRoot);
+
+        List<SelectedInstallEntry> entries;
+        try
+        {
+            entries = ModPackageService.ResolveInstallSelection(packageRoot, manifest);
+        }
+        catch (InvalidDataException ex)
+        {
+            MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        if (entries.Count == 0)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("ModSourceInvalid", "The selected mod package does not contain installable files."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        var destinations = entries
+            .Select(entry => GetSafeGamePath(Path.Combine("cleo", entry.RelativeDestination)))
+            .ToList();
+        var existingDestinations = destinations.Where(File.Exists).ToList();
+        if (existingDestinations.Count > 0
+            && MessageBox.Show(
+                string.Format(
+                    "{0} file(s) already exist in the CLEO folder. Overwrite them?{1}{2}",
+                    existingDestinations.Count,
+                    Environment.NewLine,
+                    string.Join(Environment.NewLine, existingDestinations.Select(Path.GetFileName))),
+                _appName,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) != DialogResult.Yes)
+        {
+            return false;
+        }
+
+        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var step4RootPanel)
+            ? step4RootPanel
+            : null;
+        var previewRoot = step4Panel?.Controls.OfType<Panel>()
+            .FirstOrDefault(control => control.Name == "Step4PreviewRoot");
+        var progressPanel = new InstallProgressPanel(_localizationService, modName);
+        progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName);
+        if (previewRoot != null)
+        {
+            previewRoot.Controls.Clear();
+            previewRoot.Controls.Add(progressPanel);
+            progressPanel.Dock = DockStyle.Fill;
+            progressPanel.BringToFront();
+        }
+
+        try
+        {
+            var installedFiles = new List<string>();
+            for (var index = 0; index < entries.Count; index++)
+            {
+                var destination = destinations[index];
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                File.Copy(entries[index].SourcePath, destination, overwrite: true);
+                installedFiles.Add(destination);
+                var percent = (int)((index + 1) * 100d / entries.Count);
+                progressPanel.UpdateProgress(percent, entries[index].SourcePath);
+                await Task.Yield();
+            }
+
+            ModLoaderService.RecordGameInstallation(
+                _selectedGamePath,
+                "putincleo",
+                modName,
+                packageRoot,
+                cleoRoot,
+                installedFiles);
+            progressPanel.Complete();
+            RefreshModList();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            progressPanel.Fail();
+            MessageBox.Show(
+                _localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+        finally
+        {
+            if (previewRoot != null && progressPanel.Parent == previewRoot)
+            {
+                previewRoot.Controls.Remove(progressPanel);
+                progressPanel.Dispose();
+            }
+        }
+    }
+
     private async Task<bool> InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, GtaSaModManager.Models.ModManifest manifest)
     {
         DeleteManifestEntries(manifest);
@@ -499,7 +607,7 @@ public partial class MainForm : Form
             ? Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName)
             : manifest.NormalizedType switch
             {
-                "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
+                "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
                 _ => string.Empty
             };
         if (string.IsNullOrWhiteSpace(targetRoot))
@@ -539,7 +647,7 @@ public partial class MainForm : Form
                 .ToHashSet(StringComparer.OrdinalIgnoreCase)
             : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path)
+            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot)
                 || isAssetSelectionInstall && ModPackageService.IsMediaFile(path))
             .Where(path => !isAssetPackage
                 || ModPackageService.IsMediaFile(path)
@@ -834,7 +942,7 @@ public partial class MainForm : Form
     private async Task InstallReplacingPackageAsync(string payloadPath, string modName, string packageRoot)
     {
         var filesToReplace = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path))
+            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

@@ -68,6 +68,22 @@ public class ModManifest
 
     public List<string> DeleteThis { get; set; } = new();
 
+    public List<string> InstallFiles { get; set; } = new();
+
+    public List<string> InstallFolders { get; set; } = new();
+
+    public List<string> IgnoreFiles { get; set; } = new();
+
+    public List<string> IgnoreFolders { get; set; } = new();
+
+    public bool HasInstallFiles => InstallFiles.Count > 0;
+
+    public bool HasInstallFolders => InstallFolders.Count > 0;
+
+    public bool HasIgnoreFiles => IgnoreFiles.Count > 0;
+
+    public bool HasIgnoreFolders => IgnoreFolders.Count > 0;
+
     public string NormalizedType
     {
         get
