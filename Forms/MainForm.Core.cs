@@ -102,6 +102,7 @@ public partial class MainForm : Form
 
     private enum WizardStep
     {
+        Step0,
         Step1,
         Step2,
         Step3,
@@ -121,7 +122,7 @@ public partial class MainForm : Form
             ? _settings.ModSourceFolder
             : string.Empty;
 
-        var startupStep = DetermineFirstRequiredStep();
+        var startupStep = DetermineStartupStep();
         _currentStep = startupStep;
 
         ApplyCurrentLanguage();
@@ -213,6 +214,7 @@ public partial class MainForm : Form
             }
         }
 
+        _wizardPanels[WizardStep.Step0] = CreateWizardStep0();
         _wizardPanels[WizardStep.Step1] = CreateWizardStep1();
         _wizardPanels[WizardStep.Step2] = CreateWizardStep2();
         _wizardPanels[WizardStep.Step3] = CreateWizardStep3();

@@ -13,6 +13,7 @@ public class LocalizationService
     private static readonly Dictionary<string, string> EnglishStrings = new()
     {
         ["AppTitle"] = "GTA San Andreas Mod Manager",
+        ["Guide"] = "Guide",
         ["GameStatus"] = "Game Status",
         ["GamePath"] = "Game Path",
         ["GameFolderNotConfigured"] = "Game folder not configured",
@@ -174,6 +175,7 @@ public class LocalizationService
 
     private static readonly Dictionary<string, string> PersianStrings = new()
     {
+        ["Guide"] = "راهنما",
         ["GamePath"] = "مسیر بازی",
         ["GameFolderNotConfigured"] = "پوشه بازی پیکربندی نشده است",
         ["OpenGameFolder"] = "باز کردن پوشه بازی",

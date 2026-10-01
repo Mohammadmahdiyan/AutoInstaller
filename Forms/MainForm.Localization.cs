@@ -8,9 +8,6 @@ namespace GtaSaModManager.Forms;
 
 public partial class MainForm : Form
 {
-   // -------------------------------------------------------------------------
-    // از اینجا برای فایل MainForm.Localization.cs
-    // -------------------------------------------------------------------------
     private async void LanguageComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (_isApplyingLanguage)
@@ -134,7 +131,7 @@ public partial class MainForm : Form
     {
         base.OnShown(e);
 
-        var startupStep = DetermineFirstRequiredStep();
+        var startupStep = DetermineStartupStep();
         if (_currentStep != startupStep)
         {
             _currentStep = startupStep;
@@ -260,6 +257,7 @@ public partial class MainForm : Form
         _wizardPanels.Clear();
         _wizardHost.Controls.Clear();
 
+        _wizardPanels[WizardStep.Step0] = CreateWizardStep0();
         _wizardPanels[WizardStep.Step1] = CreateWizardStep1();
         _wizardPanels[WizardStep.Step2] = CreateWizardStep2();
         _wizardPanels[WizardStep.Step3] = CreateWizardStep3();
@@ -276,17 +274,4 @@ public partial class MainForm : Form
 
         GoToStep(_currentStep);
     }
-
- 
- 
-
- 
-
- 
-
- 
-
-    // -------------------------------------------------------------------------
-    // تا اینجا برای فایل MainForm.Localization.cs
-    // -------------------------------------------------------------------------
 }

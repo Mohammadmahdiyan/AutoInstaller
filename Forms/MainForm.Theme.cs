@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using GtaSaModManager.Controls;
 using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 using GtaSaModManager.UI;
@@ -82,6 +83,11 @@ public partial class MainForm : Form
     private void ApplyCurrentTheme()
     {
         ThemeManager.ApplyTheme(this, ThemeManager.ParseTheme(_settings.Theme));
+        if (_wizardPanels.TryGetValue(WizardStep.Step0, out var step0Panel)
+            && step0Panel.Controls.Find("Step0Accordion", true).FirstOrDefault() is AccordionControl accordion)
+        {
+            accordion.ApplyPalette(ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme)));
+        }
     }
 
     private string GetThemeDisplayName(AppTheme theme)

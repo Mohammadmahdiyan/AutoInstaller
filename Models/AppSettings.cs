@@ -21,6 +21,8 @@ public enum AppTheme
 
 public class AppSettings
 {
+    public bool HasSeenIntro { get; set; }
+
     public string? GamePath { get; set; }
 
     public string? ModSourceFolder { get; set; }

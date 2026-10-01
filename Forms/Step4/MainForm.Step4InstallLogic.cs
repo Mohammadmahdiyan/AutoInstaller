@@ -188,6 +188,15 @@ public partial class MainForm : Form
     // -------------------------------------------------------------------------
     private void GoToStep(WizardStep step)
     {
+        if (step == WizardStep.Step0)
+        {
+            _step4ImageTimer.Stop();
+            _step5ImageTimer.Stop();
+            _step5ArrowTimer.Stop();
+            _completionTimer.Stop();
+            _completionTimerActive = false;
+        }
+
         if (step == WizardStep.Step5 && _currentStep != WizardStep.Step5)
         {
             _step5OccupiedAssetFolders.Clear();
@@ -370,6 +379,11 @@ public partial class MainForm : Form
         }
 
         return WizardStep.Step3;
+    }
+
+    private WizardStep DetermineStartupStep()
+    {
+        return !_settings.HasSeenIntro ? WizardStep.Step0 : DetermineFirstRequiredStep();
     }
 
     private void AdvanceToValidStep()

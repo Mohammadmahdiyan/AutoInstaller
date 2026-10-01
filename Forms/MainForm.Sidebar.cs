@@ -433,7 +433,8 @@ public partial class MainForm : Form
             MainPanel.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
         }
 
-        _sidebarPreviousButton.Visible = _currentStep != WizardStep.Step1;
+        var isStep0 = _currentStep == WizardStep.Step0;
+        _sidebarPreviousButton.Visible = !isStep0;
         _sidebarNextButton.Visible = true;
         _sidebarPreviousButton.Enabled = false;
         _sidebarNextButton.Enabled = false;
@@ -480,9 +481,12 @@ public partial class MainForm : Form
             }
         }
 
-        var hasSidebarReadme = !string.IsNullOrWhiteSpace(_selectedReadmePath)
+        var hasSidebarReadme = !isStep0
+            && !string.IsNullOrWhiteSpace(_selectedReadmePath)
             && File.Exists(_selectedReadmePath);
-        var sidebarImageFiles = isStep3Preview
+        var sidebarImageFiles = isStep0
+            ? new List<string>()
+            : isStep3Preview
             ? new List<string>()
             : isStep4Preview
                 ? _selectedImageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
@@ -734,8 +738,13 @@ public partial class MainForm : Form
 
         switch (_currentStep)
         {
-            case WizardStep.Step1:
+            case WizardStep.Step0:
                 _sidebarPreviousButton.Enabled = false;
+                _sidebarNextButton.Enabled = true;
+                _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
+                break;
+            case WizardStep.Step1:
+                _sidebarPreviousButton.Enabled = true;
                 _sidebarNextButton.Enabled = GameService.IsValidGameFolder(_selectedGamePath);
                 _sidebarNextButton.Text = _localizationService.GetString("Next", "Next");
                 break;
@@ -910,6 +919,12 @@ public partial class MainForm : Form
 
     private void HandleSidebarPrevious()
     {
+        if (_currentStep == WizardStep.Step1)
+        {
+            NavigateToStep(WizardStep.Step0);
+            return;
+        }
+
         if (_currentStep == WizardStep.Step2)
         {
             NavigateToStep(WizardStep.Step1);
@@ -976,6 +991,11 @@ public partial class MainForm : Form
         {
             switch (_currentStep)
             {
+                case WizardStep.Step0:
+                    _settings.HasSeenIntro = true;
+                    _settingsService.Save(_settings);
+                    NavigateToStep(WizardStep.Step1);
+                    break;
                 case WizardStep.Step1:
                     if (GameService.IsValidGameFolder(_selectedGamePath))
                     {
