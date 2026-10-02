@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <Compile Remove="Modsyn\Tests\**\*.cs" />
+    <EmbeddedResource Include="ModSyn\Completion\modsyn-language.json"
+                      LogicalName="GtaSaModManager.Modsyn.Completion.modsyn-language.json" />
     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <None Remove="Forms\Step0\**\*.md" />
     <Content Include="Forms\Step0\**\*.md"

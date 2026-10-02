@@ -22,7 +22,7 @@ public sealed class ModsynCompletionTests
     [TestMethod]
     public void GetCompletions_FiltersRootPropertiesBySingleCharacterPrefix()
     {
-        var completions = GetAtEnd("mod { i");
+        var completions = GetAtMarker("mod { i| }");
 
         CollectionAssert.AreEquivalent(
             new[] { "installThis", "installThese", "ignoreThis", "ignoreThese" },
@@ -32,7 +32,14 @@ public sealed class ModsynCompletionTests
     [TestMethod]
     public void GetCompletions_TPrefixSuggestsOnlyType()
     {
-        var completions = GetAtEnd("mod {\n    t");
+        var completions = GetAtMarker("""
+            mod {
+                installThis: "models/example.dff"
+                replacements: [{ source: "data/handling.cfg" target: "data/handling.cfg" }]
+                ignoreThis: "Trainer.txt"
+                t|
+            }
+            """);
 
         CollectionAssert.AreEqual(new[] { "type" }, completions.Select(item => item.Label).ToArray());
     }
@@ -165,5 +172,12 @@ public sealed class ModsynCompletionTests
     private static IReadOnlyList<ModsynCompletionItem> GetAtEnd(string source)
     {
         return ModsynCompletionService.GetCompletions(source, source.Length);
+    }
+
+    private static IReadOnlyList<ModsynCompletionItem> GetAtMarker(string markedSource)
+    {
+        var cursorOffset = markedSource.IndexOf('|');
+        Assert.IsTrue(cursorOffset >= 0);
+        return ModsynCompletionService.GetCompletions(markedSource.Remove(cursorOffset, 1), cursorOffset);
     }
 }

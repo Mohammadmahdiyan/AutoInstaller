@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 
 namespace GtaSaModManager.Modsyn.Validation;
+using System.Reflection;
+using System.Text.Json;
 
 public enum ModsynValueKind
 {
@@ -31,78 +33,32 @@ public sealed record ModsynTypeDefinition(
 
 public static class ModsynLanguageDefinition
 {
-    private static readonly ModsynTypeDefinition PutInModLoaderType = Type("PutInModLoader", "Install the package through ModLoader.", "ModLoader", "PIM");
-    private static readonly ModsynTypeDefinition ReplacingType = Type("Replacing", "Replace matching game files.", "RIP");
-    private static readonly ModsynTypeDefinition PutInCleoType = Type("PutInCleo", "Install selected files in the CLEO folder.", "PIC");
-    private static readonly ModsynTypeDefinition PutInGameFolderType = Type("PutInGameFolder", "Install package files in the game folder.", "PGF");
-    private static readonly ModsynTypeDefinition PutAndReplaceType = Type("PutAndReplace", "Install files at explicit replacement destinations.", "PAR");
-    private static readonly ModsynTypeDefinition PutAndReplacesType = Type("PutAndReplaces", "Install package files and replace matching game files.", "PRS");
-    private static readonly ModsynTypeDefinition VehicleAndSkinAndWeaponType = Type("VehicleAndSkinAndWeapon", "Install one selected vehicle, skin, or weapon asset.", "VSW", "VSS", "VehicleAndSkinsAndWeapons");
-    private static readonly ModsynTypeDefinition VehiclesAndSkinsAndWeaponsType = Type("VehiclesAndSkinsAndWeapons", "Install multiple selected vehicle, skin, or weapon assets.");
-    private static readonly ModsynTypeDefinition SavesAndMissionsType = Type("SavesAndMissions", "Install save or mission files.", "SAM");
-    private static readonly ModsynTypeDefinition MissionDslType = Type("MissionDsl", "Install a Mission DSL package.", "DSL");
+    private const string MetadataResourceName = "GtaSaModManager.Modsyn.Completion.modsyn-language.json";
+    private static readonly LanguageMetadata Metadata = LoadMetadata();
 
-    private static readonly IReadOnlyList<string> BackupApplicableTypes = Array.AsReadOnly(new[]
-    {
-        ReplacingType.Name,
-        PutAndReplaceType.Name,
-        PutAndReplacesType.Name
-    });
+    public static string DefaultTypeName => Metadata.DefaultTypeName;
 
-    public static string DefaultTypeName => PutInModLoaderType.Name;
-
-    public static IReadOnlyList<ModsynTypeDefinition> Types { get; } = Array.AsReadOnly(new[]
-    {
-        PutInModLoaderType,
-        ReplacingType,
-        PutInCleoType,
-        PutInGameFolderType,
-        PutAndReplaceType,
-        PutAndReplacesType,
-        VehicleAndSkinAndWeaponType,
-        VehiclesAndSkinsAndWeaponsType,
-        SavesAndMissionsType,
-        MissionDslType
-    });
+    public static IReadOnlyList<ModsynTypeDefinition> Types { get; } = Metadata.Types
+        .Select(type => new ModsynTypeDefinition(type.Name, Freeze(type.Aliases), type.Description))
+        .ToList()
+        .AsReadOnly();
 
     public static IReadOnlyDictionary<ModsynValueKind, ModsynValueKindDefinition> ValueKinds { get; } =
-        new ReadOnlyDictionary<ModsynValueKind, ModsynValueKindDefinition>(new Dictionary<ModsynValueKind, ModsynValueKindDefinition>
-        {
-            [ModsynValueKind.String] = new(ModsynValueKind.String, "string", "A quoted string value."),
-            [ModsynValueKind.Boolean] = new(ModsynValueKind.Boolean, "boolean", "The true or false literal."),
-            [ModsynValueKind.Null] = new(ModsynValueKind.Null, "null", "The null literal."),
-            [ModsynValueKind.Identifier] = new(ModsynValueKind.Identifier, "identifier", "An unquoted identifier value."),
-            [ModsynValueKind.Array] = new(ModsynValueKind.Array, "array", "A sequence of values."),
-            [ModsynValueKind.Object] = new(ModsynValueKind.Object, "object", "A set of named properties.")
-        });
+        Metadata.ValueKinds.ToDictionary(
+            value => Enum.Parse<ModsynValueKind>(value.Kind, ignoreCase: false),
+            value => new ModsynValueKindDefinition(
+                Enum.Parse<ModsynValueKind>(value.Kind, ignoreCase: false),
+                value.Name,
+                value.Description));
 
-    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> RootProperties { get; } = PropertyDictionary(
-        Property("type", "Package installation type.", Kinds(ModsynValueKind.String, ModsynValueKind.Identifier)),
-        Property("require", "One requirement object.", Kinds(ModsynValueKind.Object)),
-        Property("requires", "An array of requirement objects.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.Object)),
-        Property("deleteThis", "One file or directory path to delete.", Kinds(ModsynValueKind.String)),
-        Property("deleteThese", "File or directory paths to delete.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String)),
-        Property("replacements", "Replacement mappings or string path shorthand.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String, ModsynValueKind.Object)),
-        Property("backup", "Whether replacement backups are enabled; null uses the default.", Kinds(ModsynValueKind.Boolean, ModsynValueKind.Null), applicableTypes: BackupApplicableTypes),
-        Property("backupThis", "One file or directory path to back up.", Kinds(ModsynValueKind.String), applicableTypes: BackupApplicableTypes),
-        Property("backupThese", "File or directory paths to back up.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String), BackupApplicableTypes),
-        Property("dontBackupThis", "One file or directory path to exclude from backups.", Kinds(ModsynValueKind.String), applicableTypes: BackupApplicableTypes),
-        Property("dontBackupThese", "File or directory paths to exclude from backups.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String), BackupApplicableTypes),
-        Property("installThis", "One file or directory path to install.", Kinds(ModsynValueKind.String)),
-        Property("installThese", "File or directory paths to install.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String)),
-        Property("ignoreThis", "One file or directory path to ignore.", Kinds(ModsynValueKind.String)),
-        Property("ignoreThese", "File or directory paths to ignore.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String)));
+    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> RootProperties { get; } =
+        CreateProperties(Metadata.RootProperties);
 
-    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> RequirementProperties { get; } = PropertyDictionary(
-        Property("checkThis", "One file or directory path checked by this requirement.", Kinds(ModsynValueKind.String)),
-        Property("checkThese", "Paths that must all exist for this requirement condition.", Kinds(ModsynValueKind.Array), Kinds(ModsynValueKind.String)),
-        Property("reqAddress", "Package address used to satisfy this requirement; takes priority over reqPath.", Kinds(ModsynValueKind.String)),
-        Property("reqPath", "Fallback package address used when reqAddress is absent.", Kinds(ModsynValueKind.String)),
-        Property("require", "A nested requirement whose missing values fill this requirement.", Kinds(ModsynValueKind.Object)));
+    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> RequirementProperties { get; } =
+        CreateProperties(Metadata.RequirementProperties);
 
-    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> ReplacementProperties { get; } = PropertyDictionary(
-        Property("source", "A package-relative source path.", Kinds(ModsynValueKind.String)),
-        Property("target", "A game-relative destination path.", Kinds(ModsynValueKind.String)));
+    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> ReplacementProperties { get; } =
+        CreateProperties(Metadata.ReplacementProperties);
 
     private static readonly IReadOnlyDictionary<string, ModsynTypeDefinition> TypeLookup = BuildTypeLookup();
 
@@ -111,43 +67,40 @@ public static class ModsynLanguageDefinition
         var normalized = NormalizeTypeKey(value);
         if (normalized.Length == 0)
         {
-            type = PutInModLoaderType;
-            return true;
+            type = Types.FirstOrDefault(candidate => candidate.Name == DefaultTypeName);
+            return type is not null;
         }
 
         return TypeLookup.TryGetValue(normalized, out type);
     }
 
-    private static ModsynTypeDefinition Type(string name, string description, params string[] aliases)
+    private static LanguageMetadata LoadMetadata()
     {
-        return new ModsynTypeDefinition(name, Array.AsReadOnly(aliases), description);
+        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(MetadataResourceName)
+            ?? throw new InvalidOperationException("The Modsyn language metadata resource is missing.");
+        return JsonSerializer.Deserialize<LanguageMetadata>(stream, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        }) ?? throw new InvalidOperationException("The Modsyn language metadata resource is invalid.");
     }
 
-    private static ModsynPropertyDefinition Property(
-        string name,
-        string description,
-        IReadOnlyList<ModsynValueKind> allowedValueKinds,
-        IReadOnlyList<ModsynValueKind>? arrayItemKinds = null,
-        IReadOnlyList<string>? applicableTypes = null)
+    private static IReadOnlyDictionary<string, ModsynPropertyDefinition> CreateProperties(
+        IEnumerable<PropertyMetadata> metadata)
     {
-        return new ModsynPropertyDefinition(
-            name,
-            allowedValueKinds,
-            description,
-            arrayItemKinds ?? Array.Empty<ModsynValueKind>(),
-            applicableTypes ?? Array.Empty<string>());
+        return metadata.ToDictionary(
+            property => property.Name,
+            property => new ModsynPropertyDefinition(
+                property.Name,
+                Freeze(property.AllowedValueKinds.Select(kind => Enum.Parse<ModsynValueKind>(kind, ignoreCase: false))),
+                property.Description,
+                Freeze(property.ArrayItemKinds.Select(kind => Enum.Parse<ModsynValueKind>(kind, ignoreCase: false))),
+                Freeze(property.ApplicableTypes)),
+            StringComparer.Ordinal);
     }
 
-    private static IReadOnlyList<ModsynValueKind> Kinds(params ModsynValueKind[] kinds)
+    private static IReadOnlyList<T> Freeze<T>(IEnumerable<T> values)
     {
-        return Array.AsReadOnly(kinds);
-    }
-
-    private static IReadOnlyDictionary<string, ModsynPropertyDefinition> PropertyDictionary(
-        params ModsynPropertyDefinition[] definitions)
-    {
-        return new ReadOnlyDictionary<string, ModsynPropertyDefinition>(
-            definitions.ToDictionary(definition => definition.Name, StringComparer.Ordinal));
+        return values.ToList().AsReadOnly();
     }
 
     private static IReadOnlyDictionary<string, ModsynTypeDefinition> BuildTypeLookup()
@@ -162,7 +115,7 @@ public static class ModsynLanguageDefinition
             }
         }
 
-        return new ReadOnlyDictionary<string, ModsynTypeDefinition>(lookup);
+        return lookup;
     }
 
     private static string NormalizeTypeKey(string? value)
@@ -176,5 +129,51 @@ public static class ModsynLanguageDefinition
             .Where(character => !char.IsWhiteSpace(character) && character is not '-' and not '_')
             .Select(char.ToLowerInvariant)
             .ToArray());
+    }
+
+    private sealed class LanguageMetadata
+    {
+        public string DefaultTypeName { get; init; } = string.Empty;
+
+        public List<TypeMetadata> Types { get; init; } = new();
+
+        public List<ValueKindMetadata> ValueKinds { get; init; } = new();
+
+        public List<PropertyMetadata> RootProperties { get; init; } = new();
+
+        public List<PropertyMetadata> RequirementProperties { get; init; } = new();
+
+        public List<PropertyMetadata> ReplacementProperties { get; init; } = new();
+    }
+
+    private sealed class TypeMetadata
+    {
+        public string Name { get; init; } = string.Empty;
+
+        public List<string> Aliases { get; init; } = new();
+
+        public string Description { get; init; } = string.Empty;
+    }
+
+    private sealed class ValueKindMetadata
+    {
+        public string Kind { get; init; } = string.Empty;
+
+        public string Name { get; init; } = string.Empty;
+
+        public string Description { get; init; } = string.Empty;
+    }
+
+    private sealed class PropertyMetadata
+    {
+        public string Name { get; init; } = string.Empty;
+
+        public List<string> AllowedValueKinds { get; init; } = new();
+
+        public List<string> ArrayItemKinds { get; init; } = new();
+
+        public List<string> ApplicableTypes { get; init; } = new();
+
+        public string Description { get; init; } = string.Empty;
     }
 }

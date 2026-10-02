@@ -1,0 +1,243 @@
+{
+  "defaultTypeName": "PutInModLoader",
+  "types": [
+    {
+      "name": "PutInModLoader",
+      "aliases": ["ModLoader", "PIM"],
+      "description": "Install the package through ModLoader."
+    },
+    {
+      "name": "Replacing",
+      "aliases": ["RIP"],
+      "description": "Replace matching game files."
+    },
+    {
+      "name": "PutInCleo",
+      "aliases": ["PIC"],
+      "description": "Install selected files in the CLEO folder."
+    },
+    {
+      "name": "PutInGameFolder",
+      "aliases": ["PGF"],
+      "description": "Install package files in the game folder."
+    },
+    {
+      "name": "PutAndReplace",
+      "aliases": ["PAR"],
+      "description": "Install files at explicit replacement destinations."
+    },
+    {
+      "name": "PutAndReplaces",
+      "aliases": ["PRS"],
+      "description": "Install package files and replace matching game files."
+    },
+    {
+      "name": "VehicleAndSkinAndWeapon",
+      "aliases": ["VSW", "VSS", "VehicleAndSkinsAndWeapons"],
+      "description": "Install one selected vehicle, skin, or weapon asset."
+    },
+    {
+      "name": "VehiclesAndSkinsAndWeapons",
+      "aliases": [],
+      "description": "Install multiple selected vehicle, skin, or weapon assets."
+    },
+    {
+      "name": "SavesAndMissions",
+      "aliases": ["SAM"],
+      "description": "Install save or mission files."
+    },
+    {
+      "name": "MissionDsl",
+      "aliases": ["DSL"],
+      "description": "Install a Mission DSL package."
+    }
+  ],
+  "rootProperties": [
+    {
+      "name": "type",
+      "allowedValueKinds": ["String", "Identifier"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "Package installation type."
+    },
+    {
+      "name": "require",
+      "allowedValueKinds": ["Object"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One requirement object."
+    },
+    {
+      "name": "requires",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["Object"],
+      "applicableTypes": [],
+      "description": "An array of requirement objects."
+    },
+    {
+      "name": "deleteThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path to delete."
+    },
+    {
+      "name": "deleteThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "File or directory paths to delete."
+    },
+    {
+      "name": "replacements",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String", "Object"],
+      "applicableTypes": [],
+      "description": "Replacement mappings or string path shorthand."
+    },
+    {
+      "name": "backup",
+      "allowedValueKinds": ["Boolean", "Null"],
+      "arrayItemKinds": [],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "Whether replacement backups are enabled; null uses the default."
+    },
+    {
+      "name": "backupThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "One file or directory path to back up."
+    },
+    {
+      "name": "backupThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "File or directory paths to back up."
+    },
+    {
+      "name": "dontBackupThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "One file or directory path to exclude from backups."
+    },
+    {
+      "name": "dontBackupThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "File or directory paths to exclude from backups."
+    },
+    {
+      "name": "installThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path to install."
+    },
+    {
+      "name": "installThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "File or directory paths to install."
+    },
+    {
+      "name": "ignoreThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path to ignore."
+    },
+    {
+      "name": "ignoreThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "File or directory paths to ignore."
+    }
+  ],
+  "requirementProperties": [
+    {
+      "name": "checkThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path checked by this requirement."
+    },
+    {
+      "name": "checkThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "Paths that must all exist for this requirement condition."
+    },
+    {
+      "name": "reqAddress",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "Package address used to satisfy this requirement; takes priority over reqPath."
+    },
+    {
+      "name": "reqPath",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "Fallback package address used when reqAddress is absent."
+    },
+    {
+      "name": "require",
+      "allowedValueKinds": ["Object"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "A nested requirement whose missing values fill this requirement."
+    }
+  ],
+  "replacementProperties": [
+    {
+      "name": "source",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "A package-relative source path."
+    },
+    {
+      "name": "target",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "A game-relative destination path."
+    }
+  ],
+  "valueKinds": [
+    {
+      "kind": "String",
+      "name": "string",
+      "description": "A quoted string value."
+    },
+    {
+      "kind": "Boolean",
+      "name": "boolean",
+      "description": "The true or false literal."
+    },
+    { "kind": "Null", "name": "null", "description": "The null literal." },
+    {
+      "kind": "Identifier",
+      "name": "identifier",
+      "description": "An unquoted identifier value."
+    },
+    {
+      "kind": "Array",
+      "name": "array",
+      "description": "A sequence of values."
+    },
+    {
+      "kind": "Object",
+      "name": "object",
+      "description": "A set of named properties."
+    }
+  ]
+}

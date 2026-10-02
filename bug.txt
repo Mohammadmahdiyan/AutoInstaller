@@ -68,14 +68,10 @@ PutAndReplaces
 }
 backup یعنی ایا بک اپ گرفته بشه اگع true بود بگیره اگر false نگیره مقدار دیفالتش true 
 اما یک مقدار دیگه باید بگیره null که این برای اینکه کی ولیو باقی رو بگیره
-backupFile : مقدار استرینگ میگیره و میگه فقط این فایل رو بک اپ بگیره
-backupFiles : مقدار براکت میگیره و میگه فقط این فایل ها رو بک اپ بگیره
-backupFolder : مقدار استرینگ میگیره و میگه فقط این فولدر رو بک اپ بگیره
-backupFolders : مقدار براکت میگیره و میگه فقط این فولدر ها رو بک اپ بگیره
-dontBackupFile : مقدار استرینگ میگیره و میگه فقط این فایل رو بک اپ نگیره
-dontBackupFiles : مقدار براکت میگیره و میگه فقط این فایل ها رو بک اپ نگیره
-dontBackupFolder : مقدار استرینگ میگیره و میگه فقط این پوشه رو بک اپ نگیره
-dontBackupFolders : مقدار براکت میگیره و میگه فقط این پوشه ها رو بک اپ نگیره
+backupThis : مقدار استرینگ میگیره و میگه فقط این فایل یا فقط این پوشه رو بک اپ بگیره
+backupThese : مقدار براکت میگیره و میگه فقط این فایل ها یا این پوشه ها یا ترکیبشون رو بک اپ بگیره
+dontBackupThis : مقدار استرینگ میگیره و میگه فقط این فایل یا این پوشه رو بک اپ نگیره
+dontBackupThese : مقدار براکت میگیره و میگه فقط این فایل ها یا این پوشه ها یا ترکیبشون رو بک اپ نگیره
 
 مثلا
 Base Mods Address\Sounds\original audio\
@@ -84,14 +80,17 @@ Base Mods Address\Sounds\original audio\
         Config\
         SFX\
         Streams\
+    cleo\
+        cleo5.asi
 در فایل جیسون
 ```json
 {
     "type": "PutInReplace"
     "backup": null,
-    "dontBackupFolders": [
+    "dontBackupThese": [
         "audio\\Config",
         "audio\\SFX"
+        "cleo\\cleo5.asi"
     ]
 }
 ```
@@ -101,6 +100,8 @@ Game Address\
         backup\
             original audio\
                 streams\
+    cleo\
+        cleo5.asi
     audio\
          Config\
          SFX\

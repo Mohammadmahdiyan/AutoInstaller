@@ -1,0 +1,41 @@
+{
+  "name": "modsyn-language",
+  "displayName": "Modsyn Language Support",
+  "description": "Strict completion and unknown-key diagnostics for Modsyn files.",
+  "version": "0.1.0",
+  "publisher": "local-modsyn",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "extension.js",
+  "activationEvents": [
+    "onLanguage:modsyn"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "modsyn",
+        "aliases": [
+          "Modsyn",
+          "modsyn"
+        ],
+        "extensions": [
+          ".modsyn"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[modsyn]": {
+        "editor.wordBasedSuggestions": "off",
+        "editor.suggest.showWords": false
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}
