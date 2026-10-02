@@ -67,50 +67,7 @@ public static class DependencyInstallationService
                     : Failure("Dependency installation completed, but one or more required files or folders are still missing.", true, copiedDependencyEntries);
             }
 
-            var entries = ReadEntries(document.RootElement);
-            if (entries.Count == 0)
-            {
-                return Failure("The dependency manifest does not contain install entries.");
-            }
-
-            var installedEntries = 0;
-            foreach (var entry in entries)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                var sourcePath = GetSafeSourcePath(dependencyRoot, entry.Source);
-                var destinationPath = GetSafeDestinationPath(gameFolder, entry.Destination);
-
-                if (File.Exists(sourcePath))
-                {
-                    var destinationDirectory = Path.GetDirectoryName(destinationPath);
-                    if (!string.IsNullOrWhiteSpace(destinationDirectory))
-                    {
-                        Directory.CreateDirectory(destinationDirectory);
-                    }
-
-                    await Task.Run(() => File.Copy(sourcePath, destinationPath, true), cancellationToken);
-                    installedEntries++;
-                }
-                else if (Directory.Exists(sourcePath))
-                {
-                    await CopyDirectoryAsync(sourcePath, destinationPath, cancellationToken);
-                    installedEntries++;
-                }
-                else
-                {
-                    return Failure("Dependency source was not found: " + entry.Source);
-                }
-            }
-
-            var success = AreDependenciesInstalled(gameFolder);
-            return success
-                ? new DependencyInstallationResult
-                {
-                    Success = true,
-                    DependenciesWereMissing = true,
-                    InstalledEntries = installedEntries
-                }
-                : Failure("Dependency installation completed, but one or more required files or folders are still missing.", true, installedEntries);
+            return Failure("This dependency manifest type is not supported. Only PutInGameFolder (PGF) dependencies can be auto-installed.");
         }
         catch (JsonException ex)
         {
@@ -120,44 +77,6 @@ public static class DependencyInstallationService
         {
             return Failure("Dependency installation failed: " + ex.Message);
         }
-    }
-
-    private static List<DependencyEntry> ReadEntries(JsonElement root)
-    {
-        var entries = new List<DependencyEntry>();
-
-        if (root.ValueKind == JsonValueKind.Array)
-        {
-            AddArrayEntries(root, entries);
-            return entries;
-        }
-
-        if (root.ValueKind != JsonValueKind.Object)
-        {
-            return entries;
-        }
-
-        foreach (var property in root.EnumerateObject())
-        {
-            if (property.NameEquals("files") || property.NameEquals("folders") || property.NameEquals("directories"))
-            {
-                AddObjectEntries(property.Value, entries);
-            }
-            else if (property.NameEquals("install") || property.NameEquals("entries") || property.NameEquals("items"))
-            {
-                AddArrayEntries(property.Value, entries);
-            }
-            else if (string.Equals(property.Name, "type", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-            else if (property.Value.ValueKind == JsonValueKind.String)
-            {
-                entries.Add(new DependencyEntry(property.Name, property.Value.GetString()!));
-            }
-        }
-
-        return entries;
     }
 
     private static string ReadType(JsonElement root)
@@ -177,68 +96,6 @@ public static class DependencyInstallationService
         return string.Empty;
     }
 
-    private static void AddObjectEntries(JsonElement value, List<DependencyEntry> entries)
-    {
-        if (value.ValueKind != JsonValueKind.Object)
-        {
-            return;
-        }
-
-        foreach (var property in value.EnumerateObject())
-        {
-            if (property.Value.ValueKind == JsonValueKind.String)
-            {
-                entries.Add(new DependencyEntry(property.Name, property.Value.GetString()!));
-            }
-        }
-    }
-
-    private static void AddArrayEntries(JsonElement value, List<DependencyEntry> entries)
-    {
-        if (value.ValueKind != JsonValueKind.Array)
-        {
-            return;
-        }
-
-        foreach (var item in value.EnumerateArray())
-        {
-            if (item.ValueKind != JsonValueKind.Object)
-            {
-                continue;
-            }
-
-            var source = GetString(item, "source", "from", "path", "file", "folder");
-            var destination = GetString(item, "destination", "target", "to", "installPath") ?? source;
-            if (!string.IsNullOrWhiteSpace(source) && !string.IsNullOrWhiteSpace(destination))
-            {
-                entries.Add(new DependencyEntry(source, destination));
-            }
-        }
-    }
-
-    private static string? GetString(JsonElement item, params string[] names)
-    {
-        foreach (var name in names)
-        {
-            if (item.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String)
-            {
-                return value.GetString();
-            }
-        }
-
-        return null;
-    }
-
-    private static string GetSafeSourcePath(string root, string relativePath)
-    {
-        return GetSafePath(root, relativePath, "Dependency source");
-    }
-
-    private static string GetSafeDestinationPath(string root, string relativePath)
-    {
-        return GetSafePath(root, relativePath, "Dependency destination");
-    }
-
     private static string GetSafePath(string root, string relativePath, string label)
     {
         if (string.IsNullOrWhiteSpace(relativePath) || Path.IsPathRooted(relativePath))
@@ -254,25 +111,6 @@ public static class DependencyInstallationService
         }
 
         return fullPath;
-    }
-
-    private static async Task CopyDirectoryAsync(string sourceDirectory, string destinationDirectory, CancellationToken cancellationToken)
-    {
-        Directory.CreateDirectory(destinationDirectory);
-        foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
-        {
-            var relative = Path.GetRelativePath(sourceDirectory, directory);
-            Directory.CreateDirectory(Path.Combine(destinationDirectory, relative));
-        }
-
-        foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var relative = Path.GetRelativePath(sourceDirectory, file);
-            var destination = Path.Combine(destinationDirectory, relative);
-            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-            await Task.Run(() => File.Copy(file, destination, true), cancellationToken);
-        }
     }
 
     private static async Task<int> CopyDirectoryContentsAsync(string sourceDirectory, string destinationDirectory, CancellationToken cancellationToken)
@@ -313,6 +151,4 @@ public static class DependencyInstallationService
             ErrorMessage = message
         };
     }
-
-    private sealed record DependencyEntry(string Source, string Destination);
 }
