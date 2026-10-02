@@ -1,0 +1,4 @@
+mod {
+    type: PIM
+    installThis: "scripts\RZL Trainer.cs"
+}

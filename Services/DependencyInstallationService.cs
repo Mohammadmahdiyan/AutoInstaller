@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace GtaSaModManager.Services;
 
 public sealed class DependencyInstallationResult
@@ -38,22 +36,25 @@ public static class DependencyInstallationService
         }
 
         var dependencyRoot = Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles");
-        var configPath = ModPackageService.GetManifestPath(dependencyRoot);
-        if (!Directory.Exists(dependencyRoot) || string.IsNullOrWhiteSpace(configPath))
+        if (!Directory.Exists(dependencyRoot) || ModPackageService.GetManifestPath(dependencyRoot) is null)
         {
-            return Failure("Missing dependency package manifest: " + dependencyRoot);
+            return Failure("Missing dependency Modsyn configuration: " + dependencyRoot);
+        }
+
+        if (!ModPackageService.TryReadModsynConfiguration(dependencyRoot, out var configuration, out var configError))
+        {
+            return Failure("The dependency Modsyn configuration is invalid: " + configError);
         }
 
         try
         {
-            using var document = JsonDocument.Parse(await File.ReadAllTextAsync(configPath, cancellationToken));
-            var dependencyType = ReadType(document.RootElement);
+            cancellationToken.ThrowIfCancellationRequested();
+            var dependencyType = configuration!.Manifest.NormalizedType;
             var payloadRoot = Directory.Exists(Path.Combine(dependencyRoot, "Essentials"))
                 ? Path.Combine(dependencyRoot, "Essentials")
                 : dependencyRoot;
 
-            if (string.Equals(dependencyType, "putingamefolder", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(dependencyType, "pgf", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(dependencyType, "putingamefolder", StringComparison.OrdinalIgnoreCase))
             {
                 var copiedDependencyEntries = await CopyDirectoryContentsAsync(payloadRoot, gameFolder, cancellationToken);
                 var dependenciesComplete = AreDependenciesInstalled(gameFolder);
@@ -67,33 +68,12 @@ public static class DependencyInstallationService
                     : Failure("Dependency installation completed, but one or more required files or folders are still missing.", true, copiedDependencyEntries);
             }
 
-            return Failure("This dependency manifest type is not supported. Only PutInGameFolder (PGF) dependencies can be auto-installed.");
-        }
-        catch (JsonException ex)
-        {
-            return Failure("The dependency manifest is invalid: " + ex.Message);
+            return Failure("This dependency Modsyn type is not supported. Only PutInGameFolder (PGF) dependencies can be auto-installed.");
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
         {
             return Failure("Dependency installation failed: " + ex.Message);
         }
-    }
-
-    private static string ReadType(JsonElement root)
-    {
-        if (root.ValueKind == JsonValueKind.Object)
-        {
-            foreach (var property in root.EnumerateObject())
-            {
-                if (string.Equals(property.Name, "type", StringComparison.OrdinalIgnoreCase)
-                    && property.Value.ValueKind == JsonValueKind.String)
-                {
-                    return property.Value.GetString()?.Trim().ToLowerInvariant() ?? string.Empty;
-                }
-            }
-        }
-
-        return string.Empty;
     }
 
     private static string GetSafePath(string root, string relativePath, string label)

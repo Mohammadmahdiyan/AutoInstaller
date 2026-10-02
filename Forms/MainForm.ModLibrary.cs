@@ -694,10 +694,14 @@ public partial class MainForm : Form
             }
         }
 
-        var backupPlan = replacementTargets.Count > 0
-            ? BackupStorageService.CreatePlan(_selectedGamePath, modName, replacementTargets.Values)
+        var backupConfiguration = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
+        var filesToBackup = replacementTargets.Values
+            .Where(path => backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, path)))
+            .ToList();
+        var backupPlan = filesToBackup.Count > 0
+            ? BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup)
             : new BackupStoragePlan { HasBackup = true };
-        if (replacementTargets.Count > 0 && !backupPlan.HasBackup)
+        if (filesToBackup.Count > 0 && !backupPlan.HasBackup)
         {
             var chooseAlternative = MessageBox.Show(
                 "The game drive and drive C do not have enough space for the backup.\n\nWould you like to choose another location?",
@@ -712,7 +716,7 @@ public partial class MainForm : Form
                     return false;
                 }
 
-                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, replacementTargets.Values, alternativeRoot);
+                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup, alternativeRoot);
                 if (!backupPlan.HasBackup)
                 {
                     MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -775,7 +779,10 @@ public partial class MainForm : Form
                         ? Path.Combine("modloader", modName, relativePath)
                         : relativePath);
 
-                if (replacementTargets.ContainsKey(sourcePath) && File.Exists(destinationPath) && backupPlan.HasBackup)
+                if (replacementTargets.ContainsKey(sourcePath)
+                    && File.Exists(destinationPath)
+                    && backupPlan.HasBackup
+                    && backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, destinationPath)))
                 {
                     var backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationPath, modName, backupPlan.BackupRoot);
                     records.Add(new ReplaceInstallationRecord
@@ -941,6 +948,7 @@ public partial class MainForm : Form
 
     private async Task InstallReplacingPackageAsync(string payloadPath, string modName, string packageRoot)
     {
+        var backupConfiguration = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
         var filesToReplace = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
@@ -952,8 +960,13 @@ public partial class MainForm : Form
             return;
         }
 
-        var backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToReplace);
-        if (!backupPlan.HasBackup)
+        var filesToBackup = filesToReplace
+            .Where(path => backupConfiguration.ShouldBackup(Path.GetRelativePath(payloadPath, path)))
+            .ToList();
+        var backupPlan = filesToBackup.Count > 0
+            ? BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup)
+            : new BackupStoragePlan { HasBackup = true };
+        if (filesToBackup.Count > 0 && !backupPlan.HasBackup)
         {
             var chooseAlternative = MessageBox.Show(
                 "The game drive and drive C do not have enough space for the backup.\n\nWould you like to choose another location?",
@@ -969,7 +982,7 @@ public partial class MainForm : Form
                     return;
                 }
 
-                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToReplace, alternativeRoot);
+                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup, alternativeRoot);
                 if (!backupPlan.HasBackup)
                 {
                     MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1024,7 +1037,9 @@ public partial class MainForm : Form
                 }
 
                 var backupFilePath = string.Empty;
-                if (File.Exists(destinationFile) && backupPlan.HasBackup)
+                if (File.Exists(destinationFile)
+                    && backupPlan.HasBackup
+                    && backupConfiguration.ShouldBackup(Path.GetRelativePath(payloadPath, sourceFile)))
                 {
                     backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationFile, modName, backupPlan.BackupRoot);
                 }

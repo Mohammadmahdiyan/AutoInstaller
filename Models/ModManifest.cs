@@ -10,6 +10,8 @@ public sealed class ModRequirementEntry
 
     public List<string> CheckFolders { get; set; } = new();
 
+    public List<string> CheckPaths { get; set; } = new();
+
     public string? ReqAddress { get; set; }
 
     public IReadOnlyCollection<string> FilesToCheck =>
@@ -22,6 +24,7 @@ public sealed class ModRequirementEntry
         && string.IsNullOrWhiteSpace(CheckFolder)
         && (CheckFiles == null || CheckFiles.Count == 0)
         && (CheckFolders == null || CheckFolders.Count == 0)
+        && (CheckPaths == null || CheckPaths.Count == 0)
         && string.IsNullOrWhiteSpace(ReqAddress);
 }
 

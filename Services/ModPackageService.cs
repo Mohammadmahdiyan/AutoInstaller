@@ -1,6 +1,9 @@
 using System.IO.Compression;
 using System.Text.Json;
 using GtaSaModManager.Models;
+using GtaSaModManager.Modsyn.Conversion;
+using GtaSaModManager.Modsyn.Parser;
+using GtaSaModManager.Modsyn.Validation;
 
 namespace GtaSaModManager.Services;
 
@@ -66,85 +69,57 @@ public class ModPackageService
             return true;
         }
 
-        return TryValidateModJson(directoryPath, out _);
+        return TryValidateModsyn(directoryPath, out _);
     }
 
     public static bool TryValidateConfigJson(string packagePath, out string? error)
     {
-        return TryValidateModJson(packagePath, out error);
+        return TryValidateModsyn(packagePath, out error);
     }
 
     public static bool TryValidateModJson(string packagePath, out string? error)
     {
+        return TryValidateModsyn(packagePath, out error);
+    }
+
+    public static bool TryValidateModsyn(string packagePath, out string? error)
+    {
+        return TryReadModsynConfiguration(packagePath, out _, out error);
+    }
+
+    public static bool TryReadModsynConfiguration(
+        string packagePath,
+        out ModsynConvertedConfiguration? configuration,
+        out string? error)
+    {
+        configuration = null;
         error = null;
         var manifestPath = GetManifestPath(packagePath);
-        if (string.IsNullOrWhiteSpace(manifestPath))
-        {
-            return true;
-        }
 
         try
         {
-            using var document = JsonDocument.Parse(File.ReadAllText(manifestPath));
-            if (document.RootElement.ValueKind != JsonValueKind.Object)
+            var source = string.IsNullOrWhiteSpace(manifestPath) ? "mod {}" : File.ReadAllText(manifestPath);
+            var document = ModsynParser.Parse(source);
+            var validation = ModsynValidator.Validate(document);
+            if (!validation.IsValid)
             {
-                error = "The package manifest must contain a JSON object.";
+                error = string.Join(Environment.NewLine, validation.Errors);
                 return false;
             }
 
-            var properties = document.RootElement.EnumerateObject().ToList();
-            if (properties.Count == 0)
+            configuration = ModsynConfigurationConverter.Convert(document, validation, packagePath);
+            if (configuration.Manifest.NormalizedType == "putandreplace" && configuration.Replacements.Count == 0)
             {
-                return true;
-            }
-
-            if (!ValidateManifestPathListProperties(document.RootElement, out error))
-            {
+                configuration = null;
+                error = "PutAndReplace requires at least one valid replacement entry.";
                 return false;
-            }
-
-            if (!TryGetPropertyIgnoreCase(document.RootElement, "type", out var typeProperty) ||
-                typeProperty.ValueKind != JsonValueKind.String)
-            {
-                error = "The package manifest must contain a string type property.";
-                return false;
-            }
-
-            var manifest = TryReadManifest(packagePath);
-            if (manifest == null || !new[]
-                {
-                    "putinmodloader", "replacing", "putincleo", "putingamefolder",
-                    "putandreplace", "putandreplaces", "vehicleandskinandweapon",
-                    "vehiclesandskinsandweapons", "savesandmissions", "missiondsl"
-                }.Contains(manifest.NormalizedType, StringComparer.OrdinalIgnoreCase))
-            {
-                error = "The package manifest contains an unsupported type.";
-                return false;
-            }
-
-            if (manifest.NormalizedType == "putandreplace" &&
-                (!document.RootElement.TryGetProperty("replacements", out var replacements) || replacements.ValueKind != JsonValueKind.Array))
-            {
-                error = "PutAndReplace requires a replacements array.";
-                return false;
-            }
-
-            if (manifest.NormalizedType == "putandreplace")
-            {
-                try
-                {
-                    _ = ReadReplacementEntries(packagePath);
-                }
-                catch (InvalidDataException ex)
-                {
-                    error = ex.Message;
-                    return false;
-                }
             }
 
             return true;
         }
-        catch (JsonException ex)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
+            or GtaSaModManager.Modsyn.Lexer.ModsynLexException
+            or GtaSaModManager.Modsyn.Parser.ModsynParseException)
         {
             error = ex.Message;
             return false;
@@ -153,319 +128,9 @@ public class ModPackageService
 
     public static ModManifest? TryReadManifest(string basePath)
     {
-        var manifestPath = GetManifestPath(basePath);
-        if (string.IsNullOrWhiteSpace(manifestPath))
-        {
-            return new ModManifest();
-        }
-
-        try
-        {
-            var json = File.ReadAllText(manifestPath);
-            using var document = JsonDocument.Parse(json);
-            if (document.RootElement.ValueKind != JsonValueKind.Object)
-            {
-                return null;
-            }
-
-            var manifest = new ModManifest();
-            if (TryGetPropertyIgnoreCase(document.RootElement, "type", out var typeProperty) &&
-                typeProperty.ValueKind == JsonValueKind.String)
-            {
-                manifest.Type = typeProperty.GetString() ?? string.Empty;
-            }
-
-            manifest.InstallFiles = ReadManifestPathCollections(document.RootElement, "InstallFile", "InstallFiles");
-            manifest.InstallFolders = ReadManifestPathCollections(document.RootElement, "InstallFolder", "InstallFolders");
-            manifest.IgnoreFiles = ReadManifestPathCollections(document.RootElement, "IgnoreFile", "IgnoreFiles");
-            manifest.IgnoreFolders = ReadManifestPathCollections(document.RootElement, "IgnoreFolder", "IgnoreFolders");
-
-            if (document.RootElement.TryGetProperty("require", out var requireProperty))
-            {
-                var requirement = ReadRequirementEntry(requireProperty);
-                if (requirement != null)
-                {
-                    manifest.Require = requirement;
-                }
-            }
-
-            if (document.RootElement.TryGetProperty("requires", out var requiresProperty))
-            {
-                var requirements = ReadRequirementEntries(requiresProperty);
-                if (requirements.Count > 0)
-                {
-                    manifest.Requires = requirements;
-                }
-            }
-
-            if (document.RootElement.TryGetProperty("conflictCleanup", out var conflictCleanupProperty))
-            {
-                var cleanup = ReadConflictCleanupEntry(conflictCleanupProperty);
-                if (cleanup != null)
-                {
-                    manifest.ConflictCleanup = cleanup;
-                }
-            }
-
-            if (document.RootElement.TryGetProperty("deleteThis", out var deleteThisProperty))
-            {
-                manifest.DeleteThis = ReadStringCollection(deleteThisProperty);
-            }
-
-            return manifest;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static List<ModRequirementEntry> ReadRequirementEntries(JsonElement element)
-    {
-        if (element.ValueKind == JsonValueKind.Object)
-        {
-            var single = ReadRequirementEntry(element);
-            return single is null ? new List<ModRequirementEntry>() : new List<ModRequirementEntry> { single };
-        }
-
-        if (element.ValueKind != JsonValueKind.Array)
-        {
-            return new List<ModRequirementEntry>();
-        }
-
-        var list = new List<ModRequirementEntry>();
-        foreach (var item in element.EnumerateArray())
-        {
-            var requirement = ReadRequirementEntry(item);
-            if (requirement != null)
-            {
-                list.Add(requirement);
-            }
-        }
-
-        return list;
-    }
-
-    private static ModConflictCleanupEntry? ReadConflictCleanupEntry(JsonElement element)
-    {
-        if (element.ValueKind != JsonValueKind.Object)
-        {
-            return null;
-        }
-
-        var cleanup = new ModConflictCleanupEntry();
-
-        if (element.TryGetProperty("file", out var fileProperty))
-        {
-            cleanup.File = ReadStringValue(fileProperty);
-        }
-
-        if (element.TryGetProperty("folder", out var folderProperty))
-        {
-            cleanup.Folder = ReadStringValue(folderProperty);
-        }
-
-        if (element.TryGetProperty("files", out var filesProperty))
-        {
-            cleanup.Files = ReadStringCollection(filesProperty);
-        }
-
-        if (element.TryGetProperty("folders", out var foldersProperty))
-        {
-            cleanup.Folders = ReadStringCollection(foldersProperty);
-        }
-
-        if (element.TryGetProperty("replaceWith", out var replaceWithProperty))
-        {
-            cleanup.ReplaceWith = ReadStringValue(replaceWithProperty);
-        }
-
-        if (element.TryGetProperty("replacesWith", out var replacesWithProperty))
-        {
-            cleanup.ReplacesWith = ReadStringCollection(replacesWithProperty);
-        }
-
-        return cleanup.IsEmpty ? null : cleanup;
-    }
-
-    private static ModRequirementEntry? ReadRequirementEntry(JsonElement element)
-    {
-        if (element.ValueKind != JsonValueKind.Object)
-        {
-            return null;
-        }
-
-        var requirement = new ModRequirementEntry();
-
-        if (element.TryGetProperty("checkFile", out var checkFileProperty))
-        {
-            var value = ReadStringValue(checkFileProperty);
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                requirement.CheckFile = value;
-            }
-        }
-
-        if (element.TryGetProperty("checkFolder", out var checkFolderProperty))
-        {
-            var value = ReadStringValue(checkFolderProperty);
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                requirement.CheckFolder = value;
-            }
-        }
-
-        if (element.TryGetProperty("checkFiles", out var checkFilesProperty))
-        {
-            requirement.CheckFiles = ReadStringCollection(checkFilesProperty);
-        }
-
-        if (element.TryGetProperty("checkFolders", out var checkFoldersProperty))
-        {
-            requirement.CheckFolders = ReadStringCollection(checkFoldersProperty);
-        }
-
-        if (element.TryGetProperty("reqAddress", out var reqAddressProperty) && reqAddressProperty.ValueKind == JsonValueKind.String)
-        {
-            requirement.ReqAddress = reqAddressProperty.GetString();
-        }
-
-        if (element.TryGetProperty("reqPath", out var reqPathProperty) && reqPathProperty.ValueKind == JsonValueKind.String)
-        {
-            requirement.ReqAddress ??= reqPathProperty.GetString();
-        }
-
-        if (element.TryGetProperty("require", out var nestedRequireProperty))
-        {
-            var nested = ReadRequirementEntry(nestedRequireProperty);
-            if (nested != null)
-            {
-                requirement.CheckFile ??= nested.CheckFile;
-                requirement.CheckFolder ??= nested.CheckFolder;
-                requirement.CheckFiles = requirement.CheckFiles.Count > 0 ? requirement.CheckFiles : nested.CheckFiles;
-                requirement.CheckFolders = requirement.CheckFolders.Count > 0 ? requirement.CheckFolders : nested.CheckFolders;
-                requirement.ReqAddress ??= nested.ReqAddress;
-            }
-        }
-
-        return requirement.IsEmpty ? null : requirement;
-    }
-
-    private static string? ReadStringValue(JsonElement element)
-    {
-        if (element.ValueKind == JsonValueKind.String)
-        {
-            return element.GetString();
-        }
-
-        if (element.ValueKind == JsonValueKind.Array)
-        {
-            return element.EnumerateArray()
-                .Where(item => item.ValueKind == JsonValueKind.String)
-                .Select(item => item.GetString())
-                .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
-        }
-
-        return null;
-    }
-
-    private static bool TryGetPropertyIgnoreCase(JsonElement obj, string name, out JsonElement value)
-    {
-        if (obj.ValueKind == JsonValueKind.Object)
-        {
-            foreach (var property in obj.EnumerateObject())
-            {
-                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
-                {
-                    value = property.Value;
-                    return true;
-                }
-            }
-        }
-
-        value = default;
-        return false;
-    }
-
-    private static bool ValidateManifestPathListProperties(JsonElement obj, out string? error)
-    {
-        var pathListKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "installfile", "installfiles",
-            "installfolder", "installfolders",
-            "ignorefile", "ignorefiles",
-            "ignorefolder", "ignorefolders"
-        };
-
-        foreach (var property in obj.EnumerateObject())
-        {
-            if (!pathListKeys.Contains(property.Name))
-            {
-                continue;
-            }
-
-            if (property.Value.ValueKind == JsonValueKind.String)
-            {
-                continue;
-            }
-
-            if (property.Value.ValueKind == JsonValueKind.Array
-                && property.Value.EnumerateArray().All(item => item.ValueKind == JsonValueKind.String))
-            {
-                continue;
-            }
-
-            error = $"Manifest key '{property.Name}' must be a string or an array of strings.";
-            return false;
-        }
-
-        error = null;
-        return true;
-    }
-
-    private static List<string> ReadManifestPathCollections(JsonElement obj, string singularName, string pluralName)
-    {
-        var values = new List<string>();
-        if (TryGetPropertyIgnoreCase(obj, singularName, out var singularValue))
-        {
-            values.AddRange(ReadStringCollection(singularValue));
-        }
-
-        if (TryGetPropertyIgnoreCase(obj, pluralName, out var pluralValue))
-        {
-            values.AddRange(ReadStringCollection(pluralValue));
-        }
-
-        return values
-            .Select(value =>
-            {
-                var normalized = value.Trim().Replace('/', '\\');
-                return Path.IsPathRooted(normalized) ? normalized : normalized.Trim('\\');
-            })
-            .Where(value => !string.IsNullOrWhiteSpace(value))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-    }
-
-    private static List<string> ReadStringCollection(JsonElement element)
-    {
-        if (element.ValueKind == JsonValueKind.String)
-        {
-            var value = element.GetString();
-            return string.IsNullOrWhiteSpace(value) ? new List<string>() : new List<string> { value };
-        }
-
-        if (element.ValueKind != JsonValueKind.Array)
-        {
-            return new List<string>();
-        }
-
-        return element.EnumerateArray()
-            .Where(item => item.ValueKind == JsonValueKind.String)
-            .Select(item => item.GetString())
-            .Where(value => !string.IsNullOrWhiteSpace(value))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
+        return TryReadModsynConfiguration(basePath, out var configuration, out _)
+            ? configuration!.Manifest
+            : null;
     }
 
     public static string? GetManifestPath(string basePath)
@@ -476,7 +141,7 @@ public class ModPackageService
         }
 
         var folderName = Path.GetFileName(basePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-        var candidateNames = new[] { "mod.json", "config.json", folderName + ".json" };
+        var candidateNames = new[] { "mod.modsyn", "config.modsyn", folderName + ".modsyn" };
         try
         {
             var files = Directory.EnumerateFiles(basePath, "*", SearchOption.TopDirectoryOnly).ToList();
@@ -507,43 +172,25 @@ public class ModPackageService
         return TryReadManifest(basePath) ?? new ModManifest();
     }
 
+    public static ModsynConvertedConfiguration ResolveModsynConfiguration(string packageRoot)
+    {
+        if (!TryReadModsynConfiguration(packageRoot, out var configuration, out var error))
+        {
+            throw new InvalidDataException(error ?? "The Modsyn package configuration is invalid.");
+        }
+
+        return configuration!;
+    }
+
     public static List<ModReplacementEntry> ReadReplacementEntries(string packageRoot)
     {
-        var configPath = GetManifestPath(packageRoot)
-            ?? throw new InvalidDataException("The package manifest was not found.");
-        using var document = JsonDocument.Parse(File.ReadAllText(configPath));
-        if (!document.RootElement.TryGetProperty("replacements", out var replacements) || replacements.ValueKind != JsonValueKind.Array)
+        if (!TryReadModsynConfiguration(packageRoot, out var configuration, out var error))
         {
-            throw new InvalidDataException("PutAndReplace requires a replacements array.");
+            throw new InvalidDataException(error ?? "The Modsyn package configuration is invalid.");
         }
 
-        var result = new List<ModReplacementEntry>();
-        foreach (var item in replacements.EnumerateArray())
-        {
-            if (item.ValueKind == JsonValueKind.String)
-            {
-                var path = item.GetString();
-                if (!string.IsNullOrWhiteSpace(path))
-                {
-                    result.Add(new ModReplacementEntry(path, path));
-                }
-            }
-            else if (item.ValueKind == JsonValueKind.Object)
-            {
-                var source = item.TryGetProperty("source", out var sourceProperty) && sourceProperty.ValueKind == JsonValueKind.String
-                    ? sourceProperty.GetString()
-                    : null;
-                var target = item.TryGetProperty("target", out var targetProperty) && targetProperty.ValueKind == JsonValueKind.String
-                    ? targetProperty.GetString()
-                    : null;
-                if (!string.IsNullOrWhiteSpace(source) && !string.IsNullOrWhiteSpace(target))
-                {
-                    result.Add(new ModReplacementEntry(source, target));
-                }
-            }
-        }
-
-        if (result.Count == 0)
+        var result = configuration!.Replacements.ToList();
+        if (result.Count == 0 && ResolveManifest(packageRoot).NormalizedType == "putandreplace")
         {
             throw new InvalidDataException("PutAndReplace contains no valid replacement entries.");
         }
@@ -688,7 +335,7 @@ public class ModPackageService
                 continue;
             }
 
-            var hasError = !TryValidateModJson(directory, out var configError);
+            var hasError = !TryValidateModsyn(directory, out var configError);
             var payloadPath = GetPayloadDirectory(directory);
             var packageInfo = new ModPackageInfo
             {
@@ -734,8 +381,8 @@ public class ModPackageService
                 return true;
             }
         }
-        else if (string.Equals(fileName, "mod.json", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase))
+        else if (string.Equals(fileName, "mod.modsyn", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(fileName, "config.modsyn", StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }

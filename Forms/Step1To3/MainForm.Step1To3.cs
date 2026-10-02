@@ -214,6 +214,17 @@ public partial class MainForm : Form
                 return;
             }
 
+            if (ModPackageService.GetManifestPath(selected) is not null
+                && !ModPackageService.TryValidateModsyn(selected, out var configError))
+            {
+                MessageBox.Show(
+                    configError ?? "The Modsyn package configuration is invalid.",
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
             _selectedModName = ResolveDirectoryName(selected);
             _isDetectedModStatusVisible = true;
             _selectedModPackageRoot = selected;

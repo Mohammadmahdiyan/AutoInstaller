@@ -6,3 +6,4 @@ Assets/Weapons/
 .vscode
 obj/Debug
 obj/Release
+/ModSyn/Tests/obj/

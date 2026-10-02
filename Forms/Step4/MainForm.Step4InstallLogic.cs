@@ -437,7 +437,7 @@ public partial class MainForm : Form
             {
                 MessageBox.Show(
                     "This mod requires files/folders that are missing from the game installation: " +
-                    string.Join(", ", requirement.FilesToCheck.Concat(requirement.FoldersToCheck)),
+                    string.Join(", ", requirement.CheckPaths.Concat(requirement.FilesToCheck).Concat(requirement.FoldersToCheck)),
                     _appName,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -503,6 +503,17 @@ public partial class MainForm : Form
 
         var files = requirement.FilesToCheck;
         var folders = requirement.FoldersToCheck;
+        var paths = requirement.CheckPaths ?? new List<string>();
+        var pathsSatisfied = paths.Count > 0 && paths.All(path =>
+        {
+            var candidate = path;
+            if (!Path.IsPathRooted(candidate))
+            {
+                candidate = Path.Combine(gameFolder, candidate);
+            }
+
+            return File.Exists(candidate) || Directory.Exists(candidate);
+        });
         var filesSatisfied = files.Count > 0 && files.All(path =>
         {
             var candidate = path;
@@ -524,7 +535,7 @@ public partial class MainForm : Form
             return Directory.Exists(candidate);
         });
 
-        return filesSatisfied || foldersSatisfied;
+        return pathsSatisfied || filesSatisfied || foldersSatisfied;
     }
 
     private static string? ResolveRequirementPackagePath(string reqAddress, string baseModsFolder)
@@ -664,26 +675,6 @@ public partial class MainForm : Form
             if (!await EnsureDependenciesBeforeInstallAsync())
             {
                 return;
-            }
-
-            var manifestRoot = Directory.Exists(_selectedModPackageRoot) ? _selectedModPackageRoot : _selectedModPayloadPath;
-            var manifestPath = ModPackageService.GetManifestPath(manifestRoot);
-            if (!string.IsNullOrWhiteSpace(manifestPath))
-            {
-                try
-                {
-                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(File.ReadAllText(manifestPath));
-                    var root = jsonDoc.RootElement;
-                    var hasAnyProperties = root.ValueKind == System.Text.Json.JsonValueKind.Object && root.EnumerateObject().Any();
-                    if (root.ValueKind != System.Text.Json.JsonValueKind.Object || !hasAnyProperties)
-                    {
-                        MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "The package manifest is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show(_localizationService.GetString("ModJsonInvalid", "The package manifest is malformed or contains unexpected content. The mod name still uses the folder name."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
             }
 
             if (_selectedModManifest.NormalizedType == "savesandmissions")

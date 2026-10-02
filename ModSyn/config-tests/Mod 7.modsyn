@@ -1,0 +1,10 @@
+mod {
+    type: VehiclesAndSkinsAndWeapons
+    installThese:
+    [
+        "ak47.dff"
+        "ak47.txd"
+        "xaa.dff"
+        "xaa.txd"
+    ]
+}

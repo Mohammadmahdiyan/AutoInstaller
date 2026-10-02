@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Modsyn\Tests\**\*.cs" />
     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <None Remove="Forms\Step0\**\*.md" />
     <Content Include="Forms\Step0\**\*.md"

@@ -1,0 +1,11 @@
+mod {
+    type: PutAndReplace
+    backup: false
+    replacements:
+    [
+        {
+            source: "data/handling.cfg"
+            target: "data/handling.cfg"
+        }
+    ]
+}
