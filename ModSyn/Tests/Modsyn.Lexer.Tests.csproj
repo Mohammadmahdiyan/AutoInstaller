@@ -18,11 +18,4 @@
     <ProjectReference Include="..\..\ModManager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\config-tests\*.modsyn">
-      <Link>config-tests\%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

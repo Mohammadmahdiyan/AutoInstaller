@@ -211,7 +211,15 @@ public sealed class ModsynManifestDiscoveryTests
     [TestMethod]
     public void ConfigTestCollection_ParsesAndValidatesEveryExample()
     {
-        var configTestsDirectory = Path.Combine(AppContext.BaseDirectory, "config-tests");
+        var projectDirectory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (projectDirectory is not null
+            && !File.Exists(Path.Combine(projectDirectory.FullName, "Modsyn.Lexer.Tests.csproj")))
+        {
+            projectDirectory = projectDirectory.Parent;
+        }
+
+        Assert.IsNotNull(projectDirectory, "Could not locate the Modsyn test project directory.");
+        var configTestsDirectory = Path.GetFullPath(Path.Combine(projectDirectory!.FullName, "..", "config-tests"));
         var exampleFiles = Directory.GetFiles(configTestsDirectory, "*.modsyn")
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();

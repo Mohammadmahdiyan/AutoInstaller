@@ -1,57 +1,43 @@
-using GtaSaModManager.Modsyn.Validation;
-
 namespace GtaSaModManager.Modsyn.Completion;
 
 public static class ModsynCompletionService
 {
+    private static readonly PropertyCompletionProvider PropertyProvider = new();
+    private static readonly PathCompletionProvider PathProvider = new();
+    private static readonly ValueCompletionProvider ValueProvider = new(PathProvider);
+
     public static IReadOnlyList<ModsynCompletionItem> GetCompletions(
         ModsynCompletionContext context)
     {
         return context switch
         {
-            ModsynCompletionContext.RootProperties => GetPropertyCompletions(ModsynLanguageDefinition.RootProperties),
-            ModsynCompletionContext.RequirementProperties => GetPropertyCompletions(ModsynLanguageDefinition.RequirementProperties),
-            ModsynCompletionContext.TypeValues => GetTypeCompletions(),
+            ModsynCompletionContext.RootProperties or ModsynCompletionContext.RequirementProperties =>
+                PropertyProvider.GetCompletions(context),
+            ModsynCompletionContext.TypeValues => ValueProvider.GetTypeCompletions(),
             _ => Array.Empty<ModsynCompletionItem>()
         };
     }
 
-    public static IReadOnlyList<ModsynCompletionItem> GetCompletions(string source, int cursorOffset)
+    public static IReadOnlyList<ModsynCompletionItem> GetCompletions(
+        string source,
+        int cursorOffset,
+        IEnumerable<string>? availablePaths = null)
     {
-        var context = ModsynCompletionContextDetector.Detect(source, cursorOffset);
-        return GetCompletions(context);
-    }
+        var context = ModsynCompletionContextDetector.Detect(
+            source,
+            cursorOffset,
+            out var prefix,
+            out var propertyName);
 
-    private static IReadOnlyList<ModsynCompletionItem> GetPropertyCompletions(
-        IReadOnlyDictionary<string, ModsynPropertyDefinition> definitions)
-    {
-        return definitions.Values
-            .Select(definition => new ModsynCompletionItem(
-                definition.Name,
-                definition.Name,
-                definition.Description,
-                ModsynCompletionKind.Property))
-            .ToList()
-            .AsReadOnly();
-    }
-
-    private static IReadOnlyList<ModsynCompletionItem> GetTypeCompletions()
-    {
-        var completions = new List<ModsynCompletionItem>();
-        foreach (var type in ModsynLanguageDefinition.Types)
+        return context switch
         {
-            completions.Add(new ModsynCompletionItem(
-                type.Name,
-                type.Name,
-                type.Description,
-                ModsynCompletionKind.Type));
-            completions.AddRange(type.Aliases.Select(alias => new ModsynCompletionItem(
-                alias,
-                alias,
-                type.Description,
-                ModsynCompletionKind.Type)));
-        }
-
-        return completions.AsReadOnly();
+            ModsynCompletionContext.RootProperties or ModsynCompletionContext.RequirementProperties =>
+                PropertyProvider.GetCompletions(context, prefix),
+            ModsynCompletionContext.TypeValues => ValueProvider.GetTypeCompletions(prefix),
+            ModsynCompletionContext.PropertyValues when propertyName is not null =>
+                ValueProvider.GetCompletions(propertyName, prefix, availablePaths),
+            ModsynCompletionContext.PathValues => PathProvider.GetCompletions(prefix, availablePaths),
+            _ => Array.Empty<ModsynCompletionItem>()
+        };
     }
 }

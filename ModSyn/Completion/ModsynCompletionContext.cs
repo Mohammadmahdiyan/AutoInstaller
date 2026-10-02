@@ -5,5 +5,7 @@ public enum ModsynCompletionContext
     None,
     RootProperties,
     RequirementProperties,
-    TypeValues
+    TypeValues,
+    PathValues,
+    PropertyValues
 }

@@ -3,7 +3,9 @@ namespace GtaSaModManager.Modsyn.Completion;
 public enum ModsynCompletionKind
 {
     Property,
-    Type
+    Type,
+    Value,
+    Path
 }
 
 public sealed record ModsynCompletionItem(

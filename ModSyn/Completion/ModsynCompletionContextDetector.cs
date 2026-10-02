@@ -1,4 +1,5 @@
 using GtaSaModManager.Modsyn.Lexer;
+using GtaSaModManager.Modsyn.Validation;
 
 namespace GtaSaModManager.Modsyn.Completion;
 
@@ -35,9 +36,27 @@ public static class ModsynCompletionContextDetector
         public string? PropertyName { get; set; }
 
         public bool ContainsRequirementObjects { get; init; }
+
+        public string? ArrayPropertyName { get; init; }
+
+        public IReadOnlyList<ModsynValueKind> ArrayItemKinds { get; init; } = Array.Empty<ModsynValueKind>();
     }
 
     public static ModsynCompletionContext Detect(string source, int cursorOffset)
+    {
+        return Detect(source, cursorOffset, out _);
+    }
+
+    public static ModsynCompletionContext Detect(string source, int cursorOffset, out string prefix)
+    {
+        return Detect(source, cursorOffset, out prefix, out _);
+    }
+
+    public static ModsynCompletionContext Detect(
+        string source,
+        int cursorOffset,
+        out string prefix,
+        out string? propertyName)
     {
         ArgumentNullException.ThrowIfNull(source);
         if (cursorOffset < 0 || cursorOffset > source.Length)
@@ -45,7 +64,21 @@ public static class ModsynCompletionContextDetector
             throw new ArgumentOutOfRangeException(nameof(cursorOffset));
         }
 
-        var prefix = source[..cursorOffset];
+        var sourcePrefix = source[..cursorOffset];
+        var openQuoteIndex = FindUnclosedQuote(sourcePrefix);
+        if (openQuoteIndex >= 0)
+        {
+            prefix = sourcePrefix[(openQuoteIndex + 1)..];
+            return DetectCore(sourcePrefix[..openQuoteIndex], out propertyName);
+        }
+
+        prefix = GetTrailingIdentifierPrefix(sourcePrefix);
+        return DetectCore(sourcePrefix[..(sourcePrefix.Length - prefix.Length)], out propertyName);
+    }
+
+    private static ModsynCompletionContext DetectCore(string prefix, out string? propertyName)
+    {
+        propertyName = null;
         IReadOnlyList<ModsynToken> tokens;
         try
         {
@@ -53,7 +86,7 @@ public static class ModsynCompletionContextDetector
         }
         catch (ModsynLexException)
         {
-            return DetectOpenTypeString(prefix);
+            return ModsynCompletionContext.None;
         }
 
         var containers = new List<ContainerFrame>();
@@ -97,6 +130,9 @@ public static class ModsynCompletionContextDetector
 
             if (token.Kind == ModsynTokenKind.LeftBracket)
             {
+                var propertyDefinition = current.Kind == ContainerKind.Object && current.PropertyName is not null
+                    ? GetPropertyDefinition(current.Scope, current.PropertyName)
+                    : null;
                 var containsRequirementObjects = current.Kind == ContainerKind.Object
                     && current.State == ObjectState.ExpectingValue
                     && current.Scope == ObjectScope.Root
@@ -105,7 +141,9 @@ public static class ModsynCompletionContextDetector
                 {
                     Kind = ContainerKind.Array,
                     Scope = ObjectScope.Other,
-                    ContainsRequirementObjects = containsRequirementObjects
+                    ContainsRequirementObjects = containsRequirementObjects,
+                    ArrayPropertyName = current.PropertyName,
+                    ArrayItemKinds = propertyDefinition?.ArrayItemKinds ?? Array.Empty<ModsynValueKind>()
                 });
                 CompleteParentValue(containers, current);
                 continue;
@@ -145,9 +183,26 @@ public static class ModsynCompletionContextDetector
         var top = containers[^1];
         if (top.Kind == ContainerKind.Object)
         {
-            if (top.Scope == ObjectScope.Root && top.State == ObjectState.ExpectingValue && top.PropertyName == "type"
-                || top.Scope == ObjectScope.Root && lastCompletedTypeValue)
+            if (top.State == ObjectState.ExpectingValue && top.PropertyName is not null)
             {
+                if (top.Scope == ObjectScope.Root && top.PropertyName == "type")
+                {
+                    propertyName = top.PropertyName;
+                    return ModsynCompletionContext.TypeValues;
+                }
+
+                propertyName = top.PropertyName;
+                if (IsStringValueProperty(top.Scope, top.PropertyName))
+                {
+                    return ModsynCompletionContext.PathValues;
+                }
+
+                return ModsynCompletionContext.PropertyValues;
+            }
+
+            if (top.Scope == ObjectScope.Root && lastCompletedTypeValue)
+            {
+                propertyName = "type";
                 return ModsynCompletionContext.TypeValues;
             }
 
@@ -157,6 +212,12 @@ public static class ModsynCompletionContextDetector
                 ObjectScope.Requirement => ModsynCompletionContext.RequirementProperties,
                 _ => ModsynCompletionContext.None
             };
+        }
+
+        if (top.ArrayItemKinds.Contains(ModsynValueKind.String))
+        {
+            propertyName = top.ArrayPropertyName;
+            return ModsynCompletionContext.PathValues;
         }
 
         return ModsynCompletionContext.None;
@@ -208,17 +269,54 @@ public static class ModsynCompletionContextDetector
         parent.PropertyName = null;
     }
 
-    private static ModsynCompletionContext DetectOpenTypeString(string prefix)
+    private static bool IsStringValueProperty(ObjectScope scope, string propertyName)
     {
-        var quoteIndex = prefix.LastIndexOf('"');
-        if (quoteIndex < 0)
+        return GetPropertyDefinition(scope, propertyName) is { } definition
+            && definition.AllowedValueKinds.Contains(ModsynValueKind.String);
+    }
+
+    private static ModsynPropertyDefinition? GetPropertyDefinition(ObjectScope scope, string propertyName)
+    {
+        var properties = scope switch
         {
-            return ModsynCompletionContext.None;
+            ObjectScope.Root => ModsynLanguageDefinition.RootProperties,
+            ObjectScope.Requirement => ModsynLanguageDefinition.RequirementProperties,
+            ObjectScope.Other => ModsynLanguageDefinition.ReplacementProperties,
+            _ => null
+        };
+
+        return properties is not null && properties.TryGetValue(propertyName, out var definition)
+            ? definition
+            : null;
+    }
+
+    private static int FindUnclosedQuote(string source)
+    {
+        var quoteIndex = -1;
+        for (var index = 0; index < source.Length; index++)
+        {
+            if (source[index] == '"')
+            {
+                quoteIndex = quoteIndex < 0 ? index : -1;
+            }
         }
 
-        var precedingContext = Detect(prefix[..quoteIndex], quoteIndex);
-        return precedingContext == ModsynCompletionContext.TypeValues
-            ? ModsynCompletionContext.TypeValues
-            : ModsynCompletionContext.None;
+        return quoteIndex;
+    }
+
+    private static string GetTrailingIdentifierPrefix(string source)
+    {
+        var start = source.Length;
+        while (start > 0 && IsIdentifierCharacter(source[start - 1]))
+        {
+            start--;
+        }
+
+        return source[start..];
+    }
+
+    private static bool IsIdentifierCharacter(char character)
+    {
+        return character == '_' || char.IsLetterOrDigit(character);
     }
 }
