@@ -10,6 +10,7 @@ public static class ModsynValidator
         ArgumentNullException.ThrowIfNull(document);
 
         var errors = new List<ModsynValidationError>();
+        var warnings = new List<ModsynValidationWarning>();
         ValidatePropertySet(document.Body, ModsynLanguageDefinition.RootProperties, "root-level", errors);
 
         var (normalizedType, typeIsValid) = ResolveType(FindProperty(document.Body, "type"), errors);
@@ -17,6 +18,7 @@ public static class ModsynValidator
         {
             ValidateBackupApplicability(document.Body, normalizedType, errors);
         }
+        ValidateBackupSelectors(document.Body, errors, warnings);
         ValidateNullBackupSelection(document.Body, errors);
 
         var requirements = new List<ModsynResolvedRequirement>();
@@ -46,7 +48,12 @@ public static class ModsynValidator
             ? backup.Value
             : true;
 
-        return new ModsynValidationResult(normalizedType, backupEnabled, requirements.AsReadOnly(), errors.AsReadOnly());
+        return new ModsynValidationResult(
+            normalizedType,
+            backupEnabled,
+            requirements.AsReadOnly(),
+            errors.AsReadOnly(),
+            warnings.AsReadOnly());
     }
 
     private static (string TypeName, bool IsValid) ResolveType(
@@ -67,6 +74,12 @@ public static class ModsynValidator
 
         if (rawType is null)
         {
+            return (ModsynLanguageDefinition.DefaultTypeName, false);
+        }
+
+        if (string.IsNullOrWhiteSpace(rawType))
+        {
+            errors.Add(new ModsynValidationError("Unsupported package type ''.", typeProperty.Value.Location));
             return (ModsynLanguageDefinition.DefaultTypeName, false);
         }
 
@@ -109,15 +122,69 @@ public static class ModsynValidator
             return;
         }
 
-        var hasSelection = root.Properties.Any(property => property.Name is
-            "backupThis" or "backupThese" or "dontBackupThis" or "dontBackupThese");
+        var hasSelection = root.Properties.Any(property => property.Name switch
+        {
+            "backupThis" or "dontBackupThis" => property.Value is ModsynStringNode value
+                && !string.IsNullOrWhiteSpace(value.Value),
+            "backupThese" or "dontBackupThese" => property.Value is ModsynArrayNode array
+                && array.Items.OfType<ModsynStringNode>().Any(item => !string.IsNullOrWhiteSpace(item.Value)),
+            _ => false
+        });
         if (!hasSelection)
         {
             errors.Add(new ModsynValidationError(
-                "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese is provided.",
+                "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese has a value.",
                 backup.Location));
         }
     }
+
+            private static void ValidateBackupSelectors(
+                ModsynObjectNode root,
+                List<ModsynValidationError> errors,
+                List<ModsynValidationWarning> warnings)
+            {
+                foreach (var property in root.Properties)
+                {
+                    if (property.Name is "backupThis" or "dontBackupThis"
+                        && property.Value is ModsynStringNode singlePath
+                        && string.IsNullOrWhiteSpace(singlePath.Value))
+                    {
+                        errors.Add(new ModsynValidationError(
+                            $"Property '{property.Name}' requires a non-empty string path.",
+                            singlePath.Location));
+                    }
+
+                    if (property.Name is not ("backupThese" or "dontBackupThese")
+                        || property.Value is not ModsynArrayNode paths)
+                    {
+                        continue;
+                    }
+
+                    if (paths.Items.Count == 0)
+                    {
+                        errors.Add(new ModsynValidationError(
+                            $"Property '{property.Name}' requires at least one string path.",
+                            paths.Location));
+                        continue;
+                    }
+
+                    foreach (var item in paths.Items.OfType<ModsynStringNode>().Where(item => string.IsNullOrWhiteSpace(item.Value)))
+                    {
+                        errors.Add(new ModsynValidationError(
+                            $"Property '{property.Name}' cannot contain an empty string path.",
+                            item.Location));
+                    }
+
+                    if (paths.Items.Count == 1 && paths.Items[0] is ModsynStringNode onlyPath
+                        && !string.IsNullOrWhiteSpace(onlyPath.Value))
+                    {
+                        var singularName = property.Name == "backupThese" ? "backupThis" : "dontBackupThis";
+                        warnings.Add(new ModsynValidationWarning(
+                            $"Property '{property.Name}' contains one path; use '{singularName}' instead.",
+                            paths.Location));
+                    }
+                }
+            }
 
     private static ModsynResolvedRequirement ValidateRequirement(
         ModsynObjectNode requirement,

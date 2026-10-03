@@ -41,7 +41,9 @@ function activate(context) {
         const diagnostic = new vscode.Diagnostic(
           new vscode.Range(start, end),
           issue.message,
-          vscode.DiagnosticSeverity.Error,
+          issue.severity === "warning"
+            ? vscode.DiagnosticSeverity.Warning
+            : vscode.DiagnosticSeverity.Error,
         );
         diagnostic.source = "Modsyn";
         diagnostic.code = issue.code ?? "unknown-property";

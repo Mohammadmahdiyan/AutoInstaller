@@ -39,10 +39,12 @@ public sealed class ModsynValidatorTests
     }
 
     [TestMethod]
-    public void Validate_DefaultsMissingAndEmptyTypeToPutInModLoader()
+    public void Validate_DefaultsMissingTypeToPutInModLoaderAndRejectsEmptyType()
     {
         Assert.AreEqual("PutInModLoader", Validate("mod {}").NormalizedType);
-        Assert.AreEqual("PutInModLoader", Validate("mod { type: \"\" }").NormalizedType);
+        var emptyType = Validate("mod { type: \"\" }");
+        Assert.AreEqual(1, emptyType.Errors.Count);
+        StringAssert.Contains(emptyType.Errors[0].Message, "Unsupported package type");
     }
 
     [TestMethod]
@@ -111,6 +113,30 @@ public sealed class ModsynValidatorTests
         Assert.AreEqual(1, invalid.Errors.Count);
         StringAssert.Contains(invalid.Errors[0].Message, "cannot be null unless at least one of");
         Assert.IsTrue(valid.IsValid, string.Join(Environment.NewLine, valid.Errors));
+
+        var emptySelection = Validate("mod { type: Replacing backup: null backupThese: [] }");
+        Assert.IsFalse(emptySelection.IsValid);
+        Assert.IsTrue(emptySelection.Errors.Any(error => error.Message.Contains("requires at least one string path", StringComparison.Ordinal)));
+        Assert.IsTrue(emptySelection.Errors.Any(error => error.Message.Contains("cannot be null unless", StringComparison.Ordinal)));
+    }
+
+    [TestMethod]
+    public void Validate_RequiresBackupSelectorValuesAndWarnsForSingleThesePath()
+    {
+        var emptyThis = Validate("mod { type: Replacing backupThis: \"\" }");
+        var emptyTheseItem = Validate("mod { type: Replacing dontBackupThese: [\"\"] }");
+        var singletonThese = Validate("mod { type: Replacing backupThese: [\"data/file.dat\"] }");
+        var multipleThese = Validate("mod { type: Replacing backupThese: [\"one\" \"two\"] }");
+
+        Assert.IsFalse(emptyThis.IsValid);
+        StringAssert.Contains(emptyThis.Errors[0].Message, "requires a non-empty string path");
+        Assert.IsFalse(emptyTheseItem.IsValid);
+        StringAssert.Contains(emptyTheseItem.Errors[0].Message, "cannot contain an empty string path");
+        Assert.IsTrue(singletonThese.IsValid, string.Join(Environment.NewLine, singletonThese.Errors));
+        Assert.AreEqual(1, singletonThese.Warnings.Count);
+        StringAssert.Contains(singletonThese.Warnings[0].Message, "use 'backupThis' instead");
+        Assert.IsTrue(multipleThese.IsValid, string.Join(Environment.NewLine, multipleThese.Errors));
+        Assert.AreEqual(0, multipleThese.Warnings.Count);
     }
 
     [TestMethod]

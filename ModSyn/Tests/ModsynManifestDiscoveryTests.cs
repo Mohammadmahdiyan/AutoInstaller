@@ -160,7 +160,10 @@ public sealed class ModsynManifestDiscoveryTests
             }
 
             Write(packageRoot, "mod.modsyn", "mod { type: \"\" }");
-            Assert.AreEqual("PutInModLoader", ModPackageService.ResolveManifest(packageRoot).Type);
+            Assert.IsFalse(
+                ModPackageService.TryReadModsynConfiguration(packageRoot, out _, out var emptyTypeError));
+            StringAssert.Contains(emptyTypeError!, "Unsupported package type");
+            Assert.IsNull(ModPackageService.TryReadManifest(packageRoot));
             File.Delete(Path.Combine(packageRoot, "mod.modsyn"));
             Assert.AreEqual("PutInModLoader", ModPackageService.ResolveManifest(packageRoot).Type);
         });

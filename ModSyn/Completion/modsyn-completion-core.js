@@ -240,7 +240,12 @@ function getDiagnostics(source, metadata) {
   const diagnostics = [];
   let index = 0;
 
-  function addDiagnostic(token, message, code = "unknown-property") {
+  function addDiagnostic(
+    token,
+    message,
+    code = "unknown-property",
+    severity = "error",
+  ) {
     const before = source.slice(0, token.start);
     const lines = before.split(/\r\n|\r|\n/);
     diagnostics.push({
@@ -250,6 +255,7 @@ function getDiagnostics(source, metadata) {
       column: lines[lines.length - 1].length + 1,
       message: `${message} (line ${lines.length}, column ${lines[lines.length - 1].length + 1}).`,
       code,
+      severity,
     });
   }
 
@@ -401,7 +407,6 @@ function getDiagnostics(source, metadata) {
       if (
         (property.value.kind === "string" ||
           property.value.kind === "identifier") &&
-        typeValue.trim() !== "" &&
         !isSupportedType(typeValue)
       ) {
         addDiagnostic(
@@ -458,7 +463,13 @@ function getDiagnostics(source, metadata) {
         );
         continue;
       }
-      if (property.incomplete) continue;
+      if (property.incomplete || property.incompleteValue) {
+        const message = property.incomplete
+          ? `Property '${property.name}' is missing ':' and a value.`
+          : `Missing value for property '${property.name}'.`;
+        addDiagnostic(property.token, message, "missing-value");
+        continue;
+      }
       validateProperty(property, definition, scope);
     }
 
@@ -493,21 +504,72 @@ function getDiagnostics(source, metadata) {
             ),
           )
         : null;
-    const typeIsValid =
-      !typeProperty ||
-      (typeof rawType === "string" &&
-        (rawType.trim() === "" || matchedType !== undefined));
-    const resolvedType =
-      rawType?.trim() === "" || !typeProperty
-        ? metadata.defaultTypeName
-        : matchedType?.name;
-    const backupProperties = [
-      "backup",
+    const typeIsValid = !typeProperty || matchedType !== undefined;
+    const resolvedType = !typeProperty
+      ? metadata.defaultTypeName
+      : matchedType?.name;
+    const backupSelectorNames = [
       "backupThis",
       "backupThese",
       "dontBackupThis",
       "dontBackupThese",
     ];
+    for (const property of objectNode.properties) {
+      if (["backupThis", "dontBackupThis"].includes(property.name)) {
+        if (
+          property.value.kind === "string" &&
+          property.value.value.trim() === ""
+        ) {
+          addDiagnostic(
+            property.value.token,
+            `Property '${property.name}' requires a non-empty string path.`,
+            "empty-backup-path",
+          );
+        }
+        continue;
+      }
+
+      if (
+        !["backupThese", "dontBackupThese"].includes(property.name) ||
+        property.value.kind !== "Array"
+      ) {
+        continue;
+      }
+
+      if (property.value.items.length === 0) {
+        addDiagnostic(
+          property.value.token,
+          `Property '${property.name}' requires at least one string path.`,
+          "empty-backup-list",
+        );
+        continue;
+      }
+
+      for (const itemNode of property.value.items) {
+        if (itemNode.kind === "string" && itemNode.value.trim() === "") {
+          addDiagnostic(
+            itemNode.token,
+            `Property '${property.name}' cannot contain an empty string path.`,
+            "empty-backup-path",
+          );
+        }
+      }
+
+      if (
+        property.value.items.length === 1 &&
+        property.value.items[0].kind === "string" &&
+        property.value.items[0].value.trim() !== ""
+      ) {
+        const singularName =
+          property.name === "backupThese" ? "backupThis" : "dontBackupThis";
+        addDiagnostic(
+          property.value.token,
+          `Property '${property.name}' contains one path; use '${singularName}' instead.`,
+          "single-value-array",
+          "warning",
+        );
+      }
+    }
     for (const property of objectNode.properties) {
       const definition = definitions.find(
         (candidate) => candidate.name === property.name,
@@ -528,13 +590,23 @@ function getDiagnostics(source, metadata) {
     );
     if (
       backupProperty?.value.kind === "null" &&
-      !objectNode.properties.some((property) =>
-        backupProperties.slice(1).includes(property.name),
+      !objectNode.properties.some(
+        (property) =>
+          backupSelectorNames.includes(property.name) &&
+          (property.name.endsWith("This")
+            ? property.value.kind === "string" &&
+              property.value.value.trim() !== ""
+            : property.value.kind === "Array" &&
+              property.value.items.some(
+                (itemNode) =>
+                  itemNode.kind === "string" && itemNode.value.trim() !== "",
+              )),
       )
     ) {
       addDiagnostic(
         backupProperty.value.token,
-        "Property 'backup' cannot be null unless at least one backup selection key is provided.",
+        "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese has a value.",
+        "backup-null-without-selection",
       );
     }
   }
@@ -562,6 +634,21 @@ function getDiagnostics(source, metadata) {
         continue;
       }
       index += 2;
+      const nextToken = tokens[index];
+      const missingValue =
+        !nextToken ||
+        nextToken.kind === closingKind ||
+        nextToken.kind === "," ||
+        (nextToken.kind === "identifier" && tokens[index + 1]?.kind === ":");
+      if (missingValue) {
+        properties.push({
+          name: key.value,
+          token: key,
+          value: { kind: "Unknown", token: key },
+          incompleteValue: true,
+        });
+        continue;
+      }
       properties.push({ name: key.value, token: key, value: parseValue() });
     }
     if (tokens[index]?.kind === closingKind) index++;

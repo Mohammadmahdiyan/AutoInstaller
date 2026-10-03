@@ -21,11 +21,11 @@ $contentTypes = @'
   <Override PartName="/extension.vsixmanifest" ContentType="text/xml" />
 </Types>
 '@
-$vsixManifest = @'
+$vsixManifest = @"
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Language="en-US" Id="modsyn-language" Version="0.1.0" Publisher="local-modsyn" />
+    <Identity Language="en-US" Id="modsyn-language" Version="$($package.version)" Publisher="local-modsyn" />
     <DisplayName>Modsyn Language Support</DisplayName>
     <Description>Strict completion and unknown-key diagnostics for Modsyn files.</Description>
     <Tags>modsyn;language</Tags>
@@ -43,7 +43,7 @@ $vsixManifest = @'
     <Asset Type="Microsoft.VisualStudio.Code.Manifest" Path="extension/package.json" Addressable="true" />
   </Assets>
 </PackageManifest>
-'@
+"@
 
 [System.IO.File]::WriteAllText((Join-Path $stagingRoot "[Content_Types].xml"), $contentTypes)
 [System.IO.File]::WriteAllText((Join-Path $stagingRoot "extension.vsixmanifest"), $vsixManifest)

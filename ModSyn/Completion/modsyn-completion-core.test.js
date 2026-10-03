@@ -186,8 +186,9 @@ test("duplicate keys are errors, including an incomplete repeated key", () => {
     "mod { type: PIM, type }",
     metadata,
   );
-  assert.equal(incompleteDuplicate.length, 1);
+  assert.equal(incompleteDuplicate.length, 2);
   assert.equal(incompleteDuplicate[0].code, "duplicate-property");
+  assert.equal(incompleteDuplicate[1].code, "missing-value");
   assert.match(
     incompleteDuplicate[0].message,
     /Duplicate root property 'type'/,
@@ -222,7 +223,7 @@ test("diagnostics reject unsupported type, backup literals, and backup null with
   assert.deepEqual(
     nullBackupDiagnostics.map((issue) => issue.message.split(" (line")[0]),
     [
-      "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese is provided.",
+      "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese has a value.",
     ],
   );
 });
@@ -246,13 +247,82 @@ test("diagnostics enforce This/These shapes and string-only array items", () => 
 test("backup null is accepted with a backup selection key for replacement types", () => {
   assert.deepEqual(
     core.getDiagnostics(
-      "mod { type: Replacing backup: null backupThese: [] }",
+      'mod { type: Replacing backup: null backupThis: "data/file.dat" }',
       metadata,
     ),
     [],
   );
 });
 
-test("empty type uses the default without unrelated semantic errors", () => {
-  assert.deepEqual(core.getDiagnostics('mod { type: "" }', metadata), []);
+test("missing type defaults but explicit empty and unsupported types fail", () => {
+  assert.deepEqual(core.getDiagnostics("mod {}", metadata), []);
+  assert.match(
+    core.getDiagnostics('mod { type: "" }', metadata)[0].message,
+    /Unsupported package type ''/,
+  );
+  assert.match(
+    core.getDiagnostics("mod { type: NotASupportedType }", metadata)[0].message,
+    /Unsupported package type 'NotASupportedType'/,
+  );
+});
+
+test("backup null requires a selector with a non-empty value", () => {
+  const cases = [
+    "mod { type: Replacing backup: null backupThis: }",
+    'mod { type: Replacing backup: null backupThis: "" }',
+    "mod { type: Replacing backup: null backupThese: [] }",
+  ];
+  for (const source of cases) {
+    assert.ok(
+      core
+        .getDiagnostics(source, metadata)
+        .some((issue) => issue.code === "backup-null-without-selection"),
+      source,
+    );
+  }
+
+  for (const source of [
+    'mod { type: Replacing backup: null backupThis: "data/file.dat" }',
+    'mod { type: Replacing backup: null backupThese: ["data/file.dat"] }',
+  ]) {
+    assert.equal(
+      core
+        .getDiagnostics(source, metadata)
+        .some((issue) => issue.code === "backup-null-without-selection"),
+      false,
+      source,
+    );
+  }
+});
+
+test("backup This requires a non-empty string and These requires a non-empty string array", () => {
+  const invalidSources = [
+    'mod { type: Replacing backupThis: "" }',
+    "mod { type: Replacing dontBackupThis: }",
+    "mod { type: Replacing backupThese: [] }",
+    'mod { type: Replacing dontBackupThese: [""] }',
+  ];
+  for (const source of invalidSources) {
+    assert.ok(core.getDiagnostics(source, metadata).length > 0, source);
+  }
+
+  assert.deepEqual(
+    core.getDiagnostics(
+      'mod { type: Replacing backupThese: ["one" "two"] }',
+      metadata,
+    ),
+    [],
+  );
+});
+
+test("These with one path is a warning recommending This", () => {
+  const diagnostics = core.getDiagnostics(
+    'mod { type: Replacing backupThese: ["data/file.dat"] dontBackupThese: ["cache"] }',
+    metadata,
+  );
+
+  assert.equal(diagnostics.length, 2);
+  assert.ok(diagnostics.every((issue) => issue.severity === "warning"));
+  assert.match(diagnostics[0].message, /use 'backupThis' instead/);
+  assert.match(diagnostics[1].message, /use 'dontBackupThis' instead/);
 });
