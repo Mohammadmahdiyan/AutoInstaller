@@ -455,7 +455,10 @@ public partial class MainForm : Form
 
             if (step5Panel.Controls.Find("MultiAssetTypeTabs", true).FirstOrDefault() is TabControl multiAssetTabs)
             {
-                multiAssetTabs.Visible = isMultiAssetMode;
+                var currentMultiModel = isMultiAssetMode ? _multiSourceModels[_multiIndex] : null;
+                multiAssetTabs.Visible = currentMultiModel?.DetectedAssetType == "Unknown"
+                    && currentMultiModel.Status != GtaSaModManager.Models.SourceModelStatus.Mapped
+                    && string.IsNullOrWhiteSpace(currentMultiModel.SelectedAssetType);
                 multiAssetTabs.RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
                 multiAssetTabs.RightToLeftLayout = isRtl;
             }

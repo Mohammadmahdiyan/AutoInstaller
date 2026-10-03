@@ -31,19 +31,19 @@ Gold Snake Santo Capra Outfit => [اسکین ناشناخته],
 در این مثالی که زدم mp5 و Enus Stafford و Declasse Impaler و Gold Snake Santo Capra Outfit ناشناخته هستن باید برای تک تکشون اون select option رو بیاره نه اینکه العان فایل شناخته شده بود و ناشناخته بود کاربر بتونه مثلا ak47 رو توی bufallo نصب کنه
 2. فایل هام حجمشون باز زیاد شده 
 2.1. میخام منطق هر تایپ در یک فایل پیاده سازی بشه نه همشون در یک فایل
-2.2. و میخام هر کی ولیو (deleteThis و deleteThese در یک فایل InstallFile و InstallFiles در یک فایل منظورم اینکه تکی و جمعی کی ولیو در یک فایل) در config.json رو در یک فایل پیاده سازی بشه 
+2.2. می‌خواهم پردازش کلیدهای مفرد و جمعی هر ویژگی در یک فایل باشد؛ مثلاً `deleteThis` و `deleteThese` کنار هم و `installThis` و `installThese` کنار هم. این قاعده برای کلیدهای دیگر مثل `backupThis` و `backupThese` هم رعایت شود.
 من همین دو مورد به ذهنم رسید
 3. PutInGameFolder : 
 این تایپ محتویات داخلش ریخته میشه داخل پوشه بازی مثلا
 Base Mods Address\Cleo Scripts\Ragdoll
-    Ragdoll.json
+    Ragdoll.modsyn
     ragdoll.asi
     ragdoll.bmp
 
-و در فایل جیسون 
-```json
-{
-    "type": "putInGameFolder"
+و در فایل ModSyn پکیج، مثلاً `Ragdoll.modsyn`:
+```modsyn
+mod {
+    type: putInGameFolder
 }
 ```
 و خروجی 
@@ -57,52 +57,41 @@ Game Address\
 5. PutAndReplaces :
 
 6. Replacing : 
-یک key value میخام به مختض تایپ های 
+کلید `backup` را برای تایپ‌های زیر می‌خواهم:
 Replacing,
 PutAndReplace,
 PutAndReplaces
 تایپ های جایگزینی 
-{
-    "type": "Replacing",
-    "backup": true
+mod {
+    type: Replacing,
+    backup: all
 }
-backup یعنی ایا بک اپ گرفته بشه اگع true بود بگیره اگر false نگیره مقدار دیفالتش true 
-اما یک مقدار دیگه باید بگیره null که این برای اینکه کی ولیو باقی رو بگیره
+مقدار پیش‌فرض `backup` برابر `all` است؛ یعنی از همه فایل‌های جایگزین‌شونده Backup گرفته شود. مقدار `none` Backup را غیرفعال می‌کند. مقدار `some` یعنی Backup بر اساس کلیدهای انتخاب مسیر که در ادامه آمده‌اند محدود شود. در این زبان از `null` برای این حالت استفاده نمی‌شود.
 backupThis : مقدار استرینگ میگیره و میگه فقط این فایل یا فقط این پوشه رو بک اپ بگیره
 backupThese : مقدار براکت میگیره و میگه فقط این فایل ها یا این پوشه ها یا ترکیبشون رو بک اپ بگیره
 dontBackupThis : مقدار استرینگ میگیره و میگه فقط این فایل یا این پوشه رو بک اپ نگیره
 dontBackupThese : مقدار براکت میگیره و میگه فقط این فایل ها یا این پوشه ها یا ترکیبشون رو بک اپ نگیره
 
+کلیدهای `backupThis` و `backupThese` مسیرهای مشمول Backup را مشخص می‌کنند؛ `dontBackupThis` و `dontBackupThese` مسیرها را مستثنا می‌کنند و بر انتخاب‌های Backup اولویت دارند. هنگام استفاده از هرکدام از این چهار کلید، مقدار `backup` باید `some` باشد و دست‌کم یک مسیر انتخاب شود.
+
 مثلا
 Base Mods Address\Sounds\original audio\
-    config.json
+    config.modsyn
     audio\
         Config\
         SFX\
         Streams\
     cleo\
         cleo5.asi
-در فایل جیسون
-```json
-{
-    "type": "PutInReplace"
-    "backup": null,
-    "dontBackupThese": [
-        "audio\\Config",
-        "audio\\SFX"
+در فایل ModSyn پکیج، مثلاً `config.modsyn`:
+```modsyn
+mod {
+    type: PutAndReplaces,
+    backup: some,
+    dontBackupThese: [ 
+        "audio\\Config", 
+        "audio\\SFX",
         "cleo\\cleo5.asi"
     ]
 }
 ```
-و خروجی
-Game Address\
-    .ModManager\
-        backup\
-            original audio\
-                streams\
-    cleo\
-        cleo5.asi
-    audio\
-         Config\
-         SFX\
-         streams\

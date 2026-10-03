@@ -78,7 +78,6 @@ public partial class MainForm : Form
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<SourceModel> _multiSourceModels = new();
     private int _multiIndex;
-    private string _multiLastUsedAssetType = "Vehicle";
     private bool _isUpdatingMultiAssetTabs;
     private Dictionary<string, List<string>> _step5OccupiedAssetFolders = new(StringComparer.OrdinalIgnoreCase);
     private string _step5OccupiedScanKey = string.Empty;

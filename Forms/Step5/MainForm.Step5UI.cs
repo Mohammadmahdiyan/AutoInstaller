@@ -423,10 +423,31 @@ public partial class MainForm : Form
         _step5UnknownAssetTypeCancelled = false;
         _step5PreparationAttempted = true;
         var model = _multiSourceModels[_multiIndex];
+        if (model.DetectedAssetType == "Unknown"
+            && model.Status != SourceModelStatus.Mapped
+            && string.IsNullOrWhiteSpace(model.SelectedAssetType))
+        {
+            if (!model.AssetTypePrompted)
+            {
+                model.AssetTypePrompted = true;
+                model.SelectedAssetType = PromptForUnknownAssetType(model.BaseName);
+            }
+
+            if (string.IsNullOrWhiteSpace(model.SelectedAssetType))
+            {
+                _step5UnknownAssetTypeCancelled = model.AssetTypePrompted;
+                _step5DetectedAssetType = string.Empty;
+                _step5DetectedAssets.Clear();
+                _step5SelectedAssetKeys.Clear();
+                _selectedAssetForInstall = null;
+                return;
+            }
+        }
+
         var initialType = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
             ? model.TargetAsset.AssetType
             : model.DetectedAssetType == "Unknown"
-                ? _multiLastUsedAssetType
+                ? model.SelectedAssetType
                 : model.DetectedAssetType;
         SetMultiAssetTypeTab(initialType, refresh: false);
 
@@ -459,7 +480,22 @@ public partial class MainForm : Form
             assetType = "Vehicle";
         }
 
-        _multiLastUsedAssetType = assetType;
+        var model = _multiSourceModels[_multiIndex];
+        var requiredType = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
+            ? model.TargetAsset.AssetType
+            : model.DetectedAssetType == "Unknown"
+                ? model.SelectedAssetType
+                : model.DetectedAssetType;
+        if (!string.IsNullOrWhiteSpace(requiredType))
+        {
+            assetType = requiredType;
+        }
+        else if (model.DetectedAssetType == "Unknown")
+        {
+            model.SelectedAssetType = assetType;
+            _step5UnknownAssetTypeCancelled = false;
+        }
+
         _step5DetectedAssetType = assetType;
         _step5DetectedAssets.Clear();
         _step5DetectedAssets.AddRange(_assetCatalogService.LoadAssets()
@@ -468,7 +504,6 @@ public partial class MainForm : Form
         _step5SelectedAssetKeys.Clear();
         _selectedAssetForInstall = null;
 
-        var model = _multiSourceModels[_multiIndex];
         var selectedAsset = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
             ? _step5DetectedAssets.FirstOrDefault(asset =>
                 string.Equals(GetAssetSelectionKey(asset), GetAssetSelectionKey(model.TargetAsset), StringComparison.OrdinalIgnoreCase))
@@ -585,6 +620,7 @@ public partial class MainForm : Form
             return;
         }
 
+        _step5UnknownAssetTypeCancelled = false;
         var model = _multiSourceModels[_multiIndex];
         model.Status = SourceModelStatus.KeepOriginal;
         model.TargetAsset = null;
@@ -600,6 +636,7 @@ public partial class MainForm : Form
             return;
         }
 
+        _step5UnknownAssetTypeCancelled = false;
         var model = _multiSourceModels[_multiIndex];
         model.Status = SourceModelStatus.Skipped;
         model.TargetAsset = null;
@@ -618,6 +655,7 @@ public partial class MainForm : Form
         }
 
         var currentModel = _multiSourceModels[_multiIndex];
+        _step5UnknownAssetTypeCancelled = false;
         if (_selectedAssetForInstall == null)
         {
             currentModel.Status = SourceModelStatus.KeepOriginal;
@@ -1235,6 +1273,10 @@ public partial class MainForm : Form
             Height = 30,
             Location = new Point(160, 100)
         };
+
+        typeSelector.SelectedIndex = -1;
+        okButton.Enabled = false;
+        typeSelector.SelectedIndexChanged += (_, _) => okButton.Enabled = typeSelector.SelectedIndex >= 0;
 
         dialog.Controls.Add(description);
         dialog.Controls.Add(typeSelector);

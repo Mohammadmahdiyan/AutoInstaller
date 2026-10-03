@@ -250,7 +250,6 @@ public partial class MainForm : Form
             _step5DetectedAssets.Clear();
             _step5SelectedAssetKeys.Clear();
             _multiSourceModels.Clear();
-            _multiLastUsedAssetType = "Vehicle";
             var isMultiAssetPackage = _selectedModManifest?.IsMultiAssetPackage == true;
             if (isMultiAssetPackage)
             {
