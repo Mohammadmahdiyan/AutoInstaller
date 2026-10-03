@@ -50,11 +50,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
+      "projectUniqueName": "H:\\B\\ModAutoInstaller\\ModManager.csproj",
       "projectName": "gta_sa_mod_manager",
-      "projectPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\ModManager.csproj",
+      "projectPath": "H:\\B\\ModAutoInstaller\\ModManager.csproj",
       "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
-      "outputPath": "H:\\B\\AA-MiniProject\\ModAutoInstaller\\obj\\",
+      "outputPath": "H:\\B\\ModAutoInstaller\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

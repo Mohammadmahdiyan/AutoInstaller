@@ -145,8 +145,114 @@ test("unknown root and nested keys produce diagnostics", () => {
   assert.deepEqual(
     diagnostics.map((issue) => issue.message),
     [
-      "Unknown root property 'mystery'.",
-      "Unknown requirement property 'checkFile'.",
+      "Unknown root property 'mystery'. (line 1, column 7).",
+      "Unknown requirement property 'checkFile'. (line 1, column 32).",
     ],
   );
+});
+
+test("unknown keys suggest a unique close key in root and nested scopes", () => {
+  const diagnostics = core.getDiagnostics(
+    'mod { instalThese: [] require: { checkThes: ["x"] } }',
+    metadata,
+  );
+
+  assert.deepEqual(
+    diagnostics.map((issue) => issue.message.split(" (line")[0]),
+    [
+      "Unknown root property 'instalThese'. Did you mean 'installThese'?",
+      "Unknown requirement property 'checkThes'. Did you mean 'checkThese'?",
+    ],
+  );
+});
+
+test("duplicate keys are errors, including an incomplete repeated key", () => {
+  const diagnostics = core.getDiagnostics(
+    'mod { type: PIM type: DSL require: { reqPath: "one" reqPath: "two" } }',
+    metadata,
+  );
+
+  assert.deepEqual(
+    diagnostics
+      .filter((issue) => issue.code === "duplicate-property")
+      .map((issue) => issue.message.split(" (line")[0]),
+    [
+      "Duplicate root property 'type'.",
+      "Duplicate requirement property 'reqPath'.",
+    ],
+  );
+
+  const incompleteDuplicate = core.getDiagnostics(
+    "mod { type: PIM, type }",
+    metadata,
+  );
+  assert.equal(incompleteDuplicate.length, 1);
+  assert.equal(incompleteDuplicate[0].code, "duplicate-property");
+  assert.match(
+    incompleteDuplicate[0].message,
+    /Duplicate root property 'type'/,
+  );
+});
+
+test("diagnostics reject unsupported type, backup literals, and backup null without selectors", () => {
+  const diagnostics = core.getDiagnostics(
+    'mod { type: UnknownType backup: "yes" }',
+    metadata,
+  );
+
+  assert.deepEqual(
+    diagnostics.map((issue) => issue.message.split(" (line")[0]),
+    [
+      "Unsupported package type 'UnknownType'.",
+      "Property 'backup' expects boolean or null, but found string.",
+    ],
+  );
+  assert.deepEqual(
+    diagnostics.map((issue) => [issue.line, issue.column]),
+    [
+      [1, 13],
+      [1, 33],
+    ],
+  );
+
+  const nullBackupDiagnostics = core.getDiagnostics(
+    "mod { type: Replacing backup: null }",
+    metadata,
+  );
+  assert.deepEqual(
+    nullBackupDiagnostics.map((issue) => issue.message.split(" (line")[0]),
+    [
+      "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese is provided.",
+    ],
+  );
+});
+
+test("diagnostics enforce This/These shapes and string-only array items", () => {
+  const diagnostics = core.getDiagnostics(
+    'mod { type: Replacing installThis: true installThese: "one" dontBackupThese: ["a" false] }',
+    metadata,
+  );
+
+  assert.deepEqual(
+    diagnostics.map((issue) => issue.message.split(" (line")[0]),
+    [
+      "Property 'installThis' expects string, but found boolean.",
+      "Property 'installThese' expects array, but found string.",
+      "Array item for 'dontBackupThese' expects string, but found boolean.",
+    ],
+  );
+});
+
+test("backup null is accepted with a backup selection key for replacement types", () => {
+  assert.deepEqual(
+    core.getDiagnostics(
+      "mod { type: Replacing backup: null backupThese: [] }",
+      metadata,
+    ),
+    [],
+  );
+});
+
+test("empty type uses the default without unrelated semantic errors", () => {
+  assert.deepEqual(core.getDiagnostics('mod { type: "" }', metadata), []);
 });

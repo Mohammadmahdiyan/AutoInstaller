@@ -28,7 +28,8 @@ function activate(context) {
   };
 
   const validate = (document) => {
-    if (document.languageId !== "modsyn") {
+    const isModsynFile = document.fileName.toLowerCase().endsWith(".modsyn");
+    if (document.languageId !== "modsyn" && !isModsynFile) {
       return;
     }
 
@@ -43,7 +44,7 @@ function activate(context) {
           vscode.DiagnosticSeverity.Error,
         );
         diagnostic.source = "Modsyn";
-        diagnostic.code = "unknown-property";
+        diagnostic.code = issue.code ?? "unknown-property";
         return diagnostic;
       });
     diagnostics.set(document.uri, entries);

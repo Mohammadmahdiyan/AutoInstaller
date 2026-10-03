@@ -240,62 +240,336 @@ function getDiagnostics(source, metadata) {
   const diagnostics = [];
   let index = 0;
 
-  function parseObject(scope, closingKind) {
+  function addDiagnostic(token, message, code = "unknown-property") {
+    const before = source.slice(0, token.start);
+    const lines = before.split(/\r\n|\r|\n/);
+    diagnostics.push({
+      start: token.start,
+      end: token.end,
+      line: lines.length,
+      column: lines[lines.length - 1].length + 1,
+      message: `${message} (line ${lines.length}, column ${lines[lines.length - 1].length + 1}).`,
+      code,
+    });
+  }
+
+  function findClosestPropertyName(propertyName, definitions) {
+    const normalizedName = propertyName.toLowerCase();
+    const maximumDistance = Math.max(1, Math.floor(normalizedName.length / 4));
+    const closest = definitions
+      .map((definition) => ({
+        name: definition.name,
+        distance: getEditDistance(
+          normalizedName,
+          definition.name.toLowerCase(),
+        ),
+        commonPrefixLength: getCommonPrefixLength(
+          normalizedName,
+          definition.name.toLowerCase(),
+        ),
+      }))
+      .filter((candidate) => candidate.distance <= maximumDistance)
+      .sort(
+        (left, right) =>
+          left.distance - right.distance ||
+          right.commonPrefixLength - left.commonPrefixLength,
+      );
+
+    if (
+      closest.length === 0 ||
+      (closest.length > 1 &&
+        closest[0].distance === closest[1].distance &&
+        closest[0].commonPrefixLength === closest[1].commonPrefixLength)
+    ) {
+      return undefined;
+    }
+    return closest[0].name;
+  }
+
+  function getEditDistance(left, right) {
+    const distances = Array.from({ length: left.length + 1 }, () => []);
+    for (let row = 0; row <= left.length; row++) distances[row][0] = row;
+    for (let column = 0; column <= right.length; column++)
+      distances[0][column] = column;
+
+    for (let row = 1; row <= left.length; row++) {
+      for (let column = 1; column <= right.length; column++) {
+        const substitutionCost = left[row - 1] === right[column - 1] ? 0 : 1;
+        distances[row][column] = Math.min(
+          distances[row - 1][column] + 1,
+          distances[row][column - 1] + 1,
+          distances[row - 1][column - 1] + substitutionCost,
+        );
+      }
+    }
+    return distances[left.length][right.length];
+  }
+
+  function getCommonPrefixLength(left, right) {
+    let index = 0;
+    while (
+      index < left.length &&
+      index < right.length &&
+      left[index] === right[index]
+    ) {
+      index++;
+    }
+    return index;
+  }
+
+  function valueKind(node) {
+    if (node.kind === "string") return "String";
+    if (node.kind === "true" || node.kind === "false") return "Boolean";
+    if (node.kind === "null") return "Null";
+    if (node.kind === "identifier") return "Identifier";
+    if (node.kind === "Array") return "Array";
+    if (node.kind === "Object") return "Object";
+    return "Unknown";
+  }
+
+  function normalizeType(value) {
+    return value
+      .trim()
+      .replace(/[\s_-]/g, "")
+      .toLowerCase();
+  }
+
+  function isSupportedType(value) {
+    const key = normalizeType(value);
+    return metadata.types.some((type) =>
+      [type.name, ...type.aliases].some(
+        (candidate) => normalizeType(candidate) === key,
+      ),
+    );
+  }
+
+  function parseValue() {
+    const token = tokens[index];
+    if (!token)
+      return {
+        kind: "Unknown",
+        token: tokens[tokens.length - 1],
+        value: undefined,
+      };
+    if (token.kind === "{") {
+      index++;
+      const object = parseObject("}");
+      object.token = token;
+      return object;
+    }
+    if (token.kind === "[") {
+      index++;
+      const items = [];
+      while (index < tokens.length && tokens[index].kind !== "]") {
+        if (tokens[index].kind === ",") {
+          index++;
+          continue;
+        }
+        items.push(parseValue());
+      }
+      if (tokens[index]?.kind === "]") index++;
+      return { kind: "Array", token, items };
+    }
+    index++;
+    return { kind: token.kind, token, value: token.value };
+  }
+
+  function validateProperty(property, definition, scope) {
+    const kind = valueKind(property.value);
+    if (!definition.allowedValueKinds.includes(kind)) {
+      addDiagnostic(
+        property.value.token,
+        `Property '${property.name}' expects ${definition.allowedValueKinds.map((value) => metadata.valueKinds.find((entry) => entry.kind === value)?.name ?? value).join(" or ")}, but found ${metadata.valueKinds.find((entry) => entry.kind === kind)?.name ?? kind}.`,
+      );
+      return;
+    }
+
+    if (kind === "Array" && definition.arrayItemKinds.length) {
+      for (const itemNode of property.value.items) {
+        const itemKind = valueKind(itemNode);
+        if (!definition.arrayItemKinds.includes(itemKind)) {
+          addDiagnostic(
+            itemNode.token,
+            `Array item for '${property.name}' expects ${definition.arrayItemKinds.map((value) => metadata.valueKinds.find((entry) => entry.kind === value)?.name ?? value).join(" or ")}, but found ${metadata.valueKinds.find((entry) => entry.kind === itemKind)?.name ?? itemKind}.`,
+          );
+        }
+      }
+    }
+
+    if (scope === "root" && property.name === "type") {
+      const typeValue = property.value.value;
+      if (
+        (property.value.kind === "string" ||
+          property.value.kind === "identifier") &&
+        typeValue.trim() !== "" &&
+        !isSupportedType(typeValue)
+      ) {
+        addDiagnostic(
+          property.value.token,
+          `Unsupported package type '${typeValue ?? ""}'.`,
+        );
+      }
+    }
+
+    if (property.value.kind === "Object") {
+      const nestedScope =
+        property.name === "require" &&
+        (scope === "root" || scope === "requirement")
+          ? "requirement"
+          : "other";
+      validateObject(property.value, nestedScope);
+    } else if (property.value.kind === "Array") {
+      for (const itemNode of property.value.items) {
+        if (itemNode.kind !== "Object") continue;
+        const nestedScope =
+          scope === "root" && property.name === "requires"
+            ? "requirement"
+            : scope === "root" && property.name === "replacements"
+              ? "replacement"
+              : "other";
+        validateObject(itemNode, nestedScope);
+      }
+    }
+  }
+
+  function validateObject(objectNode, scope) {
+    const definitions = propertyMap(metadata, scope);
+    const seenProperties = new Set();
+    for (const property of objectNode.properties) {
+      if (seenProperties.has(property.name)) {
+        addDiagnostic(
+          property.token,
+          `Duplicate ${scope} property '${property.name}'.`,
+          "duplicate-property",
+        );
+      }
+      seenProperties.add(property.name);
+
+      const definition = definitions.find(
+        (candidate) => candidate.name === property.name,
+      );
+      if (!definition) {
+        const suggestion = findClosestPropertyName(property.name, definitions);
+        addDiagnostic(
+          property.token,
+          suggestion
+            ? `Unknown ${scope} property '${property.name}'. Did you mean '${suggestion}'?`
+            : `Unknown ${scope} property '${property.name}'.`,
+        );
+        continue;
+      }
+      if (property.incomplete) continue;
+      validateProperty(property, definition, scope);
+    }
+
+    if (scope === "replacement") {
+      for (const requiredName of ["source", "target"]) {
+        if (
+          !objectNode.properties.some(
+            (property) =>
+              property.name === requiredName &&
+              property.value.kind === "string",
+          )
+        ) {
+          addDiagnostic(
+            objectNode.token,
+            `Replacement object requires a '${requiredName}' string property.`,
+          );
+        }
+      }
+    }
+
+    if (scope !== "root") return;
+    const typeProperty = objectNode.properties.find(
+      (property) => property.name === "type",
+    );
+    const rawType = typeProperty?.value.value;
+    const matchedType =
+      typeof rawType === "string" && rawType.trim() !== ""
+        ? metadata.types.find((type) =>
+            [type.name, ...type.aliases].some(
+              (candidate) =>
+                normalizeType(candidate) === normalizeType(rawType),
+            ),
+          )
+        : null;
+    const typeIsValid =
+      !typeProperty ||
+      (typeof rawType === "string" &&
+        (rawType.trim() === "" || matchedType !== undefined));
+    const resolvedType =
+      rawType?.trim() === "" || !typeProperty
+        ? metadata.defaultTypeName
+        : matchedType?.name;
+    const backupProperties = [
+      "backup",
+      "backupThis",
+      "backupThese",
+      "dontBackupThis",
+      "dontBackupThese",
+    ];
+    for (const property of objectNode.properties) {
+      const definition = definitions.find(
+        (candidate) => candidate.name === property.name,
+      );
+      if (
+        typeIsValid &&
+        definition?.applicableTypes.length &&
+        !definition.applicableTypes.includes(resolvedType)
+      ) {
+        addDiagnostic(
+          property.token,
+          `Property '${property.name}' is only valid for types: ${definition.applicableTypes.join(", ")}.`,
+        );
+      }
+    }
+    const backupProperty = objectNode.properties.find(
+      (property) => property.name === "backup",
+    );
+    if (
+      backupProperty?.value.kind === "null" &&
+      !objectNode.properties.some((property) =>
+        backupProperties.slice(1).includes(property.name),
+      )
+    ) {
+      addDiagnostic(
+        backupProperty.value.token,
+        "Property 'backup' cannot be null unless at least one backup selection key is provided.",
+      );
+    }
+  }
+
+  function parseObject(closingKind) {
+    const properties = [];
     while (index < tokens.length && tokens[index].kind !== closingKind) {
+      if (tokens[index].kind === ",") {
+        index++;
+        continue;
+      }
       const key = tokens[index];
-      if (key.kind !== "identifier" || tokens[index + 1]?.kind !== ":") {
+      if (key.kind !== "identifier") {
+        index++;
+        continue;
+      }
+      if (tokens[index + 1]?.kind !== ":") {
+        properties.push({
+          name: key.value,
+          token: key,
+          value: { kind: "Unknown", token: key },
+          incomplete: true,
+        });
         index++;
         continue;
       }
       index += 2;
-      const allowed = propertyMap(metadata, scope);
-      if (!allowed.some((property) => property.name === key.value)) {
-        diagnostics.push({
-          start: key.start,
-          end: key.end,
-          message: `Unknown ${scope} property '${key.value}'.`,
-        });
-      }
-      parseValue(scope, key.value);
+      properties.push({ name: key.value, token: key, value: parseValue() });
     }
     if (tokens[index]?.kind === closingKind) index++;
-  }
-
-  function parseValue(parentScope, property) {
-    if (tokens[index]?.kind === "{") {
-      index++;
-      const nestedScope =
-        property === "require" &&
-        (parentScope === "root" || parentScope === "requirement")
-          ? "requirement"
-          : parentScope === "array-requirements"
-            ? "requirement"
-            : "other";
-      parseObject(nestedScope, "}");
-      return;
-    }
-    if (tokens[index]?.kind === "[") {
-      index++;
-      const itemScope =
-        parentScope === "root" && property === "requires"
-          ? "requirement"
-          : parentScope === "root" && property === "replacements"
-            ? "replacement"
-            : null;
-      while (index < tokens.length && tokens[index].kind !== "]") {
-        if (tokens[index].kind === "{" && itemScope) {
-          index++;
-          parseObject(itemScope, "}");
-        } else if (tokens[index].kind === "[") {
-          parseValue("array", "");
-        } else {
-          index++;
-        }
-      }
-      if (tokens[index]?.kind === "]") index++;
-      return;
-    }
-    if (tokens[index]) index++;
+    return {
+      kind: "Object",
+      token: tokens[index - 1] ?? tokens[0],
+      properties,
+    };
   }
 
   if (
@@ -304,7 +578,7 @@ function getDiagnostics(source, metadata) {
     tokens[1]?.kind === "{"
   ) {
     index = 2;
-    parseObject("root", "}");
+    validateObject(parseObject("}"), "root");
   }
   return diagnostics;
 }

@@ -17,6 +17,7 @@ public static class ModsynValidator
         {
             ValidateBackupApplicability(document.Body, normalizedType, errors);
         }
+        ValidateNullBackupSelection(document.Body, errors);
 
         var requirements = new List<ModsynResolvedRequirement>();
         foreach (var property in document.Body.Properties)
@@ -98,6 +99,26 @@ public static class ModsynValidator
         }
     }
 
+    private static void ValidateNullBackupSelection(
+        ModsynObjectNode root,
+        List<ModsynValidationError> errors)
+    {
+        var backup = FindProperty(root, "backup");
+        if (backup?.Value is not ModsynNullNode)
+        {
+            return;
+        }
+
+        var hasSelection = root.Properties.Any(property => property.Name is
+            "backupThis" or "backupThese" or "dontBackupThis" or "dontBackupThese");
+        if (!hasSelection)
+        {
+            errors.Add(new ModsynValidationError(
+                "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese is provided.",
+                backup.Location));
+        }
+    }
+
     private static ModsynResolvedRequirement ValidateRequirement(
         ModsynObjectNode requirement,
         List<ModsynValidationError> errors)
@@ -151,16 +172,94 @@ public static class ModsynValidator
         string scope,
         List<ModsynValidationError> errors)
     {
+        var seenProperties = new HashSet<string>(StringComparer.Ordinal);
         foreach (var property in value.Properties)
         {
+            if (!seenProperties.Add(property.Name))
+            {
+                errors.Add(new ModsynValidationError(
+                    $"Duplicate {scope} property '{property.Name}'.",
+                    property.Location));
+            }
+
             if (!definitions.TryGetValue(property.Name, out var definition))
             {
-                errors.Add(new ModsynValidationError($"Unknown {scope} property '{property.Name}'.", property.Location));
+                var suggestion = FindClosestPropertyName(property.Name, definitions.Keys);
+                var message = suggestion is null
+                    ? $"Unknown {scope} property '{property.Name}'."
+                    : $"Unknown {scope} property '{property.Name}'. Did you mean '{suggestion}'?";
+                errors.Add(new ModsynValidationError(message, property.Location));
                 continue;
             }
 
             ValidateValue(property.Name, property.Value, definition, errors);
         }
+    }
+
+    private static string? FindClosestPropertyName(string propertyName, IEnumerable<string> candidates)
+    {
+        var normalizedName = propertyName.ToLowerInvariant();
+        var maximumDistance = Math.Max(1, normalizedName.Length / 4);
+        var closest = candidates
+            .Select(candidate =>
+            {
+                var normalizedCandidate = candidate.ToLowerInvariant();
+                return (
+                    Name: candidate,
+                    Distance: GetEditDistance(normalizedName, normalizedCandidate),
+                    CommonPrefixLength: GetCommonPrefixLength(normalizedName, normalizedCandidate));
+            })
+            .Where(candidate => candidate.Distance <= maximumDistance)
+            .OrderBy(candidate => candidate.Distance)
+            .ThenByDescending(candidate => candidate.CommonPrefixLength)
+            .ToList();
+
+        if (closest.Count == 0 || closest.Count > 1
+            && closest[0].Distance == closest[1].Distance
+            && closest[0].CommonPrefixLength == closest[1].CommonPrefixLength)
+        {
+            return null;
+        }
+
+        return closest[0].Name;
+    }
+
+    private static int GetEditDistance(string left, string right)
+    {
+        var distances = new int[left.Length + 1, right.Length + 1];
+        for (var row = 0; row <= left.Length; row++)
+        {
+            distances[row, 0] = row;
+        }
+
+        for (var column = 0; column <= right.Length; column++)
+        {
+            distances[0, column] = column;
+        }
+
+        for (var row = 1; row <= left.Length; row++)
+        {
+            for (var column = 1; column <= right.Length; column++)
+            {
+                var substitutionCost = left[row - 1] == right[column - 1] ? 0 : 1;
+                distances[row, column] = Math.Min(
+                    Math.Min(distances[row - 1, column] + 1, distances[row, column - 1] + 1),
+                    distances[row - 1, column - 1] + substitutionCost);
+            }
+        }
+
+        return distances[left.Length, right.Length];
+    }
+
+    private static int GetCommonPrefixLength(string left, string right)
+    {
+        var index = 0;
+        while (index < left.Length && index < right.Length && left[index] == right[index])
+        {
+            index++;
+        }
+
+        return index;
     }
 
     private static void ValidateValue(

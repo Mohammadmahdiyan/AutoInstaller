@@ -58,6 +58,27 @@ public sealed class ModsynValidatorTests
     }
 
     [TestMethod]
+    public void Validate_SuggestsSimilarPropertyNamesInEachScope()
+    {
+        var result = Validate("mod { instalThese: [] require: { checkThes: [\"cleo.asi\"] } }");
+
+        Assert.AreEqual(2, result.Errors.Count);
+        StringAssert.Contains(result.Errors[0].Message, "Did you mean 'installThese'?");
+        StringAssert.Contains(result.Errors[1].Message, "Did you mean 'checkThese'?");
+    }
+
+    [TestMethod]
+    public void Validate_RejectsDuplicatePropertiesInEachScope()
+    {
+        var result = Validate("mod { type: PIM type: DSL require: { reqPath: \"one\" reqPath: \"two\" } replacements: [{ source: \"one\" source: \"two\" target: \"target\" }] }");
+
+        Assert.AreEqual(3, result.Errors.Count);
+        StringAssert.Contains(result.Errors[0].Message, "Duplicate root-level property 'type'");
+        StringAssert.Contains(result.Errors[1].Message, "Duplicate requirement property 'reqPath'");
+        StringAssert.Contains(result.Errors[2].Message, "Duplicate replacement property 'source'");
+    }
+
+    [TestMethod]
     public void Validate_RequiresExactThisAndTheseValueShapes()
     {
         var result = Validate("mod {\n  installThis: [\"one\"]\n  ignoreThese: [\"ok\" false]\n  deleteThese: \"one\"\n}");
@@ -79,6 +100,17 @@ public sealed class ModsynValidatorTests
         Assert.AreEqual(1, invalid.Errors.Count);
         StringAssert.Contains(invalid.Errors[0].Message, "only valid for types");
         Assert.AreEqual(new GtaSaModManager.Modsyn.Lexer.ModsynSourceLocation(1, 28), invalid.Errors[0].Location);
+    }
+
+    [TestMethod]
+    public void Validate_RequiresBackupSelectionWhenBackupIsNull()
+    {
+        var invalid = Validate("mod { type: Replacing backup: null }");
+        var valid = Validate("mod { type: Replacing backup: null backupThese: [\"data\\file.dat\"] }");
+
+        Assert.AreEqual(1, invalid.Errors.Count);
+        StringAssert.Contains(invalid.Errors[0].Message, "cannot be null unless at least one of");
+        Assert.IsTrue(valid.IsValid, string.Join(Environment.NewLine, valid.Errors));
     }
 
     [TestMethod]

@@ -1,8 +1,0 @@
-mod {
-    installThis: "models\example.dff"
-    installThese:
-    [
-        "models\example.txd"
-        "data\handling.cfg"
-    ]
-}
