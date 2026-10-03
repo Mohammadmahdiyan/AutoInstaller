@@ -45,6 +45,29 @@ public sealed class ModsynCompletionTests
     }
 
     [TestMethod]
+    public void GetCompletions_DoesNotRepeatExistingTypeKeyAfterCommaOrNewline()
+    {
+        var comma = GetAtMarker("mod { type: PutAndReplace, | }");
+        var newline = GetAtMarker("mod {\n  type: PutAndReplace\n  |\n}");
+        var expected = ModsynLanguageDefinition.RootProperties.Keys
+            .Where(name => name != "type")
+            .ToArray();
+
+        CollectionAssert.AreEquivalent(expected, comma.Select(item => item.Label).ToArray());
+        CollectionAssert.AreEquivalent(expected, newline.Select(item => item.Label).ToArray());
+    }
+
+    [TestMethod]
+    public void GetCompletions_DoesNotRepeatAnyExistingKey()
+    {
+        var root = GetAtMarker("mod { type: PIM, installThis: \"cleo/main.cs\", | }");
+        var requirement = GetAtMarker("mod { require: { checkThis: \"cleo.asi\", | } }");
+
+        Assert.IsFalse(root.Any(item => item.Label is "type" or "installThis"));
+        Assert.IsFalse(requirement.Any(item => item.Label == "checkThis"));
+    }
+
+    [TestMethod]
     public void GetCompletions_FiltersRootPropertiesByLongerPrefixes()
     {
         CollectionAssert.AreEquivalent(
@@ -121,7 +144,7 @@ public sealed class ModsynCompletionTests
         var completions = GetAtEnd(source).Select(item => item.Label).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         CollectionAssert.AreEquivalent(
-            new[] { "installThis", "installThese", "ignoreThis", "ignoreThese" },
+            new[] { "installThese", "ignoreThis", "ignoreThese" },
             completions.ToArray());
         Assert.IsFalse(new[] { "cfg", "data", "dff", "example", "handling", "models", "source", "target", "txd" }
             .Any(completions.Contains));

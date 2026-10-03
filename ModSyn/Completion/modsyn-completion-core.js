@@ -88,12 +88,10 @@ function detectContext(source, cursorOffset, metadata) {
   const tokens = tokenize(active.source);
   const stack = [];
   let sawMod = false;
-  let completedType = false;
 
   for (let index = 0; index < tokens.length; index++) {
     const token = tokens[index];
     const previous = tokens[index - 1];
-    completedType = false;
     if (stack.length === 0) {
       if (token.kind === "identifier" && token.value === "mod") sawMod = true;
       else if (token.kind === "{" && sawMod && previous?.value === "mod")
@@ -151,14 +149,12 @@ function detectContext(source, cursorOffset, metadata) {
       frame.property = undefined;
     } else if (frame.state === "key" && token.kind === "identifier") {
       frame.property = token.value;
+      frame.properties ??= new Set();
+      frame.properties.add(token.value);
       frame.state = "colon";
     } else if (frame.state === "colon" && token.kind === ":") {
       frame.state = "value";
     } else if (frame.state === "value") {
-      completedType =
-        frame.scope === "root" &&
-        frame.property === "type" &&
-        (token.kind === "identifier" || token.kind === "string");
       frame.state = "key";
       frame.property = undefined;
     }
@@ -173,6 +169,7 @@ function detectContext(source, cursorOffset, metadata) {
       prefix: active.prefix,
     };
   }
+  const usedProperties = frame.properties ?? new Set();
   if (frame.state === "value" && frame.property) {
     if (frame.scope === "root" && frame.property === "type")
       return { kind: "type", property: frame.property, prefix: active.prefix };
@@ -185,8 +182,6 @@ function detectContext(source, cursorOffset, metadata) {
       return { kind: "path", property: frame.property, prefix: active.prefix };
     return { kind: "value", property: frame.property, prefix: active.prefix };
   }
-  if (frame.scope === "root" && completedType)
-    return { kind: "type", property: "type", prefix: active.prefix };
   return {
     kind:
       frame.scope === "root"
@@ -194,6 +189,7 @@ function detectContext(source, cursorOffset, metadata) {
         : frame.scope === "requirement"
           ? "requirement"
           : "none",
+    usedProperties,
     prefix: active.prefix,
   };
 }
@@ -209,13 +205,17 @@ function getCompletions(source, cursorOffset, metadata) {
   const context = detectContext(source, cursorOffset, metadata);
   let items = [];
   if (context.kind === "root") {
-    items = propertyMap(metadata, "root").map((property) =>
-      item(property.name, property.name, property.description, "property"),
-    );
+    items = propertyMap(metadata, "root")
+      .filter((property) => !context.usedProperties?.has(property.name))
+      .map((property) =>
+        item(property.name, property.name, property.description, "property"),
+      );
   } else if (context.kind === "requirement") {
-    items = propertyMap(metadata, "requirement").map((property) =>
-      item(property.name, property.name, property.description, "property"),
-    );
+    items = propertyMap(metadata, "requirement")
+      .filter((property) => !context.usedProperties?.has(property.name))
+      .map((property) =>
+        item(property.name, property.name, property.description, "property"),
+      );
   } else if (context.kind === "type") {
     items = metadata.types.flatMap((type) => [
       item(type.name, type.name, type.description, "type"),

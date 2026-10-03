@@ -24,6 +24,16 @@ public sealed class ModsynParserTests
     }
 
     [TestMethod]
+    public void Parse_AcceptsCommaSeparatedObjectProperties()
+    {
+        var document = Parse("mod { type: PutAndReplace, backup: true, replacements: [{ source: \"data/handling.cfg\", target: \"data/handling.cfg\" }] }");
+        var validation = GtaSaModManager.Modsyn.Validation.ModsynValidator.Validate(document);
+
+        Assert.AreEqual(3, document.Body.Properties.Count);
+        Assert.IsTrue(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
+    }
+
+    [TestMethod]
     public void Parse_RecognizesStringsIdentifiersBooleansAndNull()
     {
         var document = Parse("mod {\n  text: \"value\"\n  name: SomeIdentifier\n  enabled: true\n  disabled: false\n  optional: null\n}");

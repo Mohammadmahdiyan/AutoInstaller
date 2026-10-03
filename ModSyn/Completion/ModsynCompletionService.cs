@@ -27,12 +27,13 @@ public static class ModsynCompletionService
             source,
             cursorOffset,
             out var prefix,
-            out var propertyName);
+            out var propertyName,
+            out var existingPropertyNames);
 
         return context switch
         {
             ModsynCompletionContext.RootProperties or ModsynCompletionContext.RequirementProperties =>
-                PropertyProvider.GetCompletions(context, prefix),
+                PropertyProvider.GetCompletions(context, prefix, existingPropertyNames),
             ModsynCompletionContext.TypeValues => ValueProvider.GetTypeCompletions(prefix),
             ModsynCompletionContext.PropertyValues when propertyName is not null =>
                 ValueProvider.GetCompletions(propertyName, prefix, availablePaths),

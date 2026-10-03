@@ -35,6 +35,8 @@ public static class ModsynCompletionContextDetector
 
         public string? PropertyName { get; set; }
 
+        public HashSet<string> PropertyNames { get; } = new(StringComparer.Ordinal);
+
         public bool ContainsRequirementObjects { get; init; }
 
         public string? ArrayPropertyName { get; init; }
@@ -58,6 +60,16 @@ public static class ModsynCompletionContextDetector
         out string prefix,
         out string? propertyName)
     {
+        return Detect(source, cursorOffset, out prefix, out propertyName, out _);
+    }
+
+    public static ModsynCompletionContext Detect(
+        string source,
+        int cursorOffset,
+        out string prefix,
+        out string? propertyName,
+        out IReadOnlySet<string> existingPropertyNames)
+    {
         ArgumentNullException.ThrowIfNull(source);
         if (cursorOffset < 0 || cursorOffset > source.Length)
         {
@@ -69,16 +81,20 @@ public static class ModsynCompletionContextDetector
         if (openQuoteIndex >= 0)
         {
             prefix = sourcePrefix[(openQuoteIndex + 1)..];
-            return DetectCore(sourcePrefix[..openQuoteIndex], out propertyName);
+            return DetectCore(sourcePrefix[..openQuoteIndex], out propertyName, out existingPropertyNames);
         }
 
         prefix = GetTrailingIdentifierPrefix(sourcePrefix);
-        return DetectCore(sourcePrefix[..(sourcePrefix.Length - prefix.Length)], out propertyName);
+        return DetectCore(sourcePrefix[..(sourcePrefix.Length - prefix.Length)], out propertyName, out existingPropertyNames);
     }
 
-    private static ModsynCompletionContext DetectCore(string prefix, out string? propertyName)
+    private static ModsynCompletionContext DetectCore(
+        string prefix,
+        out string? propertyName,
+        out IReadOnlySet<string> existingPropertyNames)
     {
         propertyName = null;
+        existingPropertyNames = new HashSet<string>(StringComparer.Ordinal);
         IReadOnlyList<ModsynToken> tokens;
         try
         {
@@ -91,13 +107,11 @@ public static class ModsynCompletionContextDetector
 
         var containers = new List<ContainerFrame>();
         var hasModStart = false;
-        var lastCompletedTypeValue = false;
 
         for (var index = 0; index < tokens.Count - 1; index++)
         {
             var token = tokens[index];
             var previousToken = index > 0 ? tokens[index - 1] : default;
-            lastCompletedTypeValue = false;
 
             if (containers.Count == 0)
             {
@@ -167,11 +181,7 @@ public static class ModsynCompletionContextDetector
             current = containers[^1];
             if (current.Kind == ContainerKind.Object)
             {
-                ProcessObjectToken(current, token, out lastCompletedTypeValue);
-            }
-            else if (token.Kind is not ModsynTokenKind.Comma)
-            {
-                lastCompletedTypeValue = false;
+                ProcessObjectToken(current, token);
             }
         }
 
@@ -183,6 +193,7 @@ public static class ModsynCompletionContextDetector
         var top = containers[^1];
         if (top.Kind == ContainerKind.Object)
         {
+            existingPropertyNames = top.PropertyNames;
             if (top.State == ObjectState.ExpectingValue && top.PropertyName is not null)
             {
                 if (top.Scope == ObjectScope.Root && top.PropertyName == "type")
@@ -198,12 +209,6 @@ public static class ModsynCompletionContextDetector
                 }
 
                 return ModsynCompletionContext.PropertyValues;
-            }
-
-            if (top.Scope == ObjectScope.Root && lastCompletedTypeValue)
-            {
-                propertyName = "type";
-                return ModsynCompletionContext.TypeValues;
             }
 
             return top.Scope switch
@@ -223,12 +228,8 @@ public static class ModsynCompletionContextDetector
         return ModsynCompletionContext.None;
     }
 
-    private static void ProcessObjectToken(
-        ContainerFrame frame,
-        ModsynToken token,
-        out bool completedTypeValue)
+    private static void ProcessObjectToken(ContainerFrame frame, ModsynToken token)
     {
-        completedTypeValue = false;
         if (token.Kind == ModsynTokenKind.Comma)
         {
             frame.State = ObjectState.ExpectingProperty;
@@ -239,6 +240,7 @@ public static class ModsynCompletionContextDetector
         if (frame.State == ObjectState.ExpectingProperty && token.Kind == ModsynTokenKind.Identifier)
         {
             frame.PropertyName = token.Value;
+            frame.PropertyNames.Add(token.Value);
             frame.State = ObjectState.ExpectingColon;
             return;
         }
@@ -251,8 +253,6 @@ public static class ModsynCompletionContextDetector
 
         if (frame.State == ObjectState.ExpectingValue)
         {
-            completedTypeValue = frame.Scope == ObjectScope.Root && frame.PropertyName == "type"
-                && token.Kind is ModsynTokenKind.Identifier or ModsynTokenKind.String;
             frame.State = ObjectState.ExpectingProperty;
             frame.PropertyName = null;
         }

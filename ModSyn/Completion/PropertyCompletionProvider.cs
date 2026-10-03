@@ -6,7 +6,8 @@ public sealed class PropertyCompletionProvider
 {
     public IReadOnlyList<ModsynCompletionItem> GetCompletions(
         ModsynCompletionContext context,
-        string prefix = "")
+        string prefix = "",
+        IReadOnlySet<string>? existingPropertyNames = null)
     {
         var definitions = context switch
         {
@@ -21,6 +22,7 @@ public sealed class PropertyCompletionProvider
         }
 
         return definitions.Values
+            .Where(definition => existingPropertyNames is null || !existingPropertyNames.Contains(definition.Name))
             .Where(definition => definition.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
             .Select(definition => new ModsynCompletionItem(
                 definition.Name,
