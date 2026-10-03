@@ -1,10 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "2jqXEBxZ0Ek=",
+  "dgSpecHash": "iJDmXHivMOA=",
   "success": true,
   "projectFilePath": "H:\\B\\A-ModAutoInstaller\\ModManager.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\moham\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512"
+    "C:\\Users\\moham\\.nuget\\packages\\excss\\4.2.3\\excss.4.2.3.nupkg.sha512",
+    "C:\\Users\\moham\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\moham\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
+    "C:\\Users\\moham\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512",
+    "C:\\Users\\moham\\.nuget\\packages\\svg\\3.4.8\\svg.3.4.8.nupkg.sha512",
+    "C:\\Users\\moham\\.nuget\\packages\\system.drawing.common\\5.0.3\\system.drawing.common.5.0.3.nupkg.sha512"
   ],
   "logs": []
 }

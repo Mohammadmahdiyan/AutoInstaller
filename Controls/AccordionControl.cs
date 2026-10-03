@@ -1,7 +1,9 @@
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GtaSaModManager.UI;
+using Svg;
 
 namespace GtaSaModManager.Controls;
 
@@ -38,23 +40,27 @@ public sealed class AccordionControl : UserControl
         {
             Height = HeaderHeight,
             BorderStyle = BorderStyle.FixedSingle,
-            Margin = new Padding(0, 0, 0, 8),
+            Margin = new Padding(0),
             Padding = new Padding(0)
         };
-        var header = new Button
+        var header = new AccordionHeaderButton(
+            title,
+            isExpanded,
+            RightToLeft == RightToLeft.Yes,
+            Path.Combine(AppContext.BaseDirectory, "Assets", "Forms", "Step0", "arrow-right.svg"))
         {
             Height = HeaderHeight - 2,
-            FlatStyle = FlatStyle.Flat,
-            UseVisualStyleBackColor = false,
-            TextAlign = RightToLeft == RightToLeft.Yes ? ContentAlignment.MiddleRight : ContentAlignment.MiddleLeft,
-            Padding = new Padding(10, 0, 10, 0),
             Margin = new Padding(0),
             Cursor = Cursors.Hand
         };
-        header.FlatAppearance.BorderSize = 0;
+        if (_sections.Count > 0)
+        {
+            _sections[^1].Card.Margin = new Padding(0, 0, 0, 8);
+        }
+
         var bodyPanel = new Panel
         {
-            Padding = new Padding(8),
+            Padding = new Padding(8, 8, 8, 0),
             Margin = new Padding(0),
             Visible = isExpanded
         };
@@ -103,9 +109,7 @@ public sealed class AccordionControl : UserControl
         base.OnRightToLeftChanged(e);
         foreach (var section in _sections)
         {
-            section.Header.TextAlign = RightToLeft == RightToLeft.Yes
-                ? ContentAlignment.MiddleRight
-                : ContentAlignment.MiddleLeft;
+            section.Header.SetRightToLeft(RightToLeft == RightToLeft.Yes);
             section.BodyPanel.RightToLeft = RightToLeft;
             section.BodyControl.RightToLeft = RightToLeft;
             ApplySectionPalette(section);
@@ -121,6 +125,7 @@ public sealed class AccordionControl : UserControl
             currentSection.IsExpanded = shouldExpand && ReferenceEquals(currentSection, section);
             currentSection.BodyPanel.Visible = currentSection.IsExpanded;
             currentSection.BodyControl.Visible = currentSection.IsExpanded;
+            currentSection.Header.SetExpanded(currentSection.IsExpanded);
             ApplySectionPalette(currentSection);
             UpdateSectionLayout(currentSection);
         }
@@ -143,15 +148,15 @@ public sealed class AccordionControl : UserControl
         section.Header.SetBounds(0, 0, width - 2, HeaderHeight - 2);
 
         var bodyWidth = Math.Max(120, width - 20);
-        var bodyHeight = MeasureBodyHeight(section.BodyText, bodyWidth - section.BodyPanel.Padding.Horizontal);
-        section.BodyPanel.SetBounds(0, HeaderHeight, width - 2, bodyHeight + section.BodyPanel.Padding.Vertical);
         section.BodyControl.Width = bodyWidth - section.BodyPanel.Padding.Horizontal;
+        section.BodyControl.Height = 32767;
+        var bodyHeight = MeasureRenderedBodyHeight(section.BodyControl);
+        section.BodyPanel.SetBounds(0, HeaderHeight, width - 2, bodyHeight + section.BodyPanel.Padding.Vertical);
         section.BodyControl.Height = bodyHeight;
         section.BodyControl.Location = Point.Empty;
         section.Card.Height = section.IsExpanded
             ? HeaderHeight + section.BodyPanel.Height + 2
             : HeaderHeight;
-        section.Header.Text = GetHeaderText(section);
     }
 
     private void ApplySectionPalette(AccordionSection section)
@@ -160,17 +165,10 @@ public sealed class AccordionControl : UserControl
         section.Card.ForeColor = _palette.TextPrimary;
         section.Header.BackColor = section.IsExpanded ? _palette.AccentSoft : _palette.Card;
         section.Header.ForeColor = _palette.TextPrimary;
+        section.Header.SetIconColor(_palette.TextPrimary);
         section.BodyPanel.BackColor = _palette.Surface;
         section.BodyControl.BackColor = _palette.Surface;
         section.BodyControl.ForeColor = _palette.TextPrimary;
-    }
-
-    private string GetHeaderText(AccordionSection section)
-    {
-        var arrow = section.IsExpanded ? "▼" : "▶";
-        return RightToLeft == RightToLeft.Yes
-            ? section.Title + "  " + arrow
-            : arrow + "  " + section.Title;
     }
 
     private void RenderBody(AccordionSection section)
@@ -180,10 +178,12 @@ public sealed class AccordionControl : UserControl
         richTextBox.RightToLeft = RightToLeft;
         var isRtl = RightToLeft == RightToLeft.Yes;
         var inCodeBlock = false;
-        var lines = section.BodyText.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+        var lines = GetBodyLines(section.BodyText);
 
-        foreach (var line in lines)
+        for (var index = 0; index < lines.Length; index++)
         {
+            var line = lines[index];
+            var lineEnding = index < lines.Length - 1 ? Environment.NewLine : string.Empty;
             if (line.TrimStart().StartsWith("```", StringComparison.Ordinal))
             {
                 inCodeBlock = !inCodeBlock;
@@ -193,7 +193,7 @@ public sealed class AccordionControl : UserControl
             if (inCodeBlock)
             {
                 using var codeFont = new Font("Consolas", 9.5F);
-                AppendStyledText(richTextBox, line + Environment.NewLine, codeFont, _palette.TextPrimary, _palette.SurfaceSecondary, HorizontalAlignment.Left);
+                AppendStyledText(richTextBox, line + lineEnding, codeFont, _palette.TextPrimary, _palette.SurfaceSecondary, HorizontalAlignment.Left);
                 continue;
             }
 
@@ -203,7 +203,7 @@ public sealed class AccordionControl : UserControl
                 var level = headingMatch.Groups[1].Length;
                 var size = level switch { 1 => 18F, 2 => 15F, _ => 13F };
                 using var headingFont = new Font("Segoe UI", size, FontStyle.Bold);
-                AppendStyledText(richTextBox, headingMatch.Groups[2].Value + Environment.NewLine, headingFont, _palette.TextPrimary, _palette.Surface, isRtl ? HorizontalAlignment.Right : HorizontalAlignment.Left);
+                AppendStyledText(richTextBox, headingMatch.Groups[2].Value + lineEnding, headingFont, _palette.TextPrimary, _palette.Surface, isRtl ? HorizontalAlignment.Right : HorizontalAlignment.Left);
                 continue;
             }
 
@@ -215,7 +215,7 @@ public sealed class AccordionControl : UserControl
             }
 
             AppendInlineMarkdown(richTextBox, text, isRtl);
-            AppendStyledText(richTextBox, Environment.NewLine, richTextBox.Font, _palette.TextPrimary, _palette.Surface, isRtl ? HorizontalAlignment.Right : HorizontalAlignment.Left);
+            AppendStyledText(richTextBox, lineEnding, richTextBox.Font, _palette.TextPrimary, _palette.Surface, isRtl ? HorizontalAlignment.Right : HorizontalAlignment.Left);
         }
 
         richTextBox.SelectionStart = 0;
@@ -253,35 +253,33 @@ public sealed class AccordionControl : UserControl
         }
     }
 
-    private int MeasureBodyHeight(string body, int width)
+    private static int MeasureRenderedBodyHeight(RichTextBox bodyControl)
     {
-        var totalHeight = 8;
-        var inCodeBlock = false;
-        var isRtl = RightToLeft == RightToLeft.Yes;
-        foreach (var line in body.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n'))
+        if (bodyControl.TextLength == 0)
         {
-            if (line.TrimStart().StartsWith("```", StringComparison.Ordinal))
-            {
-                inCodeBlock = !inCodeBlock;
-                continue;
-            }
-
-            var heading = Regex.Match(line, @"^[ \t]*(#{1,3})[ \t]*(.*)$");
-            var fontFamily = inCodeBlock ? "Consolas" : "Segoe UI";
-            var fontSize = inCodeBlock ? 9.5F : heading.Success ? heading.Groups[1].Length switch { 1 => 18F, 2 => 15F, _ => 13F } : 10F;
-            using var font = new Font(fontFamily, fontSize, heading.Success && !inCodeBlock ? FontStyle.Bold : FontStyle.Regular);
-            var measureText = heading.Success && !inCodeBlock ? heading.Groups[2].Value : line;
-            var flags = TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding;
-            if (isRtl && !inCodeBlock)
-            {
-                flags |= TextFormatFlags.RightToLeft;
-            }
-
-            var measured = TextRenderer.MeasureText(string.IsNullOrEmpty(measureText) ? " " : measureText, font, new Size(Math.Max(100, width), int.MaxValue), flags);
-            totalHeight += Math.Max(font.Height, measured.Height) + 2;
+            return bodyControl.Font.Height;
         }
 
-        return totalHeight + 8;
+        bodyControl.CreateControl();
+        var lastCharacterIndex = bodyControl.TextLength - 1;
+        var lastCharacterPosition = bodyControl.GetPositionFromCharIndex(lastCharacterIndex);
+        bodyControl.Select(lastCharacterIndex, 1);
+        var lastLineHeight = bodyControl.SelectionFont?.Height ?? bodyControl.Font.Height;
+        bodyControl.Select(0, 0);
+
+        return Math.Max(lastLineHeight, lastCharacterPosition.Y + lastLineHeight);
+    }
+
+    private static string[] GetBodyLines(string body)
+    {
+        var lines = body.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+        var lineCount = lines.Length;
+        while (lineCount > 0 && string.IsNullOrWhiteSpace(lines[lineCount - 1]))
+        {
+            lineCount--;
+        }
+
+        return lines.Take(lineCount).ToArray();
     }
 
     private static void AppendStyledText(RichTextBox richTextBox, string text, Font font, Color foreColor, Color backColor, HorizontalAlignment alignment)
@@ -297,7 +295,7 @@ public sealed class AccordionControl : UserControl
 
     private sealed class AccordionSection
     {
-        public AccordionSection(string title, string bodyText, Panel card, Button header, Panel bodyPanel, RichTextBox bodyControl, bool isExpanded)
+        public AccordionSection(string title, string bodyText, Panel card, AccordionHeaderButton header, Panel bodyPanel, RichTextBox bodyControl, bool isExpanded)
         {
             Title = title;
             BodyText = bodyText;
@@ -311,9 +309,140 @@ public sealed class AccordionControl : UserControl
         public string Title { get; }
         public string BodyText { get; }
         public Panel Card { get; }
-        public Button Header { get; }
+        public AccordionHeaderButton Header { get; }
         public Panel BodyPanel { get; }
         public RichTextBox BodyControl { get; }
         public bool IsExpanded { get; set; }
+    }
+
+    private sealed class AccordionHeaderButton : Button
+    {
+        private const int IconSize = 20;
+        private readonly string _svgPath;
+        private readonly string _title;
+        private readonly System.Windows.Forms.Timer _rotationTimer;
+        private Bitmap? _icon;
+        private bool _isRightToLeft;
+        private float _rotationStart;
+        private float _rotationTarget;
+        private int _animationElapsed;
+
+        public AccordionHeaderButton(string title, bool isExpanded, bool isRightToLeft, string svgPath)
+        {
+            _title = title;
+            _svgPath = svgPath;
+            _isRightToLeft = isRightToLeft;
+            _rotationStart = GetCollapsedAngle();
+            _rotationTarget = isExpanded ? 90 : _rotationStart;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            FlatStyle = FlatStyle.Flat;
+            FlatAppearance.BorderSize = 0;
+            UseVisualStyleBackColor = false;
+            Text = string.Empty;
+            AccessibleName = title;
+            Padding = new Padding(10, 0, 10, 0);
+            _rotationTimer = new System.Windows.Forms.Timer { Interval = 15 };
+            _rotationTimer.Tick += AdvanceRotation;
+        }
+
+        public void SetRightToLeft(bool isRightToLeft)
+        {
+            if (_isRightToLeft == isRightToLeft)
+            {
+                return;
+            }
+
+            _isRightToLeft = isRightToLeft;
+            SetExpanded(_rotationTarget == 90);
+        }
+
+        public void SetIconColor(Color color)
+        {
+            _icon?.Dispose();
+            using var source = SvgDocument.Open(_svgPath).Draw(IconSize, IconSize);
+            _icon = new Bitmap(source.Width, source.Height);
+            for (var x = 0; x < source.Width; x++)
+            {
+                for (var y = 0; y < source.Height; y++)
+                {
+                    var alpha = source.GetPixel(x, y).A;
+                    _icon.SetPixel(x, y, Color.FromArgb(alpha, color));
+                }
+            }
+
+            Invalidate();
+        }
+
+        public void SetExpanded(bool isExpanded)
+        {
+            _rotationStart = CurrentAngle;
+            _rotationTarget = isExpanded ? 90 : GetCollapsedAngle();
+            _animationElapsed = 0;
+            _rotationTimer.Stop();
+            _rotationTimer.Start();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            var graphics = e.Graphics;
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            var iconX = _isRightToLeft ? Padding.Left : Width - Padding.Right - IconSize;
+            var textLeft = _isRightToLeft ? iconX + IconSize + 8 : Padding.Left;
+            var textRight = _isRightToLeft ? Width - Padding.Right : iconX - 8;
+            var textBounds = Rectangle.FromLTRB(textLeft, 0, Math.Max(textLeft, textRight), Height);
+            var textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis;
+            textFlags |= _isRightToLeft ? TextFormatFlags.RightToLeft | TextFormatFlags.Right : TextFormatFlags.Left;
+            TextRenderer.DrawText(graphics, _title, Font, textBounds, ForeColor, textFlags);
+
+            if (_icon is null)
+            {
+                return;
+            }
+
+            var centerX = iconX + IconSize / 2F;
+            var centerY = Height / 2F;
+            var state = graphics.Save();
+            graphics.TranslateTransform(centerX, centerY);
+            graphics.RotateTransform(CurrentAngle);
+            graphics.DrawImage(_icon, -IconSize / 2F, -IconSize / 2F, IconSize, IconSize);
+            graphics.Restore(state);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _rotationTimer.Dispose();
+                _icon?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private float CurrentAngle => _rotationStart + (_rotationTarget - _rotationStart) * AnimationProgress;
+
+        private float AnimationProgress
+        {
+            get
+            {
+                var progress = Math.Min(1F, _animationElapsed / 220F);
+                return (1F - MathF.Cos(MathF.PI * progress)) / 2F;
+            }
+        }
+
+        private float GetCollapsedAngle() => _isRightToLeft ? 180 : 0;
+
+        private void AdvanceRotation(object? sender, EventArgs e)
+        {
+            _animationElapsed += _rotationTimer.Interval;
+            if (_animationElapsed >= 220)
+            {
+                _animationElapsed = 220;
+                _rotationTimer.Stop();
+            }
+
+            Invalidate();
+        }
     }
 }

@@ -52,6 +52,10 @@
             "SixLabors.ImageSharp": {
               "target": "Package",
               "version": "[3.1.11, )"
+            },
+            "Svg": {
+              "target": "Package",
+              "version": "[3.4.8, )"
             }
           },
           "imports": [
