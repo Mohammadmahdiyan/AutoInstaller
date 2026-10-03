@@ -115,11 +115,16 @@ public sealed class AccordionControl : UserControl
 
     private void ToggleSection(AccordionSection section)
     {
-        section.IsExpanded = !section.IsExpanded;
-        section.BodyPanel.Visible = section.IsExpanded;
-        section.BodyControl.Visible = section.IsExpanded;
-        ApplySectionPalette(section);
-        UpdateSectionLayout(section);
+        var shouldExpand = !section.IsExpanded;
+        foreach (var currentSection in _sections)
+        {
+            currentSection.IsExpanded = shouldExpand && ReferenceEquals(currentSection, section);
+            currentSection.BodyPanel.Visible = currentSection.IsExpanded;
+            currentSection.BodyControl.Visible = currentSection.IsExpanded;
+            ApplySectionPalette(currentSection);
+            UpdateSectionLayout(currentSection);
+        }
+
         _sectionsHost.PerformLayout();
     }
 

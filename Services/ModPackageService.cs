@@ -380,9 +380,16 @@ public class ModPackageService
             {
                 return true;
             }
+
+            if (IsLegacyJsonManifestFile(path, packageRoot))
+            {
+                return true;
+            }
         }
         else if (string.Equals(fileName, "mod.modsyn", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(fileName, "config.modsyn", StringComparison.OrdinalIgnoreCase))
+            || string.Equals(fileName, "config.modsyn", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(fileName, "mod.json", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
@@ -397,6 +404,15 @@ public class ModPackageService
         }
 
         return IsMediaFile(fileName);
+    }
+
+    private static bool IsLegacyJsonManifestFile(string path, string packageRoot)
+    {
+        var packageName = Path.GetFileName(packageRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        var fileName = Path.GetFileName(path);
+        return string.Equals(fileName, "config.json", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(fileName, "mod.json", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(fileName, packageName + ".json", StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool IsMediaFile(string path)

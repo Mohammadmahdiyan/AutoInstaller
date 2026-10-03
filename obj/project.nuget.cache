@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2OzZ686+D1o=",
+  "dgSpecHash": "2jqXEBxZ0Ek=",
   "success": true,
-  "projectFilePath": "H:\\B\\ModAutoInstaller\\ModManager.csproj",
+  "projectFilePath": "H:\\B\\A-ModAutoInstaller\\ModManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moham\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512"
   ],

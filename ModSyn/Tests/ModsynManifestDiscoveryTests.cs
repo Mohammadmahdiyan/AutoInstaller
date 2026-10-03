@@ -24,9 +24,10 @@ public sealed class ModsynManifestDiscoveryTests
     {
         WithPackage("package", packageRoot =>
         {
-            var manifest = Write(packageRoot, "config.modsyn", "mod { type: PutInCleo }");
+            var manifest = Write(packageRoot, "config.modsyn", "mod { type: VehicleAndSkinAndWeapon }");
 
             Assert.AreEqual(manifest, ModPackageService.GetManifestPath(packageRoot));
+            Assert.AreEqual("VehicleAndSkinAndWeapon", ModPackageService.ResolveManifest(packageRoot).Type);
         });
     }
 
@@ -79,10 +80,16 @@ public sealed class ModsynManifestDiscoveryTests
         {
             Write(packageRoot, "manifest.json", "{\"type\":\"Replacing\"}");
             Write(packageRoot, "other.json", "{}");
+            var legacyConfig = Write(packageRoot, "config.json", "{\"type\":\"Replacing\"}");
+            var legacyMod = Write(packageRoot, "mod.json", "{\"type\":\"Replacing\"}");
+            var legacyPackageManifest = Write(packageRoot, "package.json", "{\"type\":\"Replacing\"}");
 
             Assert.IsNull(ModPackageService.GetManifestPath(packageRoot));
             Assert.IsTrue(ModPackageService.IsModPackageRoot(packageRoot));
             Assert.IsFalse(ModPackageService.IsMetadataOrNonInstallableFile(Path.Combine(packageRoot, "manifest.json"), packageRoot));
+            Assert.IsTrue(ModPackageService.IsMetadataOrNonInstallableFile(legacyConfig, packageRoot));
+            Assert.IsTrue(ModPackageService.IsMetadataOrNonInstallableFile(legacyMod, packageRoot));
+            Assert.IsTrue(ModPackageService.IsMetadataOrNonInstallableFile(legacyPackageManifest, packageRoot));
             Assert.IsTrue(ModPackageService.TryReadModsynConfiguration(packageRoot, out var configuration, out var error), error);
             Assert.AreEqual("PutInModLoader", configuration!.Manifest.Type);
             var selectedEntries = ModPackageService.ResolveInstallSelection(packageRoot, configuration.Manifest);
