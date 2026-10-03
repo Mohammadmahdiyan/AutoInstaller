@@ -1,0 +1,8 @@
+mod {
+    type: Replacing,
+    backup: some,
+    backupThese: [
+        "models\\gta3.img",
+        "models\\gta_int.img"
+    ]
+}

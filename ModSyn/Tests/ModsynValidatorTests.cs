@@ -92,41 +92,47 @@ public sealed class ModsynValidatorTests
     }
 
     [TestMethod]
-    public void Validate_AppliesBackupDefaultsAndTypeRestrictions()
+    public void Validate_ResolvesBackupModesAndRequiresSomeForSelectors()
     {
-        Assert.IsTrue(Validate("mod { type: Replacing }").BackupEnabled);
-        Assert.IsTrue(Validate("mod { type: Replacing backup: null }").BackupEnabled);
-        Assert.IsFalse(Validate("mod { type: PutAndReplace backup: false }").BackupEnabled);
+        Assert.AreEqual(ModsynBackupMode.All, Validate("mod { type: Replacing }").BackupMode);
+        Assert.AreEqual(ModsynBackupMode.All, Validate("mod { type: Replacing backup: all }").BackupMode);
+        Assert.AreEqual(ModsynBackupMode.None, Validate("mod { type: Replacing backup: none }").BackupMode);
+        Assert.AreEqual(
+            ModsynBackupMode.Some,
+            Validate("mod { type: Replacing backup: some backupThis: \"data/file.dat\" }").BackupMode);
+
+        var selectorWithoutSome = Validate("mod { type: Replacing backupThese: [\"data/file.dat\"] }");
+        Assert.IsTrue(selectorWithoutSome.Errors.Any(error => error.Message.Contains("requires backup: some", StringComparison.Ordinal)));
 
         var invalid = Validate("mod { type: PutInModLoader backupThis: \"file.dat\" }");
-        Assert.AreEqual(1, invalid.Errors.Count);
-        StringAssert.Contains(invalid.Errors[0].Message, "only valid for types");
-        Assert.AreEqual(new GtaSaModManager.Modsyn.Lexer.ModsynSourceLocation(1, 28), invalid.Errors[0].Location);
+        Assert.IsTrue(invalid.Errors.Any(error => error.Message.Contains("only valid for types", StringComparison.Ordinal)));
     }
 
     [TestMethod]
-    public void Validate_RequiresBackupSelectionWhenBackupIsNull()
+    public void Validate_RequiresSelectorsForSomeAndRejectsThemForAllOrNone()
     {
-        var invalid = Validate("mod { type: Replacing backup: null }");
-        var valid = Validate("mod { type: Replacing backup: null backupThese: [\"data\\file.dat\"] }");
+        var missingSelection = Validate("mod { type: Replacing backup: some }");
+        var validSome = Validate("mod { type: Replacing backup: some backupThese: [\"one\" \"two\"] }");
+        var emptySelection = Validate("mod { type: Replacing backup: some backupThese: [] }");
+        var selectorWithAll = Validate("mod { type: Replacing backup: all backupThis: \"one\" }");
+        var selectorWithNone = Validate("mod { type: Replacing backup: none dontBackupThis: \"cache\" }");
 
-        Assert.AreEqual(1, invalid.Errors.Count);
-        StringAssert.Contains(invalid.Errors[0].Message, "cannot be null unless at least one of");
-        Assert.IsTrue(valid.IsValid, string.Join(Environment.NewLine, valid.Errors));
-
-        var emptySelection = Validate("mod { type: Replacing backup: null backupThese: [] }");
+        Assert.IsFalse(missingSelection.IsValid);
+        Assert.IsTrue(missingSelection.Errors.Any(error => error.Message.Contains("backup: some requires", StringComparison.Ordinal)));
+        Assert.IsTrue(validSome.IsValid, string.Join(Environment.NewLine, validSome.Errors));
         Assert.IsFalse(emptySelection.IsValid);
         Assert.IsTrue(emptySelection.Errors.Any(error => error.Message.Contains("requires at least one string path", StringComparison.Ordinal)));
-        Assert.IsTrue(emptySelection.Errors.Any(error => error.Message.Contains("cannot be null unless", StringComparison.Ordinal)));
+        Assert.IsFalse(selectorWithAll.IsValid);
+        Assert.IsFalse(selectorWithNone.IsValid);
     }
 
     [TestMethod]
     public void Validate_RequiresBackupSelectorValuesAndWarnsForSingleThesePath()
     {
-        var emptyThis = Validate("mod { type: Replacing backupThis: \"\" }");
-        var emptyTheseItem = Validate("mod { type: Replacing dontBackupThese: [\"\"] }");
-        var singletonThese = Validate("mod { type: Replacing backupThese: [\"data/file.dat\"] }");
-        var multipleThese = Validate("mod { type: Replacing backupThese: [\"one\" \"two\"] }");
+        var emptyThis = Validate("mod { type: Replacing backup: some backupThis: \"\" }");
+        var emptyTheseItem = Validate("mod { type: Replacing backup: some dontBackupThese: [\"\"] }");
+        var singletonThese = Validate("mod { type: Replacing backup: some backupThese: [\"data/file.dat\"] }");
+        var multipleThese = Validate("mod { type: Replacing backup: some backupThese: [\"one\" \"two\"] }");
 
         Assert.IsFalse(emptyThis.IsValid);
         StringAssert.Contains(emptyThis.Errors[0].Message, "requires a non-empty string path");

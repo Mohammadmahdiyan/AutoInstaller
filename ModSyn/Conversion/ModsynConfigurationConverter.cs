@@ -40,7 +40,7 @@ public static class ModsynConfigurationConverter
 
         var replacements = ReadReplacements(root);
         var backup = new ModsynBackupConfiguration(
-            validation.BackupEnabled,
+            validation.BackupMode,
             ReadPaths(root, "backupThis", "backupThese").AsReadOnly(),
             ReadPaths(root, "dontBackupThis", "dontBackupThese").AsReadOnly());
 

@@ -4,15 +4,22 @@ using GtaSaModManager.Modsyn.Validation;
 namespace GtaSaModManager.Modsyn.Conversion;
 
 public sealed record ModsynBackupConfiguration(
-    bool Enabled,
+    ModsynBackupMode Mode,
     IReadOnlyList<string> IncludePaths,
     IReadOnlyList<string> ExcludePaths)
 {
+    public bool Enabled => Mode != ModsynBackupMode.None;
+
     public bool ShouldBackup(string relativePath)
     {
-        if (!Enabled)
+        if (Mode == ModsynBackupMode.None)
         {
             return false;
+        }
+
+        if (Mode == ModsynBackupMode.All)
+        {
+            return true;
         }
 
         var normalizedPath = Normalize(relativePath);

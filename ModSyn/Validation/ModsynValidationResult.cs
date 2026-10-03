@@ -31,17 +31,24 @@ public sealed record ModsynResolvedRequirement(
     IReadOnlyList<string> CheckThese,
     string? RequestAddress);
 
+public enum ModsynBackupMode
+{
+    All,
+    None,
+    Some
+}
+
 public sealed class ModsynValidationResult
 {
     internal ModsynValidationResult(
         string normalizedType,
-        bool backupEnabled,
+        ModsynBackupMode backupMode,
         IReadOnlyList<ModsynResolvedRequirement> requirements,
         IReadOnlyList<ModsynValidationError> errors,
         IReadOnlyList<ModsynValidationWarning> warnings)
     {
         NormalizedType = normalizedType;
-        BackupEnabled = backupEnabled;
+        BackupMode = backupMode;
         Requirements = requirements;
         Errors = errors;
         Warnings = warnings;
@@ -49,7 +56,7 @@ public sealed class ModsynValidationResult
 
     public string NormalizedType { get; }
 
-    public bool BackupEnabled { get; }
+    public ModsynBackupMode BackupMode { get; }
 
     public IReadOnlyList<ModsynResolvedRequirement> Requirements { get; }
 

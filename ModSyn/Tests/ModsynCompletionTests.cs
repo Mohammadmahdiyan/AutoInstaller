@@ -158,7 +158,7 @@ public sealed class ModsynCompletionTests
         var requireValue = GetAtEnd("mod { require: ");
 
         Assert.IsTrue(typeValues.All(item => item.Kind == ModsynCompletionKind.Type));
-        CollectionAssert.AreEquivalent(new[] { "true", "false", "null" }, backupValues.Select(item => item.Label).ToArray());
+        CollectionAssert.AreEquivalent(new[] { "all", "none", "some" }, backupValues.Select(item => item.Label).ToArray());
         CollectionAssert.AreEqual(new[] { "{" }, requireValue.Select(item => item.Label).ToArray());
     }
 

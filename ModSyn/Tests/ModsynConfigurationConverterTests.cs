@@ -20,7 +20,7 @@ public sealed class ModsynConfigurationConverterTests
               installThese: ["models/example.txd"]
               ignoreThis: "readme.txt"
               ignoreThese: ["logs/debug.txt"]
-              backup: false
+              backup: some
               backupThis: "data/original.dat"
               backupThese: ["models/original.dff"]
               dontBackupThis: "data/large.img"
@@ -32,7 +32,7 @@ public sealed class ModsynConfigurationConverterTests
         CollectionAssert.AreEqual(new[] { "old\\file.dat", "old\\folder" }, converted.Manifest.DeleteThis);
         CollectionAssert.AreEqual(new[] { "models\\example.dff", "models\\example.txd" }, converted.Manifest.InstallFiles);
         CollectionAssert.AreEqual(new[] { "readme.txt", "logs\\debug.txt" }, converted.Manifest.IgnoreFiles);
-        Assert.IsFalse(converted.Backup.Enabled);
+        Assert.AreEqual(ModsynBackupMode.Some, converted.Backup.Mode);
         CollectionAssert.AreEqual(new[] { "data\\original.dat", "models\\original.dff" }, converted.Backup.IncludePaths.ToArray());
         CollectionAssert.AreEqual(new[] { "data\\large.img", "models\\large.txd" }, converted.Backup.ExcludePaths.ToArray());
     }
@@ -97,6 +97,7 @@ public sealed class ModsynConfigurationConverterTests
         var converted = Convert("mod { installThis: \"one.cs\" }");
 
         Assert.AreEqual("PutInModLoader", converted.Manifest.Type);
+        Assert.AreEqual(ModsynBackupMode.All, converted.Backup.Mode);
         Assert.IsTrue(converted.Backup.Enabled);
         Assert.AreEqual(1, converted.Manifest.InstallFiles.Count);
         Assert.AreEqual(0, converted.Manifest.InstallFolders.Count);
@@ -108,9 +109,16 @@ public sealed class ModsynConfigurationConverterTests
         var defaultBackup = Convert("mod { type: Replacing }").Backup;
         Assert.IsTrue(defaultBackup.ShouldBackup("data\\file.dat"));
 
+          var allBackup = Convert("mod { type: Replacing backup: all }").Backup;
+          Assert.IsTrue(allBackup.ShouldBackup("models\\car.dff"));
+
+          var noBackup = Convert("mod { type: Replacing backup: none }").Backup;
+          Assert.IsFalse(noBackup.ShouldBackup("data\\file.dat"));
+
         var filteredBackup = Convert("""
           mod {
             type: Replacing
+              backup: some
             backupThis: "data"
             dontBackupThis: "data/cache"
           }
@@ -119,7 +127,7 @@ public sealed class ModsynConfigurationConverterTests
         Assert.IsFalse(filteredBackup.ShouldBackup("data/cache/file.dat"));
         Assert.IsFalse(filteredBackup.ShouldBackup("models/car.dff"));
 
-        var disabledBackup = Convert("mod { type: Replacing backup: false }").Backup;
+        var disabledBackup = Convert("mod { type: Replacing backup: none }").Backup;
         Assert.IsFalse(disabledBackup.ShouldBackup("data/file.dat"));
       }
 

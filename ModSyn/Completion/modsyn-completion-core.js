@@ -225,9 +225,9 @@ function getCompletions(source, cursorOffset, metadata) {
     ]);
   } else if (context.kind === "value" && context.property === "backup") {
     items = [
-      item("true", "true", "Enable backups.", "value"),
-      item("false", "false", "Disable backups.", "value"),
-      item("null", "null", "Use the default backup behavior.", "value"),
+      item("all", "all", "Back up all files.", "value"),
+      item("none", "none", "Do not back up files.", "value"),
+      item("some", "some", "Back up only selected paths.", "value"),
     ];
   }
   return items.filter((candidate) =>
@@ -416,6 +416,20 @@ function getDiagnostics(source, metadata) {
       }
     }
 
+    if (
+      scope === "root" &&
+      property.name === "backup" &&
+      !["all", "none", "some"].includes(
+        String(property.value.value).toLowerCase(),
+      )
+    ) {
+      addDiagnostic(
+        property.value.token,
+        `Unsupported backup value '${property.value.value}'. Expected all, none, or some.`,
+        "unsupported-backup-mode",
+      );
+    }
+
     if (property.value.kind === "Object") {
       const nestedScope =
         property.name === "require" &&
@@ -588,25 +602,37 @@ function getDiagnostics(source, metadata) {
     const backupProperty = objectNode.properties.find(
       (property) => property.name === "backup",
     );
-    if (
-      backupProperty?.value.kind === "null" &&
-      !objectNode.properties.some(
-        (property) =>
-          backupSelectorNames.includes(property.name) &&
-          (property.name.endsWith("This")
-            ? property.value.kind === "string" &&
-              property.value.value.trim() !== ""
-            : property.value.kind === "Array" &&
-              property.value.items.some(
-                (itemNode) =>
-                  itemNode.kind === "string" && itemNode.value.trim() !== "",
-              )),
-      )
-    ) {
+    const backupMode = backupProperty
+      ? String(backupProperty.value.value).toLowerCase()
+      : "all";
+    const backupModeIsValid = ["all", "none", "some"].includes(backupMode);
+    const selectors = objectNode.properties.filter((property) =>
+      backupSelectorNames.includes(property.name),
+    );
+    if (backupModeIsValid && backupMode !== "some") {
+      for (const property of selectors) {
+        addDiagnostic(
+          property.token,
+          `Property '${property.name}' requires backup: some.`,
+          "backup-selector-requires-some",
+        );
+      }
+    }
+
+    const hasSelectorValue = selectors.some((property) =>
+      property.name.endsWith("This")
+        ? property.value.kind === "string" && property.value.value.trim() !== ""
+        : property.value.kind === "Array" &&
+          property.value.items.some(
+            (itemNode) =>
+              itemNode.kind === "string" && itemNode.value.trim() !== "",
+          ),
+    );
+    if (backupModeIsValid && backupMode === "some" && !hasSelectorValue) {
       addDiagnostic(
-        backupProperty.value.token,
-        "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese has a value.",
-        "backup-null-without-selection",
+        backupProperty?.value.token ?? objectNode.token,
+        "backup: some requires at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese with a value.",
+        "backup-some-without-selection",
       );
     }
   }

@@ -18,8 +18,8 @@ public static class ModsynValidator
         {
             ValidateBackupApplicability(document.Body, normalizedType, errors);
         }
-        ValidateBackupSelectors(document.Body, errors, warnings);
-        ValidateNullBackupSelection(document.Body, errors);
+        var (backupMode, backupModeIsValid) = ResolveBackupMode(document.Body, errors);
+        ValidateBackupSelectors(document.Body, backupMode, backupModeIsValid, errors, warnings);
 
         var requirements = new List<ModsynResolvedRequirement>();
         foreach (var property in document.Body.Properties)
@@ -44,13 +44,9 @@ public static class ModsynValidator
             }
         }
 
-        var backupEnabled = FindProperty(document.Body, "backup")?.Value is ModsynBooleanNode backup
-            ? backup.Value
-            : true;
-
         return new ModsynValidationResult(
             normalizedType,
-            backupEnabled,
+            backupMode,
             requirements.AsReadOnly(),
             errors.AsReadOnly(),
             warnings.AsReadOnly());
@@ -112,37 +108,57 @@ public static class ModsynValidator
         }
     }
 
-    private static void ValidateNullBackupSelection(
+    private static (ModsynBackupMode Mode, bool IsValid) ResolveBackupMode(
         ModsynObjectNode root,
         List<ModsynValidationError> errors)
     {
         var backup = FindProperty(root, "backup");
-        if (backup?.Value is not ModsynNullNode)
+        if (backup is null)
         {
-            return;
+            return (ModsynBackupMode.All, true);
         }
 
-        var hasSelection = root.Properties.Any(property => property.Name switch
+        if (backup.Value is not ModsynIdentifierNode identifier)
         {
-            "backupThis" or "dontBackupThis" => property.Value is ModsynStringNode value
-                && !string.IsNullOrWhiteSpace(value.Value),
-            "backupThese" or "dontBackupThese" => property.Value is ModsynArrayNode array
-                && array.Items.OfType<ModsynStringNode>().Any(item => !string.IsNullOrWhiteSpace(item.Value)),
-            _ => false
-        });
-        if (!hasSelection)
+            return (ModsynBackupMode.All, false);
+        }
+
+        switch (identifier.Name.ToLowerInvariant())
         {
-            errors.Add(new ModsynValidationError(
-                "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese has a value.",
-                backup.Location));
+            case "all":
+                return (ModsynBackupMode.All, true);
+            case "none":
+                return (ModsynBackupMode.None, true);
+            case "some":
+                return (ModsynBackupMode.Some, true);
+            default:
+                errors.Add(new ModsynValidationError(
+                    $"Unsupported backup value '{identifier.Name}'. Expected all, none, or some.",
+                    identifier.Location));
+                return (ModsynBackupMode.All, false);
         }
     }
 
             private static void ValidateBackupSelectors(
                 ModsynObjectNode root,
+                ModsynBackupMode backupMode,
+                bool backupModeIsValid,
                 List<ModsynValidationError> errors,
                 List<ModsynValidationWarning> warnings)
             {
+                var selectorProperties = root.Properties
+                    .Where(property => property.Name is "backupThis" or "backupThese" or "dontBackupThis" or "dontBackupThese")
+                    .ToList();
+                if (backupModeIsValid && backupMode != ModsynBackupMode.Some)
+                {
+                    foreach (var property in selectorProperties)
+                    {
+                        errors.Add(new ModsynValidationError(
+                            $"Property '{property.Name}' requires backup: some.",
+                            property.Location));
+                    }
+                }
+
                 foreach (var property in root.Properties)
                 {
                     if (property.Name is "backupThis" or "dontBackupThis"
@@ -183,6 +199,22 @@ public static class ModsynValidator
                             $"Property '{property.Name}' contains one path; use '{singularName}' instead.",
                             paths.Location));
                     }
+                }
+
+                var hasSelectorValue = selectorProperties.Any(property => property.Name switch
+                {
+                    "backupThis" or "dontBackupThis" => property.Value is ModsynStringNode value
+                        && !string.IsNullOrWhiteSpace(value.Value),
+                    "backupThese" or "dontBackupThese" => property.Value is ModsynArrayNode array
+                        && array.Items.OfType<ModsynStringNode>().Any(item => !string.IsNullOrWhiteSpace(item.Value)),
+                    _ => false
+                });
+                if (backupModeIsValid && backupMode == ModsynBackupMode.Some && !hasSelectorValue)
+                {
+                    var location = FindProperty(root, "backup")?.Value.Location ?? root.Location;
+                    errors.Add(new ModsynValidationError(
+                        "backup: some requires at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese with a value.",
+                        location));
                 }
             }
 

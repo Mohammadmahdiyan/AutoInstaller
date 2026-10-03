@@ -37,6 +37,19 @@ public sealed class ValueCompletionProvider
             return GetTypeCompletions(prefix);
         }
 
+        if (string.Equals(propertyName, "backup", StringComparison.Ordinal))
+        {
+            return new[]
+                {
+                    Literal("all", "Back up all files."),
+                    Literal("none", "Do not back up files."),
+                    Literal("some", "Back up only selected paths.")
+                }
+                .Where(item => item.Label.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                .ToList()
+                .AsReadOnly();
+        }
+
         var definition = FindPropertyDefinition(propertyName);
         if (definition is null)
         {

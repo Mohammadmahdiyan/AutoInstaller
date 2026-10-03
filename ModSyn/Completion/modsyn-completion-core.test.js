@@ -122,11 +122,11 @@ test("type completion is metadata-backed and prefix-filtered", () => {
   );
 });
 
-test("backup offers only its predictable literal values", () => {
+test("backup offers only all, none, and some", () => {
   const items = atMarker("mod { type: Replacing backup: | }");
   assert.deepEqual(
     items.map((item) => item.label),
-    ["true", "false", "null"],
+    ["all", "none", "some"],
   );
 });
 
@@ -195,9 +195,9 @@ test("duplicate keys are errors, including an incomplete repeated key", () => {
   );
 });
 
-test("diagnostics reject unsupported type, backup literals, and backup null without selectors", () => {
+test("diagnostics reject unsupported type and backup modes", () => {
   const diagnostics = core.getDiagnostics(
-    'mod { type: UnknownType backup: "yes" }',
+    "mod { type: UnknownType backup: maybe }",
     metadata,
   );
 
@@ -205,7 +205,7 @@ test("diagnostics reject unsupported type, backup literals, and backup null with
     diagnostics.map((issue) => issue.message.split(" (line")[0]),
     [
       "Unsupported package type 'UnknownType'.",
-      "Property 'backup' expects boolean or null, but found string.",
+      "Unsupported backup value 'maybe'. Expected all, none, or some.",
     ],
   );
   assert.deepEqual(
@@ -215,22 +215,11 @@ test("diagnostics reject unsupported type, backup literals, and backup null with
       [1, 33],
     ],
   );
-
-  const nullBackupDiagnostics = core.getDiagnostics(
-    "mod { type: Replacing backup: null }",
-    metadata,
-  );
-  assert.deepEqual(
-    nullBackupDiagnostics.map((issue) => issue.message.split(" (line")[0]),
-    [
-      "Property 'backup' cannot be null unless at least one of backupThis, backupThese, dontBackupThis, or dontBackupThese has a value.",
-    ],
-  );
 });
 
 test("diagnostics enforce This/These shapes and string-only array items", () => {
   const diagnostics = core.getDiagnostics(
-    'mod { type: Replacing installThis: true installThese: "one" dontBackupThese: ["a" false] }',
+    'mod { type: Replacing backup: some installThis: true installThese: "one" dontBackupThese: ["a" false] }',
     metadata,
   );
 
@@ -244,14 +233,38 @@ test("diagnostics enforce This/These shapes and string-only array items", () => 
   );
 });
 
-test("backup null is accepted with a backup selection key for replacement types", () => {
+test("backup some is accepted with a populated selector", () => {
   assert.deepEqual(
     core.getDiagnostics(
-      'mod { type: Replacing backup: null backupThis: "data/file.dat" }',
+      'mod { type: Replacing backup: some backupThis: "data/file.dat" }',
       metadata,
     ),
     [],
   );
+});
+
+test("all and none stand alone; selectors are exclusive to some", () => {
+  assert.deepEqual(
+    core.getDiagnostics("mod { type: Replacing backup: all }", metadata),
+    [],
+  );
+  assert.deepEqual(
+    core.getDiagnostics("mod { type: Replacing backup: none }", metadata),
+    [],
+  );
+
+  for (const source of [
+    'mod { type: Replacing backup: all backupThis: "one" }',
+    'mod { type: Replacing backup: none dontBackupThis: "cache" }',
+    'mod { type: Replacing backupThis: "one" }',
+  ]) {
+    assert.ok(
+      core
+        .getDiagnostics(source, metadata)
+        .some((issue) => issue.code === "backup-selector-requires-some"),
+      source,
+    );
+  }
 });
 
 test("missing type defaults but explicit empty and unsupported types fail", () => {
@@ -266,29 +279,29 @@ test("missing type defaults but explicit empty and unsupported types fail", () =
   );
 });
 
-test("backup null requires a selector with a non-empty value", () => {
+test("backup some requires a selector with a non-empty value", () => {
   const cases = [
-    "mod { type: Replacing backup: null backupThis: }",
-    'mod { type: Replacing backup: null backupThis: "" }',
-    "mod { type: Replacing backup: null backupThese: [] }",
+    "mod { type: Replacing backup: some backupThis: }",
+    'mod { type: Replacing backup: some backupThis: "" }',
+    "mod { type: Replacing backup: some backupThese: [] }",
   ];
   for (const source of cases) {
     assert.ok(
       core
         .getDiagnostics(source, metadata)
-        .some((issue) => issue.code === "backup-null-without-selection"),
+        .some((issue) => issue.code === "backup-some-without-selection"),
       source,
     );
   }
 
   for (const source of [
-    'mod { type: Replacing backup: null backupThis: "data/file.dat" }',
-    'mod { type: Replacing backup: null backupThese: ["data/file.dat"] }',
+    'mod { type: Replacing backup: some backupThis: "data/file.dat" }',
+    'mod { type: Replacing backup: some backupThese: ["data/file.dat" "another"] }',
   ]) {
     assert.equal(
       core
         .getDiagnostics(source, metadata)
-        .some((issue) => issue.code === "backup-null-without-selection"),
+        .some((issue) => issue.code === "backup-some-without-selection"),
       false,
       source,
     );
@@ -297,10 +310,10 @@ test("backup null requires a selector with a non-empty value", () => {
 
 test("backup This requires a non-empty string and These requires a non-empty string array", () => {
   const invalidSources = [
-    'mod { type: Replacing backupThis: "" }',
-    "mod { type: Replacing dontBackupThis: }",
-    "mod { type: Replacing backupThese: [] }",
-    'mod { type: Replacing dontBackupThese: [""] }',
+    'mod { type: Replacing backup: some backupThis: "" }',
+    "mod { type: Replacing backup: some dontBackupThis: }",
+    "mod { type: Replacing backup: some backupThese: [] }",
+    'mod { type: Replacing backup: some dontBackupThese: [""] }',
   ];
   for (const source of invalidSources) {
     assert.ok(core.getDiagnostics(source, metadata).length > 0, source);
@@ -308,7 +321,7 @@ test("backup This requires a non-empty string and These requires a non-empty str
 
   assert.deepEqual(
     core.getDiagnostics(
-      'mod { type: Replacing backupThese: ["one" "two"] }',
+      'mod { type: Replacing backup: some backupThese: ["one" "two"] }',
       metadata,
     ),
     [],
@@ -317,7 +330,7 @@ test("backup This requires a non-empty string and These requires a non-empty str
 
 test("These with one path is a warning recommending This", () => {
   const diagnostics = core.getDiagnostics(
-    'mod { type: Replacing backupThese: ["data/file.dat"] dontBackupThese: ["cache"] }',
+    'mod { type: Replacing backup: some backupThese: ["data/file.dat"] dontBackupThese: ["cache"] }',
     metadata,
   );
 

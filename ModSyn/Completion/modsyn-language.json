@@ -97,10 +97,10 @@
     },
     {
       "name": "backup",
-      "allowedValueKinds": ["Boolean", "Null"],
+      "allowedValueKinds": ["Identifier"],
       "arrayItemKinds": [],
       "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
-      "description": "Whether replacement backups are enabled; null uses the default."
+      "description": "Choose all, none, or some for replacement backups."
     },
     {
       "name": "backupThis",
