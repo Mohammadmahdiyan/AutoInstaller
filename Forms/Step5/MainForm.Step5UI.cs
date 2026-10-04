@@ -1337,11 +1337,6 @@ public partial class MainForm : Form
         state.Caption.BackColor = isSelected ? state.SelectedColor : state.NormalCaptionColor;
         state.Preview.BackColor = isSelected ? state.SelectedColor : state.NormalPreviewColor;
 
-        if (state.OccupiedUseLabel != null)
-        {
-            state.OccupiedUseLabel.BackColor = isSelected ? state.SelectedColor : state.NormalOccupiedLabelColor;
-        }
-
         if (state.IdBadge != null)
         {
             state.IdBadge.BackColor = isSelected ? state.SelectedColor : state.NormalIdBadgeColor;
@@ -1364,32 +1359,54 @@ public partial class MainForm : Form
             ? folders
             : new List<string>();
         var isOccupied = occupiedFolders.Count > 0;
-        var occupiedCaption = isOccupied ? occupiedFolders[0] : asset.NameFile;
-        var card = new Panel
+        var installedModName = isOccupied ? occupiedFolders[0] : asset.NameFile;
+        var card = new Step5AssetCardPanel
         {
             Width = cardWidth,
             Height = cardHeight,
-            BorderStyle = BorderStyle.FixedSingle,
+            BorderStyle = isOccupied ? BorderStyle.None : BorderStyle.FixedSingle,
             Margin = new Padding(0, 0, 12, 12),
             BackColor = palette.Card,
             ForeColor = palette.TextPrimary,
             Cursor = Cursors.Hand,
             Padding = new Padding(0)
         };
-        Label? occupiedUseLabel = null;
+        var isCardHovered = false;
+        var glowPhase = MathF.PI / 2F;
+        System.Windows.Forms.Timer? glowTimer = null;
         if (isOccupied)
         {
-            card.Paint += (_, e) => ControlPaint.DrawBorder(
-                e.Graphics,
-                card.ClientRectangle,
-                palette.Warning,
-                ButtonBorderStyle.Solid);
+            glowTimer = new System.Windows.Forms.Timer { Interval = 30 };
+            glowTimer.Tick += (_, _) =>
+            {
+                glowPhase += 0.08F;
+                if (glowPhase >= MathF.Tau)
+                {
+                    glowPhase -= MathF.Tau;
+                }
+
+                card.Invalidate();
+            };
+            card.Disposed += (_, _) => glowTimer.Dispose();
+            card.Paint += (_, e) =>
+            {
+                if (isCardHovered)
+                {
+                    DrawOccupiedAssetCardGlow(e.Graphics, card.ClientRectangle, palette.Warning, glowPhase);
+                }
+
+                ControlPaint.DrawBorder(
+                    e.Graphics,
+                    card.ClientRectangle,
+                    palette.Warning,
+                    ButtonBorderStyle.Solid);
+            };
         }
 
         var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
         var caption = new AssetCardCaption(
-            occupiedCaption,
-            isOccupied ? occupiedCaption : asset.Name,
+            asset.NameFile,
+            installedModName,
             palette.TextPrimary,
             palette.TextSecondary)
         {
@@ -1431,33 +1448,6 @@ public partial class MainForm : Form
             });
         }
 
-        if (isOccupied)
-        {
-            var isBadgeOnLeft = idBadge != null && !isRtl;
-            var isBadgeOnRight = idBadge != null && isRtl;
-            var headerLeft = isBadgeOnLeft ? 48 : 8;
-            var headerRight = isBadgeOnRight ? 48 : 8;
-            var folderText = occupiedFolders.Count == 1
-                ? occupiedFolders[0]
-                : occupiedFolders[0] + " +" + (occupiedFolders.Count - 1);
-            occupiedUseLabel = new Label
-            {
-                Text = string.Format(_localizationService.GetString("AssetUsedBy", "Used by: {0}"), folderText),
-                AutoEllipsis = true,
-                AutoSize = false,
-                Width = Math.Max(40, cardWidth - headerLeft - headerRight),
-                Height = 18,
-                Location = new Point(headerLeft, 8),
-                Font = new Font("Segoe UI", 7.5F, FontStyle.Bold),
-                ForeColor = palette.Warning,
-                BackColor = palette.Card,
-                TextAlign = ContentAlignment.MiddleLeft,
-                Cursor = Cursors.Hand
-            };
-            card.Controls.Add(occupiedUseLabel);
-            occupiedUseLabel.BringToFront();
-        }
-
         var catalogImagePath = _assetCatalogService.ResolveImagePath(asset);
         var catalogImage = LoadCachedImage(catalogImagePath)
             ?? LoadCachedImage(ResolveUnavailableAssetImagePath());
@@ -1490,19 +1480,15 @@ public partial class MainForm : Form
             card.Controls.Add(idBadge);
             idBadge.BringToFront();
         }
-        occupiedUseLabel?.BringToFront();
-
         card.Tag = new AssetCardVisualState(
             caption,
             preview,
-            occupiedUseLabel,
             idBadge,
             unavailableImageLabel,
             palette.AccentSoft,
             palette.Card,
             caption.BackColor,
             preview.BackColor,
-            occupiedUseLabel?.BackColor ?? palette.Card,
             idBadge?.BackColor ?? palette.Card,
             unavailableImageLabel?.BackColor ?? preview.BackColor);
         ApplyCardVisualState(card, isSelected);
@@ -1514,23 +1500,20 @@ public partial class MainForm : Form
             ReshowDelay = 100,
             ShowAlways = true
         };
+        var installedModTooltip = string.Join(Environment.NewLine, occupiedFolders);
         var assetTooltip = isOccupied
-            ? asset.NameFile + Environment.NewLine + asset.Name
+            ? installedModTooltip
             : string.IsNullOrWhiteSpace(asset.Id) ? asset.NameFile : $"{asset.NameFile}\nID: {asset.Id}";
         tooltip.SetToolTip(preview, assetTooltip);
         if (isOccupied)
         {
             tooltip.SetToolTip(card, assetTooltip);
             tooltip.SetToolTip(caption, assetTooltip);
-            if (occupiedUseLabel != null)
-            {
-                tooltip.SetToolTip(occupiedUseLabel, assetTooltip);
-            }
         }
         if (idBadge != null)
         {
             tooltip.SetToolTip(idBadge, isOccupied
-                ? $"{asset.NameFile}\n{asset.Name}\nID: {asset.Id}"
+                ? $"{installedModTooltip}\nID: {asset.Id}"
                 : $"{asset.NameFile}\nID: {asset.Id}");
         }
 
@@ -1589,6 +1572,24 @@ public partial class MainForm : Form
 
                 var mouseIsInsideCard = card.ClientRectangle.Contains(card.PointToClient(Cursor.Position));
                 caption.SetHovered(mouseIsInsideCard);
+
+                if (isOccupied)
+                {
+                    isCardHovered = mouseIsInsideCard;
+                    if (mouseIsInsideCard)
+                    {
+                        glowPhase = MathF.PI / 2F;
+                        glowTimer?.Start();
+                    }
+                    else
+                    {
+                        glowTimer?.Stop();
+                        glowPhase = MathF.PI / 2F;
+                    }
+
+                    card.Invalidate();
+                }
+
                 if (!isOccupied)
                 {
                     return;
@@ -1668,11 +1669,6 @@ public partial class MainForm : Form
         card.Click += ToggleSelection;
         preview.Click += ToggleSelection;
         caption.Click += ToggleSelection;
-        if (occupiedUseLabel != null)
-        {
-            occupiedUseLabel.Click += ToggleSelection;
-        }
-
         if (idBadge != null)
         {
             idBadge.Click += ToggleSelection;
@@ -1685,6 +1681,31 @@ public partial class MainForm : Form
         WireCardMouseTracking(card);
 
         return card;
+    }
+
+    private static void DrawOccupiedAssetCardGlow(Graphics graphics, Rectangle bounds, Color color, float phase)
+    {
+        var pulse = (1F + MathF.Sin(phase)) / 2F;
+        const int borderClearance = 4;
+        const int glowSpread = 8;
+        var previousSmoothingMode = graphics.SmoothingMode;
+        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+        for (var inset = glowSpread; inset >= borderClearance; inset--)
+        {
+            var rect = Rectangle.Inflate(bounds, -inset, -inset);
+            if (rect.Width <= 0 || rect.Height <= 0)
+            {
+                continue;
+            }
+
+            var fade = 1F - (inset - borderClearance) / (float)(glowSpread - borderClearance + 1);
+            var alpha = (int)MathF.Round(30F * pulse * fade);
+            using var pen = new Pen(Color.FromArgb(alpha, color), 2.5F);
+            graphics.DrawRectangle(pen, rect);
+        }
+
+        graphics.SmoothingMode = previousSmoothingMode;
     }
 
     private Image? GetCachedOccupiedAssetImage(string modFolderName, string nameFile)
@@ -1878,16 +1899,23 @@ public partial class MainForm : Form
     private sealed record AssetCardVisualState(
         AssetCardCaption Caption,
         PictureBox Preview,
-        Label? OccupiedUseLabel,
         Panel? IdBadge,
         Label? UnavailableImageLabel,
         Color SelectedColor,
         Color NormalCardColor,
         Color NormalCaptionColor,
         Color NormalPreviewColor,
-        Color NormalOccupiedLabelColor,
         Color NormalIdBadgeColor,
         Color NormalUnavailableImageColor);
+
+    private sealed class Step5AssetCardPanel : Panel
+    {
+        public Step5AssetCardPanel()
+        {
+            DoubleBuffered = true;
+            ResizeRedraw = true;
+        }
+    }
 
     private sealed class AssetCardCaption : Control
     {

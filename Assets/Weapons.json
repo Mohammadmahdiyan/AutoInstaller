@@ -1,11 +1,5 @@
 [
   {
-    "id": "0",
-    "name": "Fist",
-    "nameFile": "fist",
-    "image": "Assets/Weapons/fist.png"
-  },
-  {
     "id": "1",
     "name": "Brass Knuckles",
     "nameFile": "brassknuckle",
@@ -268,6 +262,12 @@
     "name": "Cellphone",
     "nameFile": "cellphone",
     "image": "Assets/Weapons/cellphoneicon.png"
+  },
+  {
+    "id": "345",
+    "name": "RPG Rocket",
+    "nameFile": "missile",
+    "image": "Assets/Weapons/rocket.png"
   },
   {
     "id": "370",
