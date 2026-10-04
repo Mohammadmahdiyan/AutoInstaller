@@ -144,8 +144,8 @@ public sealed class ModsynManifestDiscoveryTests
             ("PRS", "PutAndReplaces"),
             ("VehicleAndSkinAndWeapon", "VehicleAndSkinAndWeapon"),
             ("VSW", "VehicleAndSkinAndWeapon"),
-            ("VSS", "VehicleAndSkinAndWeapon"),
-            ("VehicleAndSkinsAndWeapons", "VehicleAndSkinAndWeapon"),
+            ("VSS", "VehiclesAndSkinsAndWeapons"),
+            ("VehicleAndSkinsAndWeapons", "VehiclesAndSkinsAndWeapons"),
             ("VehiclesAndSkinsAndWeapons", "VehiclesAndSkinsAndWeapons"),
             ("SavesAndMissions", "SavesAndMissions"),
             ("SAM", "SavesAndMissions"),
@@ -173,6 +173,21 @@ public sealed class ModsynManifestDiscoveryTests
             Assert.IsNull(ModPackageService.TryReadManifest(packageRoot));
             File.Delete(Path.Combine(packageRoot, "mod.modsyn"));
             Assert.AreEqual("PutInModLoader", ModPackageService.ResolveManifest(packageRoot).Type);
+        });
+    }
+
+    [TestMethod]
+    public void VssAlias_ResolvesToMultiAssetPackage()
+    {
+        WithPackage("package", packageRoot =>
+        {
+            Write(packageRoot, "config.modsyn", "mod { type: VSS }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual("vehiclesandskinsandweapons", manifest.NormalizedType);
+            Assert.IsFalse(manifest.IsSingleAssetPackage);
+            Assert.IsTrue(manifest.IsMultiAssetPackage);
         });
     }
 

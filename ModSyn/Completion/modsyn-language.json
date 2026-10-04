@@ -33,12 +33,12 @@
     },
     {
       "name": "VehicleAndSkinAndWeapon",
-      "aliases": ["VSW", "VSS", "VehicleAndSkinsAndWeapons"],
+      "aliases": ["VSW"],
       "description": "Install one selected vehicle, skin, or weapon asset."
     },
     {
       "name": "VehiclesAndSkinsAndWeapons",
-      "aliases": [],
+      "aliases": ["VSS", "VehicleAndSkinsAndWeapons"],
       "description": "Install multiple selected vehicle, skin, or weapon assets."
     },
     {

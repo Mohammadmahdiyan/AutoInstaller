@@ -512,6 +512,19 @@ public partial class MainForm : Form
                     ? _step5DetectedAssets.FirstOrDefault(asset =>
                         string.Equals(asset.NameFile, model.BaseName, StringComparison.OrdinalIgnoreCase))
                     : null;
+        if (selectedAsset == null
+            && model.Status == SourceModelStatus.Pending
+            && model.DetectedAssetType == "Unknown")
+        {
+            var availableAssets = _step5DetectedAssets
+                .Where(asset => !IsMultiAssetTargetUsedByAnotherModel(asset))
+                .ToList();
+            if (availableAssets.Count > 0)
+            {
+                selectedAsset = availableAssets[Random.Shared.Next(availableAssets.Count)];
+            }
+        }
+
         if (selectedAsset != null && !IsMultiAssetTargetUsedByAnotherModel(selectedAsset))
         {
             _selectedAssetForInstall = selectedAsset;

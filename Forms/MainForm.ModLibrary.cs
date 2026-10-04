@@ -627,7 +627,7 @@ public partial class MainForm : Form
         }
 
         var selectedAssetList = GetSelectedAssetListForInstall(manifest, payloadPath);
-        if ((manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons") && selectedAssetList.Count == 0)
+        if (manifest.IsSingleAssetPackage && selectedAssetList.Count == 0)
         {
             MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "No matching asset was detected in the package."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return false;

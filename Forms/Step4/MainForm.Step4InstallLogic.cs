@@ -615,7 +615,10 @@ public partial class MainForm : Form
             {
                 _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
                 _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
-                PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                if (!_selectedModManifest.IsMultiAssetPackage)
+                {
+                    PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                }
 
                 if (_step5UnknownAssetTypeCancelled)
                 {
