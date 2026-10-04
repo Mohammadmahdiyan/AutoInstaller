@@ -1334,6 +1334,7 @@ public partial class MainForm : Form
         }
 
         card.BackColor = isSelected ? state.SelectedColor : state.NormalCardColor;
+        state.IsSelected = isSelected;
         state.Caption.BackColor = isSelected ? state.SelectedColor : state.NormalCaptionColor;
         state.Preview.BackColor = isSelected ? state.SelectedColor : state.NormalPreviewColor;
 
@@ -1346,6 +1347,8 @@ public partial class MainForm : Form
         {
             state.UnavailableImageLabel.BackColor = isSelected ? state.SelectedColor : state.NormalUnavailableImageColor;
         }
+
+        card.Invalidate();
     }
 
     private Control CreateAssetCard(GameAsset asset, int cardWidth, int cardHeight)
@@ -1388,20 +1391,28 @@ public partial class MainForm : Form
                 card.Invalidate();
             };
             card.Disposed += (_, _) => glowTimer.Dispose();
-            card.Paint += (_, e) =>
-            {
-                if (isCardHovered)
-                {
-                    DrawOccupiedAssetCardGlow(e.Graphics, card.ClientRectangle, palette.Warning, glowPhase);
-                }
+        }
 
+        card.Paint += (_, e) =>
+        {
+            if (card.Tag is AssetCardVisualState { IsSelected: true })
+            {
+                DrawSelectedAssetCardShadow(e.Graphics, card.ClientRectangle, palette.Warning);
+            }
+            else if (isOccupied && isCardHovered)
+            {
+                DrawOccupiedAssetCardGlow(e.Graphics, card.ClientRectangle, palette.Warning, glowPhase);
+            }
+
+            if (isOccupied)
+            {
                 ControlPaint.DrawBorder(
                     e.Graphics,
                     card.ClientRectangle,
                     palette.Warning,
                     ButtonBorderStyle.Solid);
-            };
-        }
+            }
+        };
 
         var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
         var caption = new AssetCardCaption(
@@ -1708,6 +1719,30 @@ public partial class MainForm : Form
         graphics.SmoothingMode = previousSmoothingMode;
     }
 
+    private static void DrawSelectedAssetCardShadow(Graphics graphics, Rectangle bounds, Color color)
+    {
+        const int borderClearance = 2;
+        const int shadowSpread = 9;
+        var previousSmoothingMode = graphics.SmoothingMode;
+        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+        for (var inset = shadowSpread; inset >= borderClearance; inset--)
+        {
+            var rect = Rectangle.Inflate(bounds, -inset, -inset);
+            if (rect.Width <= 0 || rect.Height <= 0)
+            {
+                continue;
+            }
+
+            var distance = Math.Abs(inset - 5.5F) / 4F;
+            var alpha = (int)MathF.Round(24F * Math.Max(0F, 1F - distance));
+            using var pen = new Pen(Color.FromArgb(alpha, color), 3F);
+            graphics.DrawRectangle(pen, rect);
+        }
+
+        graphics.SmoothingMode = previousSmoothingMode;
+    }
+
     private Image? GetCachedOccupiedAssetImage(string modFolderName, string nameFile)
     {
         if (string.IsNullOrWhiteSpace(modFolderName) || string.IsNullOrWhiteSpace(nameFile))
@@ -1906,7 +1941,10 @@ public partial class MainForm : Form
         Color NormalCaptionColor,
         Color NormalPreviewColor,
         Color NormalIdBadgeColor,
-        Color NormalUnavailableImageColor);
+        Color NormalUnavailableImageColor)
+    {
+        public bool IsSelected { get; set; }
+    }
 
     private sealed class Step5AssetCardPanel : Panel
     {

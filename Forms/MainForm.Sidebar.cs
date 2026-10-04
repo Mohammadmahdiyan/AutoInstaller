@@ -503,7 +503,7 @@ public partial class MainForm : Form
         var hasDetectedMod = _isDetectedModStatusVisible
             && !string.IsNullOrWhiteSpace(_selectedModName)
             && (isStep3Preview || isStep4Preview || isStep5Preview);
-        var hasSelectedAssetModel = isStep5Preview && _selectedAssetForInstall != null;
+        var hasSelectedAssetModel = isStep5Preview && hasStep5ModImage && _selectedAssetForInstall != null;
 
         if (_sidebarStack != null && _sidebarStack.Controls.Contains(_sidebarReadmeHost) && _sidebarStack.Controls.Contains(_sidebarStep4Image))
         {
@@ -525,8 +525,9 @@ public partial class MainForm : Form
                 _sidebarStack.SetCellPosition(_sidebarStep4Image, new TableLayoutPanelCellPosition(0, isStep5Preview ? 7 : 8));
                 _sidebarStack.SetCellPosition(_sidebarSelectedModelPanel, new TableLayoutPanelCellPosition(0, isStep5Preview ? 8 : 7));
                 _sidebarStack.SetCellPosition(_sidebarImageNavPanel, new TableLayoutPanelCellPosition(0, 9));
-                _sidebarStack.SetCellPosition(_sidebarReadmeHost, new TableLayoutPanelCellPosition(0, 10));
-                _sidebarStack.SetCellPosition(_sidebarReadmeButton, new TableLayoutPanelCellPosition(0, 11));
+                var readmeRow = isStep5Preview && !hasStep5ModImage && shouldDisplaySidebarReadme ? 7 : 10;
+                _sidebarStack.SetCellPosition(_sidebarReadmeHost, new TableLayoutPanelCellPosition(0, readmeRow));
+                _sidebarStack.SetCellPosition(_sidebarReadmeButton, new TableLayoutPanelCellPosition(0, readmeRow + 1));
             }
 
             for (var row = 0; row < _sidebarStack.RowStyles.Count; row++)
