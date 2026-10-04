@@ -1287,8 +1287,6 @@ public partial class MainForm : Form
             Location = new Point(160, 100)
         };
 
-        typeSelector.SelectedIndex = -1;
-        okButton.Enabled = false;
         typeSelector.SelectedIndexChanged += (_, _) => okButton.Enabled = typeSelector.SelectedIndex >= 0;
 
         dialog.Controls.Add(description);
