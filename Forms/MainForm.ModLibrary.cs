@@ -599,10 +599,12 @@ public partial class MainForm : Form
     {
         DeleteManifestEntries(manifest);
 
-        var installAsModLoader = manifest.IsModLoader
-            || manifest.IsSingleAssetPackage
-            || manifest.IsMultiAssetPackage
-            || _selectedAssetForInstall != null;
+        var isPutInGameFolder = manifest.NormalizedType == "putingamefolder";
+        var installAsModLoader = !isPutInGameFolder
+            && (manifest.IsModLoader
+                || manifest.IsSingleAssetPackage
+                || manifest.IsMultiAssetPackage
+                || _selectedAssetForInstall != null);
         var targetRoot = installAsModLoader
             ? Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName)
             : manifest.NormalizedType switch
@@ -613,6 +615,22 @@ public partial class MainForm : Form
         if (string.IsNullOrWhiteSpace(targetRoot))
         {
             return false;
+        }
+
+        var previousPutInGameFolderFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (manifest.NormalizedType == "putingamefolder")
+        {
+            var installationManifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
+            var previousInstallation = ModLoaderService.LoadInstallationManifest(installationManifestPath).Entries
+                .LastOrDefault(entry => string.Equals(entry.Type, "putingamefolder", StringComparison.OrdinalIgnoreCase)
+                    && (string.Equals(entry.ModId, modName, StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(entry.SourcePackagePath, packageRoot, StringComparison.OrdinalIgnoreCase)));
+            if (previousInstallation != null)
+            {
+                previousPutInGameFolderFiles.UnionWith((previousInstallation.InstalledFiles ?? new List<string>())
+                    .Where(path => !string.IsNullOrWhiteSpace(path))
+                    .Select(Path.GetFullPath));
+            }
         }
 
         if (manifest.NormalizedType == "putinmodloader" && Directory.Exists(targetRoot))
@@ -635,7 +653,8 @@ public partial class MainForm : Form
 
         var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
         var isMultiAssetModelInstall = manifest.IsMultiAssetPackage && _multiSourceModels.Count > 0;
-        var isAssetSelectionInstall = isAssetPackage || _selectedAssetForInstall != null;
+        var isAssetSelectionInstall = !isPutInGameFolder
+            && (isAssetPackage || _selectedAssetForInstall != null);
         var sourceModelName = DetectSourceModelName(payloadPath);
         var sourceModelFiles = GetSourceModelFilePaths(payloadPath, sourceModelName);
         var multiSourceModelFiles = isMultiAssetModelInstall
@@ -696,7 +715,8 @@ public partial class MainForm : Form
 
         var backupConfiguration = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
         var filesToBackup = replacementTargets.Values
-            .Where(path => backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, path)))
+            .Where(path => !previousPutInGameFolderFiles.Contains(Path.GetFullPath(path))
+                && backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, path)))
             .ToList();
         var backupPlan = filesToBackup.Count > 0
             ? BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup)
@@ -781,6 +801,7 @@ public partial class MainForm : Form
 
                 if (replacementTargets.ContainsKey(sourcePath)
                     && File.Exists(destinationPath)
+                    && !previousPutInGameFolderFiles.Contains(Path.GetFullPath(destinationPath))
                     && backupPlan.HasBackup
                     && backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, destinationPath)))
                 {
@@ -805,6 +826,26 @@ public partial class MainForm : Form
                 var percent = (int)((index + 1) * 100d / Math.Max(1, packageFiles.Count));
                 progressPanel.UpdateProgress(percent, sourcePath);
                 await Task.Yield();
+            }
+
+            if (previousPutInGameFolderFiles.Count > 0)
+            {
+                var gameRootPrefix = Path.TrimEndingDirectorySeparator(Path.GetFullPath(_selectedGamePath))
+                    + Path.DirectorySeparatorChar;
+                var currentInstallFiles = installedDestinationFiles
+                    .Select(Path.GetFullPath)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                foreach (var previousFile in previousPutInGameFolderFiles)
+                {
+                    if (!previousFile.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase)
+                        || currentInstallFiles.Contains(previousFile)
+                        || !File.Exists(previousFile))
+                    {
+                        continue;
+                    }
+
+                    File.Delete(previousFile);
+                }
             }
 
             foreach (var record in records)

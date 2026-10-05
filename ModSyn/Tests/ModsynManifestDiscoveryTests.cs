@@ -192,6 +192,24 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void PutInGameFolder_UsesPackageRootAsInstallPayload()
+    {
+        WithPackage("Ragdoll", packageRoot =>
+        {
+            Directory.CreateDirectory(Path.Combine(packageRoot, "CLEO"));
+            File.WriteAllText(Path.Combine(packageRoot, "Ragdoll_physics.asi"), "asi");
+            File.WriteAllText(Path.Combine(packageRoot, "CLEO", "Ragdoll_FrameAdjust.cs"), "cleo");
+            Write(packageRoot, "Ragdoll.modsyn", "mod { type: PutInGameFolder }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual(
+                Path.GetFullPath(packageRoot),
+                ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest));
+        });
+    }
+
+    [TestMethod]
     public void ModsynPackageLoading_UsesConvertedCleoSelectionsAndReplacementEntries()
     {
         WithPackage("package", packageRoot =>

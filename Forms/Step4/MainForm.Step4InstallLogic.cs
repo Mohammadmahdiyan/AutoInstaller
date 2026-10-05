@@ -713,6 +713,29 @@ public partial class MainForm : Form
                 return;
             }
 
+            if (_selectedModManifest.NormalizedType == "putingamefolder")
+            {
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
+
+                if (await InstallTypedPackageAsync(
+                    _selectedModPayloadPath,
+                    _selectedModName,
+                    _selectedModPackageRoot,
+                    _selectedModManifest))
+                {
+                    await ShowStep4LoadingTransitionAsync(string.Empty);
+                    if (!_isInstallingOptionalPackage)
+                    {
+                        GoToStep(WizardStep.Step6);
+                    }
+                }
+
+                return;
+            }
+
             if (_step5UnknownAssetTypeCancelled)
             {
                 _selectedModName = UnknownAssetCancelModName;

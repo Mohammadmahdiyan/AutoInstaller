@@ -1,9 +1,13 @@
 4. PutInGameFolder : 
 این تایپ محتویات داخلش ریخته میشه داخل پوشه بازی مثلا
 Base Mods Address\Cleo Scripts\Ragdoll
+    CLEO\
+        RagDoll_FrameAdjust.cs
+        RagDoll_uniqueAbility.cs
     Ragdoll.modsyn
-    ragdoll.asi
-    ragdoll.bmp
+    RagDoll_physics.asi
+    RagDoll_physics.ini
+    readme.txt
 
 و در فایل ModSyn پکیج، مثلاً `Ragdoll.modsyn`:
 ```modsyn
@@ -13,10 +17,16 @@ mod {
 ```
 و خروجی 
 Game Address\
-    ragdoll.asi
-    ragdoll.bmp
+    Cleo\
+        RagDoll_FrameAdjust.cs
+        RagDoll_uniqueAbility.cs
+    RagDoll_physics.asi
+    RagDoll_physics.ini
+    ...
 
 تمام 
+و برای سناریو اینکه از قبل نصب باشه هم همون فایل هایی که نصب بودن رو پاک میکنی
+
 5. PutAndReplace : 
 'در این تایپ میگه تمام فایل های جایگزینی پوشمو مد رو جایگزین میکنی 
 فقط اونایی رو که من میگم ازشون بکاپ میگیری یا نمیگیری' باقی همینطوری جایگزین بشن مثلا

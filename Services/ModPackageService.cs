@@ -428,7 +428,7 @@ public class ModPackageService
 
     public static string GetInstallPayloadDirectory(string packageRoot, ModManifest manifest)
     {
-        if (manifest.NormalizedType == "putincleo"
+        if (manifest.NormalizedType is "putincleo" or "putingamefolder"
             || manifest.IsSingleAssetPackage
             || manifest.IsMultiAssetPackage)
         {
