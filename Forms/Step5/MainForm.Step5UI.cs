@@ -141,6 +141,15 @@ public partial class MainForm : Form
             Padding = new Padding(8, 4, 8, 4),
             Margin = new Padding(0, 0, 8, 4)
         };
+        var onlyUnknownModelsButton = new Button
+        {
+            Name = "MultiAssetOnlyUnknownModelsButton",
+            Text = _localizationService.GetString("OnlyUnknownModelsFromHere", "Only review unknown models from here"),
+            AutoSize = true,
+            Height = 34,
+            Padding = new Padding(8, 4, 8, 4),
+            Margin = new Padding(0, 0, 8, 4)
+        };
         var installRemainingButton = new Button
         {
             Name = "MultiAssetInstallRemainingButton",
@@ -153,9 +162,11 @@ public partial class MainForm : Form
         };
         keepOriginalButton.Click += async (_, _) => await KeepCurrentMultiAssetModelAsync();
         skipModelButton.Click += async (_, _) => await SkipCurrentMultiAssetModelAsync();
+        onlyUnknownModelsButton.Click += async (_, _) => await OnlyReviewUnknownModelsFromHereAsync();
         installRemainingButton.Click += async (_, _) => await InstallRemainingMultiModelsWithOriginalNamesAsync();
         multiAssetActions.Controls.Add(keepOriginalButton);
         multiAssetActions.Controls.Add(skipModelButton);
+        multiAssetActions.Controls.Add(onlyUnknownModelsButton);
         multiAssetActions.Controls.Add(installRemainingButton);
 
         filters.Controls.Add(categoryLabel);
@@ -646,9 +657,16 @@ public partial class MainForm : Form
             return;
         }
 
-        if (_multiIndex < _multiSourceModels.Count - 1)
+        var nextIndex = _multiIndex + 1;
+        while (nextIndex < _multiSourceModels.Count
+            && _multiSourceModels[nextIndex].Status == SourceModelStatus.Skipped)
         {
-            _multiIndex++;
+            nextIndex++;
+        }
+
+        if (nextIndex < _multiSourceModels.Count)
+        {
+            _multiIndex = nextIndex;
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
             RefreshAssetStep();
             UpdateSidebarState();
@@ -657,6 +675,45 @@ public partial class MainForm : Form
         {
             await InstallSelectedModAsync();
         }
+    }
+
+    private async Task OnlyReviewUnknownModelsFromHereAsync()
+    {
+        if (!IsMultiAssetModelMode())
+        {
+            return;
+        }
+
+        var startIndex = _multiIndex;
+        if (_selectedAssetForInstall != null
+            && _multiSourceModels[startIndex].DetectedAssetType == "Unknown")
+        {
+            _multiSourceModels[startIndex].TargetAsset = _selectedAssetForInstall;
+        }
+
+        for (var index = startIndex; index < _multiSourceModels.Count; index++)
+        {
+            var model = _multiSourceModels[index];
+            if (model.DetectedAssetType != "Unknown")
+            {
+                model.Status = SourceModelStatus.Skipped;
+                model.TargetAsset = null;
+            }
+        }
+
+        var nextUnknownIndex = Enumerable.Range(startIndex, _multiSourceModels.Count - startIndex)
+            .FirstOrDefault(index => _multiSourceModels[index].DetectedAssetType == "Unknown"
+                && _multiSourceModels[index].Status == SourceModelStatus.Pending, -1);
+        if (nextUnknownIndex < 0)
+        {
+            await InstallSelectedModAsync();
+            return;
+        }
+
+        _multiIndex = nextUnknownIndex;
+        PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+        RefreshAssetStep();
+        UpdateSidebarState();
     }
 
     private async Task KeepCurrentMultiAssetModelAsync()
