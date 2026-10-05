@@ -480,15 +480,14 @@ public partial class MainForm : Form
             if (installRemainingButton != null)
             {
                 var uncheckedCount = isMultiAssetMode
-                    ? _multiSourceModels.Skip(_multiIndex)
-                        .Count(model => model.Status is GtaSaModManager.Models.SourceModelStatus.Pending
-                            or GtaSaModManager.Models.SourceModelStatus.Skipped)
+                    ? _multiSourceModels.Count(model => model.Status is GtaSaModManager.Models.SourceModelStatus.Pending
+                        or GtaSaModManager.Models.SourceModelStatus.Skipped)
                     : 0;
                 installRemainingButton.Visible = isMultiAssetMode && uncheckedCount > 0;
                 installRemainingButton.Text = string.Format(
                     _localizationService.GetString(
                         "InstallRemainingOriginalNames",
-                        "Install {0} unchecked models with original names"),
+                        "Install {0} unchecked as named (review unknowns)"),
                     uncheckedCount);
             }
         }

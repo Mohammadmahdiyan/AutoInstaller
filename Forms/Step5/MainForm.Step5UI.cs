@@ -141,10 +141,10 @@ public partial class MainForm : Form
             Padding = new Padding(8, 4, 8, 4),
             Margin = new Padding(0, 0, 8, 4)
         };
-        var onlyUnknownModelsButton = new Button
+        var finishHereButton = new Button
         {
-            Name = "MultiAssetOnlyUnknownModelsButton",
-            Text = _localizationService.GetString("OnlyUnknownModelsFromHere", "Only review unknown models from here"),
+            Name = "MultiAssetFinishHereButton",
+            Text = _localizationService.GetString("FinishHereInstallChecked", "Finish here; install checked models only"),
             AutoSize = true,
             Height = 34,
             Padding = new Padding(8, 4, 8, 4),
@@ -153,7 +153,7 @@ public partial class MainForm : Form
         var installRemainingButton = new Button
         {
             Name = "MultiAssetInstallRemainingButton",
-            Text = _localizationService.GetString("InstallRemainingOriginalNames", "Install the remaining {0} with original names"),
+            Text = _localizationService.GetString("InstallRemainingOriginalNames", "Install {0} unchecked as named (review unknowns)"),
             AutoSize = true,
             Height = 34,
             Padding = new Padding(8, 4, 8, 4),
@@ -162,11 +162,11 @@ public partial class MainForm : Form
         };
         keepOriginalButton.Click += async (_, _) => await KeepCurrentMultiAssetModelAsync();
         skipModelButton.Click += async (_, _) => await SkipCurrentMultiAssetModelAsync();
-        onlyUnknownModelsButton.Click += async (_, _) => await OnlyReviewUnknownModelsFromHereAsync();
+        finishHereButton.Click += async (_, _) => await FinishHereAndInstallCheckedModelsAsync();
         installRemainingButton.Click += async (_, _) => await InstallRemainingMultiModelsWithOriginalNamesAsync();
         multiAssetActions.Controls.Add(keepOriginalButton);
         multiAssetActions.Controls.Add(skipModelButton);
-        multiAssetActions.Controls.Add(onlyUnknownModelsButton);
+        multiAssetActions.Controls.Add(finishHereButton);
         multiAssetActions.Controls.Add(installRemainingButton);
 
         filters.Controls.Add(categoryLabel);
@@ -672,43 +672,27 @@ public partial class MainForm : Form
         }
     }
 
-    private async Task OnlyReviewUnknownModelsFromHereAsync()
+    private async Task FinishHereAndInstallCheckedModelsAsync()
     {
         if (!IsMultiAssetModelMode())
         {
             return;
         }
 
-        var startIndex = _multiIndex;
-        if (_selectedAssetForInstall != null
-            && _multiSourceModels[startIndex].DetectedAssetType == "Unknown")
-        {
-            _multiSourceModels[startIndex].TargetAsset = _selectedAssetForInstall;
-        }
-
-        for (var index = startIndex; index < _multiSourceModels.Count; index++)
+        _step5UnknownAssetTypeCancelled = false;
+        for (var index = _multiIndex; index < _multiSourceModels.Count; index++)
         {
             var model = _multiSourceModels[index];
-            if (model.DetectedAssetType != "Unknown")
+            if (model.Status is SourceModelStatus.Pending or SourceModelStatus.Skipped)
             {
                 model.Status = SourceModelStatus.Skipped;
                 model.TargetAsset = null;
             }
         }
 
-        var nextUnknownIndex = Enumerable.Range(startIndex, _multiSourceModels.Count - startIndex)
-            .FirstOrDefault(index => _multiSourceModels[index].DetectedAssetType == "Unknown"
-                && _multiSourceModels[index].Status == SourceModelStatus.Pending, -1);
-        if (nextUnknownIndex < 0)
-        {
-            await InstallSelectedModAsync();
-            return;
-        }
-
-        _multiIndex = nextUnknownIndex;
-        PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
-        RefreshAssetStep();
-        UpdateSidebarState();
+        _selectedAssetForInstall = null;
+        _step5SelectedAssetKeys.Clear();
+        await InstallResolvedMultiAssetPackageAsync();
     }
 
     private async Task KeepCurrentMultiAssetModelAsync()
@@ -751,17 +735,93 @@ public partial class MainForm : Form
         }
 
         _step5UnknownAssetTypeCancelled = false;
-        for (var index = _multiIndex; index < _multiSourceModels.Count; index++)
+        if (_selectedAssetForInstall != null
+            && _multiSourceModels[_multiIndex].DetectedAssetType == "Unknown")
+        {
+            _multiSourceModels[_multiIndex].TargetAsset = _selectedAssetForInstall;
+        }
+
+        for (var index = 0; index < _multiSourceModels.Count; index++)
         {
             var model = _multiSourceModels[index];
-            if (model.Status is SourceModelStatus.Pending or SourceModelStatus.Skipped)
+            if (model.Status is not (SourceModelStatus.Pending or SourceModelStatus.Skipped))
+            {
+                continue;
+            }
+
+            if (model.DetectedAssetType == "Unknown")
+            {
+                model.Status = SourceModelStatus.Pending;
+            }
+            else
             {
                 model.Status = SourceModelStatus.KeepOriginal;
                 model.TargetAsset = null;
             }
         }
 
-        await InstallSelectedModAsync();
+        var nextUnknownIndex = _multiSourceModels.FindIndex(model =>
+            model.Status == SourceModelStatus.Pending && model.DetectedAssetType == "Unknown");
+        if (nextUnknownIndex < 0)
+        {
+            _selectedAssetForInstall = null;
+            _step5SelectedAssetKeys.Clear();
+            await InstallResolvedMultiAssetPackageAsync();
+            return;
+        }
+
+        _multiIndex = nextUnknownIndex;
+        PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+        RefreshAssetStep();
+        UpdateSidebarState();
+    }
+
+    private async Task InstallResolvedMultiAssetPackageAsync()
+    {
+        var hasCheckedModelFiles = _multiSourceModels.Any(model =>
+            model.Status is SourceModelStatus.Mapped or SourceModelStatus.KeepOriginal
+            && (model.DffPath is not null && File.Exists(model.DffPath)
+                || model.TxdPath is not null && File.Exists(model.TxdPath)));
+        if (!hasCheckedModelFiles)
+        {
+            MessageBox.Show(
+                _localizationService.GetString(
+                    "NoCheckedModelsToInstall",
+                    "There are no checked models to install."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        if (!await EnsureRequiredPackagesBeforeInstallAsync()
+            || !await EnsureDependenciesBeforeInstallAsync())
+        {
+            return;
+        }
+
+        if (!_isInstallingOptionalPackage)
+        {
+            GoToStep(WizardStep.Step4);
+        }
+
+        if (await InstallTypedPackageAsync(
+            _selectedModPayloadPath,
+            _selectedModName,
+            _selectedModPackageRoot,
+            _selectedModManifest!))
+        {
+            _pendingExistingAssetInstallAction = null;
+            await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
+            if (!_isInstallingOptionalPackage)
+            {
+                GoToStep(WizardStep.Step6);
+            }
+        }
+        else if (!_isInstallingOptionalPackage)
+        {
+            GoToStep(WizardStep.Step5);
+        }
     }
 
     private void ShowMultiAssetReview()
