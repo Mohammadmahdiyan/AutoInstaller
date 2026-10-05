@@ -479,13 +479,17 @@ public partial class MainForm : Form
                 .FirstOrDefault() as Button;
             if (installRemainingButton != null)
             {
-                var remainingCount = Math.Max(0, _multiSourceModels.Count - _multiIndex - 1);
-                installRemainingButton.Visible = isMultiAssetMode && _multiIndex >= 1 && remainingCount > 0;
+                var uncheckedCount = isMultiAssetMode
+                    ? _multiSourceModels.Skip(_multiIndex)
+                        .Count(model => model.Status is GtaSaModManager.Models.SourceModelStatus.Pending
+                            or GtaSaModManager.Models.SourceModelStatus.Skipped)
+                    : 0;
+                installRemainingButton.Visible = isMultiAssetMode && uncheckedCount > 0;
                 installRemainingButton.Text = string.Format(
                     _localizationService.GetString(
                         "InstallRemainingOriginalNames",
-                        "Install the remaining {0} with original names"),
-                    remainingCount);
+                        "Install {0} unchecked models with original names"),
+                    uncheckedCount);
             }
         }
 

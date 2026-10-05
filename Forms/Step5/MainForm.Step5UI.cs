@@ -750,29 +750,16 @@ public partial class MainForm : Form
 
     private async Task InstallRemainingMultiModelsWithOriginalNamesAsync()
     {
-        if (!IsMultiAssetModelMode()
-            || _multiIndex < 1
-            || _multiIndex >= _multiSourceModels.Count - 1)
+        if (!IsMultiAssetModelMode())
         {
             return;
         }
 
-        var currentModel = _multiSourceModels[_multiIndex];
         _step5UnknownAssetTypeCancelled = false;
-        if (_selectedAssetForInstall == null)
-        {
-            currentModel.Status = SourceModelStatus.KeepOriginal;
-            currentModel.TargetAsset = null;
-        }
-        else if (!TryStoreCurrentMultiSourceModelChoice())
-        {
-            return;
-        }
-
-        for (var index = _multiIndex + 1; index < _multiSourceModels.Count; index++)
+        for (var index = _multiIndex; index < _multiSourceModels.Count; index++)
         {
             var model = _multiSourceModels[index];
-            if (model.Status == SourceModelStatus.Pending)
+            if (model.Status is SourceModelStatus.Pending or SourceModelStatus.Skipped)
             {
                 model.Status = SourceModelStatus.KeepOriginal;
                 model.TargetAsset = null;
