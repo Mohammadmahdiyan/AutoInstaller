@@ -192,6 +192,31 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void PackageInstallation_RecordsVssAsMultiAssetType()
+    {
+        WithPackage("package", packageRoot =>
+        {
+            var gameRoot = Path.Combine(packageRoot, "game");
+            var installedDirectory = Path.Combine(gameRoot, "modloader", "poco");
+            Directory.CreateDirectory(installedDirectory);
+            var installedFile = Path.Combine(installedDirectory, "grenade.dff");
+            File.WriteAllText(installedFile, "model");
+
+            ModLoaderService.RecordPackageInstallation(
+                "vehiclesandskinsandweapons",
+                "Weapons\\poco",
+                packageRoot,
+                installedDirectory,
+                new[] { installedFile });
+
+            var installationsPath = ModLoaderService.GetGameInstallationsManifestPath(gameRoot);
+            var recordedInstallation = ModLoaderService.LoadInstallationManifest(installationsPath).Entries.Single();
+
+            Assert.AreEqual("vehiclesandskinsandweapons", recordedInstallation.Type);
+        });
+    }
+
+    [TestMethod]
     public void PutInGameFolder_UsesPackageRootAsInstallPayload()
     {
         WithPackage("Ragdoll", packageRoot =>

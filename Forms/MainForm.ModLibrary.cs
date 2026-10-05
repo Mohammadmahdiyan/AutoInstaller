@@ -860,9 +860,11 @@ public partial class MainForm : Form
 
             if (installAsModLoader)
             {
-                var installType = manifest.IsSingleAssetPackage || manifest.IsMultiAssetPackage || _selectedAssetForInstall != null
-                    ? "vehicleandskinandweapon"
-                    : "putinmodloader";
+                var installType = manifest.IsMultiAssetPackage
+                    ? manifest.NormalizedType
+                    : manifest.IsSingleAssetPackage || _selectedAssetForInstall != null
+                        ? "vehicleandskinandweapon"
+                        : "putinmodloader";
                 var packageModId = GetPackageModId(packageRoot);
                 ModLoaderService.RecordInstallation(modName, packageRoot, targetRoot);
                 ModLoaderService.RecordPackageInstallation(
