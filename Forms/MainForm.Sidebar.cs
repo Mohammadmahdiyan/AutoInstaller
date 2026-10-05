@@ -477,13 +477,25 @@ public partial class MainForm : Form
 
             var installRemainingButton = multiAssetActions.Controls.Find("MultiAssetInstallRemainingButton", false)
                 .FirstOrDefault() as Button;
+            var finishHereButton = multiAssetActions.Controls.Find("MultiAssetFinishHereButton", false)
+                .FirstOrDefault() as Button;
+            var hasCheckedModelBeforeCurrent = isMultiAssetMode
+                && _multiSourceModels.Take(_multiIndex).Any(model =>
+                    model.Status is GtaSaModManager.Models.SourceModelStatus.Mapped
+                        or GtaSaModManager.Models.SourceModelStatus.KeepOriginal);
+            var uncheckedCount = isMultiAssetMode
+                ? _multiSourceModels.Count(model => model.Status is GtaSaModManager.Models.SourceModelStatus.Pending
+                    or GtaSaModManager.Models.SourceModelStatus.Skipped)
+                : 0;
+            var canUseBulkActions = isMultiAssetMode && hasCheckedModelBeforeCurrent && uncheckedCount > 0;
+            if (finishHereButton != null)
+            {
+                finishHereButton.Visible = canUseBulkActions;
+            }
+
             if (installRemainingButton != null)
             {
-                var uncheckedCount = isMultiAssetMode
-                    ? _multiSourceModels.Count(model => model.Status is GtaSaModManager.Models.SourceModelStatus.Pending
-                        or GtaSaModManager.Models.SourceModelStatus.Skipped)
-                    : 0;
-                installRemainingButton.Visible = isMultiAssetMode && uncheckedCount > 0;
+                installRemainingButton.Visible = canUseBulkActions;
                 installRemainingButton.Text = string.Format(
                     _localizationService.GetString(
                         "InstallRemainingOriginalNames",
