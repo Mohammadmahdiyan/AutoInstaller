@@ -1,0 +1,284 @@
+1. در تایپ vss 
+در step 5
+وقتی به اخرین ایتم میرسیم 
+یک Install review میاره 
+اینو حذف کن ولی این ایده خوبیه ولی ایا جایی که العان هست جای خوبی نیست 
+یک دکمه اون بالا اضافه کن برای دیدن چه فایلی نصب شده با زدنش همون پنجره بیاد اما یکم متفاوت 
+ایتم هایی رو که نصبه نشون بده 
+[x+1]. [nameFile مد کاربر] => [ایتمی که انتخاب کرده یا اگر انتخاب نکرده بود همون nameFile]
+مثلا
+1. molotov => molotov
+2. grenade => teargas
+...
+اگر روی ایتمی از این لیست کلیک شد باید بره توی step 5 همون 
+وحتی اگر ایتم قبلا انتخاب شده بود هم بشه رفت توی step 5 
+
+2. در تایپ vss 
+در step 5
+یک دکمه اضافه کن 
+کاربردش این باشه که بگه از این ایتم به بعد رو نصب نکن یعنی بیخیال از این ایتم به بعد بشو و فقط ایتم های ناشناخته رو بیار 
+با کاربردش تو اسم دکمه رو بگو
+3. در تایپ vss 
+در step 5
+یک دکمه اضاف کن که کاربردش این باشه که از این به بعد رو نصب کن ولی step 5 رو براشون نیار باقی رو همین اسمی که هستن خوبه 
+با کاربردش تو اسم دکمه رو بگو
+4. PutInGameFolder : 
+این تایپ محتویات داخلش ریخته میشه داخل پوشه بازی مثلا
+Base Mods Address\Cleo Scripts\Ragdoll
+    Ragdoll.modsyn
+    ragdoll.asi
+    ragdoll.bmp
+
+و در فایل ModSyn پکیج، مثلاً `Ragdoll.modsyn`:
+```modsyn
+mod {
+    type: putInGameFolder
+}
+```
+و خروجی 
+Game Address\
+    ragdoll.asi
+    ragdoll.bmp
+
+تمام 
+5. PutAndReplace : 
+'در این تایپ میگه تمام فایل های جایگزینی پوشمو مد رو جایگزین میکنی 
+فقط اونایی رو که من میگم ازشون بکاپ میگیری یا نمیگیری' باقی همینطوری جایگزین بشن مثلا
+
+Base Mods Address\Cleo scripts\Ben10\
+    modloader\Ben10 Mod\...
+    models\hud.txd
+    bass.dll
+    gta_sa.exe
+    modloader.asi
+    vorbisFile.dll
+    vorbisHooked.dll
+    Z-ReadMe.txt
+    mod.modsyn
+
+```modsyn
+mod {
+    type: PutAndReplace,
+    backup: some,
+    backupThese: [
+        "models\\hud.txd",
+        "vorbisFile.dll",
+        "vorbisHooked.dll"
+    ]
+}
+``` 
+(
+توضیحات کاربرد و منطق تایپ
+backupThis => این کی میگه از همه فایل یا پوشه هایی که توی مد هست توی بازی هم هست فایل های بازی که میخاد جایگزینشون بشه از همشون بک اپ نگیر بجز این فایل یا پوشه
+backupThese => اینم دقیقا مثل قبلی فقط بجای یک مقدار چند مقدار میگیره
+dontBackupThis => این کی میگه از همه فایل یا پوشه هایی که توی مد هست توی بازی هم هست فایل های بازی که میخاد جایگزینشون بشه از همشون بک اپ بگیر بجز این فایل یا پوشه
+dontBackupThese => اینم دقیقا مثل قبلی فقط بجای یک مقدار چند مقدار میگیره
+)
+و خروجیش میشه 
+Game Address\
+    .ModManager\
+        backups\
+            Ben10\
+                models\hud.txd
+                vorbisFile.dll
+                vorbisHooked.dll
+    modloader\Ben10 Mod\...
+    bass.dll
+    gta_sa.exe
+    modloader.asi
+    vorbisFile.dll
+    vorbisHooked.dll
+    ...
+و اگر برعکسش بود برای همین مثال 
+```modsyn
+mod {
+    type: PutAndReplace,
+    backup: some,
+    dontBackupThese: [
+        "models\\hud.txd",
+        "gta_sa.exe",
+    ]
+}
+``` 
+و خروجیش میشه
+Game Address\
+    .ModManager\
+        backups\
+            Ben10\
+                models\hud.txd
+                bass.dll
+                gta_sa.exe
+                modloader.asi
+                vorbisFile.dll
+                vorbisHooked.dll
+    modloader\Ben10 Mod\...
+    bass.dll
+    gta_sa.exe
+    modloader.asi
+    vorbisFile.dll
+    vorbisHooked.dll
+    ...
+
+نکته خیلی مهم تایپ PutAndReplace حتما باید حدعقل یکی از اینها رو داشته باشه 
+1.backupThis
+2.backupThese
+3.dontBackupThis
+4.dontBackupThese
+یا به PutAndReplaces تبدیل بشه اگر اینطور نبود ارور بده
+و نکته بعدی اینکه این چهار کی بالا که گفتم از فایل های اصلی بازی بک اپ میگیرن اگر بود لیست فایل های بازی رو گذاشتم اگر نیاز بود
+H:\B\A-ModAutoInstaller\Assets\Game Files List\
+    GTA 5 FARSI.txt
+    gta_sa.txt
+ولی مثلا modloader توی پیشفرض بازی نیست ولی با نصب مدی توی reqFiles هست و میاد توی بازی و باید ازش بک اپ گرفته بشه بخاطر همین توی مثالی که بالا زدم modloader.asi رو اوردم
+و این مختص modloader.asi و فایل های داخل reqFiles نیست منظورم هر فایلی که داخل خود بازی هست و میخاد جایگزینش بشه بود
+6. PutAndReplaces: این تایپ مثل تایپ قبلی ولی چند تا تفاوت مهم داره
+اول از همه توی این تایپ واجب و اجباری نیست حدعقل یکی  از اینها باشه
+1.backupThis
+2.backupThese
+3.dontBackupThis
+4.dontBackupThese
+و اصل این تایپ بنا شده بر اینکه 
+'ببین من برام مهم نیست بنویسی یا ببنویسی چیو بک اپ بگیرم یا چیو بک اپ نگیرم چون من معمولا برای مد هایی استفاده میشم که فایل های زیادی دارن و 
+نوشتن اینکه چیو بک اپ بگیری و چیو بک اپ نگیری سخته میتونه باشه ها ولی میتونه هم نباشه من خودم خودکار برسی میکنم چه فایلی میخاد جایگزین بشه خودم بک اپ میگیرم و فایل هایی که نمیخاد جایگزین بشه همینطوری میریزم'
+مثلا 
+
+Base Mods Address\Cleo scripts\Ben10\
+    modloader\Ben10 Mod\...
+    models\hud.txd
+    bass.dll
+    gta_sa.exe
+    modloader.asi
+    vorbisFile.dll
+    vorbisHooked.dll
+    Z-ReadMe.txt
+    mod.modsyn
+
+```modsyn
+mod {
+    type: PutAndReplaces,
+}
+``` 
+پوشه بازی رو برسی میکنه میبینه اینها توی پوشه بازی هست
+1.models\hud.txd
+2.bass.dll
+3.gta_sa.exe
+4.modloader.asi
+5.vorbisFile.dll
+6.vorbisHooked.dll
+پس میشه
+
+Game Address\
+    .ModManager\
+        backups\
+            Ben10\
+                models\hud.txd
+                bass.dll
+                gta_sa.exe
+                modloader.asi
+                vorbisFile.dll
+                vorbisHooked.dll
+    modloader\Ben10 Mod\...
+    bass.dll
+    gta_sa.exe
+    modloader.asi
+    vorbisFile.dll
+    vorbisHooked.dll
+    ...
+و اینارو توضیح دادم میتونه برای این تایپ هم استفاده بشه
+1.backupThis
+2.backupThese
+3.dontBackupThis
+4.dontBackupThese
+7. Replacing : این تایپ میگه 
+'من هیچ فایل اضافه ندارم همه فایل های من جایگزینی هست پس باید فایل های منو توی پوشه بازی پیدا کنی و بک اپ بگیری (مگر اینکه با اون چهار مورد گفته باشم یکی یا چند تارو بک اپ بگیر یا نگیر)'
+مثلا
+Base Mods Address\Sounds\SFX Audio Original\
+    audio\
+        SFX\
+            FEET
+            GENRL
+            PAIN_A
+            SCRIPT
+            SPC_EA
+            SPC_FA
+            SPC_GA
+            SPC_NA
+            SPC_PA
+    mod.modsyn
+و در modsyn
+
+```modsyn
+    type: Replacing,
+```
+
+Game Address\
+    .ModManager\
+        backups\
+            SFX Audio Original\
+                audio\
+                    SFX\
+                        FEET
+                        GENRL
+                        PAIN_A
+                        SCRIPT
+                        SPC_EA
+                        SPC_FA
+                        SPC_GA
+                        SPC_NA
+                        SPC_PA
+    audio\
+        SFX\
+            FEET
+            GENRL
+            PAIN_A
+            SCRIPT
+            SPC_EA
+            SPC_FA
+            SPC_GA
+            SPC_NA
+            SPC_PA
+و اگر در modsyn نوشته بود 
+```modsyn
+    type: Replacing,
+    backup: none
+```
+نباید بک اپ بگیرهbackup: none
+یعنی میشه خروجیش 
+
+Game Address\
+    .ModManager\
+        backups\
+    audio\
+        SFX\
+            FEET
+            GENRL
+            PAIN_A
+            SCRIPT
+            SPC_EA
+            SPC_FA
+            SPC_GA
+            SPC_NA
+            SPC_PA
+
+(backup: some یعنی بعضی هاشون میخاد بک اپ گرفته بشه یا گرفته نشه
+backup: all که پیشفرضه یعنی همهشون بک اپ گرفته بشه
+)
+(
+    کی های 
+    1.backupThis
+    2.backupThese
+    3.dontBackupThis
+    4.dontBackupThese
+    5.backup
+    در تایپ های 
+    1. PutAndReplace
+    2. PutAndReplaces
+    3. Replacing
+    میشه استفاده کرد
+)
+8. وقتی در PutAndReplace مد قبلا نصب شده بود میخام بدکمه delete ش رو هندل کنیم
+اون فایل هایی که جایگزین نشدن رو پاک میکنی (در installations.json نوشته)
+و فایل های داخل پوشه بک اپ مد رو میریزی داخل پوشه بازی تمام
+و همچنین برای PutAndReplaces و Replacing
+و بعد پوشه که در بک اپ هست رو پاک میکنی
+9. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده

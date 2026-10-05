@@ -34,7 +34,33 @@ public partial class MainForm : Form
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-        var title = new Label { Name = "AssetStepTitle", Text = _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced..."), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 10) };
+        var title = new Label { Name = "AssetStepTitle", Text = _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced..."), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0, 0, 12, 8) };
+        var reviewModelsButton = new Button
+        {
+            Name = "MultiAssetReviewButton",
+            Text = _localizationService.GetString("MultiAssetReviewButton", "Mod Status"),
+            AutoSize = true,
+            Height = 32,
+            Visible = false,
+            Margin = new Padding(0, 0, 0, 8)
+        };
+        reviewModelsButton.Click += (_, _) => ShowMultiAssetReview();
+        var header = new FlowLayoutPanel
+        {
+            Name = "AssetStepHeader",
+            Dock = DockStyle.Fill,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight,
+            WrapContents = true,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
+        header.Controls.Add(title);
+        header.Controls.Add(reviewModelsButton);
         var filters = new FlowLayoutPanel { Name = "AssetFilters", Dock = DockStyle.Fill, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Padding = new Padding(0, 4, 0, 4), Margin = new Padding(0, 0, 0, 8) };
         var categoryLabel = new Label { Name = "AssetCategoryLabel", Text = _localizationService.GetString("AssetCategory", "Category"), AutoSize = true, Margin = new Padding(0, 7, 8, 0), Visible = false };
         var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 240, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
@@ -164,6 +190,7 @@ public partial class MainForm : Form
         };
 
         layout.Controls.Add(title, 0, 0);
+            layout.Controls.Add(header, 0, 0);
         layout.Controls.Add(filters, 0, 1);
         layout.Controls.Add(multiAssetTabs, 0, 2);
         layout.Controls.Add(unknownModelNotice, 0, 3);
@@ -419,6 +446,12 @@ public partial class MainForm : Form
 
     private void PrepareMultiSourceModelStep(string payloadPath)
     {
+        if (_multiSourceModels.Count == 0)
+        {
+            return;
+        }
+
+        _multiIndex = Math.Clamp(_multiIndex, 0, _multiSourceModels.Count - 1);
         _step5PreparedPayloadPath = payloadPath;
         _step5UnknownAssetTypeCancelled = false;
         _step5PreparationAttempted = true;
@@ -444,7 +477,7 @@ public partial class MainForm : Form
             }
         }
 
-        var initialType = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
+        var initialType = model.TargetAsset != null
             ? model.TargetAsset.AssetType
             : model.DetectedAssetType == "Unknown"
                 ? model.SelectedAssetType
@@ -481,7 +514,7 @@ public partial class MainForm : Form
         }
 
         var model = _multiSourceModels[_multiIndex];
-        var requiredType = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
+        var requiredType = model.TargetAsset != null
             ? model.TargetAsset.AssetType
             : model.DetectedAssetType == "Unknown"
                 ? model.SelectedAssetType
@@ -504,7 +537,7 @@ public partial class MainForm : Form
         _step5SelectedAssetKeys.Clear();
         _selectedAssetForInstall = null;
 
-        var selectedAsset = model.Status == SourceModelStatus.Mapped && model.TargetAsset != null
+        var selectedAsset = model.TargetAsset != null
             ? _step5DetectedAssets.FirstOrDefault(asset =>
                 string.Equals(GetAssetSelectionKey(asset), GetAssetSelectionKey(model.TargetAsset), StringComparison.OrdinalIgnoreCase))
             : model.Status == SourceModelStatus.Pending
@@ -622,7 +655,7 @@ public partial class MainForm : Form
         }
         else
         {
-            await ShowMultiAssetSummaryAsync();
+            await InstallSelectedModAsync();
         }
     }
 
@@ -689,43 +722,23 @@ public partial class MainForm : Form
             }
         }
 
-        await ShowMultiAssetSummaryAsync();
+        await InstallSelectedModAsync();
     }
 
-    private async Task ShowMultiAssetSummaryAsync()
+    private void ShowMultiAssetReview()
     {
-        var resultLines = _multiSourceModels.Select(model => model.Status switch
+        if (_selectedModManifest?.IsMultiAssetPackage != true || _multiSourceModels.Count == 0)
         {
-            SourceModelStatus.Mapped => string.Format(
-                _localizationService.GetString("MultiAssetSummaryMapped", "Mapped: {0} -> {1}"),
-                model.BaseName,
-                model.TargetAsset?.NameFile ?? model.TargetAsset?.Name ?? "?"),
-            SourceModelStatus.KeepOriginal => string.Format(
-                _localizationService.GetString("MultiAssetSummaryKeep", "Keep: {0}"),
-                model.BaseName),
-            SourceModelStatus.Skipped => string.Format(
-                _localizationService.GetString("MultiAssetSummarySkipped", "Skipped: {0}"),
-                model.BaseName),
-            _ => string.Format(
-                _localizationService.GetString("MultiAssetSummaryPending", "Unresolved: {0}"),
-                model.BaseName)
-        }).ToList();
+            return;
+        }
 
-        var filesLeftOut = _multiSourceModels
-            .Where(model => model.Status is SourceModelStatus.Skipped or SourceModelStatus.Pending
-                || model.Status == SourceModelStatus.Mapped && model.TargetAsset == null)
-            .SelectMany(model => new[] { model.DffPath, model.TxdPath }
-                .Where(path => !string.IsNullOrWhiteSpace(path))
-                .Select(path => Path.GetFileName(path)!))
-            .ToList();
-        if (filesLeftOut.Count > 0)
+        if (IsMultiAssetModelMode() && _selectedAssetForInstall != null)
         {
-            resultLines.Add(string.Empty);
-            resultLines.Add(_localizationService.GetString("MultiAssetFilesLeftOut", "Files left out:"));
-            resultLines.AddRange(filesLeftOut);
+            _multiSourceModels[_multiIndex].TargetAsset = _selectedAssetForInstall;
         }
 
         var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
         using var dialog = new Form
         {
             Text = _localizationService.GetString("MultiAssetSummaryTitle", "Review model mappings"),
@@ -736,57 +749,178 @@ public partial class MainForm : Form
             ShowInTaskbar = false,
             RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
             RightToLeftLayout = isRtl,
-            ClientSize = new Size(520, 390)
+            ClientSize = new Size(460, 390)
         };
-        var summary = new TextBox
+        var listHost = new FlowLayoutPanel
         {
-            Multiline = true,
-            ReadOnly = true,
-            ScrollBars = ScrollBars.Vertical,
-            WordWrap = true,
+            Name = "MultiAssetStatusRows",
             Dock = DockStyle.Fill,
-            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
-            Text = string.Join(Environment.NewLine, resultLines),
-            Margin = new Padding(12)
+            AutoScroll = true,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Padding = new Padding(0),
+            Margin = new Padding(0),
+            BackColor = palette.Surface,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No
+        };
+        var selectedModelIndex = -1;
+        for (var index = 0; index < _multiSourceModels.Count; index++)
+        {
+            var modelIndex = index;
+            var model = _multiSourceModels[index];
+            var targetName = model.TargetAsset?.NameFile ?? model.TargetAsset?.Name ?? model.BaseName;
+            var isSkipped = model.Status == SourceModelStatus.Skipped;
+            var isConfirmed = model.Status is SourceModelStatus.Mapped or SourceModelStatus.KeepOriginal;
+            var row = new Panel
+            {
+                Name = "MultiAssetStatusRow" + modelIndex,
+                Height = 58,
+                Width = 420,
+                Margin = new Padding(0),
+                Padding = new Padding(24, 6, 20, 4),
+                Cursor = Cursors.Hand,
+                BackColor = palette.Surface,
+                Tag = modelIndex
+            };
+            var sourceLabel = new Label
+            {
+                Text = model.BaseName,
+                AutoSize = true,
+                Location = new Point(0, 3),
+                Font = new Font("Segoe UI", 10F, FontStyle.Regular),
+                ForeColor = palette.TextPrimary,
+                Cursor = Cursors.Hand
+            };
+            row.Controls.Add(sourceLabel);
+
+            if (!isSkipped)
+            {
+                var targetText = string.Equals(model.BaseName, targetName, StringComparison.OrdinalIgnoreCase)
+                    ? "=> " + targetName
+                    : "=> " + string.Format(
+                        _localizationService.GetString("ChangedNameTo", "Changed Name To {0}"),
+                        targetName);
+                var targetLabel = new Label
+                {
+                    Text = targetText,
+                    AutoSize = true,
+                    Location = new Point(8, 27),
+                    Font = new Font("Segoe UI", 9F),
+                    ForeColor = palette.TextSecondary,
+                    Tag = "SecondaryText",
+                    Cursor = Cursors.Hand
+                };
+                row.Controls.Add(targetLabel);
+            }
+
+            var statusLabel = new Label
+            {
+                Text = isConfirmed ? "✓" : "×",
+                AutoSize = false,
+                Width = 25,
+                Height = 34,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Location = new Point(row.Width - 48, 10),
+                Font = new Font("Segoe UI", 16F, FontStyle.Bold),
+                ForeColor = isConfirmed ? palette.Success : palette.Error,
+                Cursor = Cursors.Hand
+            };
+            row.Controls.Add(statusLabel);
+
+            void SelectModel(object? _, EventArgs __)
+            {
+                selectedModelIndex = modelIndex;
+                dialog.Close();
+            }
+
+            void SetRowHover(object? _, EventArgs __)
+            {
+                row.BackColor = palette.AccentSoft;
+            }
+
+            void ClearRowHover(object? _, EventArgs __)
+            {
+                if (!row.ClientRectangle.Contains(row.PointToClient(Cursor.Position)))
+                {
+                    row.BackColor = palette.Surface;
+                }
+            }
+
+            row.Click += SelectModel;
+            row.MouseEnter += SetRowHover;
+            row.MouseLeave += ClearRowHover;
+            foreach (Control child in row.Controls)
+            {
+                child.Click += SelectModel;
+                child.MouseEnter += SetRowHover;
+                child.MouseLeave += ClearRowHover;
+            }
+
+            listHost.Controls.Add(row);
+            if (modelIndex < _multiSourceModels.Count - 1)
+            {
+                listHost.Controls.Add(new Panel
+                {
+                    Height = 1,
+                    Width = 420,
+                    Margin = new Padding(14, 0, 14, 0),
+                    BackColor = palette.BorderSoft
+                });
+            }
+        }
+
+        listHost.SizeChanged += (_, _) =>
+        {
+            var rowWidth = Math.Max(260, listHost.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 2);
+            foreach (var row in listHost.Controls.OfType<Panel>().Where(control => control.Name.StartsWith("MultiAssetStatusRow", StringComparison.Ordinal)))
+            {
+                row.Width = rowWidth;
+                if (row.Controls.OfType<Label>().LastOrDefault() is { Text: "✓" or "×" } statusLabel)
+                {
+                    statusLabel.Location = new Point(row.Width - 48, 10);
+                }
+            }
         };
         var buttons = new FlowLayoutPanel
         {
-            Dock = DockStyle.Bottom,
-            Height = 48,
-            Padding = new Padding(8),
+            Dock = DockStyle.Fill,
+            Padding = new Padding(8, 6, 8, 6),
             FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
-            WrapContents = false
+            WrapContents = false,
+            Margin = new Padding(0)
         };
-        var installButton = new Button
+        var closeButton = new Button
         {
-            Text = _localizationService.GetString("Install", "Install"),
+            Text = _localizationService.GetString("Close", "Close"),
             AutoSize = true,
-            DialogResult = DialogResult.OK,
-            Enabled = !_multiSourceModels.Any(model => model.Status == SourceModelStatus.Pending
-                || model.Status == SourceModelStatus.Mapped && model.TargetAsset == null)
-        };
-        var backButton = new Button
-        {
-            Text = _localizationService.GetString("Back", "Back"),
-            AutoSize = true,
+            Height = 28,
+            Margin = new Padding(0),
             DialogResult = DialogResult.Cancel
         };
-        buttons.Controls.Add(installButton);
-        buttons.Controls.Add(backButton);
-        dialog.Controls.Add(summary);
-        dialog.Controls.Add(buttons);
-        dialog.AcceptButton = installButton;
-        dialog.CancelButton = backButton;
+        buttons.Controls.Add(closeButton);
+        var dialogLayout = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 2,
+            Padding = new Padding(0),
+            Margin = new Padding(0)
+        };
+        dialogLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        dialogLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        dialogLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        dialogLayout.Controls.Add(listHost, 0, 0);
+        dialogLayout.Controls.Add(buttons, 0, 1);
+        dialog.Controls.Add(dialogLayout);
+        dialog.CancelButton = closeButton;
         ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
 
-        if (dialog.ShowDialog(this) == DialogResult.OK)
+        dialog.ShowDialog(this);
+        if ((uint)selectedModelIndex < (uint)_multiSourceModels.Count)
         {
-            await InstallSelectedModAsync();
-            return;
+            _multiIndex = selectedModelIndex;
+            GoToStep(WizardStep.Step5);
         }
-
-        _multiIndex = _multiSourceModels.Count - 1;
-        GoToStep(WizardStep.Step5);
     }
 
     private string GetMultiSourceModelTitle()

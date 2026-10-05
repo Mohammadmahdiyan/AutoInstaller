@@ -443,6 +443,11 @@ public partial class MainForm : Form
         var isStep4Preview = _currentStep == WizardStep.Step4;
         var isStep5Preview = _currentStep == WizardStep.Step5;
         _wizardPanels.TryGetValue(WizardStep.Step5, out var step5Panel);
+        if (step5Panel?.Controls.Find("MultiAssetReviewButton", true).FirstOrDefault() is Button reviewModelsButton)
+        {
+            reviewModelsButton.Visible = isStep5Preview && _selectedModManifest?.IsMultiAssetPackage == true;
+        }
+
         var multiAssetActions = isStep5Preview
             ? step5Panel?.Controls.Find("MultiAssetActions", true).FirstOrDefault() as FlowLayoutPanel
             : null;
