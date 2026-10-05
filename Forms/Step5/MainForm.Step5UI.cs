@@ -42,7 +42,7 @@ public partial class MainForm : Form
             AutoSize = true,
             Height = 32,
             Visible = false,
-            Margin = new Padding(0, 0, 0, 8)
+            Margin = new Padding(0, 0, 8, 4)
         };
         reviewModelsButton.Click += (_, _) => ShowMultiAssetReview();
         var header = new FlowLayoutPanel
@@ -60,7 +60,6 @@ public partial class MainForm : Form
             BackColor = Color.Transparent
         };
         header.Controls.Add(title);
-        header.Controls.Add(reviewModelsButton);
         var filters = new FlowLayoutPanel { Name = "AssetFilters", Dock = DockStyle.Fill, Height = 42, FlowDirection = FlowDirection.LeftToRight, WrapContents = false, Padding = new Padding(0, 4, 0, 4), Margin = new Padding(0, 0, 0, 8) };
         var categoryLabel = new Label { Name = "AssetCategoryLabel", Text = _localizationService.GetString("AssetCategory", "Category"), AutoSize = true, Margin = new Padding(0, 7, 8, 0), Visible = false };
         var categoryFilter = new ComboBox { Name = "AssetCategoryFilter", Width = 240, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
@@ -164,6 +163,7 @@ public partial class MainForm : Form
         skipModelButton.Click += async (_, _) => await SkipCurrentMultiAssetModelAsync();
         finishHereButton.Click += async (_, _) => await FinishHereAndInstallCheckedModelsAsync();
         installRemainingButton.Click += async (_, _) => await InstallRemainingMultiModelsWithOriginalNamesAsync();
+        multiAssetActions.Controls.Add(reviewModelsButton);
         multiAssetActions.Controls.Add(keepOriginalButton);
         multiAssetActions.Controls.Add(skipModelButton);
         multiAssetActions.Controls.Add(finishHereButton);
