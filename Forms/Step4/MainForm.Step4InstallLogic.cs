@@ -603,16 +603,8 @@ public partial class MainForm : Form
             var isPutAndReplacesPackage = _selectedModManifest.NormalizedType == "putandreplaces";
             var isReplacingPackage = _selectedModManifest.IsReplacing;
             var previousModelFiles = new List<string>();
-            var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
-            var sourceAssetType = DetectAssetTypeByName(sourceModelName);
-            var requiresAssetSelection = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && !isReplacingPackage && (_selectedModManifest.IsSingleAssetPackage
-                || _selectedModManifest.IsMultiAssetPackage
-                || _selectedAssetForInstall != null
-                || !string.IsNullOrWhiteSpace(sourceModelName)
-                || !string.IsNullOrWhiteSpace(sourceAssetType));
-            var assetInstallFlow = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && !isReplacingPackage && (_selectedModManifest.IsSingleAssetPackage
-                || _selectedModManifest.IsMultiAssetPackage
-                || _selectedAssetForInstall != null);
+            var requiresAssetSelection = _selectedModManifest.SupportsAssetSelection;
+            var assetInstallFlow = _selectedModManifest.SupportsAssetSelection;
             InstallationManifestEntry? existingAssetInstallation = null;
             if ((assetInstallFlow || requiresAssetSelection)
                 && (_currentStep == WizardStep.Step3 || _currentStep == WizardStep.Step5))

@@ -220,6 +220,15 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void AssetSelection_IsEnabledOnlyForVswAndVssPackageTypes()
+    {
+        Assert.IsFalse(new ModManifest { Type = "PIM" }.SupportsAssetSelection);
+        Assert.IsFalse(new ModManifest { Type = "Replacing" }.SupportsAssetSelection);
+        Assert.IsTrue(new ModManifest { Type = "VSW" }.SupportsAssetSelection);
+        Assert.IsTrue(new ModManifest { Type = "VSS" }.SupportsAssetSelection);
+    }
+
+    [TestMethod]
     public void PutInGameFolder_UsesPackageRootAsInstallPayload()
     {
         WithPackage("Ragdoll", packageRoot =>

@@ -144,6 +144,8 @@ public class ModManifest
     public bool IsSingleAssetPackage => NormalizedType == "vehicleandskinandweapon";
 
     public bool IsMultiAssetPackage => NormalizedType == "vehiclesandskinsandweapons";
+
+    public bool SupportsAssetSelection => IsSingleAssetPackage || IsMultiAssetPackage;
 }
 
 public sealed record ModReplacementEntry(string Source, string Target);
