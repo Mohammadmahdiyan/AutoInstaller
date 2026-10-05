@@ -657,14 +657,9 @@ public partial class MainForm : Form
             return;
         }
 
-        var nextIndex = _multiIndex + 1;
-        while (nextIndex < _multiSourceModels.Count
-            && _multiSourceModels[nextIndex].Status == SourceModelStatus.Skipped)
-        {
-            nextIndex++;
-        }
+        var nextIndex = _multiSourceModels.FindIndex(model => model.Status == SourceModelStatus.Pending);
 
-        if (nextIndex < _multiSourceModels.Count)
+        if (nextIndex >= 0)
         {
             _multiIndex = nextIndex;
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);

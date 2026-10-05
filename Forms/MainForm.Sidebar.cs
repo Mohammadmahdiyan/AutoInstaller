@@ -788,14 +788,15 @@ public partial class MainForm : Form
                 {
                     var currentModel = _multiSourceModels[_multiIndex];
                     var canContinueWithoutMapping = currentModel.Status is GtaSaModManager.Models.SourceModelStatus.KeepOriginal or GtaSaModManager.Models.SourceModelStatus.Skipped;
-                    var isLastModel = _multiIndex == _multiSourceModels.Count - 1;
+                    var resolvedCount = _multiSourceModels.Count(model => model.Status is not GtaSaModManager.Models.SourceModelStatus.Pending);
+                    var hasPendingModels = resolvedCount < _multiSourceModels.Count;
                     _sidebarNextButton.Enabled = _selectedAssetForInstall != null || canContinueWithoutMapping;
-                    _sidebarNextButton.Text = isLastModel
-                        ? _localizationService.GetString("Install", "Install")
-                        : string.Format(
-                            _localizationService.GetString("NextModel", "Next model ({0}/{1})"),
-                            _multiIndex + 1,
-                            _multiSourceModels.Count);
+                    _sidebarNextButton.Text = hasPendingModels
+                        ? string.Format(
+                            _localizationService.GetString("NextModelProgress", "Next ({0}/{1})"),
+                            resolvedCount,
+                            _multiSourceModels.Count)
+                        : _localizationService.GetString("Install", "Install");
                 }
                 else
                 {
