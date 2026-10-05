@@ -171,9 +171,32 @@ public sealed class ModsynValidatorTests
     [TestMethod]
     public void Validate_AcceptsReplacementObjectsAndStringShorthand()
     {
-        var result = Validate("mod {\n  type: PutAndReplace\n  replacements: [\"same/path\" { source: \"from\" target: \"to\" }]\n}");
+        var result = Validate("mod {\n  type: PutAndReplace\n  backup: some\n  backupThis: \"data\"\n  replacements: [\"same/path\" { source: \"from\" target: \"to\" }]\n}");
 
         Assert.IsTrue(result.IsValid, string.Join(Environment.NewLine, result.Errors));
+    }
+
+    [TestMethod]
+    public void Validate_PutAndReplaceRequiresBackupSelectorsButPutAndReplacesDoesNot()
+    {
+        var missingSelector = Validate("mod { type: PutAndReplace }");
+        var selectedBackup = Validate("mod { type: PutAndReplace backup: some backupThis: \"models\" }");
+        var automaticBackup = Validate("mod { type: PutAndReplaces }");
+
+        Assert.IsFalse(missingSelector.IsValid);
+        Assert.IsTrue(missingSelector.Errors.Any(error => error.Message.Contains("PutAndReplace requires at least one backup selector", StringComparison.Ordinal)));
+        Assert.IsTrue(selectedBackup.IsValid, string.Join(Environment.NewLine, selectedBackup.Errors));
+        Assert.IsTrue(automaticBackup.IsValid, string.Join(Environment.NewLine, automaticBackup.Errors));
+    }
+
+    [TestMethod]
+    public void Validate_PutAndReplacesAllowsAutomaticAndSelectiveBackups()
+    {
+        var automaticBackup = Validate("mod { type: PutAndReplaces }");
+        var selectiveBackup = Validate("mod { type: PutAndReplaces backup: some dontBackupThese: [\"data\\\\cache\"] }");
+
+        Assert.IsTrue(automaticBackup.IsValid, string.Join(Environment.NewLine, automaticBackup.Errors));
+        Assert.IsTrue(selectiveBackup.IsValid, string.Join(Environment.NewLine, selectiveBackup.Errors));
     }
 
     [TestMethod]

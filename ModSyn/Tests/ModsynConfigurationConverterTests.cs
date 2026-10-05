@@ -76,6 +76,8 @@ public sealed class ModsynConfigurationConverterTests
         var converted = Convert("""
             mod {
               type: PutAndReplace
+              backup: some
+              backupThis: "data"
               replacements: [
                 "data/handling.cfg"
                 { source: "custom/weapon.dat" target: "data/weapon.dat" }
@@ -148,6 +150,36 @@ public sealed class ModsynConfigurationConverterTests
         {
             Directory.Delete(packageRoot, recursive: true);
         }
+    }
+
+    [TestMethod]
+    public void BackupConfiguration_BackupThisMatchesNestedGameFilePath()
+    {
+      var backup = Convert("""
+        mod {
+          type: PutAndReplace
+          backup: some
+          backupThis: "data\\maps\\generic\\multiobj.ide"
+        }
+        """).Backup;
+
+      Assert.IsTrue(backup.ShouldBackup("data\\maps\\generic\\multiobj.ide"));
+      Assert.IsFalse(backup.ShouldBackup("data\\maps\\generic\\other.ide"));
+    }
+
+    [TestMethod]
+    public void BackupConfiguration_NormalizesEscapedWindowsSeparators()
+    {
+      var backup = Convert("""
+        mod {
+          type: PutAndReplace
+          backup: some
+          backupThis: "data\\maps\\generic\\multiobj.ide"
+        }
+        """).Backup;
+
+      Assert.IsTrue(backup.ShouldBackup("data\\maps\\generic\\multiobj.ide"));
+      Assert.IsFalse(backup.ShouldBackup("data\\maps\\generic\\other.ide"));
     }
 
     [TestMethod]

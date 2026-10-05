@@ -40,7 +40,13 @@ public sealed record ModsynBackupConfiguration(
 
     private static string Normalize(string path)
     {
-        return path.Trim().Replace('/', '\\').Trim('\\');
+        var normalized = path.Trim().Replace('/', '\\').Trim('\\');
+        while (normalized.Contains("\\\\", StringComparison.Ordinal))
+        {
+            normalized = normalized.Replace("\\\\", "\\", StringComparison.Ordinal);
+        }
+
+        return normalized;
     }
 }
 

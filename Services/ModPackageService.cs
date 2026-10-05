@@ -108,13 +108,6 @@ public class ModPackageService
             }
 
             configuration = ModsynConfigurationConverter.Convert(document, validation, packagePath);
-            if (configuration.Manifest.NormalizedType == "putandreplace" && configuration.Replacements.Count == 0)
-            {
-                configuration = null;
-                error = "PutAndReplace requires at least one valid replacement entry.";
-                return false;
-            }
-
             return true;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
@@ -189,13 +182,7 @@ public class ModPackageService
             throw new InvalidDataException(error ?? "The Modsyn package configuration is invalid.");
         }
 
-        var result = configuration!.Replacements.ToList();
-        if (result.Count == 0 && ResolveManifest(packageRoot).NormalizedType == "putandreplace")
-        {
-            throw new InvalidDataException("PutAndReplace contains no valid replacement entries.");
-        }
-
-        return result;
+        return configuration!.Replacements.ToList();
     }
 
     public static bool IsReplacingInstall(string packageRoot)
@@ -428,7 +415,7 @@ public class ModPackageService
 
     public static string GetInstallPayloadDirectory(string packageRoot, ModManifest manifest)
     {
-        if (manifest.NormalizedType is "putincleo" or "putingamefolder"
+        if (manifest.NormalizedType is "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces"
             || manifest.IsSingleAssetPackage
             || manifest.IsMultiAssetPackage)
         {

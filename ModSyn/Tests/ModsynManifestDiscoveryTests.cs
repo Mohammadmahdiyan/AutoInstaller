@@ -157,7 +157,9 @@ public sealed class ModsynManifestDiscoveryTests
         {
             foreach (var (typeName, expectedType) in packageTypes)
             {
-                var replacementText = expectedType == "PutAndReplace" ? " replacements: [\"payload.dat\"]" : string.Empty;
+                var replacementText = expectedType == "PutAndReplace"
+                    ? " backup: some backupThis: \"payload.dat\" replacements: [\"payload.dat\"]"
+                    : string.Empty;
                 Write(packageRoot, "mod.modsyn", $"mod {{ type: {typeName}{replacementText} }}");
 
                 Assert.IsTrue(
@@ -235,6 +237,30 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void PutAndReplaceTypes_UsePackageRootAsInstallPayload()
+    {
+        WithPackage("Ben10", packageRoot =>
+        {
+            Directory.CreateDirectory(Path.Combine(packageRoot, "models"));
+            Directory.CreateDirectory(Path.Combine(packageRoot, "modloader", "Ben10 Mod"));
+            File.WriteAllText(Path.Combine(packageRoot, "bass.dll"), "root file");
+            File.WriteAllText(Path.Combine(packageRoot, "models", "hud.txd"), "nested file");
+
+            foreach (var type in new[] { "PutAndReplace", "PutAndReplaces" })
+            {
+                var selectors = type == "PutAndReplace" ? "backup: some backupThis: \"models\"" : string.Empty;
+                Write(packageRoot, "mod.modsyn", $"mod {{ type: {type} {selectors} }}");
+                var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+                Assert.AreEqual(
+                    Path.GetFullPath(packageRoot),
+                    ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest),
+                    type);
+            }
+        });
+    }
+
+    [TestMethod]
     public void ModsynPackageLoading_UsesConvertedCleoSelectionsAndReplacementEntries()
     {
         WithPackage("package", packageRoot =>
@@ -262,6 +288,8 @@ public sealed class ModsynManifestDiscoveryTests
             Write(packageRoot, "mod.modsyn", """
                 mod {
                   type: PutAndReplace
+                                    backup: some
+                                    backupThis: "data"
                   replacements: [
                     "data/handling.cfg"
                     { source: "custom/weapon.dat" target: "data/weapon.dat" }
@@ -274,6 +302,31 @@ public sealed class ModsynManifestDiscoveryTests
             Assert.AreEqual("custom\\weapon.dat", replacements[1].Source);
             Assert.AreEqual("data\\weapon.dat", replacements[1].Target);
         });
+    }
+
+    [TestMethod]
+    public void BackupStorage_DefaultPlanStoresModFilesUnderManagerBackups()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynBackup-" + Guid.NewGuid().ToString("N"));
+        var originalFile = Path.Combine(gameFolder, "data", "handling.cfg");
+        Directory.CreateDirectory(Path.GetDirectoryName(originalFile)!);
+        File.WriteAllText(originalFile, "original");
+        try
+        {
+            var plan = BackupStorageService.CreatePlan(gameFolder, "Ben10", new[] { originalFile });
+
+            Assert.IsTrue(plan.HasBackup, plan.ErrorMessage);
+            Assert.AreEqual(Path.Combine(gameFolder, ".ModManager", "backup"), plan.BackupRoot);
+            var backupFile = ModPackageService.BackupOriginalFileForReplacement(gameFolder, originalFile, "Ben10", plan.BackupRoot);
+            Assert.AreEqual(Path.Combine(gameFolder, ".ModManager", "backup", "Ben10", "data", "handling.cfg"), backupFile);
+        }
+        finally
+        {
+            if (Directory.Exists(gameFolder))
+            {
+                Directory.Delete(gameFolder, recursive: true);
+            }
+        }
     }
 
     [TestMethod]

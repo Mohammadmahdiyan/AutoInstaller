@@ -592,15 +592,17 @@ public partial class MainForm : Form
             _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
             var isPutInCleoPackage = _selectedModManifest.NormalizedType == "putincleo";
             var isPutInGameFolderPackage = _selectedModManifest.NormalizedType == "putingamefolder";
+            var isPutAndReplacePackage = _selectedModManifest.NormalizedType == "putandreplace";
+            var isPutAndReplacesPackage = _selectedModManifest.NormalizedType == "putandreplaces";
             var previousModelFiles = new List<string>();
             var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
             var sourceAssetType = DetectAssetTypeByName(sourceModelName);
-            var requiresAssetSelection = !isPutInCleoPackage && !isPutInGameFolderPackage && (_selectedModManifest.IsSingleAssetPackage
+            var requiresAssetSelection = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null
                 || !string.IsNullOrWhiteSpace(sourceModelName)
                 || !string.IsNullOrWhiteSpace(sourceAssetType));
-            var assetInstallFlow = !isPutInCleoPackage && !isPutInGameFolderPackage && (_selectedModManifest.IsSingleAssetPackage
+            var assetInstallFlow = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null);
             InstallationManifestEntry? existingAssetInstallation = null;
@@ -746,6 +748,52 @@ public partial class MainForm : Form
             }
 
             if (_selectedModManifest.NormalizedType == "putingamefolder")
+            {
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
+
+                if (await InstallTypedPackageAsync(
+                    _selectedModPayloadPath,
+                    _selectedModName,
+                    _selectedModPackageRoot,
+                    _selectedModManifest))
+                {
+                    await ShowStep4LoadingTransitionAsync(string.Empty);
+                    if (!_isInstallingOptionalPackage)
+                    {
+                        GoToStep(WizardStep.Step6);
+                    }
+                }
+
+                return;
+            }
+
+            if (isPutAndReplacePackage)
+            {
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
+
+                if (await InstallTypedPackageAsync(
+                    _selectedModPayloadPath,
+                    _selectedModName,
+                    _selectedModPackageRoot,
+                    _selectedModManifest))
+                {
+                    await ShowStep4LoadingTransitionAsync(string.Empty);
+                    if (!_isInstallingOptionalPackage)
+                    {
+                        GoToStep(WizardStep.Step6);
+                    }
+                }
+
+                return;
+            }
+
+            if (isPutAndReplacesPackage)
             {
                 if (!_isInstallingOptionalPackage)
                 {

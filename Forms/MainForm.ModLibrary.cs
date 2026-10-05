@@ -600,7 +600,8 @@ public partial class MainForm : Form
         DeleteManifestEntries(manifest);
 
         var isPutInGameFolder = manifest.NormalizedType == "putingamefolder";
-        var installAsModLoader = !isPutInGameFolder
+        var isDirectGameInstall = manifest.NormalizedType is "putingamefolder" or "putandreplace" or "putandreplaces";
+        var installAsModLoader = !isDirectGameInstall
             && (manifest.IsModLoader
                 || manifest.IsSingleAssetPackage
                 || manifest.IsMultiAssetPackage
@@ -653,7 +654,7 @@ public partial class MainForm : Form
 
         var isAssetPackage = manifest.NormalizedType is "vehicleandskinandweapon" or "vehiclesandskinsandweapons";
         var isMultiAssetModelInstall = manifest.IsMultiAssetPackage && _multiSourceModels.Count > 0;
-        var isAssetSelectionInstall = !isPutInGameFolder
+        var isAssetSelectionInstall = !isDirectGameInstall
             && (isAssetPackage || _selectedAssetForInstall != null);
         var sourceModelName = DetectSourceModelName(payloadPath);
         var sourceModelFiles = GetSourceModelFilePaths(payloadPath, sourceModelName);
@@ -687,16 +688,28 @@ public partial class MainForm : Form
         var replacementTargets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         if (manifest.NormalizedType == "putandreplace")
         {
-            foreach (var replacement in ModPackageService.ReadReplacementEntries(packageRoot))
+            var replacements = ModPackageService.ReadReplacementEntries(packageRoot);
+            if (replacements.Count == 0)
             {
-                var sourcePath = GetSafePackagePath(payloadPath, replacement.Source);
-                if (!File.Exists(sourcePath))
+                foreach (var sourcePath in packageFiles)
                 {
-                    MessageBox.Show("Replacement source was not found: " + replacement.Source, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return false;
+                    var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
+                    replacementTargets[sourcePath] = GetSafeGamePath(relativePath);
                 }
+            }
+            else
+            {
+                foreach (var replacement in replacements)
+                {
+                    var sourcePath = GetSafePackagePath(payloadPath, replacement.Source);
+                    if (!File.Exists(sourcePath))
+                    {
+                        MessageBox.Show("Replacement source was not found: " + replacement.Source, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
 
-                replacementTargets[sourcePath] = GetSafeGamePath(replacement.Target);
+                    replacementTargets[sourcePath] = GetSafeGamePath(replacement.Target);
+                }
             }
         }
         else if (manifest.NormalizedType is "putandreplaces" or "putingamefolder")

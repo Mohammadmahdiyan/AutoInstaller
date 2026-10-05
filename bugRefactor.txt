@@ -239,3 +239,41 @@ backup: all که پیشفرضه یعنی همهشون بک اپ گرفته بش�
 و همچنین برای PutAndReplaces و Replacing
 و بعد پوشه که در بک اپ هست رو پاک میکنی
 9. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
+
+
+99. من اینو توی modsyn نوشتم اما بک اپ نگرفته 
+base mods address\Cleo scripts\Football\
+    cleo\...
+    data\maps\generic\multiobj.ide
+    modloader\FootballTeamPlay\...
+    Football.modsyn
+mod {
+    type: PutAndReplace,
+    backup: some,
+    backupThis: "data\\maps\\generic\\multiobj.ide"
+}
+(
+    فکنم اینو بدونی ولی حالا بازم میگم
+mod {
+    type: PutAndReplace,
+    backup: some,
+    backupThis: "data\\maps\\generic\\multiobj.ide"
+}
+    این ادرس
+    معنیش اینه
+    Game address\data\maps\generic\multiobj.ide
+    یعنی از این فایل بک اپ بگیر
+mod {
+    type: PutAndReplace,
+    backup: some,
+    backupThis: "data\\maps\\generic"
+}
+    data\\maps\\generic
+    معنیش اینه
+    Game address\data\maps\generic
+    یعنی از این پوشه بک اپ بگیر
+)
+بک اپ باید توی پوشه .ModManager باشه
+.ModManager\backup\[اسم پوشه مد]
+و در این مثال ما 
+.ModManager\backup\Football\data\maps\generic\multiobj.ide

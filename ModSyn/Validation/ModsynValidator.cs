@@ -20,6 +20,16 @@ public static class ModsynValidator
         }
         var (backupMode, backupModeIsValid) = ResolveBackupMode(document.Body, errors);
         ValidateBackupSelectors(document.Body, backupMode, backupModeIsValid, errors, warnings);
+        if (typeIsValid
+            && normalizedType == "PutAndReplace"
+            && backupModeIsValid
+            && backupMode != ModsynBackupMode.Some
+            && !document.Body.Properties.Any(property => property.Name is "backupThis" or "backupThese" or "dontBackupThis" or "dontBackupThese"))
+        {
+            errors.Add(new ModsynValidationError(
+                "PutAndReplace requires at least one backup selector with backup: some. Use PutAndReplaces for automatic backup selection.",
+                FindProperty(document.Body, "type")?.Value.Location ?? document.Body.Location));
+        }
 
         var requirements = new List<ModsynResolvedRequirement>();
         foreach (var property in document.Body.Properties)
