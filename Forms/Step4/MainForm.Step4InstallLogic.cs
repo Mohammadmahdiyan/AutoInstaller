@@ -591,15 +591,16 @@ public partial class MainForm : Form
             _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
             _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
             var isPutInCleoPackage = _selectedModManifest.NormalizedType == "putincleo";
+            var isPutInGameFolderPackage = _selectedModManifest.NormalizedType == "putingamefolder";
             var previousModelFiles = new List<string>();
             var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
             var sourceAssetType = DetectAssetTypeByName(sourceModelName);
-            var requiresAssetSelection = !isPutInCleoPackage && (_selectedModManifest.IsSingleAssetPackage
+            var requiresAssetSelection = !isPutInCleoPackage && !isPutInGameFolderPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null
                 || !string.IsNullOrWhiteSpace(sourceModelName)
                 || !string.IsNullOrWhiteSpace(sourceAssetType));
-            var assetInstallFlow = !isPutInCleoPackage && (_selectedModManifest.IsSingleAssetPackage
+            var assetInstallFlow = !isPutInCleoPackage && !isPutInGameFolderPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null);
             InstallationManifestEntry? existingAssetInstallation = null;
@@ -673,6 +674,37 @@ public partial class MainForm : Form
             {
                 MessageBox.Show(_localizationService.GetString("ModFolderEmpty", "The selected mod folder is empty or unreadable."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
+
+            if (isPutInGameFolderPackage)
+            {
+                var previousInstallation = FindExistingPutInGameFolderInstallation(_selectedModPackageRoot, _selectedModName);
+                if (previousInstallation != null)
+                {
+                    var action = PromptForExistingPutInGameFolderAction(_selectedModName);
+                    if (action == DialogResult.No)
+                    {
+                        DeleteExistingPutInGameFolderInstallation(previousInstallation);
+                        _lastActionWasDelete = true;
+                        RefreshModList();
+                        if (!_isInstallingOptionalPackage)
+                        {
+                            GoToStep(WizardStep.Step6);
+                        }
+
+                        return;
+                    }
+
+                    if (action != DialogResult.Yes)
+                    {
+                        return;
+                    }
+
+                    if (!string.Equals(previousInstallation.Type, "putingamefolder", StringComparison.OrdinalIgnoreCase))
+                    {
+                        DeleteExistingPutInGameFolderInstallation(previousInstallation);
+                    }
+                }
             }
 
             if (!await EnsureDependenciesBeforeInstallAsync())
@@ -1037,6 +1069,153 @@ public partial class MainForm : Form
             }
 
             MessageBox.Show($"Installation failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}More details were written to:{Environment.NewLine}{logPath}", _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private InstallationManifestEntry? FindExistingPutInGameFolderInstallation(string packageRoot, string modName)
+    {
+        var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
+        var entries = ModLoaderService.LoadInstallationManifest(manifestPath).Entries;
+        var fullPackageRoot = Path.GetFullPath(packageRoot);
+        var existingBySource = entries.LastOrDefault(entry =>
+            !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+            && string.Equals(Path.GetFullPath(entry.SourcePackagePath), fullPackageRoot, StringComparison.OrdinalIgnoreCase));
+        if (existingBySource != null)
+        {
+            return existingBySource;
+        }
+
+        var packageModId = GetPackageModId(packageRoot);
+        return entries.LastOrDefault(entry =>
+            string.Equals(entry.Type, "putingamefolder", StringComparison.OrdinalIgnoreCase)
+            && (string.Equals(entry.ModId, packageModId, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(entry.ModId, modName, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private DialogResult PromptForExistingPutInGameFolderAction(string modName)
+    {
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        using var dialog = new Form
+        {
+            Text = _localizationService.GetString("PutInGameFolderAlreadyInstalledTitle", "Mod already installed"),
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            RightToLeftLayout = isRtl,
+            ClientSize = new Size(480, 170)
+        };
+        var message = new Label
+        {
+            Text = string.Format(
+                _localizationService.GetString(
+                    "PutInGameFolderAlreadyInstalledPrompt",
+                    "'{0}' is already installed. What would you like to do?"),
+                modName),
+            Dock = DockStyle.Fill,
+            Padding = new Padding(18),
+            TextAlign = isRtl ? ContentAlignment.MiddleRight : ContentAlignment.MiddleLeft
+        };
+        var buttons = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 58,
+            Padding = new Padding(10),
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+        var reinstallButton = new Button
+        {
+            Text = _localizationService.GetString("Reinstall", "Reinstall"),
+            Width = 130,
+            Height = 36,
+            DialogResult = DialogResult.Yes
+        };
+        var deleteButton = new Button
+        {
+            Text = _localizationService.GetString("Delete", "Delete"),
+            Width = 110,
+            Height = 36,
+            DialogResult = DialogResult.No
+        };
+        var cancelButton = new Button
+        {
+            Text = _localizationService.GetString("Cancel", "Cancel"),
+            Width = 100,
+            Height = 36,
+            DialogResult = DialogResult.Cancel
+        };
+        buttons.Controls.Add(reinstallButton);
+        buttons.Controls.Add(deleteButton);
+        buttons.Controls.Add(cancelButton);
+        dialog.Controls.Add(message);
+        dialog.Controls.Add(buttons);
+        dialog.CancelButton = cancelButton;
+        ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
+        return dialog.ShowDialog(this);
+    }
+
+    private void DeleteExistingPutInGameFolderInstallation(InstallationManifestEntry installation)
+    {
+        var gameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(_selectedGamePath));
+        var gameRootPrefix = gameRoot + Path.DirectorySeparatorChar;
+        var installedDestination = Path.GetFullPath(installation.InstalledDestination);
+        var installedFiles = (installation.InstalledFiles ?? new List<string>())
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var installedFile in installedFiles)
+        {
+            if (!installedFile.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidDataException("The recorded PutInGameFolder installation contains a path outside the selected game folder.");
+            }
+
+            if (File.Exists(installedFile))
+            {
+                File.Delete(installedFile);
+            }
+        }
+
+        if (string.Equals(installation.Type, "putingamefolder", StringComparison.OrdinalIgnoreCase))
+        {
+            ModPackageService.TryRestoreReplacementInstallations(_selectedModName);
+        }
+
+        if (!string.Equals(installedDestination, gameRoot, StringComparison.OrdinalIgnoreCase)
+            && installedDestination.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase)
+            && Directory.Exists(installedDestination))
+        {
+            foreach (var directory in Directory.GetDirectories(installedDestination, "*", SearchOption.AllDirectories)
+                         .OrderByDescending(path => path.Length)
+                         .Append(installedDestination))
+            {
+                if (Directory.Exists(directory) && !Directory.EnumerateFileSystemEntries(directory).Any())
+                {
+                    Directory.Delete(directory);
+                }
+            }
+        }
+
+        var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
+        var gameManifest = ModLoaderService.LoadInstallationManifest(manifestPath);
+        gameManifest.Entries.RemoveAll(entry =>
+            string.Equals(entry.ModId, installation.ModId, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(entry.Type, installation.Type, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(entry.SourcePackagePath, installation.SourcePackagePath, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(entry.InstalledDestination, installation.InstalledDestination, StringComparison.OrdinalIgnoreCase));
+        ModLoaderService.SaveInstallationManifest(manifestPath, gameManifest);
+
+        var installedRecords = ModLoaderService.LoadInstalledRecords();
+        if (installedRecords.RemoveAll(record =>
+                string.Equals(record.SourcePackagePath, installation.SourcePackagePath, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(record.InstalledDestination, installation.InstalledDestination, StringComparison.OrdinalIgnoreCase)) > 0)
+        {
+            ModLoaderService.SaveInstalledRecords(installedRecords);
         }
     }
 
