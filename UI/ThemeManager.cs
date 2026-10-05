@@ -1,4 +1,5 @@
 using GtaSaModManager.Models;
+using GtaSaModManager.Controls;
 using Microsoft.Win32;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
@@ -336,6 +337,11 @@ public static class ThemeManager
         ThemePalette palette,
         bool isRoot = false)
     {
+        if (control is InstallProgressView progressView)
+        {
+            progressView.ApplyPalette(palette);
+        }
+
         // ------------------------------------------------------------
         // FORM / ROOT BACKGROUND
         // ------------------------------------------------------------

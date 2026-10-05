@@ -307,6 +307,27 @@ public class ModPackageService
         return backupPath;
     }
 
+    public static async Task<string> BackupOriginalFileForReplacementAsync(
+        string gameFolder,
+        string originalFilePath,
+        string modName,
+        string? backupRoot = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(originalFilePath) || !File.Exists(originalFilePath))
+        {
+            return string.Empty;
+        }
+
+        var targetBackupRoot = string.IsNullOrWhiteSpace(backupRoot) ? GetDefaultBackupRoot() : backupRoot;
+        var relativePath = Path.GetRelativePath(gameFolder, originalFilePath)
+            .Replace('/', Path.DirectorySeparatorChar)
+            .Replace('\\', Path.DirectorySeparatorChar);
+        var backupPath = Path.Combine(targetBackupRoot, SanitizeFolderName(modName), relativePath);
+        await FileCopyService.CopyFileAsync(originalFilePath, backupPath, cancellationToken);
+        return backupPath;
+    }
+
     public static List<ModPackageInfo> DiscoverModPackages(string libraryRoot)
     {
         var result = new List<ModPackageInfo>();

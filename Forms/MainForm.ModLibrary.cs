@@ -217,14 +217,33 @@ public partial class MainForm : Form
                 }
             };
 
-            uninstall.Click += (_, _) =>
+            uninstall.Click += async (_, _) =>
             {
                 if (MessageBox.Show(string.Format(_localizationService.GetString("ConfirmUninstallMod", "Are you sure you want to uninstall '{0}'?"), mod.Name), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
                     return;
                 }
 
-                var success = ModLoaderService.TryUninstallInstalledMod(mod.Name, mod.FolderPath, gamePath, "putinmodloader");
+                GoToStep(WizardStep.Step4);
+                bool success;
+                try
+                {
+                    success = await UninstallInstalledFolderWithProgressAsync(
+                        mod.Name,
+                        mod.FolderPath,
+                        gamePath,
+                        "putinmodloader");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        _localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled.") + " " + ex.Message,
+                        _appName,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+
                 if (!success)
                 {
                     MessageBox.Show(_localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -391,24 +410,43 @@ public partial class MainForm : Form
             return;
         }
 
+        var dyomDependencyRoot = Path.Combine(_settings.ModSourceFolder ?? _selectedGamePath, "Scripts", "DYOM", "DYOM v8.2");
+        var dependencyFiles = new List<string>();
         if (isDyom)
         {
-            var dyomDependencyRoot = Path.Combine(_settings.ModSourceFolder ?? _selectedGamePath, "Scripts", "DYOM", "DYOM v8.2");
-            if (Directory.Exists(dyomDependencyRoot))
-            {
-                var destination = Path.Combine(userFilesRoot, "DYOM v8.2");
-                if (Directory.Exists(destination))
-                {
-                    Directory.Delete(destination, true);
-                }
-
-                await ModPackageService.CopyDirectoryAsync(dyomDependencyRoot, destination, null);
-            }
-            else
+            if (!Directory.Exists(dyomDependencyRoot))
             {
                 MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "DYOM dependency was not found in the Base Mods folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            dependencyFiles = Directory.GetFiles(dyomDependencyRoot, "*", SearchOption.AllDirectories).ToList();
+        }
+
+        var progressFiles = dependencyFiles
+            .Select(path => (path, Path.Combine("DYOM v8.2", Path.GetRelativePath(dyomDependencyRoot, path))))
+            .Concat(packageFiles.Select(path => (path, Path.GetRelativePath(packageRoot, path))))
+            .ToList();
+        var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName;
+        BeginStep4Progress(progressTitle, progressFiles);
+
+        if (isDyom)
+        {
+            var destination = Path.Combine(userFilesRoot, "DYOM v8.2");
+            if (Directory.Exists(destination))
+            {
+                Directory.Delete(destination, true);
+            }
+
+            var dependencyDisplayNames = dependencyFiles
+                .Select(path => Path.Combine("DYOM v8.2", Path.GetRelativePath(dyomDependencyRoot, path)))
+                .ToList();
+            await CopyDirectoryWithStep4ProgressAsync(
+                dyomDependencyRoot,
+                destination,
+                dependencyFiles,
+                0,
+                dependencyDisplayNames);
         }
 
         var trashRoot = Path.Combine(userFilesRoot, ".trash");
@@ -437,10 +475,16 @@ public partial class MainForm : Form
                 File.Move(destinationPath, archivedPath);
             }
 
-            File.Copy(sourceFile, destinationPath, true);
+            var relativeName = Path.GetRelativePath(packageRoot, sourceFile);
+            await CopyStep4FileAsync(
+                dependencyFiles.Count + packageFiles.IndexOf(sourceFile),
+                sourceFile,
+                destinationPath,
+                relativeName);
             installedSlots.Add(targetSlot);
         }
 
+        CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
         var slotLabel = isDyom ? "DYOM" : "save";
         var installedCount = installedSlots.Count;
         var summary = installedCount == 1
@@ -460,13 +504,32 @@ public partial class MainForm : Form
             return;
         }
 
+        var dependencyFiles = Directory.GetFiles(dyomDependencyRoot, "*", SearchOption.AllDirectories).ToList();
+        var packageFiles = Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)
+            .Where(file => !ModPackageService.IsMetadataOrNonInstallableFile(file, packageRoot))
+            .ToList();
+        var progressFiles = dependencyFiles
+            .Select(path => (path, Path.Combine("DYOM v8.2", Path.GetRelativePath(dyomDependencyRoot, path))))
+            .Concat(packageFiles.Select(path => (path, Path.Combine("DSL", Path.GetRelativePath(packageRoot, path)))))
+            .ToList();
+        var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName;
+        BeginStep4Progress(progressTitle, progressFiles);
+
         var destinationRoot = Path.Combine(userFilesRoot, "DYOM v8.2");
         if (Directory.Exists(destinationRoot))
         {
             Directory.Delete(destinationRoot, true);
         }
 
-        await ModPackageService.CopyDirectoryAsync(dyomDependencyRoot, destinationRoot, null);
+        var dependencyDisplayNames = dependencyFiles
+            .Select(path => Path.Combine("DYOM v8.2", Path.GetRelativePath(dyomDependencyRoot, path)))
+            .ToList();
+        await CopyDirectoryWithStep4ProgressAsync(
+            dyomDependencyRoot,
+            destinationRoot,
+            dependencyFiles,
+            0,
+            dependencyDisplayNames);
 
         var dslRoot = Path.Combine(userFilesRoot, "DSL");
         if (Directory.Exists(dslRoot))
@@ -483,7 +546,16 @@ public partial class MainForm : Form
         }
 
         Directory.CreateDirectory(dslRoot);
-        await ModPackageService.CopyDirectoryAsync(packageRoot, dslRoot, null, excludeMetadataFiles: true);
+        var packageDisplayNames = packageFiles
+            .Select(path => Path.Combine("DSL", Path.GetRelativePath(packageRoot, path)))
+            .ToList();
+        await CopyDirectoryWithStep4ProgressAsync(
+            packageRoot,
+            dslRoot,
+            packageFiles,
+            dependencyFiles.Count,
+            packageDisplayNames);
+        CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
         GoToStep(WizardStep.Step6);
     }
 
@@ -535,20 +607,10 @@ public partial class MainForm : Form
             return false;
         }
 
-        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var step4RootPanel)
-            ? step4RootPanel
-            : null;
-        var previewRoot = step4Panel?.Controls.OfType<Panel>()
-            .FirstOrDefault(control => control.Name == "Step4PreviewRoot");
-        var progressPanel = new InstallProgressPanel(_localizationService, modName);
-        progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName);
-        if (previewRoot != null)
-        {
-            previewRoot.Controls.Clear();
-            previewRoot.Controls.Add(progressPanel);
-            progressPanel.Dock = DockStyle.Fill;
-            progressPanel.BringToFront();
-        }
+        var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName;
+        BeginStep4Progress(progressTitle, entries
+            .Select(entry => (entry.SourcePath, entry.RelativeDestination))
+            .ToList());
 
         try
         {
@@ -557,11 +619,12 @@ public partial class MainForm : Form
             {
                 var destination = destinations[index];
                 Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-                File.Copy(entries[index].SourcePath, destination, overwrite: true);
+                await CopyStep4FileAsync(
+                    index,
+                    entries[index].SourcePath,
+                    destination,
+                    entries[index].RelativeDestination);
                 installedFiles.Add(destination);
-                var percent = (int)((index + 1) * 100d / entries.Count);
-                progressPanel.UpdateProgress(percent, entries[index].SourcePath);
-                await Task.Yield();
             }
 
             ModLoaderService.RecordGameInstallation(
@@ -571,27 +634,19 @@ public partial class MainForm : Form
                 packageRoot,
                 cleoRoot,
                 installedFiles);
-            progressPanel.Complete();
+            CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
             RefreshModList();
             return true;
         }
         catch (Exception ex)
         {
-            progressPanel.Fail();
+            FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             MessageBox.Show(
                 _localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message,
                 _appName,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return false;
-        }
-        finally
-        {
-            if (previewRoot != null && progressPanel.Parent == previewRoot)
-            {
-                previewRoot.Controls.Remove(progressPanel);
-                progressPanel.Dispose();
-            }
         }
     }
 
@@ -762,20 +817,10 @@ public partial class MainForm : Form
             }
         }
 
-        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var step4RootPanel)
-            ? step4RootPanel
-            : null;
-        var previewRoot = step4Panel?.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
-        var progressPanel = new InstallProgressPanel(_localizationService, modName);
-        progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName);
-
-        if (previewRoot != null)
-        {
-            previewRoot.Controls.Clear();
-            previewRoot.Controls.Add(progressPanel);
-            progressPanel.Dock = DockStyle.Fill;
-            progressPanel.BringToFront();
-        }
+        var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName;
+        BeginStep4Progress(progressTitle, packageFiles
+            .Select(path => (path, Path.GetRelativePath(payloadPath, path)))
+            .ToList());
 
         try
         {
@@ -818,7 +863,11 @@ public partial class MainForm : Form
                     && backupPlan.HasBackup
                     && backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, destinationPath)))
                 {
-                    var backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationPath, modName, backupPlan.BackupRoot);
+                    var backupFilePath = await ModPackageService.BackupOriginalFileForReplacementAsync(
+                        _selectedGamePath,
+                        destinationPath,
+                        modName,
+                        backupPlan.BackupRoot);
                     records.Add(new ReplaceInstallationRecord
                     {
                         BackupId = Guid.NewGuid().ToString("N"),
@@ -834,11 +883,12 @@ public partial class MainForm : Form
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
-                File.Copy(sourcePath, destinationPath, true);
+                await CopyStep4FileAsync(
+                    index,
+                    sourcePath,
+                    destinationPath,
+                    Path.GetRelativePath(payloadPath, sourcePath));
                 installedDestinationFiles.Add(destinationPath);
-                var percent = (int)((index + 1) * 100d / Math.Max(1, packageFiles.Count));
-                progressPanel.UpdateProgress(percent, sourcePath);
-                await Task.Yield();
             }
 
             if (previousPutInGameFolderFiles.Count > 0)
@@ -893,23 +943,15 @@ public partial class MainForm : Form
                 ModLoaderService.RecordGameInstallation(_selectedGamePath, manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
             }
 
-            progressPanel.Complete();
+            CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
             RefreshModList();
             return true;
         }
         catch (Exception ex)
         {
-            progressPanel.Fail();
+            FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
-        }
-        finally
-        {
-            if (previewRoot != null && progressPanel.Parent == previewRoot)
-            {
-                previewRoot.Controls.Remove(progressPanel);
-                progressPanel.Dispose();
-            }
         }
     }
 
@@ -1059,20 +1101,10 @@ public partial class MainForm : Form
             }
         }
 
-        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var step4RootPanel)
-            ? step4RootPanel
-            : null;
-        var previewRoot = step4Panel?.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
-        var progressPanel = new InstallProgressPanel(_localizationService, modName);
-        progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + modName + " (Replacing)");
-
-        if (previewRoot != null)
-        {
-            previewRoot.Controls.Clear();
-            previewRoot.Controls.Add(progressPanel);
-            progressPanel.Dock = DockStyle.Fill;
-            progressPanel.BringToFront();
-        }
+        var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName + " (Replacing)";
+        BeginStep4Progress(progressTitle, filesToReplace
+            .Select(path => (path, Path.GetRelativePath(payloadPath, path)))
+            .ToList());
 
         var records = new List<ReplaceInstallationRecord>();
 
@@ -1097,10 +1129,14 @@ public partial class MainForm : Form
                     && backupPlan.HasBackup
                     && backupConfiguration.ShouldBackup(Path.GetRelativePath(payloadPath, sourceFile)))
                 {
-                    backupFilePath = ModPackageService.BackupOriginalFileForReplacement(_selectedGamePath, destinationFile, modName, backupPlan.BackupRoot);
+                    backupFilePath = await ModPackageService.BackupOriginalFileForReplacementAsync(
+                        _selectedGamePath,
+                        destinationFile,
+                        modName,
+                        backupPlan.BackupRoot);
                 }
 
-                File.Copy(sourceFile, destinationFile, true);
+                await CopyStep4FileAsync(i, sourceFile, destinationFile, relativePath);
 
                 var record = new ReplaceInstallationRecord
                 {
@@ -1121,26 +1157,15 @@ public partial class MainForm : Form
                 records.Add(record);
                 ModPackageService.RecordReplacementInstallation(record);
 
-                var percent = (int)((i + 1) * 100d / Math.Max(1, filesToReplace.Count));
-                progressPanel.UpdateProgress(percent, sourceFile);
-                await Task.Delay(30);
             }
 
-            progressPanel.Complete();
+            CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
             GoToStep(WizardStep.Step6);
         }
         catch (Exception ex)
         {
-            progressPanel.Fail();
+            FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        finally
-        {
-            if (previewRoot != null && progressPanel.Parent == previewRoot)
-            {
-                previewRoot.Controls.Remove(progressPanel);
-                progressPanel.Dispose();
-            }
         }
     }
 

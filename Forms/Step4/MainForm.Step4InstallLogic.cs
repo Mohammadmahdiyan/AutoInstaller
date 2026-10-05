@@ -85,12 +85,14 @@ public partial class MainForm : Form
 
         if (manifest.IsReplacing)
         {
+            GoToStep(WizardStep.Step4);
             await InstallReplacingPackageAsync(payloadPath, modName, packageRoot);
             return;
         }
 
         if (manifest.NormalizedType is "putinmodloader" or "putingamefolder" or "putandreplace" or "putandreplaces" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
         {
+            GoToStep(WizardStep.Step4);
             await InstallTypedPackageAsync(payloadPath, modName, packageRoot, manifest);
             return;
         }
@@ -686,7 +688,7 @@ public partial class MainForm : Form
                     var action = PromptForExistingPutInGameFolderAction(_selectedModName);
                     if (action == DialogResult.No)
                     {
-                        DeleteExistingPutInGameFolderInstallation(previousInstallation);
+                        await DeleteExistingPutInGameFolderInstallationAsync(previousInstallation);
                         _lastActionWasDelete = true;
                         RefreshModList();
                         if (!_isInstallingOptionalPackage)
@@ -704,7 +706,7 @@ public partial class MainForm : Form
 
                     if (!string.Equals(previousInstallation.Type, "putingamefolder", StringComparison.OrdinalIgnoreCase))
                     {
-                        DeleteExistingPutInGameFolderInstallation(previousInstallation);
+                        await DeleteExistingPutInGameFolderInstallationAsync(previousInstallation);
                     }
                 }
             }
@@ -717,6 +719,10 @@ public partial class MainForm : Form
             if (_selectedModManifest.NormalizedType == "savesandmissions")
             {
                 DeleteManifestEntries(_selectedModManifest);
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
                 await InstallSaveOrDyomPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModManifest);
                 return;
             }
@@ -724,6 +730,10 @@ public partial class MainForm : Form
             if (_selectedModManifest.NormalizedType == "missiondsl")
             {
                 DeleteManifestEntries(_selectedModManifest);
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
                 await InstallMissionDslPackageAsync(_selectedModPayloadPath, _selectedModName);
                 return;
             }
@@ -1069,10 +1079,6 @@ public partial class MainForm : Form
                 Directory.CreateDirectory(targetDir);
             }
 
-            _installPaths = Directory.GetFiles(_selectedModPayloadPath, "*", SearchOption.AllDirectories)
-                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
             _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
             _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
 
@@ -1107,6 +1113,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
+            FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             var logPath = Path.Combine(AppContext.BaseDirectory, "mod-install-debug.log");
             try
             {
@@ -1205,8 +1212,9 @@ public partial class MainForm : Form
         return dialog.ShowDialog(this);
     }
 
-    private void DeleteExistingPutInGameFolderInstallation(InstallationManifestEntry installation)
+    private async Task DeleteExistingPutInGameFolderInstallationAsync(InstallationManifestEntry installation)
     {
+        GoToStep(WizardStep.Step4);
         var gameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(_selectedGamePath));
         var gameRootPrefix = gameRoot + Path.DirectorySeparatorChar;
         var installedDestination = Path.GetFullPath(installation.InstalledDestination);
@@ -1216,8 +1224,17 @@ public partial class MainForm : Form
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        foreach (var installedFile in installedFiles)
+        var filesToDelete = installedFiles.Where(File.Exists).ToList();
+        var deleteTitle = string.Format(
+            _localizationService.GetString("DeletingMod", "Deleting {0}"),
+            _selectedModName);
+        BeginStep4Progress(deleteTitle, filesToDelete
+            .Select(path => (path, Path.GetRelativePath(_selectedGamePath, path)))
+            .ToList());
+
+        for (var index = 0; index < installedFiles.Count; index++)
         {
+            var installedFile = installedFiles[index];
             if (!installedFile.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidDataException("The recorded PutInGameFolder installation contains a path outside the selected game folder.");
@@ -1226,12 +1243,17 @@ public partial class MainForm : Form
             if (File.Exists(installedFile))
             {
                 File.Delete(installedFile);
+                AddCompletedStep4File(
+                    Path.GetRelativePath(_selectedGamePath, installedFile),
+                    index + 1,
+                    Math.Max(1, installedFiles.Count));
+                await Task.Yield();
             }
         }
 
         if (string.Equals(installation.Type, "putingamefolder", StringComparison.OrdinalIgnoreCase))
         {
-            ModPackageService.TryRestoreReplacementInstallations(_selectedModName);
+            await RestoreReplacementInstallationsWithProgressAsync(_selectedModName);
         }
 
         if (!string.Equals(installedDestination, gameRoot, StringComparison.OrdinalIgnoreCase)
@@ -1265,6 +1287,8 @@ public partial class MainForm : Form
         {
             ModLoaderService.SaveInstalledRecords(installedRecords);
         }
+
+        CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
     }
 
     private InstallationManifestEntry? FindExistingAssetInstallation(string packageRoot)
@@ -1595,10 +1619,7 @@ public partial class MainForm : Form
         }
 
         GoToStep(WizardStep.Step4);
-        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var panel) ? panel : null;
-        var previewRoot = step4Panel?.Controls.OfType<Panel>()
-            .FirstOrDefault(control => control.Name == "Step4PreviewRoot");
-        if (previewRoot == null)
+        if (_step4ProgressView == null || _step4ProgressView.IsDisposed)
         {
             MessageBox.Show(
                 _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete '{0}' from modloader.")
@@ -1610,17 +1631,11 @@ public partial class MainForm : Form
             return;
         }
 
-        previewRoot.Controls.Clear();
-        var progressPanel = new InstallProgressPanel(
-            _localizationService,
-            modName,
-            _localizationService.GetString("DeletingSelectedModels", "Deleting selected models"))
-        {
-            Name = "Step4DeleteSelectedProgressPanel",
-            Dock = DockStyle.Fill
-        };
-        previewRoot.Controls.Add(progressPanel);
-        progressPanel.BringToFront();
+        var deleteTitle = _localizationService.GetString("DeletingSelectedModels", "Deleting selected models");
+        var deleteEntries = filesToDelete
+            .Select(path => (path, Path.GetRelativePath(installation.InstalledDestination, path)))
+            .ToList();
+        BeginStep4Progress(deleteTitle, deleteEntries);
 
         var deletedFiles = new List<string>();
         for (var index = 0; index < filesToDelete.Count; index++)
@@ -1655,7 +1670,7 @@ public partial class MainForm : Form
                     errorMessage += Environment.NewLine + manifestException.Message;
                 }
 
-                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
                 MessageBox.Show(
                     string.Format(
                         _localizationService.GetString("DeleteFileFailed", "Could not delete file: {0}"),
@@ -1667,8 +1682,10 @@ public partial class MainForm : Form
                 return;
             }
 
-            var percent = (int)((index + 1) * 100d / Math.Max(1, filesToDelete.Count));
-            progressPanel.UpdateProgress(percent, filePath);
+            AddCompletedStep4File(
+                Path.GetRelativePath(installation.InstalledDestination, filePath),
+                index + 1,
+                filesToDelete.Count);
             await Task.Yield();
         }
 
@@ -1684,7 +1701,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
             MessageBox.Show(
                 string.Format(
                     _localizationService.GetString("DeleteManifestUpdateFailed", "Could not update installation records for: {0}"),
@@ -1696,7 +1713,7 @@ public partial class MainForm : Form
             return;
         }
 
-        progressPanel.Complete(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
+        CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
         _pendingExistingAssetInstallAction = null;
         GoToStep(WizardStep.Step3);
         MessageBox.Show(
@@ -1710,10 +1727,7 @@ public partial class MainForm : Form
     {
         GoToStep(WizardStep.Step4);
 
-        var step4Panel = _wizardPanels.TryGetValue(WizardStep.Step4, out var panel) ? panel : null;
-        var previewRoot = step4Panel?.Controls.OfType<Panel>()
-            .FirstOrDefault(control => control.Name == "Step4PreviewRoot");
-        if (previewRoot == null)
+        if (_step4ProgressView == null || _step4ProgressView.IsDisposed)
         {
             MessageBox.Show(
                 _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete the mod from modloader."),
@@ -1723,19 +1737,6 @@ public partial class MainForm : Form
             GoToStep(WizardStep.Step3);
             return;
         }
-
-        previewRoot.Controls.Clear();
-        var deletingText = _localizationService.GetString("Deleting", "Deleting");
-        var progressPanel = new InstallProgressPanel(_localizationService, modName, deletingText)
-        {
-            Name = "Step4DeleteProgressPanel",
-            Dock = DockStyle.Fill
-        };
-        previewRoot.Controls.Add(progressPanel);
-        progressPanel.BringToFront();
-        progressPanel.SetStatus(string.Format(
-            _localizationService.GetString("DeletingMod", "Deleting {0}"),
-            modName));
 
         string[] files;
         string[] directories;
@@ -1748,7 +1749,10 @@ public partial class MainForm : Form
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            BeginStep4Progress(
+                string.Format(_localizationService.GetString("DeletingMod", "Deleting {0}"), modName),
+                Array.Empty<(string SourcePath, string RelativeName)>());
+            FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
             MessageBox.Show(
                 string.Format(
                     _localizationService.GetString("DeleteFolderReadFailed", "Could not read folder: {0}"),
@@ -1760,6 +1764,11 @@ public partial class MainForm : Form
             return;
         }
 
+        var deleteTitle = string.Format(_localizationService.GetString("DeletingMod", "Deleting {0}"), modName);
+        BeginStep4Progress(deleteTitle, files
+            .Select(path => (path, Path.GetRelativePath(installation.InstalledDestination, path)))
+            .ToList());
+
         for (var index = 0; index < files.Length; index++)
         {
             var filePath = files[index];
@@ -1769,7 +1778,7 @@ public partial class MainForm : Form
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
-                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
                 MessageBox.Show(
                     string.Format(
                         _localizationService.GetString("DeleteFileFailed", "Could not delete file: {0}"),
@@ -1781,8 +1790,10 @@ public partial class MainForm : Form
                 return;
             }
 
-            var percent = (int)((index + 1) * 100d / Math.Max(1, files.Length));
-            progressPanel.UpdateProgress(percent, filePath);
+            AddCompletedStep4File(
+                Path.GetRelativePath(installation.InstalledDestination, filePath),
+                index + 1,
+                files.Length);
             await Task.Yield();
         }
 
@@ -1797,7 +1808,7 @@ public partial class MainForm : Form
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
-                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
                 MessageBox.Show(
                     string.Format(
                         _localizationService.GetString("DeleteFolderFailed", "Could not delete folder: {0}"),
@@ -1819,7 +1830,7 @@ public partial class MainForm : Form
                 installation.Type);
             if (!deleted || Directory.Exists(installation.InstalledDestination))
             {
-                progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+                FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
                 MessageBox.Show(
                     string.Format(
                         _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete '{0}' from modloader."),
@@ -1833,7 +1844,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            progressPanel.Fail(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
             MessageBox.Show(
                 string.Format(
                     _localizationService.GetString("DeleteAssetInstallationFailed", "Could not delete '{0}' from modloader."),
@@ -1845,7 +1856,7 @@ public partial class MainForm : Form
             return;
         }
 
-        progressPanel.Complete(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
+        CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
         _pendingExistingAssetInstallAction = null;
         _lastActionWasDelete = true;
         GoToStep(WizardStep.Step6);
@@ -1872,21 +1883,8 @@ public partial class MainForm : Form
 
     private async Task CompleteAssetPreparationStepAsync()
     {
-        if (_wizardPanels.TryGetValue(WizardStep.Step4, out var panel))
-        {
-            var progressBar = panel.Controls.OfType<ProgressBar>().FirstOrDefault();
-            var statusLabel = panel.Controls.OfType<Label>().FirstOrDefault(label => label.Name == "ProgressStatus");
-            if (progressBar != null)
-            {
-                progressBar.Value = 100;
-            }
-
-            if (statusLabel != null)
-            {
-                statusLabel.Text = _localizationService.GetString("Installing", "Installing") + " " + _selectedModName + " - 100%";
-            }
-        }
-
+        _step4ProgressView?.SetOverallProgress(100);
+        CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
         await Task.Delay(150);
     }
 
@@ -2034,8 +2032,13 @@ public partial class MainForm : Form
                 || includeGalleryMedia && MediaPreviewControl.IsSupportedMediaPath(path))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
-        var total = files.Count;
-        _step4FileProgress.Clear();
+        var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + _selectedModName;
+        var displayNames = files
+            .Select(path => Path.GetRelativePath(sourceDir, path).Replace('\\', '/'))
+            .ToList();
+        BeginStep4Progress(progressTitle, files
+            .Select((path, index) => (path, displayNames[index]))
+            .ToList());
 
         for (var i = 0; i < files.Count; i++)
         {
@@ -2043,53 +2046,10 @@ public partial class MainForm : Form
             var relative = Path.GetRelativePath(sourceDir, file).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
             var destination = Path.Combine(targetDir, relative);
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-            File.Copy(file, destination, true);
-
-            var percent = Math.Min(100, (int)((i + 1) * 100d / Math.Max(1, total)));
-            if (!_step4FileProgress.TryGetValue(relative, out var values))
-            {
-                values = new List<int>();
-                _step4FileProgress[relative] = values;
-            }
-
-            if (!values.Contains(percent))
-            {
-                values.Add(percent);
-            }
-
-            if (_wizardPanels.TryGetValue(WizardStep.Step4, out var panel))
-            {
-                var progressPanel = panel.Controls.OfType<InstallProgressPanel>().FirstOrDefault();
-                if (progressPanel != null)
-                {
-                    progressPanel.SetStatus(_localizationService.GetString("Installing", "Installing") + " " + _selectedModName + " - " + percent + "%");
-                    progressPanel.UpdateProgress(percent, Path.GetFileName(file));
-                }
-
-                var root = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
-                var listBox = root?.Controls.OfType<ListBox>().FirstOrDefault(control => control.Name == "Step4FileList");
-                if (listBox != null)
-                {
-                    listBox.Items.Clear();
-                    foreach (var item in files.Select(path => Path.GetRelativePath(sourceDir, path).Replace('\\', '/')).Distinct(StringComparer.OrdinalIgnoreCase))
-                    {
-                        if (_step4FileProgress.TryGetValue(item, out var statusValues) && statusValues.Count > 0)
-                        {
-                            var latest = statusValues[^1];
-                            listBox.Items.Add(latest >= 100
-                                ? item
-                                : $"{item} ({string.Join(" ", statusValues.Select(value => $"{value}%"))})");
-                        }
-                        else
-                        {
-                            listBox.Items.Add(item);
-                        }
-                    }
-                }
-            }
-
-            await Task.Delay(30);
+            await CopyStep4FileAsync(i, file, destination, displayNames[i]);
         }
+
+        CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
     }
 
 

@@ -138,7 +138,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void UninstallCurrentMod()
+    private async Task UninstallCurrentMod()
     {
         if (string.IsNullOrWhiteSpace(_selectedModName) || string.IsNullOrWhiteSpace(_selectedGamePath))
         {
@@ -158,15 +158,29 @@ public partial class MainForm : Form
         var isReplacementInstall = type is "replacing" or "putandreplace" or "putandreplaces";
         var isModLoaderInstall = type is "putinmodloader" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons"
             || _selectedAssetForInstall != null;
-        var success = isReplacementInstall
-            ? ModPackageService.TryRestoreReplacementInstallations(_selectedModName)
-            : isModLoaderInstall
-            ? ModLoaderService.TryUninstallInstalledMod(
-                _selectedModName,
-                Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), _selectedModName),
-                _selectedGamePath,
-                "putinmodloader")
-            : ModLoaderService.TryUninstallByModId(_selectedModName, type, null, _selectedGamePath);
+        GoToStep(WizardStep.Step4);
+        bool success;
+        try
+        {
+            success = isReplacementInstall
+                ? await RestoreReplacementInstallationsWithProgressAsync(_selectedModName)
+                : isModLoaderInstall
+                    ? await UninstallInstalledFolderWithProgressAsync(
+                        _selectedModName,
+                        Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), _selectedModName),
+                        _selectedGamePath,
+                        "putinmodloader")
+                    : await UninstallByModIdWithProgressAsync(_selectedModName, type, null, _selectedGamePath);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled.") + " " + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
 
         if (!success)
         {

@@ -12,11 +12,20 @@ public partial class MainForm : Form
     private Panel CreateWizardStep4()
     {
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18) };
-        var title = new Label { Text = _localizationService.GetString("Installing", "Installing"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top };
-        var status = new Label { Name = "ProgressStatus", AutoSize = true, Font = new Font("Segoe UI", 10F, FontStyle.Bold), Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 0) };
-        var progressBar = new ProgressBar { Width = 680, Height = 24, Minimum = 0, Maximum = 100, Value = 0, Dock = DockStyle.Top, Margin = new Padding(0, 8, 0, 8) };
-        var fileList = new ListBox { Name = "Step4FileList", Dock = DockStyle.Bottom, Height = 140, Font = new Font("Segoe UI", 9F), Margin = new Padding(0, 8, 0, 0), Visible = true };
-        var previewRoot = new Panel { Name = "Step4PreviewRoot", Dock = DockStyle.Fill, Padding = new Padding(0, 8, 0, 0), BackColor = Color.FromArgb(255, 255, 255) };
+        _step4ProgressView = new InstallProgressView();
+        var layout = new TableLayoutPanel
+        {
+            Name = "Step4Layout",
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 2,
+            Margin = new Padding(0),
+            Padding = new Padding(0),
+            BackColor = Color.Transparent
+        };
+        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
         var loadingOverlay = new Panel
         {
             Name = "Step4LoadingOverlay",
@@ -80,17 +89,11 @@ public partial class MainForm : Form
             }
         };
 
-        panel.Controls.Add(title);
-        panel.Controls.Add(status);
-        panel.Controls.Add(progressBar);
-        panel.Controls.Add(previewRoot);
-        panel.Controls.Add(fileList);
-        panel.Controls.Add(readmeButton);
+        layout.Controls.Add(_step4ProgressView, 0, 0);
+        layout.Controls.Add(readmeButton, 0, 1);
+        panel.Controls.Add(layout);
         panel.Controls.Add(loadingOverlay);
-        panel.Controls.SetChildIndex(previewRoot, 3);
-        panel.Controls.SetChildIndex(fileList, 4);
-        panel.Controls.SetChildIndex(readmeButton, 5);
-        panel.Controls.SetChildIndex(loadingOverlay, 6);
+        loadingOverlay.BringToFront();
         return panel;
     }
 
@@ -166,9 +169,8 @@ public partial class MainForm : Form
             return;
         }
 
-        var root = panel.Controls.OfType<Panel>().FirstOrDefault(control => control.Name == "Step4PreviewRoot");
         var readmeButton = panel.Controls.OfType<Button>().FirstOrDefault(control => control.Name == "Step4ReadmeButton");
-        if (root == null)
+        if (_step4ProgressView == null || _step4ProgressView.IsDisposed)
         {
             return;
         }
@@ -179,65 +181,10 @@ public partial class MainForm : Form
             readmeButton.Enabled = false;
         }
 
-        var progressPanel = root.Controls.OfType<InstallProgressPanel>().FirstOrDefault();
-        if (progressPanel == null)
+        if (_lastStep4FileNames.Count > 0 && !_step4ProgressView.HasFileRows)
         {
-            progressPanel = new InstallProgressPanel(_localizationService, _selectedModName);
-            progressPanel.Name = "Step4ProgressPanel";
-            progressPanel.Dock = DockStyle.Top;
-            progressPanel.Height = 170;
-            root.Controls.Add(progressPanel);
+            _step4ProgressView.ShowCompletedFiles(_lastStep4FileNames, _step4ProgressTitle);
         }
-
-        var fileList = root.Controls.OfType<ListBox>().FirstOrDefault(control => control.Name == "Step4FileList");
-        if (fileList == null)
-        {
-            fileList = new ListBox
-            {
-                Name = "Step4FileList",
-                Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9F),
-                Margin = new Padding(0, 8, 0, 0),
-                Visible = true,
-                BorderStyle = BorderStyle.FixedSingle,
-                SelectionMode = SelectionMode.None,
-                IntegralHeight = true
-            };
-            root.Controls.Add(fileList);
-        }
-
-        fileList.Items.Clear();
-        var fileEntries = _installPaths
-            .Where(path => !string.IsNullOrWhiteSpace(path))
-            .Select(path => Path.GetRelativePath(_selectedModPayloadPath, path).Replace('\\', '/'))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        foreach (var item in fileEntries)
-        {
-            if (_step4FileProgress.TryGetValue(item, out var percentages) && percentages.Count > 0)
-            {
-                var latest = percentages[^1];
-                if (latest >= 100)
-                {
-                    fileList.Items.Add(item);
-                    continue;
-                }
-
-                fileList.Items.Add($"{item} ({string.Join(" ", percentages.Select(value => $"{value}%"))})");
-                continue;
-            }
-
-            fileList.Items.Add(item);
-        }
-
-        fileList.Visible = fileEntries.Count > 0;
-        fileList.Height = fileEntries.Count > 0 ? 210 : 0;
-
-        root.SuspendLayout();
-        root.Visible = true;
-        root.Height = 0;
-        root.ResumeLayout(true);
         panel.PerformLayout();
     }
 

@@ -55,8 +55,7 @@ public partial class MainForm : Form
     private GtaSaModManager.Models.GameAsset? _selectedAssetForInstall;
     private string _selectedReadmePath = string.Empty;
     private List<string> _selectedImageFiles = new();
-    private List<string> _installPaths = new();
-    private readonly Dictionary<string, List<int>> _step4FileProgress = new(StringComparer.OrdinalIgnoreCase);
+    private InstallProgressView? _step4ProgressView;
     private WizardStep _currentStep = WizardStep.Step1;
     private int _completionSecondsLeft = 6;
     private bool _completionTimerActive;
