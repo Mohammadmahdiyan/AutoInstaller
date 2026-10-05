@@ -227,6 +227,51 @@ public class ModLoaderService
         return true;
     }
 
+    public static InstallationManifestEntry? FindGameInstallationRecord(
+        string gamePath,
+        string modType,
+        string modName,
+        string? sourcePackagePath = null)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || !Directory.Exists(gamePath))
+        {
+            return null;
+        }
+
+        var fullSourcePackagePath = !string.IsNullOrWhiteSpace(sourcePackagePath)
+            ? Path.GetFullPath(sourcePackagePath)
+            : string.Empty;
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        return LoadInstallationManifest(manifestPath).Entries.LastOrDefault(entry =>
+            string.Equals(entry.Type, modType, StringComparison.OrdinalIgnoreCase)
+            && (string.Equals(entry.ModId, modName, StringComparison.OrdinalIgnoreCase)
+                || !string.IsNullOrWhiteSpace(fullSourcePackagePath)
+                    && !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+                    && string.Equals(
+                        Path.GetFullPath(entry.SourcePackagePath),
+                        fullSourcePackagePath,
+                        StringComparison.OrdinalIgnoreCase)));
+    }
+
+    public static List<string> GetUnreplacedInstalledFiles(
+        IEnumerable<string> installedFiles,
+        IEnumerable<string> replacementFilePaths)
+    {
+        ArgumentNullException.ThrowIfNull(installedFiles);
+        ArgumentNullException.ThrowIfNull(replacementFilePaths);
+
+        var replacementPaths = replacementFilePaths
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        return installedFiles
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .Where(path => !replacementPaths.Contains(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     public static void RecordUserFilesInstallation(string modName, string modType, IEnumerable<string> installedFiles)
     {
         var manifestPath = GetUserFilesInstallationsManifestPath();

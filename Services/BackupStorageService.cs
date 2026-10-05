@@ -1,4 +1,5 @@
 using System.Text.Json;
+using GtaSaModManager.Models;
 using GtaSaModManager.Modsyn.Conversion;
 
 namespace GtaSaModManager.Services;
@@ -37,6 +38,62 @@ public static class BackupStorageService
                 && File.Exists(path)
                 && backupConfiguration.ShouldBackup(Path.GetRelativePath(fullGameFolder, path)))
             .ToList();
+    }
+
+    public static List<string> GetModBackupDirectories(
+        string gameFolder,
+        string modName,
+        IEnumerable<ReplaceInstallationRecord> records)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
+        ArgumentException.ThrowIfNullOrWhiteSpace(modName);
+        ArgumentNullException.ThrowIfNull(records);
+
+        var normalizedModName = ModPackageService.SanitizeFolderName(modName);
+        var directories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var defaultBackupDirectory = Path.Combine(
+            gameFolder,
+            ManagerDirectoryName,
+            BackupFolderName,
+            normalizedModName);
+        if (Directory.Exists(defaultBackupDirectory))
+        {
+            directories.Add(defaultBackupDirectory);
+        }
+
+        foreach (var record in records)
+        {
+            if (string.IsNullOrWhiteSpace(record.BackupFilePath)
+                || string.IsNullOrWhiteSpace(record.OriginalFilePath)
+                || string.IsNullOrWhiteSpace(record.GameFolder))
+            {
+                continue;
+            }
+
+            var relativeOriginalPath = Path.GetRelativePath(record.GameFolder, record.OriginalFilePath);
+            if (Path.IsPathRooted(relativeOriginalPath)
+                || relativeOriginalPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                    .Any(segment => segment == ".."))
+            {
+                continue;
+            }
+
+            var backupFilePath = Path.GetFullPath(record.BackupFilePath);
+            var backupSuffix = Path.DirectorySeparatorChar + relativeOriginalPath;
+            if (!backupFilePath.EndsWith(backupSuffix, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var backupDirectory = backupFilePath[..^backupSuffix.Length];
+            if (string.Equals(Path.GetFileName(backupDirectory), normalizedModName, StringComparison.OrdinalIgnoreCase)
+                && Directory.Exists(backupDirectory))
+            {
+                directories.Add(backupDirectory);
+            }
+        }
+
+        return directories.ToList();
     }
 
     public static BackupStoragePlan CreatePlan(

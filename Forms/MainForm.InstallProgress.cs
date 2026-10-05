@@ -185,20 +185,66 @@ public partial class MainForm
 
     private async Task<bool> RestoreReplacementInstallationsWithProgressAsync(string modName)
     {
+        var gameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(_selectedGamePath));
+        var gameRootPrefix = gameRoot + Path.DirectorySeparatorChar;
         var records = ModPackageService.LoadReplacementRecords()
-            .Where(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase))
+            .Where(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(record.GameFolder)
+                && string.Equals(Path.GetFullPath(record.GameFolder), gameRoot, StringComparison.OrdinalIgnoreCase))
             .ToList();
-        if (records.Count == 0)
+
+        var installationManifestPath = ModLoaderService.GetGameInstallationsManifestPath(gameRoot);
+        var installationEntry = ModLoaderService.LoadInstallationManifest(installationManifestPath).Entries
+            .LastOrDefault(entry => string.Equals(entry.ModId, modName, StringComparison.OrdinalIgnoreCase));
+        if (records.Count == 0 && installationEntry == null)
         {
             return false;
         }
 
-        var operations = records
+        var backupDirectories = BackupStorageService.GetModBackupDirectories(gameRoot, modName, records);
+        var backupFileOperations = backupDirectories
+            .SelectMany(directory => Directory.GetFiles(directory, "*", SearchOption.AllDirectories)
+                .Select(sourcePath =>
+                {
+                    var relativePath = Path.GetRelativePath(directory, sourcePath);
+                    var destinationPath = Path.GetFullPath(Path.Combine(gameRoot, relativePath));
+                    return (SourcePath: sourcePath, DestinationPath: destinationPath, RelativeName: relativePath);
+                }))
+            .Where(operation => operation.DestinationPath.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase))
+            .GroupBy(operation => operation.DestinationPath, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .ToList();
+        var backupDestinationPaths = backupFileOperations
+            .Select(operation => operation.DestinationPath)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var backupSourcePaths = backupFileOperations
+            .Select(operation => Path.GetFullPath(operation.SourcePath))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var replacementPaths = records
+            .Select(record => record.OriginalFilePath)
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .Concat(backupDestinationPaths)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var installedFilesToDelete = ModLoaderService.GetUnreplacedInstalledFiles(
+                installationEntry?.InstalledFiles ?? Enumerable.Empty<string>(),
+                replacementPaths)
+            .Where(path => path.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase) && File.Exists(path))
+            .ToList();
+        var historyFallbackOperations = records
             .Where(record => !string.IsNullOrWhiteSpace(record.OriginalFilePath)
-                && (File.Exists(record.BackupFilePath) || File.Exists(record.OriginalFilePath)))
+                && record.OriginalFilePath.StartsWith(gameRootPrefix, StringComparison.OrdinalIgnoreCase)
+                && !backupDestinationPaths.Contains(Path.GetFullPath(record.OriginalFilePath))
+                && (File.Exists(record.BackupFilePath)
+                    ? !backupSourcePaths.Contains(Path.GetFullPath(record.BackupFilePath))
+                    : File.Exists(record.OriginalFilePath)))
             .ToList();
         var title = string.Format(_localizationService.GetString("DeletingMod", "Deleting {0}"), modName);
-        var progressFiles = operations
+        var progressFiles = installedFilesToDelete
+            .Select(path => (SourcePath: path, RelativeName: Path.GetRelativePath(gameRoot, path)))
+            .Concat(backupFileOperations
+                .Select(operation => (SourcePath: operation.SourcePath, RelativeName: operation.RelativeName)))
+            .Concat(historyFallbackOperations
             .Select(record =>
             {
                 var backupExists = File.Exists(record.BackupFilePath);
@@ -206,35 +252,62 @@ public partial class MainForm
                 var relativeName = !string.IsNullOrWhiteSpace(record.GameFolder)
                     ? Path.GetRelativePath(record.GameFolder, record.OriginalFilePath)
                     : Path.GetFileName(record.OriginalFilePath);
-                return (sourcePath, relativeName);
-            })
+                return (SourcePath: sourcePath, RelativeName: relativeName);
+            }))
             .ToList();
         BeginStep4Progress(title, progressFiles);
 
         var restored = false;
         try
         {
-            for (var index = 0; index < operations.Count; index++)
+            for (var index = 0; index < installedFilesToDelete.Count; index++)
             {
-                var record = operations[index];
-                var relativeName = progressFiles[index].relativeName;
-                if (File.Exists(record.BackupFilePath) && !string.IsNullOrWhiteSpace(record.OriginalFilePath))
+                var installedFile = installedFilesToDelete[index];
+                if (!File.Exists(installedFile))
                 {
-                    await CopyStep4FileAsync(index, record.BackupFilePath, record.OriginalFilePath, relativeName);
+                    continue;
+                }
+
+                File.Delete(installedFile);
+                AddCompletedStep4File(
+                    Path.GetRelativePath(gameRoot, installedFile),
+                    index + 1,
+                    Math.Max(1, progressFiles.Count));
+                restored = true;
+                await Task.Yield();
+            }
+
+            for (var index = 0; index < backupFileOperations.Count; index++)
+            {
+                var operation = backupFileOperations[index];
+                var progressIndex = installedFilesToDelete.Count + index;
+                await CopyStep4FileAsync(
+                    progressIndex,
+                    operation.SourcePath,
+                    operation.DestinationPath,
+                    operation.RelativeName);
+                restored = true;
+            }
+
+            for (var index = 0; index < historyFallbackOperations.Count; index++)
+            {
+                var record = historyFallbackOperations[index];
+                var relativeName = progressFiles[installedFilesToDelete.Count + backupFileOperations.Count + index].RelativeName;
+                var progressIndex = installedFilesToDelete.Count + backupFileOperations.Count + index;
+                if (File.Exists(record.BackupFilePath))
+                {
+                    await CopyStep4FileAsync(progressIndex, record.BackupFilePath, record.OriginalFilePath, relativeName);
                     restored = true;
                 }
                 else if (File.Exists(record.OriginalFilePath))
                 {
                     File.Delete(record.OriginalFilePath);
-                    AddCompletedStep4File(relativeName, index + 1, operations.Count);
+                    AddCompletedStep4File(relativeName, progressIndex + 1, Math.Max(1, progressFiles.Count));
                     restored = true;
                 }
             }
 
-            foreach (var backupDirectory in records
-                         .Select(record => record.BackupDirectoryPath)
-                         .Where(path => !string.IsNullOrWhiteSpace(path))
-                         .Distinct(StringComparer.OrdinalIgnoreCase))
+            foreach (var backupDirectory in backupDirectories)
             {
                 if (Directory.Exists(backupDirectory))
                 {
@@ -242,12 +315,14 @@ public partial class MainForm
                 }
             }
 
-            ModLoaderService.RemoveGameInstallationRecord(_selectedGamePath, modName);
+            var installationRecordRemoved = ModLoaderService.RemoveGameInstallationRecord(gameRoot, modName);
 
             var remaining = ModPackageService.LoadReplacementRecords();
-            remaining.RemoveAll(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase));
+            remaining.RemoveAll(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(record.GameFolder)
+                && string.Equals(Path.GetFullPath(record.GameFolder), gameRoot, StringComparison.OrdinalIgnoreCase));
             ModPackageService.SaveReplacementRecords(remaining);
-            if (restored)
+            if (restored || installationRecordRemoved || records.Count > 0)
             {
                 CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
             }
@@ -255,7 +330,7 @@ public partial class MainForm
             {
                 FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
             }
-            return restored;
+            return restored || installationRecordRemoved || records.Count > 0;
         }
         catch
         {

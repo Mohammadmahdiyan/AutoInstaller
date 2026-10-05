@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Multi Select</title>
+
+  <style>
+    :root {
+      --blue: oklch(74.6% 0.16 232.661);
+
+      --background: #08090b;
+      --window: #101216;
+      --item: #12151a;
+      --hover: #181c22;
+      --border: #272c34;
+
+      --text: #f1f3f5;
+      --muted: #858d99;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          color-mix(in oklch, var(--blue) 10%, transparent),
+          transparent 45%
+        ),
+        var(--background);
+
+      font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+    }
+
+    /* Window */
+
+    .window {
+      width: 500px;
+      max-width: calc(100vw - 24px);
+
+      background: var(--window);
+
+      border: 1px solid #22262d;
+      border-radius: 16px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.55),
+        inset 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    /* Header */
+
+    .header {
+      min-height: 64px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 20px;
+
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title {
+      margin: 0;
+
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Selected numbers */
+
+    .selected-count {
+      min-width: 26px;
+      min-height: 26px;
+
+      padding: 4px 9px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 999px;
+
+      background: #0c0f13;
+      border: 1px solid #292e36;
+
+      color: var(--muted);
+
+      font-size: 12px;
+      white-space: nowrap;
+
+      transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .selected-count.active {
+      color: var(--blue);
+
+      border-color:
+        color-mix(
+          in oklch,
+          var(--blue) 40%,
+          #292e36
+        );
+
+      background:
+        color-mix(
+          in oklch,
+          var(--blue) 8%,
+          #0c0f13
+        );
+
+      box-shadow:
+        0 0 14px
+        color-mix(
+          in oklch,
+          var(--blue) 10%,
+          transparent
+        );
+    }
+
+    /* Item */
+
+    .item {
+      min-height: 58px;
+
+      display: flex;
+      align-items: center;
+
+      direction: ltr;
+
+      padding: 0 20px;
+
+      cursor: pointer;
+      user-select: none;
+
+      border-bottom: 1px solid var(--border);
+
+      transition:
+        background 0.22s ease,
+        border-color 0.22s ease;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    /* Hover */
+
+    .item:hover {
+      background: var(--hover);
+
+      border-bottom-color: #343a44;
+    }
+
+    /* Active */
+
+    .item:has(.checkbox:checked) {
+      background:
+        color-mix(
+          in oklch,
+          var(--blue) 8%,
+          var(--item)
+        );
+    }
+
+    /* Text */
+
+    .item-text {
+      flex: 1;
+
+      text-align: left;
+
+      color: #dfe3e8;
+
+      font-size: 14px;
+      font-weight: 500;
+
+      transition: color 0.2s ease;
+    }
+
+    .item:hover .item-text {
+      color: #ffffff;
+    }
+
+    .item:has(.checkbox:checked) .item-text {
+      color: #ffffff;
+    }
+
+    /* Checkbox */
+
+    .checkbox-container {
+      width: 22px;
+      height: 22px;
+
+      flex-shrink: 0;
+
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .checkbox {
+      position: absolute;
+
+      width: 1px;
+      height: 1px;
+
+      opacity: 0;
+    }
+
+    /* Checkpoint */
+
+    .checkmark {
+      width: 20px;
+      height: 20px;
+
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1.5px solid #3a414b;
+
+      border-radius: 6px;
+
+      background: #181c21;
+
+      transition:
+        background 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.28s ease,
+        transform 0.28s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    /* Check */
+
+    .checkmark::after {
+      content: "";
+
+      position: absolute;
+
+      width: 5px;
+      height: 9px;
+
+      left: 50%;
+      top: 50%;
+
+      border: solid #071014;
+      border-width: 0 2px 2px 0;
+
+      transform:
+        translate(-50%, -58%)
+        rotate(45deg)
+        scale(0.3);
+
+      transform-origin: center;
+
+      opacity: 0;
+
+      transition:
+        opacity 0.15s ease,
+        transform 0.28s cubic-bezier(.2, .9, .2, 1.35);
+    }
+
+    /* Checked */
+
+    .checkbox:checked + .checkmark {
+      background: var(--blue);
+
+      border-color: var(--blue);
+
+      box-shadow:
+        0 0 0 4px
+          color-mix(
+            in oklch,
+            var(--blue) 12%,
+            transparent
+          ),
+
+        0 0 20px
+          color-mix(
+            in oklch,
+            var(--blue) 24%,
+            transparent
+          );
+
+      transform: scale(1.05);
+    }
+
+    .checkbox:checked + .checkmark::after {
+      opacity: 1;
+
+      transform:
+        translate(-50%, -58%)
+        rotate(45deg)
+        scale(1);
+    }
+
+    /* Check animation */
+
+    .checkmark.pop {
+      animation:
+        checkPop 0.42s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    @keyframes checkPop {
+      0% {
+        transform: scale(0.75);
+      }
+
+      45% {
+        transform: scale(1.18);
+      }
+
+      70% {
+        transform: scale(0.98);
+      }
+
+      100% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Focus */
+
+    .checkbox:focus-visible + .checkmark {
+      outline: 2px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    /* Actions */
+
+    .actions {
+      height: 0;
+
+      display: flex;
+      gap: 8px;
+
+      padding: 0 20px;
+
+      overflow: hidden;
+
+      opacity: 0;
+
+      transform: translateY(-8px);
+
+      border-top: 1px solid transparent;
+
+      transition:
+        height 0.28s ease,
+        padding 0.28s ease,
+        opacity 0.22s ease,
+        transform 0.28s ease,
+        border-color 0.28s ease;
+    }
+
+    /* وقتی ۲ آیتم یا بیشتر انتخاب شد */
+
+    .actions.show {
+      height: 56px;
+
+      padding-top: 12px;
+      padding-bottom: 12px;
+
+      opacity: 1;
+
+      transform: translateY(0);
+
+      border-top-color: var(--border);
+    }
+
+    /* Action buttons */
+
+    .action-button {
+      flex: 1;
+
+      height: 32px;
+
+      border: 1px solid #303640;
+      border-radius: 7px;
+
+      background: #15181d;
+
+      color: #cdd2d8;
+
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .action-button:hover {
+      background: #1b2027;
+
+      border-color:
+        color-mix(
+          in oklch,
+          var(--blue) 35%,
+          #303640
+        );
+
+      color: var(--blue);
+
+      transform: translateY(-1px);
+    }
+
+    .action-button:active {
+      transform: translateY(0) scale(.98);
+    }
+
+    .action-button.primary:hover {
+      background:
+        color-mix(
+          in oklch,
+          var(--blue) 12%,
+          #15181d
+        );
+
+      box-shadow:
+        0 0 16px
+        color-mix(
+          in oklch,
+          var(--blue) 10%,
+          transparent
+        );
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="window">
+
+    <!-- Header -->
+
+    <div class="header">
+
+      <h1 class="title">
+        Select Items
+      </h1>
+
+      <div
+        class="selected-count"
+        id="selectedCount"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <!-- Items -->
+
+    <div class="table">
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 1
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="1"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 2
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="2"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 3
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="3"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 4
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="4"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 5
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="5"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 6
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="6"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 7
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="7"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+
+      <label class="item">
+
+        <span class="item-text">
+          Item 8
+        </span>
+
+        <span class="checkbox-container">
+
+          <input
+            type="checkbox"
+            class="checkbox"
+            value="8"
+          />
+
+          <span class="checkmark"></span>
+
+        </span>
+
+      </label>
+
+    </div>
+
+
+    <!-- Action buttons -->
+
+    <div
+      class="actions"
+      id="actions"
+    >
+
+      <button
+        class="action-button primary"
+        id="selectAll"
+        type="button"
+      >
+        Select All
+      </button>
+
+      <button
+        class="action-button"
+        id="deselectAll"
+        type="button"
+      >
+        Deselect All
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const checkboxes =
+      document.querySelectorAll(".checkbox");
+
+    const selectedCount =
+      document.getElementById("selectedCount");
+
+    const actions =
+      document.getElementById("actions");
+
+    const selectAll =
+      document.getElementById("selectAll");
+
+    const deselectAll =
+      document.getElementById("deselectAll");
+
+
+    /*
+      به‌روزرسانی Header
+      و نمایش/مخفی کردن دکمه‌ها
+    */
+
+    function updateSelectedItems() {
+
+      const selected =
+        [...checkboxes]
+          .filter(
+            checkbox => checkbox.checked
+          )
+          .map(
+            checkbox => checkbox.value
+          );
+
+
+      /*
+        نمایش شماره آیتم‌های انتخاب‌شده
+      */
+
+      if (selected.length === 0) {
+
+        selectedCount.textContent = "0";
+
+        selectedCount.classList.remove(
+          "active"
+        );
+
+      } else {
+
+        selectedCount.textContent =
+          selected.join(", ");
+
+        selectedCount.classList.add(
+          "active"
+        );
+      }
+
+
+      /*
+        دکمه‌ها فقط زمانی نمایش داده شوند
+        که بیشتر از یک آیتم انتخاب شده باشد.
+      */
+
+      actions.classList.toggle(
+        "show",
+        selected.length > 1
+      );
+    }
+
+
+    /*
+      انتخاب آیتم
+    */
+
+    checkboxes.forEach((checkbox) => {
+
+      checkbox.addEventListener(
+        "change",
+        () => {
+
+          const checkmark =
+            checkbox.nextElementSibling;
+
+
+          /*
+            اجرای دوباره انیمیشن
+          */
+
+          checkmark.classList.remove(
+            "pop"
+          );
+
+          void checkmark.offsetWidth;
+
+          checkmark.classList.add(
+            "pop"
+          );
+
+
+          updateSelectedItems();
+
+        }
+      );
+
+    });
+
+
+    /*
+      Select All
+    */
+
+    selectAll.addEventListener(
+      "click",
+      () => {
+
+        checkboxes.forEach(
+          checkbox => {
+
+            if (!checkbox.checked) {
+
+              checkbox.checked = true;
+
+              const checkmark =
+                checkbox.nextElementSibling;
+
+              checkmark.classList.remove(
+                "pop"
+              );
+
+              void checkmark.offsetWidth;
+
+              checkmark.classList.add(
+                "pop"
+              );
+            }
+
+          }
+        );
+
+
+        updateSelectedItems();
+      }
+    );
+
+
+    /*
+      Deselect All
+    */
+
+    deselectAll.addEventListener(
+      "click",
+      () => {
+
+        checkboxes.forEach(
+          checkbox => {
+
+            checkbox.checked = false;
+
+          }
+        );
+
+
+        updateSelectedItems();
+      }
+    );
+
+
+    /*
+      مقدار اولیه
+    */
+
+    updateSelectedItems();
+
+  </script>
+
+</body>
+</html>

@@ -85,6 +85,11 @@ public partial class MainForm : Form
 
         if (manifest.IsReplacing)
         {
+            if (!await PrepareExistingReplacingInstallationAsync(modName, packageRoot))
+            {
+                return;
+            }
+
             GoToStep(WizardStep.Step4);
             await InstallReplacingPackageAsync(payloadPath, modName, packageRoot);
             return;
@@ -829,11 +834,15 @@ public partial class MainForm : Form
 
             if (isReplacingPackage)
             {
+                if (!await PrepareExistingReplacingInstallationAsync(_selectedModName, _selectedModPackageRoot))
+                {
+                    return;
+                }
+
                 if (!_isInstallingOptionalPackage)
                 {
                     GoToStep(WizardStep.Step4);
                 }
-
                 await InstallReplacingPackageAsync(
                     _selectedModPayloadPath,
                     _selectedModName,
@@ -1140,6 +1149,59 @@ public partial class MainForm : Form
 
             MessageBox.Show($"Installation failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}More details were written to:{Environment.NewLine}{logPath}", _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    private async Task<bool> PrepareExistingReplacingInstallationAsync(string modName, string packageRoot)
+    {
+        var installation = ModLoaderService.FindGameInstallationRecord(
+            _selectedGamePath,
+            "replacing",
+            modName,
+            packageRoot);
+        var hasReplacementHistory = ModPackageService.LoadReplacementRecords().Any(record =>
+            string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(record.InstallationType, "replacing", StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(record.GameFolder)
+            && string.Equals(
+                Path.GetFullPath(record.GameFolder),
+                Path.GetFullPath(_selectedGamePath),
+                StringComparison.OrdinalIgnoreCase));
+        if (installation == null && !hasReplacementHistory)
+        {
+            return true;
+        }
+
+        var action = PromptForExistingPutInGameFolderAction(modName);
+        if (action is not (DialogResult.Yes or DialogResult.No))
+        {
+            return false;
+        }
+
+        GoToStep(WizardStep.Step4);
+        if (!await RestoreReplacementInstallationsWithProgressAsync(modName))
+        {
+            MessageBox.Show(
+                _localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        RefreshModList();
+        if (action == DialogResult.No)
+        {
+            _lastActionWasDelete = true;
+            if (!_isInstallingOptionalPackage)
+            {
+                GoToStep(WizardStep.Step6);
+            }
+
+            return false;
+        }
+
+        _lastActionWasDelete = false;
+        return true;
     }
 
     private InstallationManifestEntry? FindExistingPutInGameFolderInstallation(string packageRoot, string modName)

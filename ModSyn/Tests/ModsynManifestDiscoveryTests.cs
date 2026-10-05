@@ -1,4 +1,5 @@
 using GtaSaModManager.Services;
+using GtaSaModManager.Models;
 using GtaSaModManager.Modsyn.Parser;
 using GtaSaModManager.Modsyn.Validation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -409,6 +410,103 @@ public sealed class ModsynManifestDiscoveryTests
             Assert.IsTrue(
                 validation.IsValid,
                 $"{Path.GetFileName(exampleFile)}: {string.Join(Environment.NewLine, validation.Errors)}");
+        }
+    }
+
+    [TestMethod]
+    public void BackupStorage_ResolvesModBackupDirectoryFromReplacementRecords()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynBackupDirectory-" + Guid.NewGuid().ToString("N"));
+        var backupDirectory = Path.Combine(gameFolder, ".ModManager", "backup", "Football");
+        var originalFile = Path.Combine(gameFolder, "data", "maps", "generic", "multiobj.ide");
+        var backupFile = Path.Combine(backupDirectory, "data", "maps", "generic", "multiobj.ide");
+        Directory.CreateDirectory(Path.GetDirectoryName(backupFile)!);
+        File.WriteAllText(backupFile, "original");
+
+        try
+        {
+            var directories = BackupStorageService.GetModBackupDirectories(
+                gameFolder,
+                "Football",
+                new[]
+                {
+                    new ReplaceInstallationRecord
+                    {
+                        GameFolder = gameFolder,
+                        OriginalFilePath = originalFile,
+                        BackupFilePath = backupFile
+                    }
+                });
+
+            CollectionAssert.AreEqual(new[] { backupDirectory }, directories);
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ModLoaderService_FindsInstalledFilesWithoutReplacementHistory()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynInstalledFiles-" + Guid.NewGuid().ToString("N"));
+        var replacedFile = Path.Combine(gameFolder, "data", "old.cfg");
+        var addedFile = Path.Combine(gameFolder, "new", "plugin.asi");
+
+        var unreplacedFiles = ModLoaderService.GetUnreplacedInstalledFiles(
+            new[] { replacedFile, addedFile },
+            new[] { replacedFile });
+
+        CollectionAssert.AreEqual(new[] { Path.GetFullPath(addedFile) }, unreplacedFiles);
+    }
+
+    [TestMethod]
+    public void ModLoaderService_RemovesOnlyTheRequestedGameInstallationRecord()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynInstallationRecord-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(gameFolder);
+
+        try
+        {
+            ModLoaderService.RecordGameInstallation(gameFolder, "putandreplace", "Football", "package-a", gameFolder, Array.Empty<string>());
+            ModLoaderService.RecordGameInstallation(gameFolder, "replacing", "Other Mod", "package-b", gameFolder, Array.Empty<string>());
+
+            Assert.IsTrue(ModLoaderService.RemoveGameInstallationRecord(gameFolder, "Football"));
+
+            var remaining = ModLoaderService.LoadInstallationManifest(
+                ModLoaderService.GetGameInstallationsManifestPath(gameFolder)).Entries;
+            CollectionAssert.AreEqual(new[] { "Other Mod" }, remaining.Select(entry => entry.ModId).ToArray());
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ModLoaderService_FindsExistingReplacingInstallByNameOrPackagePath()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynFindInstallation-" + Guid.NewGuid().ToString("N"));
+        var packageRoot = Path.Combine(Path.GetTempPath(), "Football-RIP");
+        Directory.CreateDirectory(gameFolder);
+
+        try
+        {
+            ModLoaderService.RecordGameInstallation(
+                gameFolder,
+                "replacing",
+                "Football",
+                packageRoot,
+                gameFolder,
+                Array.Empty<string>());
+
+            Assert.IsNotNull(ModLoaderService.FindGameInstallationRecord(gameFolder, "replacing", "Football"));
+            Assert.IsNotNull(ModLoaderService.FindGameInstallationRecord(gameFolder, "replacing", "Renamed Mod", packageRoot));
+            Assert.IsNull(ModLoaderService.FindGameInstallationRecord(gameFolder, "putandreplaces", "Football"));
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
         }
     }
 

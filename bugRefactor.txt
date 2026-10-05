@@ -1,279 +1,115 @@
-5. PutAndReplace : 
-'در این تایپ میگه تمام فایل های جایگزینی پوشمو مد رو جایگزین میکنی 
-فقط اونایی رو که من میگم ازشون بکاپ میگیری یا نمیگیری' باقی همینطوری جایگزین بشن مثلا
-
-Base Mods Address\Cleo scripts\Ben10\
-    modloader\Ben10 Mod\...
-    models\hud.txd
-    bass.dll
-    gta_sa.exe
-    modloader.asi
-    vorbisFile.dll
-    vorbisHooked.dll
-    Z-ReadMe.txt
-    mod.modsyn
-
-```modsyn
-mod {
-    type: PutAndReplace,
-    backup: some,
-    backupThese: [
-        "models\\hud.txd",
-        "vorbisFile.dll",
-        "vorbisHooked.dll"
-    ]
-}
-``` 
-(
-توضیحات کاربرد و منطق تایپ
-backupThis => این کی میگه از همه فایل یا پوشه هایی که توی مد هست توی بازی هم هست فایل های بازی که میخاد جایگزینشون بشه از همشون بک اپ نگیر بجز این فایل یا پوشه
-backupThese => اینم دقیقا مثل قبلی فقط بجای یک مقدار چند مقدار میگیره
-dontBackupThis => این کی میگه از همه فایل یا پوشه هایی که توی مد هست توی بازی هم هست فایل های بازی که میخاد جایگزینشون بشه از همشون بک اپ بگیر بجز این فایل یا پوشه
-dontBackupThese => اینم دقیقا مثل قبلی فقط بجای یک مقدار چند مقدار میگیره
-)
-و خروجیش میشه 
-Game Address\
-    .ModManager\
-        backups\
-            Ben10\
-                models\hud.txd
-                vorbisFile.dll
-                vorbisHooked.dll
-    modloader\Ben10 Mod\...
-    bass.dll
-    gta_sa.exe
-    modloader.asi
-    vorbisFile.dll
-    vorbisHooked.dll
-    ...
-و اگر برعکسش بود برای همین مثال 
-```modsyn
-mod {
-    type: PutAndReplace,
-    backup: some,
-    dontBackupThese: [
-        "models\\hud.txd",
-        "gta_sa.exe",
-    ]
-}
-``` 
-و خروجیش میشه
-Game Address\
-    .ModManager\
-        backups\
-            Ben10\
-                models\hud.txd
-                bass.dll
-                gta_sa.exe
-                modloader.asi
-                vorbisFile.dll
-                vorbisHooked.dll
-    modloader\Ben10 Mod\...
-    bass.dll
-    gta_sa.exe
-    modloader.asi
-    vorbisFile.dll
-    vorbisHooked.dll
-    ...
-
-نکته خیلی مهم تایپ PutAndReplace حتما باید حدعقل یکی از اینها رو داشته باشه 
-1.backupThis
-2.backupThese
-3.dontBackupThis
-4.dontBackupThese
-یا به PutAndReplaces تبدیل بشه اگر اینطور نبود ارور بده
-و نکته بعدی اینکه این چهار کی بالا که گفتم از فایل های اصلی بازی بک اپ میگیرن اگر بود لیست فایل های بازی رو گذاشتم اگر نیاز بود
-H:\B\A-ModAutoInstaller\Assets\Game Files List\
-    GTA 5 FARSI.txt
-    gta_sa.txt
-ولی مثلا modloader توی پیشفرض بازی نیست ولی با نصب مدی توی reqFiles هست و میاد توی بازی و باید ازش بک اپ گرفته بشه بخاطر همین توی مثالی که بالا زدم modloader.asi رو اوردم
-و این مختص modloader.asi و فایل های داخل reqFiles نیست منظورم هر فایلی که داخل خود بازی هست و میخاد جایگزینش بشه بود
-
-
-من اینو توی modsyn نوشتم اما بک اپ نگرفته 
-base mods address\Cleo scripts\Football\
-    cleo\...
-    data\maps\generic\multiobj.ide
-    modloader\FootballTeamPlay\...
-    Football.modsyn
-mod {
-    type: PutAndReplace,
-    backup: some,
-    backupThis: "data\\maps\\generic\\multiobj.ide"
-}
-(
-    فکنم اینو بدونی ولی حالا بازم میگم
-mod {
-    type: PutAndReplace,
-    backup: some,
-    backupThis: "data\\maps\\generic\\multiobj.ide"
-}
-    این ادرس
-    معنیش اینه
-    Game address\data\maps\generic\multiobj.ide
-    یعنی از این فایل بک اپ بگیر
-mod {
-    type: PutAndReplace,
-    backup: some,
-    backupThis: "data\\maps\\generic"
-}
-    data\\maps\\generic
-    معنیش اینه
-    Game address\data\maps\generic
-    یعنی از این پوشه بک اپ بگیر
-)
-بک اپ باید توی پوشه .ModManager باشه
-.ModManager\backup\[اسم پوشه مد]
-و در این مثال ما 
-.ModManager\backup\Football\data\maps\generic\multiobj.ide
-6. PutAndReplaces: این تایپ مثل تایپ قبلی ولی چند تا تفاوت مهم داره
-اول از همه توی این تایپ واجب و اجباری نیست حدعقل یکی  از اینها باشه
-1.backupThis
-2.backupThese
-3.dontBackupThis
-4.dontBackupThese
-و اصل این تایپ بنا شده بر اینکه 
-'ببین من برام مهم نیست بنویسی یا ببنویسی چیو بک اپ بگیرم یا چیو بک اپ نگیرم چون من معمولا برای مد هایی استفاده میشم که فایل های زیادی دارن و 
-نوشتن اینکه چیو بک اپ بگیری و چیو بک اپ نگیری سخته میتونه باشه ها ولی میتونه هم نباشه من خودم خودکار برسی میکنم چه فایلی میخاد جایگزین بشه خودم بک اپ میگیرم و فایل هایی که نمیخاد جایگزین بشه همینطوری میریزم'
-مثلا 
-
-Base Mods Address\Cleo scripts\Ben10\
-    modloader\Ben10 Mod\...
-    models\hud.txd
-    bass.dll
-    gta_sa.exe
-    modloader.asi
-    vorbisFile.dll
-    vorbisHooked.dll
-    Z-ReadMe.txt
-    mod.modsyn
-
-```modsyn
-mod {
-    type: PutAndReplaces,
-}
-``` 
-پوشه بازی رو برسی میکنه میبینه اینها توی پوشه بازی هست
-1.models\hud.txd
-2.bass.dll
-3.gta_sa.exe
-4.modloader.asi
-5.vorbisFile.dll
-6.vorbisHooked.dll
-پس میشه
-
-Game Address\
-    .ModManager\
-        backups\
-            Ben10\
-                models\hud.txd
-                bass.dll
-                gta_sa.exe
-                modloader.asi
-                vorbisFile.dll
-                vorbisHooked.dll
-    modloader\Ben10 Mod\...
-    bass.dll
-    gta_sa.exe
-    modloader.asi
-    vorbisFile.dll
-    vorbisHooked.dll
-    ...
-و اینارو توضیح دادم میتونه برای این تایپ هم استفاده بشه
-1.backupThis
-2.backupThese
-3.dontBackupThis
-4.dontBackupThese
-7. Replacing : این تایپ میگه 
-'من هیچ فایل اضافه ندارم همه فایل های من جایگزینی هست پس باید فایل های منو توی پوشه بازی پیدا کنی و بک اپ بگیری (مگر اینکه با اون چهار مورد گفته باشم یکی یا چند تارو بک اپ بگیر یا نگیر)'
-مثلا
-Base Mods Address\Sounds\SFX Audio Original\
-    audio\
-        SFX\
-            FEET
-            GENRL
-            PAIN_A
-            SCRIPT
-            SPC_EA
-            SPC_FA
-            SPC_GA
-            SPC_NA
-            SPC_PA
-    mod.modsyn
-و در modsyn
-
-```modsyn
-    type: Replacing,
-```
-
-Game Address\
-    .ModManager\
-        backups\
-            SFX Audio Original\
-                audio\
-                    SFX\
-                        FEET
-                        GENRL
-                        PAIN_A
-                        SCRIPT
-                        SPC_EA
-                        SPC_FA
-                        SPC_GA
-                        SPC_NA
-                        SPC_PA
-    audio\
-        SFX\
-            FEET
-            GENRL
-            PAIN_A
-            SCRIPT
-            SPC_EA
-            SPC_FA
-            SPC_GA
-            SPC_NA
-            SPC_PA
-و اگر در modsyn نوشته بود 
-```modsyn
-    type: Replacing,
-    backup: none
-```
-نباید بک اپ بگیرهbackup: none
-یعنی میشه خروجیش 
-
-Game Address\
-    .ModManager\
-        backups\
-    audio\
-        SFX\
-            FEET
-            GENRL
-            PAIN_A
-            SCRIPT
-            SPC_EA
-            SPC_FA
-            SPC_GA
-            SPC_NA
-            SPC_PA
-
-(backup: some یعنی بعضی هاشون میخاد بک اپ گرفته بشه یا گرفته نشه
-backup: all که پیشفرضه یعنی همهشون بک اپ گرفته بشه
-)
-(
-    کی های 
-    1.backupThis
-    2.backupThese
-    3.dontBackupThis
-    4.dontBackupThese
-    5.backup
-    در تایپ های 
-    1. PutAndReplace
-    2. PutAndReplaces
-    3. Replacing
-    میشه استفاده کرد
-)
-8. وقتی در PutAndReplace مد قبلا نصب شده بود میخام بدکمه delete ش رو هندل کنیم
+9. وقتی در PutAndReplace مد قبلا نصب شده بود میخام بدکمه delete ش رو هندل کنیم
 اون فایل هایی که جایگزین نشدن رو پاک میکنی (در installations.json نوشته)
 و فایل های داخل پوشه بک اپ مد رو میریزی داخل پوشه بازی تمام
 و همچنین برای PutAndReplaces و Replacing
 و بعد پوشه که در بک اپ هست رو پاک میکنی
-9. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
+10. داشتم مد با تایپ PIM نصب میکردم که توش یک فایل dff بود اما برنامه این select option رو اورد (Select asset type
+X
+The model '[nameFile]' was not found. Select its asset type.
+Vehicle
+Skin
+Weapon
+Cancel
+Continue) اما این مختص VSW و VSS هست نه باقی تایپ ها
+11. میخام منطق نصب تایپ MissionDSL رو بگم خیلی راحت در این ادرس
+Documents\GTA San Andreas User Files\DSL\
+محتویات پوشه dsl رو تمامش رو حذف میکنی و سیو جدید را میریزی داخل dsl
+و اگر پوشه dsl وجود نداشت باید به این ادرس اول رجوع کنی
+Base Mods Address\Scripts\DYOM\DYOM v8.1\
+و این رو اول نصب کن 
+بعد مد رو نصب میکنیم
+11. میخام منطق نصب تایپ SaveAndMission رو بگم 
+این ادرس
+Documents\GTA San Andreas User Files\
+ولی چند حالت داره برنامه باید خودش خودکار تشخیص بده 
+چون این تایپ همزمان میتونه سیو نصب کنه 
+اگر فرمت 
+.b
+بود یعنی سیو هست 
+ولی اگر فرمت 
+.dat 
+مرحله هست
+اگر میخواست سیو نصب کنه 
+باید یک step 5 مخصوص سیو بیاره 
+که باید توش هشت ایتم باشه 
+که من نمونه ظاهری اینگلیسیش رو گذاشتم 
+Forms\Step5\SaveAndMissionUi\Save.html
+برای سیو هایی که موجود نبود
+SAVE FILE [1,2,3,4,5,6,7,8] NOT PRESENT
+و اون سیو هایی که از قبل موجود بود باید اسمش باشه مثلا
+GTASAsf1.b
+(و یک مورد که 
+میدونم احتمال زیاد نمیتونی انجام بدی ولی حالا تلاشتو بکن اگه دیدی سخته یا زیاد میخاد کد بزنی یا نمیشه انجام نده 
+ولی اون کار چیه میخاستم توی فایل سیو رو برسی کنی و اسم سیو رو  از توی این فرمت .b در بیاری و بجای GTASAsf[1,2,3,4,5,6,7,8].b در بیاری و بزاری
+)
+و ایتمی که تیک خورده روی همون سیو نصب بشه
+حالا فرمت .dat که برای مرحله ها هست 
+دقیقا همین step 5ولی متن هاش یکم فرق میکنه 
+ایتم هایی که موجود نبود باید بنویسه
+slot [1,2,3,4,5,6,7,8] is empty
+و ایتمی که از قبل موجوده مثلا شماره یکش این اسم رو داره
+DYOM1.dat
+(و یک مورد که 
+میدونم احتمال زیاد نمیتونی انجام بدی ولی حالا تلاشتو بکن اگه دیدی سخته یا زیاد میخاد کد بزنی یا نمیشه انجام نده 
+ولی اون کار چیه میخاستم توی فایل سیو رو برسی کنی و اسم سیو رو  از توی این فرمت .dat در بیاری و بجای DYOM[1,2,3,4,5,6,7,8].dat در بیاری و بزاری
+)
+تمام 
+برای حذف کردنش همونی که سیو/مرحله با همون شماره که نصب شد رو حذف میکنه
+12. SavesAndMissions
+اینم دقیقا مثل قبلیه تفاوت فقط در step 5 هست 
+این تایپ برای اینکه 
+1. دو تا سیو یا بیشتر نصب کنیم
+2. دو تا مرحله یا بیشتر نصب کنیم
+3. یک یا بیشتر مرحله نصب کنیم با یک و بیشتر مرحله نصب کنیم
+باید یکی یکی نصب کنه 
+اولی رو نصب کرد 
+(تقریبا مثل vsw با vss هست)
+و دکمه هایی که در vss هست چون به کار میان اینجا هم باید باشن مخصوصا مد استاتوس
+
+مثلا
+GTASAsf1.b
+GTASAsf2.b
+DYOM8.dat
+
+اینجوری باید نصب بشه 
+GTASAsf1.b => step 5 (SavesAndMissions) => selected number 6 => (Renamed To =>) GTASAsf6.b => Documents\GTA San Andreas User Files\(put here)
+GTASAsf2.b => step 5 (SavesAndMissions) => selected number 1 => (Renamed To =>) GTASAsf1.b => Documents\GTA San Andreas User Files\(put here)
+DYOM8.dat => step 5 (SavesAndMissions) => selected number 1 => (Renamed To =>) DYOM1.dat => Documents\GTA San Andreas User Files\(put here)
+برای پاک شدنشم باید بیار delete و delete some
+13. Mixed
+این تایپ هم میخام اضافه کنی 
+مخفف : MIX
+این تایپ برای اینکه ترکیبی چند تا مد با تایپ های مختلف رو نصب کنیم  مثلا 
+Base Mods Address\Skins\Army-and-animation
+    gta3img\
+        male01.dff
+        male01.txd
+    animations\
+        anim\anim.ifp
+
+```modsyn
+mod {
+    type: mixed,
+    list: [
+        {
+            type: VSW,
+            folderName: "gta3img"
+        },
+        {
+            type: Replacing,
+            folderName: "animations"
+            backup: none
+        }
+    ]
+}
+```
+(نکته list باید حدعقل دو یا بیشتر ایتم بگیرهوگرنه خطا بده 
+و folderName برای mixed برای تمام ابجکت ها واجب هست 
+تایپ mixed واجب که List رو داشته باشه و list هم واجبه که حدعقل دو ایتم داشته باشه و واجبه داخل هر ابجکت folderName باشه
+)
+یکی یکی نصب میکنه ولی step 6 نمیره 
+اولی رو نصب میکنه میره دومی تا اخر 
+
+و برای حدف کردنش ...
+14. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
+15. میخام optional رو ...
