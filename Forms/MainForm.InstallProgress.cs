@@ -231,6 +231,19 @@ public partial class MainForm
                 }
             }
 
+            foreach (var backupDirectory in records
+                         .Select(record => record.BackupDirectoryPath)
+                         .Where(path => !string.IsNullOrWhiteSpace(path))
+                         .Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                if (Directory.Exists(backupDirectory))
+                {
+                    Directory.Delete(backupDirectory, recursive: true);
+                }
+            }
+
+            ModLoaderService.RemoveGameInstallationRecord(_selectedGamePath, modName);
+
             var remaining = ModPackageService.LoadReplacementRecords();
             remaining.RemoveAll(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase));
             ModPackageService.SaveReplacementRecords(remaining);

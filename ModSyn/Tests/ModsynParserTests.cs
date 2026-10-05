@@ -26,10 +26,10 @@ public sealed class ModsynParserTests
     [TestMethod]
     public void Parse_AcceptsCommaSeparatedObjectProperties()
     {
-        var document = Parse("mod { type: PutAndReplace, backup: all, replacements: [{ source: \"data/handling.cfg\", target: \"data/handling.cfg\" }] }");
+        var document = Parse("mod { type: PutAndReplace, backup: some, backupThis: \"data/handling.cfg\", replacements: [{ source: \"data/handling.cfg\", target: \"data/handling.cfg\" }] }");
         var validation = GtaSaModManager.Modsyn.Validation.ModsynValidator.Validate(document);
 
-        Assert.AreEqual(3, document.Body.Properties.Count);
+        Assert.AreEqual(4, document.Body.Properties.Count);
         Assert.IsTrue(validation.IsValid, string.Join(Environment.NewLine, validation.Errors));
     }
 

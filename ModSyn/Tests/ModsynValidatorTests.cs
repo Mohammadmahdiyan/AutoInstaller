@@ -223,7 +223,8 @@ public sealed class ModsynValidatorTests
 
     private static void AssertNormalizedType(string value, string expected)
     {
-        var result = Validate($"mod {{ type: \"{value}\" }}");
+        var selectors = expected == "PutAndReplace" ? " backup: some backupThis: \"file.dat\"" : string.Empty;
+        var result = Validate($"mod {{ type: \"{value}\"{selectors} }}");
 
         Assert.IsTrue(result.IsValid, string.Join(Environment.NewLine, result.Errors));
         Assert.AreEqual(expected, result.NormalizedType);

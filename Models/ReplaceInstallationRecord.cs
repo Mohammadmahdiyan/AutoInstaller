@@ -12,6 +12,8 @@ public class ReplaceInstallationRecord
 
     public string BackupFilePath { get; set; } = string.Empty;
 
+    public string BackupDirectoryPath { get; set; } = string.Empty;
+
     public string InstalledModFile { get; set; } = string.Empty;
 
     public DateTime InstallationDate { get; set; } = DateTime.UtcNow;

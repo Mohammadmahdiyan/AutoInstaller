@@ -744,27 +744,22 @@ public partial class MainForm : Form
         if (manifest.NormalizedType == "putandreplace")
         {
             var replacements = ModPackageService.ReadReplacementEntries(packageRoot);
-            if (replacements.Count == 0)
+            foreach (var sourcePath in packageFiles)
             {
-                foreach (var sourcePath in packageFiles)
-                {
-                    var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
-                    replacementTargets[sourcePath] = GetSafeGamePath(relativePath);
-                }
+                var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
+                replacementTargets[sourcePath] = GetSafeGamePath(relativePath);
             }
-            else
-            {
-                foreach (var replacement in replacements)
-                {
-                    var sourcePath = GetSafePackagePath(payloadPath, replacement.Source);
-                    if (!File.Exists(sourcePath))
-                    {
-                        MessageBox.Show("Replacement source was not found: " + replacement.Source, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return false;
-                    }
 
-                    replacementTargets[sourcePath] = GetSafeGamePath(replacement.Target);
+            foreach (var replacement in replacements)
+            {
+                var sourcePath = GetSafePackagePath(payloadPath, replacement.Source);
+                if (!File.Exists(sourcePath))
+                {
+                    MessageBox.Show("Replacement source was not found: " + replacement.Source, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
                 }
+
+                replacementTargets[sourcePath] = GetSafeGamePath(replacement.Target);
             }
         }
         else if (manifest.NormalizedType is "putandreplaces" or "putingamefolder")
@@ -773,7 +768,7 @@ public partial class MainForm : Form
             {
                 var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
                 var destinationPath = GetSafeGamePath(relativePath);
-                if (manifest.NormalizedType == "putandreplaces" && File.Exists(destinationPath)
+                if (manifest.NormalizedType == "putandreplaces"
                     || manifest.NormalizedType == "putingamefolder" && File.Exists(destinationPath))
                 {
                     replacementTargets[sourcePath] = destinationPath;
@@ -782,10 +777,11 @@ public partial class MainForm : Form
         }
 
         var backupConfiguration = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
-        var filesToBackup = replacementTargets.Values
-            .Where(path => !previousPutInGameFolderFiles.Contains(Path.GetFullPath(path))
-                && backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, path)))
-            .ToList();
+        var filesToBackup = BackupStorageService.SelectFilesToBackup(
+            _selectedGamePath,
+            replacementTargets.Values.Where(path => !previousPutInGameFolderFiles.Contains(Path.GetFullPath(path))),
+            backupConfiguration);
+        var filesToBackupSet = filesToBackup.ToHashSet(StringComparer.OrdinalIgnoreCase);
         var backupPlan = filesToBackup.Count > 0
             ? BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup)
             : new BackupStoragePlan { HasBackup = true };
@@ -858,16 +854,20 @@ public partial class MainForm : Form
                         : relativePath);
 
                 if (replacementTargets.ContainsKey(sourcePath)
-                    && File.Exists(destinationPath)
-                    && !previousPutInGameFolderFiles.Contains(Path.GetFullPath(destinationPath))
-                    && backupPlan.HasBackup
-                    && backupConfiguration.ShouldBackup(Path.GetRelativePath(_selectedGamePath, destinationPath)))
+                    && !previousPutInGameFolderFiles.Contains(Path.GetFullPath(destinationPath)))
                 {
-                    var backupFilePath = await ModPackageService.BackupOriginalFileForReplacementAsync(
-                        _selectedGamePath,
-                        destinationPath,
-                        modName,
-                        backupPlan.BackupRoot);
+                    var backupFilePath = string.Empty;
+                    if (File.Exists(destinationPath)
+                        && backupPlan.HasBackup
+                        && filesToBackupSet.Contains(Path.GetFullPath(destinationPath)))
+                    {
+                        backupFilePath = await ModPackageService.BackupOriginalFileForReplacementAsync(
+                            _selectedGamePath,
+                            destinationPath,
+                            modName,
+                            backupPlan.BackupRoot);
+                    }
+
                     records.Add(new ReplaceInstallationRecord
                     {
                         BackupId = Guid.NewGuid().ToString("N"),
@@ -875,6 +875,9 @@ public partial class MainForm : Form
                         GameFolder = _selectedGamePath,
                         OriginalFilePath = destinationPath,
                         BackupFilePath = backupFilePath,
+                        BackupDirectoryPath = filesToBackup.Count > 0 && backupPlan.HasBackup
+                            ? Path.Combine(backupPlan.BackupRoot, ModPackageService.SanitizeFolderName(modName))
+                            : string.Empty,
                         InstalledModFile = sourcePath,
                         InstallationType = manifest.NormalizedType,
                         ReplacementSucceeded = true,
@@ -1058,9 +1061,14 @@ public partial class MainForm : Form
             return;
         }
 
-        var filesToBackup = filesToReplace
-            .Where(path => backupConfiguration.ShouldBackup(Path.GetRelativePath(payloadPath, path)))
+        var replacementTargets = filesToReplace
+            .Select(sourcePath => GetSafeGamePath(Path.GetRelativePath(payloadPath, sourcePath)))
             .ToList();
+        var filesToBackup = BackupStorageService.SelectFilesToBackup(
+            _selectedGamePath,
+            replacementTargets,
+            backupConfiguration);
+        var filesToBackupSet = filesToBackup.ToHashSet(StringComparer.OrdinalIgnoreCase);
         var backupPlan = filesToBackup.Count > 0
             ? BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup)
             : new BackupStoragePlan { HasBackup = true };
@@ -1107,6 +1115,7 @@ public partial class MainForm : Form
             .ToList());
 
         var records = new List<ReplaceInstallationRecord>();
+        var installedFiles = new List<string>();
 
         try
         {
@@ -1116,7 +1125,7 @@ public partial class MainForm : Form
                 var relativePath = Path.GetRelativePath(payloadPath, sourceFile)
                     .Replace('/', Path.DirectorySeparatorChar)
                     .Replace('\\', Path.DirectorySeparatorChar);
-                var destinationFile = Path.Combine(_selectedGamePath, relativePath);
+                var destinationFile = GetSafeGamePath(relativePath);
                 var destinationDirectory = Path.GetDirectoryName(destinationFile);
 
                 if (!string.IsNullOrWhiteSpace(destinationDirectory))
@@ -1127,7 +1136,7 @@ public partial class MainForm : Form
                 var backupFilePath = string.Empty;
                 if (File.Exists(destinationFile)
                     && backupPlan.HasBackup
-                    && backupConfiguration.ShouldBackup(Path.GetRelativePath(payloadPath, sourceFile)))
+                    && filesToBackupSet.Contains(Path.GetFullPath(destinationFile)))
                 {
                     backupFilePath = await ModPackageService.BackupOriginalFileForReplacementAsync(
                         _selectedGamePath,
@@ -1137,6 +1146,7 @@ public partial class MainForm : Form
                 }
 
                 await CopyStep4FileAsync(i, sourceFile, destinationFile, relativePath);
+                installedFiles.Add(destinationFile);
 
                 var record = new ReplaceInstallationRecord
                 {
@@ -1145,6 +1155,9 @@ public partial class MainForm : Form
                     GameFolder = _selectedGamePath,
                     OriginalFilePath = destinationFile,
                     BackupFilePath = backupFilePath,
+                    BackupDirectoryPath = filesToBackup.Count > 0 && backupPlan.HasBackup
+                        ? Path.Combine(backupPlan.BackupRoot, ModPackageService.SanitizeFolderName(modName))
+                        : string.Empty,
                     InstalledModFile = sourceFile,
                     InstallationDate = DateTime.UtcNow,
                     InstallationType = "Replacing",
@@ -1158,6 +1171,14 @@ public partial class MainForm : Form
                 ModPackageService.RecordReplacementInstallation(record);
 
             }
+
+            ModLoaderService.RecordGameInstallation(
+                _selectedGamePath,
+                "replacing",
+                modName,
+                packageRoot,
+                _selectedGamePath,
+                installedFiles);
 
             CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
             GoToStep(WizardStep.Step6);

@@ -596,15 +596,16 @@ public partial class MainForm : Form
             var isPutInGameFolderPackage = _selectedModManifest.NormalizedType == "putingamefolder";
             var isPutAndReplacePackage = _selectedModManifest.NormalizedType == "putandreplace";
             var isPutAndReplacesPackage = _selectedModManifest.NormalizedType == "putandreplaces";
+            var isReplacingPackage = _selectedModManifest.IsReplacing;
             var previousModelFiles = new List<string>();
             var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
             var sourceAssetType = DetectAssetTypeByName(sourceModelName);
-            var requiresAssetSelection = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && (_selectedModManifest.IsSingleAssetPackage
+            var requiresAssetSelection = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && !isReplacingPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null
                 || !string.IsNullOrWhiteSpace(sourceModelName)
                 || !string.IsNullOrWhiteSpace(sourceAssetType));
-            var assetInstallFlow = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && (_selectedModManifest.IsSingleAssetPackage
+            var assetInstallFlow = !isPutInCleoPackage && !isPutInGameFolderPackage && !isPutAndReplacePackage && !isPutAndReplacesPackage && !isReplacingPackage && (_selectedModManifest.IsSingleAssetPackage
                 || _selectedModManifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null);
             InstallationManifestEntry? existingAssetInstallation = null;
@@ -823,6 +824,20 @@ public partial class MainForm : Form
                     }
                 }
 
+                return;
+            }
+
+            if (isReplacingPackage)
+            {
+                if (!_isInstallingOptionalPackage)
+                {
+                    GoToStep(WizardStep.Step4);
+                }
+
+                await InstallReplacingPackageAsync(
+                    _selectedModPayloadPath,
+                    _selectedModName,
+                    _selectedModPackageRoot);
                 return;
             }
 

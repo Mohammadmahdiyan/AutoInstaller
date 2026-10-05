@@ -1,4 +1,5 @@
 using System.Text.Json;
+using GtaSaModManager.Modsyn.Conversion;
 
 namespace GtaSaModManager.Services;
 
@@ -17,6 +18,26 @@ public static class BackupStorageService
     private const string LegacyIdentityFileName = ".zGtaSaModManager.json";
     private const string BackupFolderName = "backup";
     private const string ExternalBackupBase = @"C:\Program Files (x86)\GTA San Andreas\zBackupFiles";
+
+    public static List<string> SelectFilesToBackup(
+        string gameFolder,
+        IEnumerable<string> candidateFiles,
+        ModsynBackupConfiguration backupConfiguration)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameFolder);
+        ArgumentNullException.ThrowIfNull(candidateFiles);
+        ArgumentNullException.ThrowIfNull(backupConfiguration);
+
+        var fullGameFolder = Path.TrimEndingDirectorySeparator(Path.GetFullPath(gameFolder));
+        var gameFolderPrefix = fullGameFolder + Path.DirectorySeparatorChar;
+        return candidateFiles
+            .Select(Path.GetFullPath)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(path => path.StartsWith(gameFolderPrefix, StringComparison.OrdinalIgnoreCase)
+                && File.Exists(path)
+                && backupConfiguration.ShouldBackup(Path.GetRelativePath(fullGameFolder, path)))
+            .ToList();
+    }
 
     public static BackupStoragePlan CreatePlan(
         string gameFolder,

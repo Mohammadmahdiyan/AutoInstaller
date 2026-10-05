@@ -237,6 +237,62 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void BackupStorage_SelectsOnlyExistingIncludedGameFiles()
+    {
+        WithPackage("Football", packageRoot =>
+        {
+            Write(packageRoot, "mod.modsyn", """
+                mod {
+                  type: PutAndReplace
+                  backup: some
+                  backupThis: "data/maps/generic"
+                  dontBackupThis: "data/maps/generic/skip.ide"
+                }
+                """);
+
+            var gameRoot = Path.Combine(Path.GetTempPath(), "ModsynBackupSelection-" + Guid.NewGuid().ToString("N"));
+            var includedFile = Path.Combine(gameRoot, "data", "maps", "generic", "multiobj.ide");
+            var excludedFile = Path.Combine(gameRoot, "data", "maps", "generic", "skip.ide");
+            var missingFile = Path.Combine(gameRoot, "data", "maps", "generic", "missing.ide");
+            Directory.CreateDirectory(Path.GetDirectoryName(includedFile)!);
+            File.WriteAllText(includedFile, "original");
+            File.WriteAllText(excludedFile, "original");
+
+            try
+            {
+                var backup = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
+                var selected = BackupStorageService.SelectFilesToBackup(
+                    gameRoot,
+                    new[] { includedFile, excludedFile, missingFile },
+                    backup);
+
+                CollectionAssert.AreEqual(new[] { includedFile }, selected);
+            }
+            finally
+            {
+                Directory.Delete(gameRoot, recursive: true);
+            }
+        });
+    }
+
+    [TestMethod]
+    public void Replacing_UsesPackageRootAsInstallPayload()
+    {
+        WithPackage("SFX Audio Original", packageRoot =>
+        {
+            Directory.CreateDirectory(Path.Combine(packageRoot, "audio", "SFX"));
+            File.WriteAllText(Path.Combine(packageRoot, "audio", "SFX", "FEET"), "audio data");
+            Write(packageRoot, "mod.modsyn", "mod { type: Replacing }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual(
+                Path.GetFullPath(packageRoot),
+                ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest));
+        });
+    }
+
+    [TestMethod]
     public void PutAndReplaceTypes_UsePackageRootAsInstallPayload()
     {
         WithPackage("Ben10", packageRoot =>
