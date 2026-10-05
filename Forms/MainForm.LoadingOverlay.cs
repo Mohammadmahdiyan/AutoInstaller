@@ -3,6 +3,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
+using GtaSaModManager.UI;
 
 namespace GtaSaModManager.Forms;
 
@@ -79,9 +80,16 @@ public partial class MainForm : Form
     private void ShowGlobalLoadingOverlay(string message)
     {
         EnsureGlobalLoadingOverlay();
+        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
         if (_globalLoadingLabel != null)
         {
             _globalLoadingLabel.Text = message;
+            _globalLoadingLabel.ForeColor = palette.TextPrimary;
+        }
+
+        if (_globalLoadingSpinnerLabel != null)
+        {
+            _globalLoadingSpinnerLabel.ForeColor = palette.Accent;
         }
 
         if (_globalLoadingOverlay != null)
