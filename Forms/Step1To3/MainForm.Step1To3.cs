@@ -239,14 +239,9 @@ public partial class MainForm : Form
 
             if (!ModPackageService.TryValidateModsyn(selected, out var configError))
             {
-                MessageBox.Show(
-                    string.Format(
-                        _localizationService.GetString("ModsynInvalidOpen", "The Modsyn file contains an error. Fix it in Notepad, then select the mod again:\n{0}"),
-                        configError ?? "The Modsyn package configuration is invalid."),
-                    _appName,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                OpenModsynInNotepad(manifestPath);
+                ShowModsynErrorDialog(
+                    configError ?? "The Modsyn package configuration is invalid.",
+                    manifestPath);
                 return;
             }
 
@@ -419,13 +414,19 @@ public partial class MainForm : Form
     {
         try
         {
+            var notepadPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.System),
+                "notepad.exe");
             var startInfo = new ProcessStartInfo
             {
-                FileName = "notepad.exe",
-                UseShellExecute = true
+                FileName = notepadPath,
+                Arguments = "\"" + Path.GetFullPath(manifestPath) + "\"",
+                UseShellExecute = false
             };
-            startInfo.ArgumentList.Add(manifestPath);
-            Process.Start(startInfo);
+            if (Process.Start(startInfo) is null)
+            {
+                throw new InvalidOperationException("Notepad did not start.");
+            }
         }
         catch (Exception ex)
         {
@@ -436,6 +437,62 @@ public partial class MainForm : Form
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
         }
+    }
+
+    private void ShowModsynErrorDialog(string error, string manifestPath)
+    {
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        using var dialog = new Form
+        {
+            Text = _localizationService.GetString("ModsynErrorTitle", "Modsyn validation error"),
+            StartPosition = FormStartPosition.CenterParent,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
+            RightToLeftLayout = isRtl,
+            ClientSize = new Size(620, 300)
+        };
+        var errorText = new TextBox
+        {
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            Text = error,
+            Dock = DockStyle.Fill,
+            Margin = new Padding(10),
+            Font = new Font("Segoe UI", 10F)
+        };
+        var buttons = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 52,
+            Padding = new Padding(8),
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+        var openButton = new Button
+        {
+            Text = _localizationService.GetString("OpenModsynButton", "Open mod.modsyn in Notepad"),
+            AutoSize = true,
+            Height = 34
+        };
+        var closeButton = new Button
+        {
+            Text = _localizationService.GetString("Close", "Close"),
+            Width = 100,
+            Height = 34,
+            DialogResult = DialogResult.Cancel
+        };
+        openButton.Click += (_, _) => OpenModsynInNotepad(manifestPath);
+        buttons.Controls.Add(openButton);
+        buttons.Controls.Add(closeButton);
+        dialog.Controls.Add(errorText);
+        dialog.Controls.Add(buttons);
+        dialog.CancelButton = closeButton;
+        ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
+        dialog.ShowDialog(this);
     }
 
     private void RefreshStep3Images(Control step3Panel, string modFolder, bool resetIndex = true)
