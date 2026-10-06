@@ -28,7 +28,14 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step5)
         {
-            RefreshAssetStep();
+            if (_isSaveMissionStepActive)
+            {
+                RefreshSaveMissionStep();
+            }
+            else
+            {
+                RefreshAssetStep();
+            }
         }
     }
 

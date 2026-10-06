@@ -351,8 +351,8 @@ public partial class MainForm
             : (string.Empty, null);
         var manifestPath = normalizedType == "missiondsl"
             ? userFilesInstallation.Item1
-            : normalizedType == "savesandmissions"
-            ? ModLoaderService.GetUserFilesInstallationsManifestPath()
+            : normalizedType is "saveandmission" or "savesandmissions"
+            ? ModLoaderService.GetGameInstallationsManifestPath(gamePath ?? string.Empty)
             : !string.IsNullOrWhiteSpace(gamePath)
                 ? ModLoaderService.GetGameInstallationsManifestPath(gamePath)
                 : string.Empty;

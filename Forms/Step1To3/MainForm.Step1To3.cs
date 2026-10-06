@@ -251,6 +251,11 @@ public partial class MainForm : Form
             _pendingAssetModelFilesToDelete.Clear();
             _lastActionWasDelete = false;
             _isCheckingPreviousAssetInstallation = false;
+            _isSaveMissionStepActive = false;
+            _saveMissionPackageFiles.Clear();
+            _saveMissionInstalledFiles.Clear();
+            _saveMissionFileIndex = 0;
+            _selectedSaveMissionSlot = null;
             _step5DetectedAssets.Clear();
             _step5SelectedAssetKeys.Clear();
             _multiSourceModels.Clear();

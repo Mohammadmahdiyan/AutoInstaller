@@ -12,7 +12,7 @@ Documents\GTA San Andreas User Files\
 اگر میخواست سیو نصب کنه 
 باید یک step 5 مخصوص سیو بیاره 
 که باید توش هشت ایتم باشه 
-که من نمونه ظاهری اینگلیسیش رو گذاشتم 
+که من نمونه ظاهری اچ تی ام الش اینگلیسیش رو گذاشتم 
 Forms\Step5\SaveAndMissionUi\Save.html
 برای سیو هایی که موجود نبود
 SAVE FILE [1,2,3,4,5,6,7,8] NOT PRESENT
@@ -29,6 +29,8 @@ GTASAsf1.b
 slot [1,2,3,4,5,6,7,8] is empty
 و ایتمی که از قبل موجوده مثلا شماره یکش این اسم رو داره
 DYOM1.dat
+که من نمونه ظاهری اچ تی ام الش اینگلیسیش رو گذاشتم 
+Forms\Step5\SaveAndMissionUi\Mission.html
 (و یک مورد که 
 میدونم احتمال زیاد نمیتونی انجام بدی ولی حالا تلاشتو بکن اگه دیدی سخته یا زیاد میخاد کد بزنی یا نمیشه انجام نده 
 ولی اون کار چیه میخاستم توی فایل سیو رو برسی کنی و اسم سیو رو  از توی این فرمت .dat در بیاری و بجای DYOM[1,2,3,4,5,6,7,8].dat در بیاری و بزاری
@@ -56,6 +58,33 @@ GTASAsf1.b => step 5 (SavesAndMissions) => selected number 6 => (Renamed To =>) 
 GTASAsf2.b => step 5 (SavesAndMissions) => selected number 1 => (Renamed To =>) GTASAsf1.b => Documents\GTA San Andreas User Files\(put here)
 DYOM8.dat => step 5 (SavesAndMissions) => selected number 1 => (Renamed To =>) DYOM1.dat => Documents\GTA San Andreas User Files\(put here)
 برای پاک شدنشم باید بیار delete و delete some
+
+13. میخام یک key value به modsyn اضافه کنم 
+که فقط مخصوص 
+MissionDSL
+SaveAndMission
+SavesAndMissions
+هست اینطوری که بعضی وقتا هست میخاد غیر از مرحله میخاد یکچزای دیگه هم نصب بشه در user file 
+
+```modsyn
+mod {
+    type: DSL,
+    addToUserFile: [
+        {
+            from: "JLNSJ", // => منظورش اینکه داخل پوشه مد یک پوشه JLNSJ هست بریز توی to
+            to: "" // => \Documents\GTA San Andreas User Files\ => (اینجا منظورشه) (اگر to نبود هم منظورش همینجاست)
+        },
+        {
+            fromBase: "Scripts\\DYOM\\Dyom IX Addon TR Yama By Eren Unal Fix v3\text.gxt", // => Base Mods Address\ (این برای اینکه از ادرس بیس خواسته باشن یک چیزی رو نصب کنن)
+            to: "MPACK" // => \Documents\GTA San Andreas User Files\MPACK\ (text.gxt رو اینجا باید بریزه)
+        }
+    ]
+}
+```
+باید from باشه
+باید مقدار داشته باشه
+باید یا from باشه یا fromBase
+
 13. Mixed
 این تایپ هم میخام اضافه کنی 
 مخفف : MIX
@@ -90,7 +119,18 @@ mod {
 یکی یکی نصب میکنه ولی step 6 نمیره 
 اولی رو نصب میکنه میره دومی تا اخر 
 
-و برای حدف کردنش ...
+و برای حدف کردنش
+میخام اگه دوباره اینجا انتخاب شد 
+بگه مد قبلا وجود داره میخای دوباره نصب کنی یا حذف کنی 
+اگه گفت حذف کنی 
+بیاد step 5 ولی step 5 مخصوص mixed من منظورمو با این فایل اچ تی ام ال ظاهرشو کامل توضیح دادم 
+Forms\DeleteSomeModUi\DeleteSomeModUi.html
+تو فقط میخاد اینو تبدیل به cs کنی و به پروژه اضافه کنی و منطقش رو عوض کنی 
+اسم مد هارو باید درست کنی 
+(
+    عکس و گیف و ویدیو مد برای از پوشه مد لود کنه نه از پوشه بازی 
+    ادرس مد در installing.json هست
+)
 14. میخام optional رو ...
 15. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
 16. اگه mod.modsyn مدی موجود نبود یا داخل خطا داشت (اگه خطا داشت خطا رو نشون بده) و با Notepad باز کنه mod.modsyn رو

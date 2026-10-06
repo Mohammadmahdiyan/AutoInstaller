@@ -218,7 +218,8 @@ public partial class MainForm : Form
             item.Value.Visible = item.Key == step;
         }
 
-        if (step == WizardStep.Step5 && !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
+        if (step == WizardStep.Step5 && !_isSaveMissionStepActive
+            && !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
         {
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
         }
@@ -239,7 +240,14 @@ public partial class MainForm : Form
 
         if (step == WizardStep.Step5)
         {
-            RefreshAssetStep();
+            if (_isSaveMissionStepActive)
+            {
+                RefreshSaveMissionStep();
+            }
+            else
+            {
+                RefreshAssetStep();
+            }
         }
 
         if (step == WizardStep.Step4)
@@ -261,6 +269,29 @@ public partial class MainForm : Form
             if (openUserFilesButton != null)
             {
                 openUserFilesButton.Visible = _selectedModManifest?.NormalizedType is "missiondsl" or "saveandmission" or "savesandmissions";
+            }
+
+            var installedSaveMissionEntry = _selectedModManifest?.NormalizedType is "saveandmission" or "savesandmissions"
+                ? ModLoaderService.LoadInstallationManifest(
+                    ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath)).Entries
+                    .LastOrDefault(entry => string.Equals(entry.ModId, _selectedModName, StringComparison.OrdinalIgnoreCase)
+                        && entry.Type is "saveandmission" or "savesandmissions")
+                : null;
+            var deleteSaveMissionButton = completionPanel.Controls.Find("DeleteSaveMissionButton", true)
+                .OfType<Button>()
+                .FirstOrDefault();
+            if (deleteSaveMissionButton != null)
+            {
+                deleteSaveMissionButton.Visible = installedSaveMissionEntry?.InstalledFiles.Count > 0;
+            }
+
+            var deleteSomeSaveMissionButton = completionPanel.Controls.Find("DeleteSomeSaveMissionButton", true)
+                .OfType<Button>()
+                .FirstOrDefault();
+            if (deleteSomeSaveMissionButton != null)
+            {
+                deleteSomeSaveMissionButton.Visible = _selectedModManifest?.NormalizedType == "savesandmissions"
+                    && (installedSaveMissionEntry?.InstalledFiles.Count ?? 0) > 1;
             }
 
             var completionTitle = completionPanel.Controls.OfType<Label>().FirstOrDefault(label => label.Name == "CompletionTitle");
@@ -722,14 +753,24 @@ public partial class MainForm : Form
                 return;
             }
 
-            if (_selectedModManifest.NormalizedType == "savesandmissions")
+            if (IsSaveMissionPackage)
             {
-                DeleteManifestEntries(_selectedModManifest);
-                if (!_isInstallingOptionalPackage)
+                if (!_isSaveMissionStepActive)
                 {
-                    GoToStep(WizardStep.Step4);
+                    if (!PrepareSaveMissionStep())
+                    {
+                        return;
+                    }
+
+                    if (!_isInstallingOptionalPackage)
+                    {
+                        GoToStep(WizardStep.Step5);
+                    }
+
+                    return;
                 }
-                await InstallSaveOrDyomPackageAsync(_selectedModPayloadPath, _selectedModName, _selectedModManifest);
+
+                await InstallSelectedSaveMissionFileAsync();
                 return;
             }
 

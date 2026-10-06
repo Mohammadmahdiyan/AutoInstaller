@@ -42,8 +42,13 @@
       "description": "Install multiple selected vehicle, skin, or weapon assets."
     },
     {
+      "name": "SaveAndMission",
+      "aliases": ["SAM"],
+      "description": "Install one save or mission file into a selected slot."
+    },
+    {
       "name": "SavesAndMissions",
-      "aliases": ["SAM", "SaveAndMission"],
+      "aliases": ["SMS"],
       "description": "Install save or mission files."
     },
     {

@@ -34,8 +34,10 @@ public sealed class ModsynValidatorTests
         AssertNormalizedType("VSS", "VehiclesAndSkinsAndWeapons");
         AssertNormalizedType("VehicleAndSkinsAndWeapons", "VehiclesAndSkinsAndWeapons");
         AssertNormalizedType("VehiclesAndSkinsAndWeapons", "VehiclesAndSkinsAndWeapons");
-        AssertNormalizedType("SAM", "SavesAndMissions");
-        AssertNormalizedType("SaveAndMission", "SavesAndMissions");
+        AssertNormalizedType("SaveAndMission", "SaveAndMission");
+        AssertNormalizedType("SavesAndMissions", "SavesAndMissions");
+        AssertNormalizedType("SAM", "SaveAndMission");
+        AssertNormalizedType("SMS", "SavesAndMissions");
         AssertNormalizedType("DSL", "MissionDsl");
     }
 

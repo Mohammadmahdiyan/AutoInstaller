@@ -795,7 +795,18 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step5:
                 _sidebarPreviousButton.Enabled = true;
-                if (IsMultiAssetModelMode())
+                if (_isSaveMissionStepActive)
+                {
+                    _sidebarNextButton.Enabled = _selectedSaveMissionSlot.HasValue;
+                    _sidebarNextButton.Text = _selectedModManifest?.NormalizedType == "savesandmissions"
+                        && _saveMissionFileIndex + 1 < _saveMissionPackageFiles.Count
+                            ? string.Format(
+                                _localizationService.GetString("NextModelProgress", "Next ({0}/{1})"),
+                                _saveMissionFileIndex + 1,
+                                _saveMissionPackageFiles.Count)
+                            : _localizationService.GetString("Install", "Install");
+                }
+                else if (IsMultiAssetModelMode())
                 {
                     var currentModel = _multiSourceModels[_multiIndex];
                     var canContinueWithoutMapping = currentModel.Status is GtaSaModManager.Models.SourceModelStatus.KeepOriginal or GtaSaModManager.Models.SourceModelStatus.Skipped;
@@ -964,6 +975,24 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step5)
         {
+            if (_isSaveMissionStepActive)
+            {
+                if (_saveMissionFileIndex > 0)
+                {
+                    _saveMissionFileIndex--;
+                    _selectedSaveMissionSlot = null;
+                    RefreshSaveMissionStep();
+                    UpdateSidebarState();
+                }
+                else
+                {
+                    _isSaveMissionStepActive = false;
+                    NavigateToStep(WizardStep.Step3);
+                }
+
+                return;
+            }
+
             if (IsMultiAssetModelMode())
             {
                 if (_multiIndex > 0)
@@ -1039,7 +1068,14 @@ public partial class MainForm : Form
                     }
                     break;
                 case WizardStep.Step5:
-                    if (IsMultiAssetModelMode())
+                    if (_isSaveMissionStepActive)
+                    {
+                        if (_selectedSaveMissionSlot.HasValue)
+                        {
+                            await InstallSelectedModAsync();
+                        }
+                    }
+                    else if (IsMultiAssetModelMode())
                     {
                         await AdvanceMultiAssetModelAsync();
                     }

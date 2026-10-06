@@ -72,11 +72,24 @@ public partial class MainForm : Form
     private Label? _globalLoadingLabel;
     private Label? _globalLoadingSpinnerLabel;
     private readonly System.Windows.Forms.Timer _loadingSpinnerTimer = new();
+    private readonly System.Windows.Forms.Timer _saveMissionActiveLabelTimer = new();
+    private Label? _saveMissionActiveLabel;
+    private Point _saveMissionActiveLabelTargetLocation;
+    private Point _saveMissionActiveLabelStartLocation;
+    private Color _saveMissionActiveLabelStartColor;
+    private Color _saveMissionActiveLabelTargetColor;
+    private int _saveMissionActiveLabelFrame;
     private float _loadingSpinnerAngle;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<SourceModel> _multiSourceModels = new();
+    private readonly List<SaveMissionSourceFile> _saveMissionPackageFiles = new();
+    private readonly List<string> _saveMissionInstalledFiles = new();
+    private readonly List<RadioButton> _saveMissionSlotButtons = new();
     private int _multiIndex;
+    private int _saveMissionFileIndex;
+    private int? _selectedSaveMissionSlot;
+    private bool _isSaveMissionStepActive;
     private bool _isUpdatingMultiAssetTabs;
     private Dictionary<string, List<string>> _step5OccupiedAssetFolders = new(StringComparer.OrdinalIgnoreCase);
     private string _step5OccupiedScanKey = string.Empty;
@@ -109,9 +122,14 @@ public partial class MainForm : Form
         Step6
     }
 
+    private sealed record SaveMissionSourceFile(string Path, bool IsMission);
+
     public MainForm()
     {
         InitializeComponent();
+        _saveMissionActiveLabelTimer.Interval = 15;
+        _saveMissionActiveLabelTimer.Tick += (_, _) => AnimateSaveMissionActiveLabel();
+        FormClosed += (_, _) => _saveMissionActiveLabelTimer.Dispose();
         _settings = _settingsService.Load();
         SyncCachedGameDataFromFilesystem();
 

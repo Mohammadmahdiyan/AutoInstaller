@@ -208,6 +208,155 @@ public partial class MainForm : Form
         layout.Controls.Add(multiAssetActions, 0, 4);
         layout.Controls.Add(gallery, 0, 5);
         panel.Controls.Add(layout);
+
+        var saveMissionPanel = new Panel
+        {
+            Name = "SaveMissionSlotPanel",
+            Dock = DockStyle.Fill,
+            Padding = new Padding(8),
+            BackColor = Color.White,
+            Visible = false
+        };
+        var saveMissionLayout = new TableLayoutPanel
+        {
+            Name = "SaveMissionSlotLayout",
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 4,
+            Margin = new Padding(0),
+            Padding = new Padding(0)
+        };
+        saveMissionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        var saveMissionHeader = new FlowLayoutPanel
+        {
+            Name = "SaveMissionHeader",
+            Dock = DockStyle.Fill,
+            AutoSize = true,
+            WrapContents = true,
+            FlowDirection = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight,
+            Margin = new Padding(0, 0, 0, 8)
+        };
+        var saveMissionTitle = new Label
+        {
+            Name = "SaveMissionTitle",
+            Text = _localizationService.GetString("SelectItem", "Select Item"),
+            AutoSize = true,
+            Font = new Font("Segoe UI", 18F, FontStyle.Bold),
+            Margin = new Padding(0, 4, 12, 4)
+        };
+        var selectedSlotBadge = new Label
+        {
+            Name = "SaveMissionSelectedSlotBadge",
+            Text = "0",
+            TextAlign = ContentAlignment.MiddleCenter,
+            Size = new Size(34, 30),
+            Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+            Margin = new Padding(0, 4, 12, 4),
+            BackColor = Color.FromArgb(12, 15, 19),
+            ForeColor = Color.FromArgb(133, 141, 153),
+            BorderStyle = BorderStyle.FixedSingle
+        };
+        var saveMissionStatusButton = new Button
+        {
+            Name = "SaveMissionStatusButton",
+            Text = _localizationService.GetString("MultiAssetReviewButton", "Mod Status"),
+            AutoSize = true,
+            Height = 34,
+            Visible = false,
+            Margin = new Padding(0, 0, 8, 4)
+        };
+        saveMissionStatusButton.Click += (_, _) => ShowSaveMissionStatus();
+        saveMissionHeader.Controls.Add(saveMissionTitle);
+        saveMissionHeader.Controls.Add(selectedSlotBadge);
+        saveMissionHeader.Controls.Add(saveMissionStatusButton);
+
+        var saveMissionSourceLabel = new Label
+        {
+            Name = "SaveMissionSourceLabel",
+            AutoSize = true,
+            Font = new Font("Segoe UI", 10F),
+            Margin = new Padding(0, 0, 0, 10)
+        };
+        _saveMissionActiveLabel = new Label
+        {
+            Name = "SaveMissionActiveModLabel",
+            AutoSize = true,
+            MaximumSize = new Size(760, 0),
+            Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(91, 103, 124),
+            Margin = new Padding(0, 0, 0, 6),
+            Visible = false
+        };
+        var saveMissionSlots = new TableLayoutPanel
+        {
+            Name = "SaveMissionSlots",
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 8,
+            GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
+            Margin = new Padding(0),
+            Padding = new Padding(0)
+        };
+        saveMissionSlots.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        saveMissionSlots.RowStyles.Clear();
+        for (var row = 0; row < 8; row++)
+        {
+            saveMissionSlots.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
+        }
+
+        _saveMissionSlotButtons.Clear();
+        for (var slot = 1; slot <= 8; slot++)
+        {
+            var slotButton = new RadioButton
+            {
+                Name = "SaveMissionSlot" + slot,
+                Appearance = Appearance.Button,
+                AutoSize = false,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Padding = new Padding(18, 6, 14, 6),
+                Margin = new Padding(0, 0, 0, 1),
+                Tag = slot,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10F, FontStyle.Regular),
+                BackColor = Color.FromArgb(18, 21, 26),
+                ForeColor = Color.FromArgb(223, 227, 232),
+                UseVisualStyleBackColor = false
+            };
+            slotButton.FlatAppearance.BorderColor = Color.FromArgb(39, 44, 52);
+            slotButton.FlatAppearance.BorderSize = 1;
+            slotButton.CheckedChanged += (_, _) =>
+            {
+                if (slotButton.Checked && slotButton.Tag is int selectedSlot)
+                {
+                    _selectedSaveMissionSlot = selectedSlot;
+                    if (saveMissionPanel.Controls.Find("SaveMissionSelectedSlotBadge", true).FirstOrDefault() is Label badge)
+                    {
+                        badge.Text = selectedSlot.ToString();
+                    }
+
+                    UpdateSaveMissionActiveLabel(selectedSlot);
+                    RefreshSaveMissionSlotAppearance();
+                    UpdateSidebarState();
+                }
+            };
+            _saveMissionSlotButtons.Add(slotButton);
+            saveMissionSlots.Controls.Add(slotButton, 0, slot - 1);
+        }
+
+        saveMissionLayout.Controls.Add(saveMissionHeader, 0, 0);
+        saveMissionLayout.Controls.Add(_saveMissionActiveLabel, 0, 1);
+        saveMissionLayout.Controls.Add(saveMissionSourceLabel, 0, 2);
+        saveMissionLayout.Controls.Add(saveMissionSlots, 0, 3);
+        saveMissionPanel.Controls.Add(saveMissionLayout);
+        panel.Controls.Add(saveMissionPanel);
+        saveMissionPanel.BringToFront();
         return panel;
     }
 

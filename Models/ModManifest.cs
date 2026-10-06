@@ -111,7 +111,8 @@ public class ModManifest
                 "putandreplaces" or "prs" => "putandreplaces",
                 "vehicleandskinandweapon" or "vsw" => "vehicleandskinandweapon",
                 "vehiclesandskinsandweapons" or "vehicleandskinsandweapons" or "vss" => "vehiclesandskinsandweapons",
-                "saveandmission" or "savesandmissions" or "sam" => "savesandmissions",
+                "saveandmission" or "sam" => "saveandmission",
+                "savesandmissions" or "sms" => "savesandmissions",
                 "missiondsl" or "dsl" => "missiondsl",
                 _ => normalized
             };

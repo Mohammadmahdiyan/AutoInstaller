@@ -305,7 +305,10 @@ public class ModLoaderService
         string gamePath,
         string modName,
         string modType,
-        IEnumerable<string> installedFiles)
+        IEnumerable<string> installedFiles,
+        string? installedDestination = null,
+        bool mergeExistingFiles = false,
+        string? sourcePackagePath = null)
     {
         var manifestPath = GetGameInstallationsManifestPath(gamePath);
         if (string.IsNullOrWhiteSpace(manifestPath))
@@ -315,19 +318,30 @@ public class ModLoaderService
 
         var manifest = LoadInstallationManifest(manifestPath);
         var modId = string.IsNullOrWhiteSpace(modName) ? Guid.NewGuid().ToString("N") : modName;
+        var existingEntries = manifest.Entries
+            .Where(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.Type, modType, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var filesToRecord = (mergeExistingFiles
+                ? existingEntries.SelectMany(entry => entry.InstalledFiles ?? new List<string>())
+                : Enumerable.Empty<string>())
+            .Concat(installedFiles)
+            .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
         manifest.Entries.RemoveAll(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        var userFilesRoot = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "GTA San Andreas User Files");
         manifest.Entries.Add(new InstallationManifestEntry
         {
             ModId = modId,
             Type = modType,
-            InstalledDestination = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "GTA San Andreas User Files",
-                "DSL"),
-            InstalledFiles = installedFiles
-                .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList()
+            SourcePackagePath = sourcePackagePath ?? existingEntries.LastOrDefault()?.SourcePackagePath ?? string.Empty,
+            InstalledDestination = installedDestination ?? (string.Equals(modType, "missiondsl", StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(userFilesRoot, "DSL")
+                : userFilesRoot),
+            InstalledFiles = filesToRecord
         });
         SaveInstallationManifest(manifestPath, manifest);
     }
@@ -443,9 +457,9 @@ public class ModLoaderService
         var normalizedType = (modType ?? string.Empty).Trim();
         var normalizedTypeLower = normalizedType.ToLowerInvariant();
 
-        if (normalizedTypeLower == "savesandmissions")
+        if (normalizedTypeLower is "saveandmission" or "savesandmissions")
         {
-            return TryUninstallUserFilesInstall(modId);
+            return TryUninstallSaveMissionInstall(gamePath, modId);
         }
 
         if (normalizedTypeLower == "missiondsl")
@@ -558,6 +572,86 @@ public class ModLoaderService
             && string.Equals(item.Type, "missiondsl", StringComparison.OrdinalIgnoreCase));
         SaveInstallationManifest(manifestPath, manifest);
         return true;
+    }
+
+    private static bool TryUninstallSaveMissionInstall(string? gamePath, string modId)
+    {
+        if (!string.IsNullOrWhiteSpace(gamePath) && Directory.Exists(gamePath))
+        {
+            var manifestPath = GetGameInstallationsManifestPath(gamePath);
+            var manifest = LoadInstallationManifest(manifestPath);
+            var entry = manifest.Entries.LastOrDefault(item =>
+                string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase)
+                && item.Type is "saveandmission" or "savesandmissions");
+            if (entry != null)
+            {
+                foreach (var file in entry.InstalledFiles ?? new List<string>())
+                {
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                    }
+                }
+
+                manifest.Entries.RemoveAll(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase)
+                    && item.Type is "saveandmission" or "savesandmissions");
+                SaveInstallationManifest(manifestPath, manifest);
+                return true;
+            }
+        }
+
+        return TryUninstallUserFilesInstall(modId);
+    }
+
+    public static bool RemoveSelectedUserFilesInstallationFiles(
+        string gamePath,
+        string modId,
+        IEnumerable<string> selectedFiles)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || !Directory.Exists(gamePath))
+        {
+            return false;
+        }
+
+        ArgumentNullException.ThrowIfNull(selectedFiles);
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        var manifest = LoadInstallationManifest(manifestPath);
+        var entry = manifest.Entries.LastOrDefault(item =>
+            string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase)
+            && item.Type is "saveandmission" or "savesandmissions");
+        if (entry == null)
+        {
+            return false;
+        }
+
+        var installedFiles = (entry.InstalledFiles ?? new List<string>())
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var filesToRemove = selectedFiles
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .Where(installedFiles.Contains)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var file in filesToRemove)
+        {
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+        }
+
+        entry.InstalledFiles = installedFiles
+            .Where(path => !filesToRemove.Contains(path) && File.Exists(path))
+            .ToList();
+        if (entry.InstalledFiles.Count == 0)
+        {
+            manifest.Entries.RemoveAll(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        SaveInstallationManifest(manifestPath, manifest);
+        return filesToRemove.Count > 0;
     }
 
     public static void ClearDirectoryContents(string directoryPath)

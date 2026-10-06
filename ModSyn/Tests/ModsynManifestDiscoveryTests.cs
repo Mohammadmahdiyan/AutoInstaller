@@ -148,8 +148,10 @@ public sealed class ModsynManifestDiscoveryTests
             ("VSS", "VehiclesAndSkinsAndWeapons"),
             ("VehicleAndSkinsAndWeapons", "VehiclesAndSkinsAndWeapons"),
             ("VehiclesAndSkinsAndWeapons", "VehiclesAndSkinsAndWeapons"),
+            ("SaveAndMission", "SaveAndMission"),
             ("SavesAndMissions", "SavesAndMissions"),
-            ("SAM", "SavesAndMissions"),
+            ("SAM", "SaveAndMission"),
+            ("SMS", "SavesAndMissions"),
             ("MissionDsl", "MissionDsl"),
             ("DSL", "MissionDsl")
         };
@@ -593,6 +595,99 @@ public sealed class ModsynManifestDiscoveryTests
         {
             Directory.Delete(gameFolder, recursive: true);
             Directory.Delete(Path.GetDirectoryName(Path.GetDirectoryName(installedFile)!)!, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void SaveMissionInstallation_MergesSlotsAndUninstallsOnlyRecordedFiles()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynSaveMission-" + Guid.NewGuid().ToString("N"));
+        var userFilesRoot = Path.Combine(gameFolder, "Documents", "GTA San Andreas User Files");
+        var firstSlot = Path.Combine(userFilesRoot, "GTASAsf6.b");
+        var secondSlot = Path.Combine(userFilesRoot, "DYOM1.dat");
+        var unrelatedSlot = Path.Combine(userFilesRoot, "GTASAsf1.b");
+        Directory.CreateDirectory(userFilesRoot);
+        Directory.CreateDirectory(gameFolder);
+        File.WriteAllText(firstSlot, "save");
+        File.WriteAllText(secondSlot, "mission");
+        File.WriteAllText(unrelatedSlot, "unrelated");
+
+        try
+        {
+            ModLoaderService.RecordUserFilesInstallation(
+                gameFolder,
+                "Campaign Pack",
+                "savesandmissions",
+                new[] { firstSlot },
+                userFilesRoot,
+                sourcePackagePath: Path.Combine(gameFolder, "Campaign Pack"));
+            ModLoaderService.RecordUserFilesInstallation(
+                gameFolder,
+                "Campaign Pack",
+                "savesandmissions",
+                new[] { secondSlot },
+                userFilesRoot,
+                mergeExistingFiles: true);
+
+            var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(gameFolder);
+            var entry = ModLoaderService.LoadInstallationManifest(manifestPath).Entries.Single();
+            CollectionAssert.AreEquivalent(new[] { firstSlot, secondSlot }, entry.InstalledFiles);
+            Assert.AreEqual(Path.Combine(gameFolder, "Campaign Pack"), entry.SourcePackagePath);
+
+            Assert.IsTrue(ModLoaderService.TryUninstallByModId(
+                "Campaign Pack",
+                "savesandmissions",
+                installedDestination: null,
+                gamePath: gameFolder));
+
+            Assert.IsFalse(File.Exists(firstSlot));
+            Assert.IsFalse(File.Exists(secondSlot));
+            Assert.IsTrue(File.Exists(unrelatedSlot));
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void SaveMissionNameReader_ReadsNameFromGtaSaveHeader()
+    {
+        var savePath = Path.Combine(Path.GetTempPath(), "ModsynSaveName-" + Guid.NewGuid().ToString("N") + ".b");
+        var bytes = new byte[32];
+        "BLOCK"u8.CopyTo(bytes);
+        bytes[8] = (byte)'5';
+        System.Text.Encoding.ASCII.GetBytes("Big Smoke").CopyTo(bytes, 9);
+
+        try
+        {
+            File.WriteAllBytes(savePath, bytes);
+
+            Assert.AreEqual("Big Smoke", GtaSaModManager.Services.SaveMissionNameReader.TryReadGtaSaveName(savePath));
+        }
+        finally
+        {
+            File.Delete(savePath);
+        }
+    }
+
+    [TestMethod]
+    public void SaveMissionNameReader_ReadsNameFromDyomMissionHeader()
+    {
+        var missionPath = Path.Combine(Path.GetTempPath(), "ModsynMissionName-" + Guid.NewGuid().ToString("N") + ".dat");
+        var bytes = new byte[64];
+        new byte[] { 0xFC, 0xFF, 0xFF, 0xFF }.CopyTo(bytes, 0);
+        System.Text.Encoding.ASCII.GetBytes("Kill The Johnsons Mother").CopyTo(bytes, 4);
+
+        try
+        {
+            File.WriteAllBytes(missionPath, bytes);
+
+            Assert.AreEqual("Kill The Johnsons Mother", GtaSaModManager.Services.SaveMissionNameReader.TryReadDyomMissionName(missionPath));
+        }
+        finally
+        {
+            File.Delete(missionPath);
         }
     }
 
