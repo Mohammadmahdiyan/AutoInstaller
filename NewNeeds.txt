@@ -44,6 +44,7 @@ Forms\DeleteSomeModUi\DeleteSomeModUi.html
     عکس و گیف و ویدیو مد برای از پوشه مد لود کنه نه از پوشه بازی 
     ادرس مد در installing.json هست
 )
+---------------- New Need For Project ----------------
 1. میخام optional رو توضیح بدم
 بعضی از مد هاست که برای بهتر کار کردن مد یک یا چند مد میخواد نصب کنیم که داخل پوشه مد هست 
 که اسمش معمولا هست 
@@ -153,10 +154,10 @@ delete => مد رو پاک میکنه فقط
 delete all optionals => تمام optionals هایی که نصب شدن رو پاک میکنه
 delete base mod and all optionals => هم مد و تمام optionals هایی که نصب شدن رو پاک میکنه
 delete some optional => اگر این دکمه زده شد باز باید یک step 5 مخصوص حذف optionals در نظر بگیریم 
-
-delete base mod and delete some optional => 
-
+ظاهرش بازم میخام مثل این فایل باشه
+Forms\DeleteSomeModUi\DeleteSomeModUi.html
+و فکر نکنم بخاد توضیح بدم با زدن دکمه سطل اشغال بعد yes همون optional پاک بشه
+delete base mod and delete some optional => اینم مثل قبلی با این تفاوت که مد رو هم حذف میکنه
 3. یک دکمه میخام در step 1 که کارش این باشه یک مد رندوم رو بیاره
 اینجوری که کلیک میشه بره step 3 و اون ادرس مد توی broswe step 3 باشه
 توی پوشه های base mod یکی رندوم پیدا کنه 
-4. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
