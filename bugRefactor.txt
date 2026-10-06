@@ -44,11 +44,119 @@ Forms\DeleteSomeModUi\DeleteSomeModUi.html
     عکس و گیف و ویدیو مد برای از پوشه مد لود کنه نه از پوشه بازی 
     ادرس مد در installing.json هست
 )
-14. میخام optional رو توضیح بدم
+1. میخام optional رو توضیح بدم
+بعضی از مد هاست که برای بهتر کار کردن مد یک یا چند مد میخواد نصب کنیم که داخل پوشه مد هست 
+که اسمش معمولا هست 
+1.1. optional\
+1.2. (optional)\
+(باید اسمش کوچک بشه بعد برسی بشه)
+مد اصلی که نصب میشه در step 6 اگر optional\ یا (optional)\ اگر این پوشه موجود بود 
+مثلا
+Base Mods Address\Cleo scripts\SA.Project2DFX\
+    optional\
+        modloader\_ESSENTIALS\Open Limit Adjuster2\
+            III.VC.SA.LimitAdjuster.asi
+            III.VC.SA.LimitAdjuster.ini
+        config.modsyn
+    SA.Project2DFX\
+        SALodLights.asi
+        SALodLights.dat
+        SALodLights.ini
+    mod.modsyn
 
-14. میخام optionals رو توضیح بدم
+modsyn در روت
+```modsyn
+mod {
+    type: PIM
+}
+```
+modsyn در optional 
+```modsyn
+mod {
+    type: PGF
+}
+```
+اینطوری نصب میشه 
+Game Address\ 
+    modloader\
+        SA.Project2DFX\
+            SALodLights.asi
+            SALodLights.dat
+            SALodLights.ini
+بعد میره step 6 و باید دکمه داشته باشه نصب optional 
+و با زدن دکمه 
+optional رو بره نصب کنه یعنی بره توی step 4 install و optional رو نصب کنه
+و انتظار دار یم اینطوری نصب بشه 
+Game Address\ 
+    modloader\
+        _ESSENTIALS\
+            Open Limit Adjuster2\
+                III.VC.SA.LimitAdjuster.asi
+                III.VC.SA.LimitAdjuster.ini
+        SA.Project2DFX\
+            SALodLights.asi
+            SALodLights.dat
+            SALodLights.ini
+و تمام
+و برای حذفش 
+اگر مد نصب بود اون پنجره بیار که میگه مد نصبه میخای چیکار کنی 
+reinstall => دوباره مد رو نصب کنه
+delete => مد رو پاک میکنه فقط
+cancel => بدون هیچ کاری میره step 6
+delete optional => فقط optional رو پاک میکنه
+delete base mod and optional => هم مد و هم optional رو حذف میکنه
 
-15. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
-16. یک دکمه میخام در step 1 که کارش این باشه یک مد رندوم رو بیاره
+
+optional
+2. میخام optionals رو توضیح بدم
+بعضی از مد هاست که برای بهتر کار کردن مد یک یا چند مد میخواد نصب کنیم که داخل پوشه مد هست 
+که اسمش معمولا هست 
+2.1. optionals\
+2.2. (optionals)\
+(باید اسمش کوچک بشه بعد برسی بشه)
+مد اصلی که نصب میشه در step 6 اگر optionals\ یا (optionals)\ اگر این پوشه موجود بود 
+مثلا
+Base Mods Address\proper-hd-models-v3-0_1784061587_504548-01q\
+    Proper HD Models\
+    Optionals\
+        Buy More Properties\
+            ...
+            mod.modsyn
+        coverbyArtemQa146\
+            ...
+            mod.modsyn
+        ECHO\
+            ...
+            mod.modsyn
+        ...
+    Readme (or die).txt
+    mod.modsyn
+
+modsyn در روت
+```modsyn
+mod {
+    type: PIM
+}
+```
+modsyn در optional 
+هرکدوم یک تایپی دارن باید مد اصلی رو که نصب کرد در step 6 یک دکمه باشه نصب optionals
+و با زدنش اینبار step 5 بیاد بالا (step 5 مخصوص optionals) 
+و تک تک پوشه های داخل optionals رو لیست کنه 
+و هر کدوم کلیک شد بره step 4 که نصبش کنه و نره step 6 دوباره بیاد step 5 همینجا و ایتمی که نصب شده رو کمرنگ نشون بده
+و ایتم بعدی به همین صورت step 4 و دوباره بیاد step 5 تا یا تمام پوشه های optionals تموم بشه یا دکمه finish (یک دکمه تحت عنوان اینکه کافیه دیگه نمیخاد ادامه بدی باشه  که اسمش finish باشه)
+
+و برای سناریو حذف 
+اگر مد نصب بود اون پنجره بیار که میگه مد نصبه میخای چیکار کنی 
+reinstall => دوباره مد رو نصب کنه
+cancel => بدون هیچ کاری میره step 6
+delete => مد رو پاک میکنه فقط
+delete all optionals => تمام optionals هایی که نصب شدن رو پاک میکنه
+delete base mod and all optionals => هم مد و تمام optionals هایی که نصب شدن رو پاک میکنه
+delete some optional => اگر این دکمه زده شد باز باید یک step 5 مخصوص حذف optionals در نظر بگیریم 
+
+delete base mod and delete some optional => 
+
+3. یک دکمه میخام در step 1 که کارش این باشه یک مد رندوم رو بیاره
 اینجوری که کلیک میشه بره step 3 و اون ادرس مد توی broswe step 3 باشه
 توی پوشه های base mod یکی رندوم پیدا کنه 
+4. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
