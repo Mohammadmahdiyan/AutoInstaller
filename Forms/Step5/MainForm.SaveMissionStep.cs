@@ -8,6 +8,61 @@ public partial class MainForm
 {
     private bool IsSaveMissionPackage => _selectedModManifest?.NormalizedType is "saveandmission" or "savesandmissions";
 
+    private async Task<bool> PrepareExistingSaveMissionInstallationAsync()
+    {
+        if (_selectedModManifest is null || !IsSaveMissionPackage)
+        {
+            return true;
+        }
+
+        var existingInstallation = ModLoaderService.FindGameInstallationRecord(
+            _selectedGamePath,
+            _selectedModManifest.NormalizedType,
+            _selectedModName,
+            _selectedModPackageRoot);
+        if (existingInstallation is null)
+        {
+            return true;
+        }
+
+        var action = PromptForExistingPutInGameFolderAction(_selectedModName);
+        if (action is not (DialogResult.Yes or DialogResult.No))
+        {
+            return false;
+        }
+
+        GoToStep(WizardStep.Step4);
+        if (!await UninstallByModIdWithProgressAsync(
+                existingInstallation.ModId,
+                _selectedModManifest.NormalizedType,
+                null,
+                _selectedGamePath))
+        {
+            MessageBox.Show(
+                _localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        _isSaveMissionStepActive = false;
+        RefreshModList();
+        if (action == DialogResult.No)
+        {
+            _lastActionWasDelete = true;
+            if (!_isInstallingOptionalPackage)
+            {
+                GoToStep(WizardStep.Step6);
+            }
+
+            return false;
+        }
+
+        _lastActionWasDelete = false;
+        return true;
+    }
+
     private bool PrepareSaveMissionStep()
     {
         _saveMissionPackageFiles.Clear();

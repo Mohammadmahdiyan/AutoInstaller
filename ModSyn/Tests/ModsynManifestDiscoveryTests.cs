@@ -676,6 +676,37 @@ public sealed class ModsynManifestDiscoveryTests
         }
     }
 
+    [DataTestMethod]
+    [DataRow("saveandmission")]
+    [DataRow("savesandmissions")]
+    public void SaveMissionInstallation_UninstallsRecordedFilesForEachType(string modType)
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynSaveMissionUninstall-" + Guid.NewGuid().ToString("N"));
+        var installedFile = Path.Combine(gameFolder, "Documents", "GTA San Andreas User Files", "GTASAsf3.b");
+        Directory.CreateDirectory(Path.GetDirectoryName(installedFile)!);
+        File.WriteAllText(installedFile, "save");
+
+        try
+        {
+            ModLoaderService.RecordUserFilesInstallation(
+                gameFolder,
+                "Single Save Pack",
+                modType,
+                new[] { installedFile });
+
+            Assert.IsTrue(ModLoaderService.TryUninstallByModId(
+                "Single Save Pack",
+                modType,
+                installedDestination: null,
+                gamePath: gameFolder));
+            Assert.IsFalse(File.Exists(installedFile));
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
+        }
+    }
+
     [TestMethod]
     public async Task AddToUserFile_CopiesPackageAndBaseSourcesAndUninstallsRecordedFiles()
     {

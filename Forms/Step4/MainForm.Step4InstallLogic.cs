@@ -757,6 +757,11 @@ public partial class MainForm : Form
             {
                 if (!_isSaveMissionStepActive)
                 {
+                    if (!await PrepareExistingSaveMissionInstallationAsync())
+                    {
+                        return;
+                    }
+
                     if (!PrepareSaveMissionStep())
                     {
                         return;
