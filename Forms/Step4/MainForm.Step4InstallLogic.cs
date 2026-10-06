@@ -255,6 +255,14 @@ public partial class MainForm : Form
         if (step == WizardStep.Step6)
         {
             var completionPanel = _wizardPanels[WizardStep.Step6];
+            var openUserFilesButton = completionPanel.Controls.Find("OpenUserFilesFolderButton", true)
+                .OfType<Button>()
+                .FirstOrDefault();
+            if (openUserFilesButton != null)
+            {
+                openUserFilesButton.Visible = _selectedModManifest?.NormalizedType is "missiondsl" or "saveandmission" or "savesandmissions";
+            }
+
             var completionTitle = completionPanel.Controls.OfType<Label>().FirstOrDefault(label => label.Name == "CompletionTitle");
             var completionDescription = completionPanel.Controls.OfType<Label>().FirstOrDefault(label => label.Name == "CompletionDescription");
             if (completionTitle != null)
@@ -727,6 +735,11 @@ public partial class MainForm : Form
 
             if (_selectedModManifest.NormalizedType == "missiondsl")
             {
+                if (!await PrepareExistingMissionDslInstallationAsync(_selectedModName))
+                {
+                    return;
+                }
+
                 DeleteManifestEntries(_selectedModManifest);
                 if (!_isInstallingOptionalPackage)
                 {
@@ -1194,6 +1207,91 @@ public partial class MainForm : Form
 
         _lastActionWasDelete = false;
         return true;
+    }
+
+    private async Task<bool> PrepareExistingMissionDslInstallationAsync(string modName)
+    {
+        var userFilesDslRoot = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "GTA San Andreas User Files",
+            "DSL");
+        var existingInstallation = ModLoaderService.FindUserFilesInstallation(
+            _selectedGamePath,
+            modName,
+            "missiondsl").Entry;
+        var hasDslContents = Directory.Exists(userFilesDslRoot)
+            && Directory.EnumerateFileSystemEntries(userFilesDslRoot).Any();
+        if (existingInstallation == null && !hasDslContents)
+        {
+            return true;
+        }
+
+        var action = PromptForExistingPutInGameFolderAction(modName);
+        if (action is not (DialogResult.Yes or DialogResult.No))
+        {
+            return false;
+        }
+
+        GoToStep(WizardStep.Step4);
+        var uninstallSucceeded = existingInstallation != null
+            ? await UninstallByModIdWithProgressAsync(modName, "missiondsl", null, _selectedGamePath)
+            : await ClearUntrackedMissionDslInstallationAsync(userFilesDslRoot, modName);
+        if (!uninstallSucceeded)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("UninstallModFailed", "The selected mod could not be uninstalled."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        RefreshModList();
+        if (action == DialogResult.No)
+        {
+            _lastActionWasDelete = true;
+            if (!_isInstallingOptionalPackage)
+            {
+                GoToStep(WizardStep.Step6);
+            }
+
+            return false;
+        }
+
+        _lastActionWasDelete = false;
+        return true;
+    }
+
+    private async Task<bool> ClearUntrackedMissionDslInstallationAsync(string dslRoot, string modName)
+    {
+        var files = Directory.Exists(dslRoot)
+            ? Directory.GetFiles(dslRoot, "*", SearchOption.AllDirectories)
+            : Array.Empty<string>();
+        var title = string.Format(_localizationService.GetString("DeletingMod", "Deleting {0}"), modName);
+        BeginStep4Progress(title, files.Select(path => (path, Path.GetFileName(path))).ToList());
+
+        try
+        {
+            for (var index = 0; index < files.Length; index++)
+            {
+                if (File.Exists(files[index]))
+                {
+                    File.Delete(files[index]);
+                    AddCompletedStep4File(Path.GetFileName(files[index]), index + 1, Math.Max(1, files.Length));
+                }
+
+                await Task.Yield();
+            }
+
+            ModLoaderService.ClearDirectoryContents(dslRoot);
+            CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
+            return true;
+        }
+        catch
+        {
+            FailStep4Progress(_localizationService.GetString("DeleteProgressFailed", "Deletion failed."));
+            throw;
+        }
     }
 
     private InstallationManifestEntry? FindExistingPutInGameFolderInstallation(string packageRoot, string modName)

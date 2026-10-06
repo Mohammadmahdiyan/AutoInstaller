@@ -43,7 +43,7 @@
     },
     {
       "name": "SavesAndMissions",
-      "aliases": ["SAM"],
+      "aliases": ["SAM", "SaveAndMission"],
       "description": "Install save or mission files."
     },
     {

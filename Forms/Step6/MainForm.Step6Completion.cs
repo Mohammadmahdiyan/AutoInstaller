@@ -17,6 +17,14 @@ public partial class MainForm : Form
         var description = new Label { Name = "CompletionDescription", Text = _localizationService.GetString("InstallationComplete", "Installation complete."), AutoSize = true, Font = new Font("Segoe UI", 11F) };
         var countdown = new Label { Name = "CountdownLabel", AutoSize = true, Font = new Font("Segoe UI", 10F) };
         var openButton = new Button { Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
+        var openUserFilesButton = new Button
+        {
+            Name = "OpenUserFilesFolderButton",
+            Text = _localizationService.GetString("OpenUserFilesFolder", "Open GTA San Andreas User Files"),
+            Width = 230,
+            Height = 42,
+            Visible = false
+        };
         var runButton = new Button { Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
         var installMoreButton = new Button { Name = "InstallMoreModsButton", Text = _localizationService.GetString("WannaInstallMoreMods", "Wanna install more mods?"), Width = 210, Height = 42 };
         var gallery = new FlowLayoutPanel
@@ -36,6 +44,17 @@ public partial class MainForm : Form
             {
                 Process.Start(new ProcessStartInfo { FileName = _selectedGamePath, UseShellExecute = true, Verb = "open" });
             }
+        };
+
+        openUserFilesButton.Click += (_, _) =>
+        {
+            var userFilesPath = GetGtaUserFilesDirectory();
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = userFilesPath,
+                UseShellExecute = true,
+                Verb = "open"
+            });
         };
 
         runButton.Click += (_, _) => GameService.LaunchGame(_selectedGamePath);
@@ -59,24 +78,6 @@ public partial class MainForm : Form
             }
         };
 
-        var flow = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.LeftToRight, WrapContents = false };
-        flow.Controls.Add(openButton);
-        flow.Controls.Add(runButton);
-        flow.Controls.Add(installMoreButton);
-
-        panel.Controls.Add(title);
-        panel.Controls.Add(description);
-        panel.Controls.Add(flow);
-        panel.Controls.Add(countdown);
-        panel.Controls.Add(gallery);
-        title.Location = new Point(18, 18);
-        description.Location = new Point(18, 58);
-        flow.Location = new Point(18, 90);
-        countdown.Location = new Point(18, 160);
-        gallery.Location = new Point(18, 190);
-        gallery.Size = new Size(panel.Width - 36, panel.Height - 220);
-        panel.AutoScroll = true;
-
         var optionalHost = new FlowLayoutPanel
         {
             Name = "OptionalInstallHost",
@@ -86,8 +87,56 @@ public partial class MainForm : Form
             Visible = false,
             BackColor = Color.Transparent
         };
-        panel.Controls.Add(optionalHost);
-        optionalHost.Location = new Point(18, 130);
+
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        var openActions = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0)
+        };
+        openActions.Controls.Add(openButton);
+        openActions.Controls.Add(openUserFilesButton);
+
+        var gameActions = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
+            WrapContents = false,
+            Margin = new Padding(0),
+            Padding = new Padding(0)
+        };
+        gameActions.Controls.Add(runButton);
+        gameActions.Controls.Add(installMoreButton);
+
+        var layout = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 7,
+            Padding = new Padding(0),
+            Margin = new Padding(0),
+            BackColor = Color.Transparent
+        };
+        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        layout.Controls.Add(title, 0, 0);
+        layout.Controls.Add(description, 0, 1);
+        layout.Controls.Add(openActions, 0, 2);
+        layout.Controls.Add(gameActions, 0, 3);
+        layout.Controls.Add(optionalHost, 0, 4);
+        layout.Controls.Add(countdown, 0, 5);
+        layout.Controls.Add(gallery, 0, 6);
+        panel.Controls.Add(layout);
+        panel.AutoScroll = false;
         return panel;
     }
 

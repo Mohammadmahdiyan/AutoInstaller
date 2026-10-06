@@ -327,6 +327,25 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void MissionDsl_UsesPackageRootForReadmeAndImagePreviews()
+    {
+        WithPackage("Missions", packageRoot =>
+        {
+            var dslPayload = Path.Combine(packageRoot, "DSL");
+            Directory.CreateDirectory(dslPayload);
+            File.WriteAllText(Path.Combine(packageRoot, "readme.txt"), "instructions");
+            File.WriteAllText(Path.Combine(packageRoot, "gallery1.jpg"), "preview");
+            Write(packageRoot, "mod.modsyn", "mod { type: DSL }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+            var payloadPath = ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest);
+
+            Assert.AreEqual(packageRoot, ModPackageService.GetPreviewDirectory(packageRoot, payloadPath, manifest));
+            Assert.AreEqual(dslPayload, payloadPath);
+        });
+    }
+
+    [TestMethod]
     public void ModsynPackageLoading_UsesConvertedCleoSelectionsAndReplacementEntries()
     {
         WithPackage("package", packageRoot =>
@@ -516,6 +535,64 @@ public sealed class ModsynManifestDiscoveryTests
         finally
         {
             Directory.Delete(gameFolder, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void ModLoaderService_ClearDirectoryContentsKeepsRootAndRemovesNestedEntries()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "ModsynClearDsl-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(Path.Combine(directory, "nested", "deeper"));
+        File.WriteAllText(Path.Combine(directory, "save.dat"), "mission");
+        File.WriteAllText(Path.Combine(directory, "nested", "keep.txt"), "data");
+
+        try
+        {
+            ModLoaderService.ClearDirectoryContents(directory);
+
+            Assert.IsTrue(Directory.Exists(directory));
+            Assert.AreEqual(0, Directory.GetFileSystemEntries(directory).Length);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [TestMethod]
+    public void MissionDslInstallation_IsRecordedInGameInstallationsManifest()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynMissionDslManifest-" + Guid.NewGuid().ToString("N"));
+        var installedFile = Path.Combine(Path.GetTempPath(), "ModsynMissionDslFile-" + Guid.NewGuid().ToString("N"), "DSL", "mission.dat");
+        Directory.CreateDirectory(gameFolder);
+        Directory.CreateDirectory(Path.GetDirectoryName(installedFile)!);
+        File.WriteAllText(installedFile, "mission");
+
+        try
+        {
+            ModLoaderService.RecordUserFilesInstallation(
+                gameFolder,
+                "Missions",
+                "missiondsl",
+                new[] { installedFile });
+
+            var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(gameFolder);
+            var entry = ModLoaderService.LoadInstallationManifest(manifestPath).Entries.Single();
+            var foundInstallation = ModLoaderService.FindUserFilesInstallation(gameFolder, "Renamed Mission Package", "missiondsl");
+
+            Assert.AreEqual("Missions", entry.ModId);
+            Assert.AreEqual("missiondsl", entry.Type);
+            CollectionAssert.AreEqual(new[] { installedFile }, entry.InstalledFiles);
+            Assert.AreEqual(manifestPath, foundInstallation.ManifestPath);
+            Assert.IsNotNull(foundInstallation.Entry);
+            Assert.AreEqual(
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GTA San Andreas User Files", "DSL"),
+                entry.InstalledDestination);
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
+            Directory.Delete(Path.GetDirectoryName(Path.GetDirectoryName(installedFile)!)!, recursive: true);
         }
     }
 

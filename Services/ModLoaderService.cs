@@ -44,6 +44,35 @@ public class ModLoaderService
         return Path.Combine(folder, "installations.json");
     }
 
+    private static string GetExistingUserFilesInstallationsManifestPath()
+    {
+        var userFilesRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GTA San Andreas User Files");
+        return Path.Combine(userFilesRoot, ".zGtaSaModManager", "installations.json");
+    }
+
+    private static void RemoveEmptyLegacyUserFilesManifestDirectory()
+    {
+        var legacyDirectory = Path.GetDirectoryName(GetExistingUserFilesInstallationsManifestPath());
+        if (string.IsNullOrWhiteSpace(legacyDirectory) || !Directory.Exists(legacyDirectory))
+        {
+            return;
+        }
+
+        try
+        {
+            if (!Directory.EnumerateFileSystemEntries(legacyDirectory).Any())
+            {
+                Directory.Delete(legacyDirectory);
+            }
+        }
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
+    }
+
     private static void SetHidden(string path)
     {
         try
@@ -272,9 +301,18 @@ public class ModLoaderService
             .ToList();
     }
 
-    public static void RecordUserFilesInstallation(string modName, string modType, IEnumerable<string> installedFiles)
+    public static void RecordUserFilesInstallation(
+        string gamePath,
+        string modName,
+        string modType,
+        IEnumerable<string> installedFiles)
     {
-        var manifestPath = GetUserFilesInstallationsManifestPath();
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return;
+        }
+
         var manifest = LoadInstallationManifest(manifestPath);
         var modId = string.IsNullOrWhiteSpace(modName) ? Guid.NewGuid().ToString("N") : modName;
         manifest.Entries.RemoveAll(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase));
@@ -282,12 +320,53 @@ public class ModLoaderService
         {
             ModId = modId,
             Type = modType,
+            InstalledDestination = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "GTA San Andreas User Files",
+                "DSL"),
             InstalledFiles = installedFiles
                 .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList()
         });
         SaveInstallationManifest(manifestPath, manifest);
+    }
+
+    public static (string ManifestPath, InstallationManifestEntry? Entry) FindUserFilesInstallation(
+        string gamePath,
+        string modId,
+        string modType)
+    {
+        var missionDslDestination = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "GTA San Andreas User Files",
+            "DSL");
+        var manifestPaths = new[]
+        {
+            GetGameInstallationsManifestPath(gamePath),
+            GetExistingUserFilesInstallationsManifestPath()
+        };
+
+        foreach (var manifestPath in manifestPaths.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            var entry = LoadInstallationManifest(manifestPath).Entries.LastOrDefault(item =>
+                string.Equals(item.Type, modType, StringComparison.OrdinalIgnoreCase)
+                && (string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(modType, "missiondsl", StringComparison.OrdinalIgnoreCase)
+                        && !string.IsNullOrWhiteSpace(item.InstalledDestination)
+                        && string.Equals(
+                            Path.GetFullPath(item.InstalledDestination),
+                            Path.GetFullPath(missionDslDestination),
+                            StringComparison.OrdinalIgnoreCase)));
+            if (entry != null)
+            {
+                RemoveEmptyLegacyUserFilesManifestDirectory();
+                return (manifestPath, entry);
+            }
+        }
+
+        RemoveEmptyLegacyUserFilesManifestDirectory();
+        return (string.Empty, null);
     }
 
     public static bool RemoveInstalledRecord(string modName, string? installedDestination = null)
@@ -364,9 +443,14 @@ public class ModLoaderService
         var normalizedType = (modType ?? string.Empty).Trim();
         var normalizedTypeLower = normalizedType.ToLowerInvariant();
 
-        if (normalizedTypeLower is "savesandmissions" or "missiondsl")
+        if (normalizedTypeLower == "savesandmissions")
         {
             return TryUninstallUserFilesInstall(modId);
+        }
+
+        if (normalizedTypeLower == "missiondsl")
+        {
+            return TryUninstallMissionDslInstall(gamePath, modId);
         }
 
         if (normalizedTypeLower == "putinmodloader")
@@ -430,9 +514,70 @@ public class ModLoaderService
             }
         }
 
+        if (string.Equals(entry.Type, "missiondsl", StringComparison.OrdinalIgnoreCase))
+        {
+            var userFilesRoot = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "GTA San Andreas User Files");
+            ClearDirectoryContents(Path.Combine(userFilesRoot, "DSL"));
+        }
+
         manifest.Entries.RemoveAll(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
         SaveInstallationManifest(manifestPath, manifest);
         return true;
+    }
+
+    private static bool TryUninstallMissionDslInstall(string? gamePath, string modId)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || !Directory.Exists(gamePath))
+        {
+            return TryUninstallUserFilesInstall(modId);
+        }
+
+        var (manifestPath, entry) = FindUserFilesInstallation(gamePath, modId, "missiondsl");
+        if (entry == null || string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return false;
+        }
+
+        foreach (var file in entry.InstalledFiles ?? new List<string>())
+        {
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+        }
+
+        var userFilesRoot = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "GTA San Andreas User Files");
+        ClearDirectoryContents(Path.Combine(userFilesRoot, "DSL"));
+
+        var manifest = LoadInstallationManifest(manifestPath);
+        manifest.Entries.RemoveAll(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(item.Type, "missiondsl", StringComparison.OrdinalIgnoreCase));
+        SaveInstallationManifest(manifestPath, manifest);
+        return true;
+    }
+
+    public static void ClearDirectoryContents(string directoryPath)
+    {
+        if (string.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath))
+        {
+            return;
+        }
+
+        foreach (var entry in Directory.GetFileSystemEntries(directoryPath))
+        {
+            if (Directory.Exists(entry))
+            {
+                Directory.Delete(entry, recursive: true);
+            }
+            else
+            {
+                File.Delete(entry);
+            }
+        }
     }
 
     public static bool TryUninstallModFolder(string modFolderPath)

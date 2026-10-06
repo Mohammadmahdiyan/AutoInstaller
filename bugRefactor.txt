@@ -1,11 +1,4 @@
-11. میخام منطق نصب تایپ MissionDSL رو بگم خیلی راحت در این ادرس
-Documents\GTA San Andreas User Files\DSL\
-محتویات پوشه dsl رو تمامش رو حذف میکنی و سیو جدید را میریزی داخل dsl
-و اگر پوشه dsl وجود نداشت باید به این ادرس اول رجوع کنی
-Base Mods Address\Scripts\DYOM\DYOM v8.1\
-و این رو اول نصب کن 
-بعد مد رو نصب میکنیم
-11. میخام منطق نصب تایپ SaveAndMission رو بگم 
+12. میخام منطق نصب تایپ SaveAndMission رو بگم 
 این ادرس
 Documents\GTA San Andreas User Files\
 ولی چند حالت داره برنامه باید خودش خودکار تشخیص بده 

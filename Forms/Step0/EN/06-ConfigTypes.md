@@ -143,7 +143,7 @@ Accepted values: `SavesAndMissions`, `SAM`.
 
 ## MissionDsl
 
-Installs the DYOM dependency, clears the existing `DSL` folder under `Documents\GTA San Andreas User Files`, then copies the package contents there while excluding metadata, README, and media files. The DYOM dependency must be present in the Base Mods folder.
+If `Documents\GTA San Andreas User Files\DSL` does not exist, installs the DYOM v8.1 dependency from `Base Mods\Scripts\DYOM\DYOM v8.1` into `Documents\GTA San Andreas User Files\DYOM v8.1`. If that dependency source is missing, installation stops with a warning. It then replaces the entire `DSL` folder with the package contents, excluding metadata, README, and media files.
 
 Accepted values: `MissionDsl`, `DSL`.
 

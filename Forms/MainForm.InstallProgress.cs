@@ -346,13 +346,20 @@ public partial class MainForm
         string? gamePath)
     {
         var normalizedType = (modType ?? string.Empty).Trim().ToLowerInvariant();
-        var manifestPath = normalizedType is "savesandmissions" or "missiondsl"
+        var userFilesInstallation = normalizedType == "missiondsl"
+            ? ModLoaderService.FindUserFilesInstallation(gamePath ?? string.Empty, modId, "missiondsl")
+            : (string.Empty, null);
+        var manifestPath = normalizedType == "missiondsl"
+            ? userFilesInstallation.Item1
+            : normalizedType == "savesandmissions"
             ? ModLoaderService.GetUserFilesInstallationsManifestPath()
             : !string.IsNullOrWhiteSpace(gamePath)
                 ? ModLoaderService.GetGameInstallationsManifestPath(gamePath)
                 : string.Empty;
-        var entry = ModLoaderService.LoadInstallationManifest(manifestPath).Entries
-            .FirstOrDefault(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        var entry = normalizedType == "missiondsl"
+            ? userFilesInstallation.Item2
+            : ModLoaderService.LoadInstallationManifest(manifestPath).Entries
+                .FirstOrDefault(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
         var files = (entry?.InstalledFiles ?? new List<string>()).Where(File.Exists).ToList();
         var title = string.Format(_localizationService.GetString("DeletingMod", "Deleting {0}"), modId);
         BeginStep4Progress(title, files

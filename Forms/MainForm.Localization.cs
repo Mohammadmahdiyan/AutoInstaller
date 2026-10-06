@@ -238,6 +238,9 @@ public partial class MainForm : Form
                 case "Step4ReadmeButton":
                     button.Text = _localizationService.GetString("OpenReadmeFile", "Open README.txt");
                     return;
+                case "OpenUserFilesFolderButton":
+                    button.Text = _localizationService.GetString("OpenUserFilesFolder", "Open GTA San Andreas User Files");
+                    return;
             }
         }
 

@@ -497,52 +497,67 @@ public partial class MainForm : Form
     private async Task InstallMissionDslPackageAsync(string packageRoot, string modName)
     {
         var userFilesRoot = GetGtaUserFilesDirectory();
-        var dyomDependencyRoot = Path.Combine(_settings.ModSourceFolder ?? _selectedGamePath, "Scripts", "DYOM", "DYOM v8.2");
-        if (!Directory.Exists(dyomDependencyRoot))
+        var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        var dslRoot = Path.Combine(userFilesRoot, "DSL");
+        var installDyomDependency = !Directory.Exists(dslRoot);
+        var dyomDependencyRoot = Path.Combine(baseModsFolder, "Scripts", "DYOM", "DYOM v8.1");
+        if (installDyomDependency && !Directory.Exists(dyomDependencyRoot))
         {
-            MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "DYOM dependency was not found in the Base Mods folder."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(
+                "DYOM v8.1 dependency was not found in the Base Mods folder: " + dyomDependencyRoot,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
             return;
         }
 
-        var dependencyFiles = Directory.GetFiles(dyomDependencyRoot, "*", SearchOption.AllDirectories).ToList();
         var packageFiles = Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)
             .Where(file => !ModPackageService.IsMetadataOrNonInstallableFile(file, packageRoot))
             .ToList();
+        if (packageFiles.Count == 0)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("ModSourceInvalid", "The selected mod package does not contain installable files."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return;
+        }
+
+        var dependencyFiles = installDyomDependency
+            ? Directory.GetFiles(dyomDependencyRoot, "*", SearchOption.AllDirectories).ToList()
+            : new List<string>();
         var progressFiles = dependencyFiles
-            .Select(path => (path, Path.Combine("DYOM v8.2", Path.GetRelativePath(dyomDependencyRoot, path))))
+            .Select(path => (path, Path.Combine("DYOM v8.1", Path.GetRelativePath(dyomDependencyRoot, path))))
             .Concat(packageFiles.Select(path => (path, Path.Combine("DSL", Path.GetRelativePath(packageRoot, path)))))
             .ToList();
         var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName;
         BeginStep4Progress(progressTitle, progressFiles);
 
-        var destinationRoot = Path.Combine(userFilesRoot, "DYOM v8.2");
-        if (Directory.Exists(destinationRoot))
+        if (installDyomDependency)
         {
-            Directory.Delete(destinationRoot, true);
+            var dependencyDestination = Path.Combine(userFilesRoot, "DYOM v8.1");
+            if (Directory.Exists(dependencyDestination))
+            {
+                Directory.Delete(dependencyDestination, true);
+            }
+
+            var dependencyDisplayNames = dependencyFiles
+                .Select(path => Path.Combine("DYOM v8.1", Path.GetRelativePath(dyomDependencyRoot, path)))
+                .ToList();
+            await CopyDirectoryWithStep4ProgressAsync(
+                dyomDependencyRoot,
+                dependencyDestination,
+                dependencyFiles,
+                0,
+                dependencyDisplayNames);
         }
 
-        var dependencyDisplayNames = dependencyFiles
-            .Select(path => Path.Combine("DYOM v8.2", Path.GetRelativePath(dyomDependencyRoot, path)))
-            .ToList();
-        await CopyDirectoryWithStep4ProgressAsync(
-            dyomDependencyRoot,
-            destinationRoot,
-            dependencyFiles,
-            0,
-            dependencyDisplayNames);
-
-        var dslRoot = Path.Combine(userFilesRoot, "DSL");
         if (Directory.Exists(dslRoot))
         {
-            foreach (var file in Directory.GetFiles(dslRoot, "*", SearchOption.AllDirectories))
-            {
-                File.Delete(file);
-            }
-
-            foreach (var directory in Directory.GetDirectories(dslRoot, "*", SearchOption.AllDirectories).OrderByDescending(d => d, StringComparer.OrdinalIgnoreCase))
-            {
-                Directory.Delete(directory, true);
-            }
+            Directory.Delete(dslRoot, recursive: true);
         }
 
         Directory.CreateDirectory(dslRoot);
@@ -555,6 +570,11 @@ public partial class MainForm : Form
             packageFiles,
             dependencyFiles.Count,
             packageDisplayNames);
+        ModLoaderService.RecordUserFilesInstallation(
+            _selectedGamePath,
+            modName,
+            "missiondsl",
+            packageFiles.Select(path => Path.Combine(dslRoot, Path.GetRelativePath(packageRoot, path))));
         CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
         GoToStep(WizardStep.Step6);
     }

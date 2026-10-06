@@ -234,6 +234,10 @@ public partial class MainForm : Form
             {
                 _selectedModPayloadPath = selected;
             }
+            var previewRoot = ModPackageService.GetPreviewDirectory(
+                selected,
+                _selectedModPayloadPath,
+                _selectedModManifest);
             _step5PreparedPayloadPath = string.Empty;
             _step5ExistingInstallationDestination = string.Empty;
             _step5PreparationAttempted = false;
@@ -292,15 +296,16 @@ public partial class MainForm : Form
                     await Task.Yield();
                     var packageRoot = _selectedModPackageRoot;
                     var payloadPath = _selectedModPayloadPath;
+                    var mediaRoot = previewRoot;
                     var checkTask = Task.Run(() => (
                         ExistingInstallation: FindExistingAssetInstallation(packageRoot),
-                        ReadmePath: FindReadmeFile(payloadPath),
-                        ImageFiles: FindImageFiles(payloadPath)));
+                        ReadmePath: FindReadmeFile(mediaRoot),
+                        ImageFiles: FindImageFiles(mediaRoot)));
                     await Task.WhenAll(checkTask, Task.Delay(1000));
                     var checkResult = await checkTask;
                     _selectedReadmePath = checkResult.ReadmePath;
                     _selectedImageFiles = checkResult.ImageFiles;
-                    RefreshStep3Images(panel, payloadPath);
+                    RefreshStep3Images(panel, mediaRoot);
                 }
                 catch (Exception ex)
                 {
@@ -319,10 +324,10 @@ public partial class MainForm : Form
             }
             else
             {
-                _selectedReadmePath = FindReadmeFile(_selectedModPayloadPath);
-                _selectedImageFiles = FindImageFiles(_selectedModPayloadPath);
+                _selectedReadmePath = FindReadmeFile(previewRoot);
+                _selectedImageFiles = FindImageFiles(previewRoot);
                 UpdateSidebarState();
-                RefreshStep3Images(panel, _selectedModPayloadPath);
+                RefreshStep3Images(panel, previewRoot);
             }
         };
 

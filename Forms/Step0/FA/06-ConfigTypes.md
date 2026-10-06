@@ -22,7 +22,7 @@
 
 ```text
 <پوشه بازی>\modloader\<نام مود>\
-````
+```
 
 در پکیج‌های معمولی، Payload اولین زیرپوشه مجاز در سطح اصلی پکیج است که به ترتیب حروف الفبا انتخاب می‌شود.
 
@@ -310,15 +310,19 @@ DYOM<number>.dat
 
 ## MissionDsl
 
-ابتدا Dependency مربوط به **DYOM** را نصب می‌کند.
-
-سپس پوشه موجود `DSL` را از مسیر زیر پاک می‌کند:
+اگر پوشه `DSL` در مسیر زیر وجود نداشته باشد، ابتدا Dependency نسخه **DYOM v8.1** را از مسیر پوشه Base Mods نصب می‌کند:
 
 ```text
-Documents\GTA San Andreas User Files
+Base Mods\Scripts\DYOM\DYOM v8.1
 ```
 
-بعد محتویات پکیج را در آن پوشه کپی می‌کند.
+مقصد نصب Dependency:
+
+```text
+Documents\GTA San Andreas User Files\DYOM v8.1
+```
+
+اگر منبع Dependency پیدا نشود، نصب با هشدار متوقف می‌شود. سپس کل پوشه `DSL` در `Documents\GTA San Andreas User Files` جایگزین می‌شود و محتویات پکیج در آن کپی می‌شود.
 
 فایل‌های Metadata، README و فایل‌های رسانه‌ای از این عملیات کپی مستثنی هستند.
 
@@ -338,7 +342,7 @@ Documents\GTA San Andreas User Files
 
 # نکات مهم درباره رفتار سیستم
 
-* اعتبارسنجی `type` در حال حاضر، پس از استانداردسازی، این مقادیر را می‌پذیرد:
+- اعتبارسنجی `type` در حال حاضر، پس از استانداردسازی، این مقادیر را می‌پذیرد:
 
 ```text
 putinmodloader
@@ -353,11 +357,11 @@ savesandmissions
 missiondsl
 ```
 
-* مقدار `VehicleAndSkinsAndWeapons` به نوع **تک‌Asset** تبدیل می‌شود، زیرا فاقد `Vehicles` به‌صورت جمع است.
+- مقدار `VehicleAndSkinsAndWeapons` به نوع **تک‌Asset** تبدیل می‌شود، زیرا فاقد `Vehicles` به‌صورت جمع است.
 
-* در مقابل، `VehiclesAndSkinsAndWeapons` یک نوع مستقل برای **چند Asset** باقی می‌ماند.
+- در مقابل، `VehiclesAndSkinsAndWeapons` یک نوع مستقل برای **چند Asset** باقی می‌ماند.
 
-* اگر `type` وجود نداشته باشد یا خالی باشد، هنگام ساخته‌شدن `ModManifest` مقدار پیش‌فرض آن:
+- اگر `type` وجود نداشته باشد یا خالی باشد، هنگام ساخته‌شدن `ModManifest` مقدار پیش‌فرض آن:
 
 ```text
 putinmodloader
@@ -365,6 +369,6 @@ putinmodloader
 
 خواهد بود.
 
-* با این حال، برای عبور از اعتبارسنجی، یک Manifest غیرخالی **حتماً باید دارای یک `type` از نوع string باشد**.
+- با این حال، برای عبور از اعتبارسنجی، یک Manifest غیرخالی **حتماً باید دارای یک `type` از نوع string باشد**.
 
-* مقدار `conflictCleanup` توسط سیستم خوانده و ذخیره می‌شود، اما در حال حاضر فرآیندهای نصب، دستورهای Cleanup موجود در آن را **به‌صورت خودکار اجرا نمی‌کنند**.
+- مقدار `conflictCleanup` توسط سیستم خوانده و ذخیره می‌شود، اما در حال حاضر فرآیندهای نصب، دستورهای Cleanup موجود در آن را **به‌صورت خودکار اجرا نمی‌کنند**.
