@@ -16,6 +16,7 @@ public static class ModsynCompletionContextDetector
         Root,
         Requirement,
         AddToUserFile,
+        MixedPart,
         Other
     }
 
@@ -41,6 +42,8 @@ public static class ModsynCompletionContextDetector
         public bool ContainsRequirementObjects { get; init; }
 
         public bool ContainsUserFileObjects { get; init; }
+
+        public bool ContainsMixedPartObjects { get; init; }
 
         public string? ArrayPropertyName { get; init; }
 
@@ -138,6 +141,8 @@ public static class ModsynCompletionContextDetector
                     ? ObjectScope.Requirement
                     : current.Kind == ContainerKind.Array && current.ContainsUserFileObjects
                         ? ObjectScope.AddToUserFile
+                        : current.Kind == ContainerKind.Array && current.ContainsMixedPartObjects
+                            ? ObjectScope.MixedPart
                         : current.Kind == ContainerKind.Object
                             && current.State == ObjectState.ExpectingValue
                             && current.PropertyName == "require"
@@ -161,12 +166,17 @@ public static class ModsynCompletionContextDetector
                     && current.State == ObjectState.ExpectingValue
                     && current.Scope == ObjectScope.Root
                     && current.PropertyName == "addToUserFile";
+                var containsMixedPartObjects = current.Kind == ContainerKind.Object
+                    && current.State == ObjectState.ExpectingValue
+                    && current.Scope == ObjectScope.Root
+                    && current.PropertyName == "list";
                 containers.Add(new ContainerFrame
                 {
                     Kind = ContainerKind.Array,
                     Scope = ObjectScope.Other,
                     ContainsRequirementObjects = containsRequirementObjects,
                     ContainsUserFileObjects = containsUserFileObjects,
+                    ContainsMixedPartObjects = containsMixedPartObjects,
                     ArrayPropertyName = current.PropertyName,
                     ArrayItemKinds = propertyDefinition?.ArrayItemKinds ?? Array.Empty<ModsynValueKind>()
                 });
@@ -207,7 +217,7 @@ public static class ModsynCompletionContextDetector
             existingPropertyNames = top.PropertyNames;
             if (top.State == ObjectState.ExpectingValue && top.PropertyName is not null)
             {
-                if (top.Scope == ObjectScope.Root && top.PropertyName == "type")
+                if (top.Scope is ObjectScope.Root or ObjectScope.MixedPart && top.PropertyName == "type")
                 {
                     propertyName = top.PropertyName;
                     return ModsynCompletionContext.TypeValues;
@@ -227,6 +237,7 @@ public static class ModsynCompletionContextDetector
                 ObjectScope.Root => ModsynCompletionContext.RootProperties,
                 ObjectScope.Requirement => ModsynCompletionContext.RequirementProperties,
                 ObjectScope.AddToUserFile => ModsynCompletionContext.AddToUserFileProperties,
+                ObjectScope.MixedPart => ModsynCompletionContext.MixedPartProperties,
                 _ => ModsynCompletionContext.None
             };
         }
@@ -294,6 +305,7 @@ public static class ModsynCompletionContextDetector
             ObjectScope.Root => ModsynLanguageDefinition.RootProperties,
             ObjectScope.Requirement => ModsynLanguageDefinition.RequirementProperties,
             ObjectScope.AddToUserFile => ModsynLanguageDefinition.AddToUserFileProperties,
+            ObjectScope.MixedPart => ModsynLanguageDefinition.MixedPartProperties,
             ObjectScope.Other => ModsynLanguageDefinition.ReplacementProperties,
             _ => null
         };

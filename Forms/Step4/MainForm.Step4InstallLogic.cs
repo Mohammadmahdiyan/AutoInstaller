@@ -213,12 +213,22 @@ public partial class MainForm : Form
 
         _currentStep = step;
 
+        if (step != WizardStep.Step5 && _isDeleteModsStepActive)
+        {
+            // Safety: never leave the delete window flagged active outside Step 5.
+            _isDeleteModsStepActive = false;
+            if (_wizardPanels.TryGetValue(WizardStep.Step5, out var deleteStep5Panel))
+            {
+                ApplyDeleteModsVisibility(deleteStep5Panel, show: false);
+            }
+        }
+
         foreach (var item in _wizardPanels)
         {
             item.Value.Visible = item.Key == step;
         }
 
-        if (step == WizardStep.Step5 && !_isSaveMissionStepActive
+        if (step == WizardStep.Step5 && !_isSaveMissionStepActive && !_isDeleteModsStepActive
             && !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
         {
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
@@ -240,7 +250,11 @@ public partial class MainForm : Form
 
         if (step == WizardStep.Step5)
         {
-            if (_isSaveMissionStepActive)
+            if (_isDeleteModsStepActive)
+            {
+                // The delete window is static; nothing to refresh.
+            }
+            else if (_isSaveMissionStepActive)
             {
                 RefreshSaveMissionStep();
             }
@@ -248,6 +262,11 @@ public partial class MainForm : Form
             {
                 RefreshAssetStep();
             }
+        }
+
+        if (step == WizardStep.Step1)
+        {
+            RefreshStep1DeleteButton();
         }
 
         if (step == WizardStep.Step4)
@@ -268,7 +287,8 @@ public partial class MainForm : Form
                 .FirstOrDefault();
             if (openUserFilesButton != null)
             {
-                openUserFilesButton.Visible = _selectedModManifest?.NormalizedType is "missiondsl" or "saveandmission" or "savesandmissions";
+                openUserFilesButton.Visible = _selectedModManifest?.NormalizedType is "missiondsl" or "saveandmission" or "savesandmissions"
+                    || _selectedModManifest?.MixedParts.Any(part => part.Manifest.NormalizedType is "missiondsl" or "saveandmission" or "savesandmissions") == true;
             }
 
             var installedSaveMissionEntry = _selectedModManifest?.NormalizedType is "saveandmission" or "savesandmissions"
@@ -636,6 +656,18 @@ public partial class MainForm : Form
 
             _selectedModPackageRoot = string.IsNullOrWhiteSpace(_selectedModPackageRoot) ? _selectedModPayloadPath : _selectedModPackageRoot;
             _selectedModManifest ??= ModPackageService.ResolveManifest(_selectedModPackageRoot);
+            if (_isMixedInstallActive)
+            {
+                await InstallCurrentMixedPartAsync();
+                return;
+            }
+
+            if (_selectedModManifest.IsMixedPackage)
+            {
+                await BeginMixedPackageInstallAsync();
+                return;
+            }
+
             var isPutInCleoPackage = _selectedModManifest.NormalizedType == "putincleo";
             var isPutInGameFolderPackage = _selectedModManifest.NormalizedType == "putingamefolder";
             var isPutAndReplacePackage = _selectedModManifest.NormalizedType == "putandreplace";
@@ -757,11 +789,6 @@ public partial class MainForm : Form
             {
                 if (!_isSaveMissionStepActive)
                 {
-                    if (!await PrepareExistingSaveMissionInstallationAsync())
-                    {
-                        return;
-                    }
-
                     if (!PrepareSaveMissionStep())
                     {
                         return;

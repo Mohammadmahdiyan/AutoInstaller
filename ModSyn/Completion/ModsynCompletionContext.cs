@@ -6,6 +6,7 @@ public enum ModsynCompletionContext
     RootProperties,
     RequirementProperties,
     AddToUserFileProperties,
+    MixedPartProperties,
     TypeValues,
     PathValues,
     PropertyValues

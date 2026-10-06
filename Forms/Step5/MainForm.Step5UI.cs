@@ -349,6 +349,7 @@ public partial class MainForm : Form
         saveMissionPanel.Controls.Add(saveMissionLayout);
         panel.Controls.Add(saveMissionPanel);
         saveMissionPanel.BringToFront();
+        panel.Controls.Add(CreateDeleteModsHost());
         return panel;
     }
 
@@ -946,12 +947,23 @@ public partial class MainForm : Form
             GoToStep(WizardStep.Step4);
         }
 
+        var mixedPartFiles = new List<string>();
         if (await InstallTypedPackageAsync(
             _selectedModPayloadPath,
             _selectedModName,
             _selectedModPackageRoot,
-            _selectedModManifest!))
+            _selectedModManifest!,
+            backupOverride: _isMixedInstallActive ? CreateMixedBackupConfiguration(_mixedParts[_mixedPartIndex]) : null,
+            replacementsOverride: _isMixedInstallActive ? _mixedParts[_mixedPartIndex].Replacements : null,
+            recordInstallation: !_isMixedInstallActive,
+            installedFilesOutput: mixedPartFiles))
         {
+            if (_isMixedInstallActive)
+            {
+                await CompleteCurrentMixedPartAsync(mixedPartFiles);
+                return;
+            }
+
             _pendingExistingAssetInstallAction = null;
             await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
             if (!_isInstallingOptionalPackage)
@@ -961,6 +973,13 @@ public partial class MainForm : Form
         }
         else if (!_isInstallingOptionalPackage)
         {
+            if (_isMixedInstallActive && mixedPartFiles.Count > 0
+                && (uint)_mixedPartIndex < (uint)_mixedParts.Count)
+            {
+                AddMixedInstalledPart(_mixedParts[_mixedPartIndex], mixedPartFiles);
+                RecordCurrentMixedInstallation();
+            }
+
             GoToStep(WizardStep.Step5);
         }
     }

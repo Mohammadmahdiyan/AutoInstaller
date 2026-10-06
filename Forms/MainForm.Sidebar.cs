@@ -798,7 +798,13 @@ public partial class MainForm : Form
                 break;
             case WizardStep.Step5:
                 _sidebarPreviousButton.Enabled = true;
-                if (_isSaveMissionStepActive)
+                if (_isDeleteModsStepActive)
+                {
+                    _sidebarPreviousButton.Enabled = _deleteModsPanel?.IsBusy != true;
+                    _sidebarNextButton.Enabled = false;
+                    _sidebarNextButton.Text = _localizationService.GetString("DeleteModsTitle", "Delete Mods");
+                }
+                else if (_isSaveMissionStepActive)
                 {
                     _sidebarNextButton.Enabled = _selectedSaveMissionSlot.HasValue;
                     _sidebarNextButton.Text = _selectedModManifest?.NormalizedType == "savesandmissions"
@@ -978,6 +984,36 @@ public partial class MainForm : Form
 
         if (_currentStep == WizardStep.Step5)
         {
+            if (_isDeleteModsStepActive)
+            {
+                CloseDeleteModsStep();
+                return;
+            }
+
+            if (_isMixedInstallActive)
+            {
+                if (_isSaveMissionStepActive && _saveMissionFileIndex > 0)
+                {
+                    _saveMissionFileIndex--;
+                    _selectedSaveMissionSlot = null;
+                    RefreshSaveMissionStep();
+                    UpdateSidebarState();
+                    return;
+                }
+
+                if (IsMultiAssetModelMode() && _multiIndex > 0)
+                {
+                    _multiIndex--;
+                    PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
+                    RefreshAssetStep();
+                    UpdateSidebarState();
+                    return;
+                }
+
+                AbortMixedInstall();
+                return;
+            }
+
             if (_isSaveMissionStepActive)
             {
                 if (_saveMissionFileIndex > 0)
@@ -1071,7 +1107,11 @@ public partial class MainForm : Form
                     }
                     break;
                 case WizardStep.Step5:
-                    if (_isSaveMissionStepActive)
+                    if (_isDeleteModsStepActive)
+                    {
+                        // Deleting is done row by row inside the window; there is no Next action.
+                    }
+                    else if (_isSaveMissionStepActive)
                     {
                         if (_selectedSaveMissionSlot.HasValue)
                         {

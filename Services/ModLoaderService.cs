@@ -237,6 +237,85 @@ public class ModLoaderService
         SaveInstallationManifest(manifestPath, manifest);
     }
 
+    public static void RecordMixedInstallation(
+        string gamePath,
+        string modId,
+        string sourcePackagePath,
+        string installedDestination,
+        IEnumerable<InstallationManifestPart> parts)
+    {
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return;
+        }
+
+        var installedParts = parts
+            .Select(part => new InstallationManifestPart
+            {
+                Name = part.Name,
+                Type = part.Type,
+                ModId = part.ModId,
+                InstalledDestination = part.InstalledDestination,
+                InstalledFiles = (part.InstalledFiles ?? new List<string>())
+                    .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList()
+            })
+            .ToList();
+        var manifest = LoadInstallationManifest(manifestPath);
+        manifest.Entries.RemoveAll(entry =>
+            string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(entry.Type, "mixed", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.SourcePackagePath, sourcePackagePath, StringComparison.OrdinalIgnoreCase));
+        manifest.Entries.Add(new InstallationManifestEntry
+        {
+            ModId = modId,
+            Type = "mixed",
+            SourcePackagePath = sourcePackagePath,
+            InstalledDestination = installedDestination,
+            MixedParts = installedParts,
+            InstalledFiles = installedParts
+                .SelectMany(part => part.InstalledFiles)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList()
+        });
+        SaveInstallationManifest(manifestPath, manifest);
+    }
+
+    public static bool RemoveMixedInstallationPart(string gamePath, string parentModId, string partModId)
+    {
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            return false;
+        }
+
+        var manifest = LoadInstallationManifest(manifestPath);
+        var parent = manifest.Entries.LastOrDefault(entry =>
+            string.Equals(entry.ModId, parentModId, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(entry.Type, "mixed", StringComparison.OrdinalIgnoreCase));
+        if (parent is null
+            || parent.MixedParts.RemoveAll(part =>
+                string.Equals(part.ModId, partModId, StringComparison.OrdinalIgnoreCase)) == 0)
+        {
+            return false;
+        }
+
+        parent.InstalledFiles = parent.MixedParts
+            .SelectMany(part => part.InstalledFiles ?? new List<string>())
+            .Where(File.Exists)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (parent.MixedParts.Count == 0)
+        {
+            manifest.Entries.Remove(parent);
+        }
+
+        SaveInstallationManifest(manifestPath, manifest);
+        return true;
+    }
+
     public static bool RemoveGameInstallationRecord(string gamePath, string modId)
     {
         var manifestPath = GetGameInstallationsManifestPath(gamePath);

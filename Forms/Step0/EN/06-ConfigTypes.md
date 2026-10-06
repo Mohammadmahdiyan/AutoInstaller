@@ -153,9 +153,25 @@ Accepted values: `MissionDsl`, `DSL`.
 }
 ```
 
+## Mixed (MIX)
+
+`Mixed` combines two or more typed package folders from the package root. Each `folderName` must name an existing relative folder. Parts run in list order; asset parts pause for Step 5 selection, and the wizard reaches Step 6 only after the final part completes.
+
+```modsyn
+mod {
+  type: MIX
+  list: [
+    { type: VSW folderName: "gta3img" }
+    { type: Replacing folderName: "animations" backup: none }
+  ]
+}
+```
+
+Each part supports the existing package types except nested `Mixed`. Backup selectors and `replacements` belong to the part object and apply only to that part. Reinstalling an installed Mixed package offers a per-part delete view; the Step 1 delete button lists its parts individually.
+
 ## Important behavior notes
 
-- Type validation currently accepts `putinmodloader`, `replacing`, `putincleo`, `putingamefolder`, `putandreplace`, `putandreplaces`, `vehicleandskinandweapon`, `vehiclesandskinsandweapons`, `savesandmissions`, and `missiondsl` after normalization.
+- Type validation currently accepts `putinmodloader`, `replacing`, `putincleo`, `putingamefolder`, `putandreplace`, `putandreplaces`, `vehicleandskinandweapon`, `vehiclesandskinsandweapons`, `savesandmissions`, `missiondsl`, and `mixed` after normalization.
 - `VehicleAndSkinsAndWeapons` normalizes to the single-asset value because it lacks the plural `Vehicles`; `VehiclesAndSkinsAndWeapons` remains the distinct multi-asset value.
 - A missing or blank type defaults to `putinmodloader` when a `ModManifest` is constructed, but validation requires a string type in a non-empty manifest.
 - `conflictCleanup` is parsed and stored, but current install flows do not execute its cleanup instructions automatically.

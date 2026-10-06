@@ -93,6 +93,35 @@ test("addToUserFile objects complete only their source and destination keys", ()
   assert.deepEqual(sourceValue, []);
 });
 
+test("Mixed list objects complete only Mixed part properties", () => {
+  const source = 'mod { type: MIX list: [{ type: VSW folderName: "gta3img" | }] }';
+  const items = atMarker(source);
+  assert.deepEqual(
+    items.map((item) => item.label),
+    metadata.mixedPartProperties
+      .map((property) => property.name)
+      .filter((name) => !["type", "folderName"].includes(name)),
+  );
+});
+
+test("Mixed diagnostics require two safe typed folder entries", () => {
+  const valid = core.getDiagnostics(
+    'mod { type: MIX list: [{ type: VSW folderName: "gta3img" } { type: Replacing folderName: "animations" backup: none }] }',
+    metadata,
+  );
+  assert.deepEqual(valid, []);
+
+  for (const source of [
+    "mod { type: MIX }",
+    'mod { type: MIX list: [{ type: VSW folderName: "gta3img" }] }',
+    'mod { type: MIX list: [{ type: VSW } { type: Replacing folderName: "animations" }] }',
+    'mod { type: MIX list: [{ type: VSW folderName: "../outside" } { type: Replacing folderName: "animations" }] }',
+    'mod { type: MIX list: [{ type: VSW folderName: "shared" } { type: Replacing folderName: "shared" }] }',
+  ]) {
+    assert.ok(core.getDiagnostics(source, metadata).length > 0, source);
+  }
+});
+
 test("empty root object contains keys only, never words from values", () => {
   const source =
     'mod { installThis: "models/example.dff" replacements: [{ source: "data/handling.cfg" target: "data/handling.cfg" }] | }';

@@ -14,7 +14,7 @@ public sealed class ModsynValidatorTests
         {
             "type", "require", "requires", "deleteThis", "deleteThese", "replacements",
             "addToUserFile", "backup", "backupThis", "backupThese", "dontBackupThis", "dontBackupThese",
-            "installThis", "installThese", "ignoreThis", "ignoreThese"
+            "installThis", "installThese", "ignoreThis", "ignoreThese", "list"
         };
 
         CollectionAssert.AreEquivalent(expected, ModsynLanguageDefinition.RootProperties.Keys.ToArray());
@@ -110,6 +110,27 @@ public sealed class ModsynValidatorTests
         {
             var result = Validate($"mod {{ type: SavesAndMissions addToUserFile: [{entry}] }}");
             Assert.IsFalse(result.IsValid, entry);
+        }
+    }
+
+    [TestMethod]
+    public void Validate_MixedRequiresTwoTypedEntriesWithSafeFolderNames()
+    {
+        var valid = Validate("mod { type: MIX list: [{ type: VSW folderName: \"gta3img\" } { type: Replacing folderName: \"animations\" backup: none }] }");
+        Assert.IsTrue(valid.IsValid, string.Join(Environment.NewLine, valid.Errors));
+        Assert.AreEqual("Mixed", valid.NormalizedType);
+
+        foreach (var invalidSource in new[]
+        {
+            "mod { type: Mixed }",
+            "mod { type: Mixed list: [{ type: VSW folderName: \"gta3img\" }] }",
+            "mod { type: Mixed list: [{ type: VSW } { type: Replacing folderName: \"animations\" }] }",
+            "mod { type: Mixed list: [{ type: VSW folderName: \"../outside\" } { type: Replacing folderName: \"animations\" }] }",
+            "mod { type: Mixed list: [{ type: VSW folderName: \"shared\" } { type: Replacing folderName: \"shared\" }] }",
+            "mod { type: Mixed list: [{ type: Unknown folderName: \"one\" } { type: Replacing folderName: \"two\" }] }"
+        })
+        {
+            Assert.IsFalse(Validate(invalidSource).IsValid, invalidSource);
         }
     }
 

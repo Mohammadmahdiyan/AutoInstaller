@@ -55,6 +55,11 @@
       "name": "MissionDsl",
       "aliases": ["DSL"],
       "description": "Install a Mission DSL package."
+    },
+    {
+      "name": "Mixed",
+      "aliases": ["MIX"],
+      "description": "Install multiple typed package folders in sequence."
     }
   ],
   "rootProperties": [
@@ -169,6 +174,13 @@
       "arrayItemKinds": ["String"],
       "applicableTypes": [],
       "description": "File or directory paths to ignore."
+    },
+    {
+      "name": "list",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["Object"],
+      "applicableTypes": ["Mixed"],
+      "description": "At least two typed package folder entries for a Mixed package."
     }
   ],
   "requirementProperties": [
@@ -245,6 +257,106 @@
       "arrayItemKinds": [],
       "applicableTypes": [],
       "description": "A destination folder relative to GTA San Andreas User Files; defaults to its root."
+    }
+  ],
+  "mixedPartProperties": [
+    {
+      "name": "type",
+      "allowedValueKinds": ["String", "Identifier"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "Installation type for this package folder."
+    },
+    {
+      "name": "folderName",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "Package-relative folder containing this part's files."
+    },
+    {
+      "name": "backup",
+      "allowedValueKinds": ["Identifier"],
+      "arrayItemKinds": [],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "Choose all, none, or some for this part's replacement backups."
+    },
+    {
+      "name": "backupThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "One file or directory path to back up."
+    },
+    {
+      "name": "backupThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "File or directory paths to back up."
+    },
+    {
+      "name": "dontBackupThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "One file or directory path to exclude from backups."
+    },
+    {
+      "name": "dontBackupThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": ["Replacing", "PutAndReplace", "PutAndReplaces"],
+      "description": "File or directory paths to exclude from backups."
+    },
+    {
+      "name": "replacements",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String", "Object"],
+      "applicableTypes": ["PutAndReplace"],
+      "description": "Replacement mappings or string path shorthand for this part."
+    },
+    {
+      "name": "installThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path to install."
+    },
+    {
+      "name": "installThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "File or directory paths to install."
+    },
+    {
+      "name": "ignoreThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path to ignore."
+    },
+    {
+      "name": "ignoreThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "File or directory paths to ignore."
+    },
+    {
+      "name": "deleteThis",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "One file or directory path to delete before installing this part."
+    },
+    {
+      "name": "deleteThese",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["String"],
+      "applicableTypes": [],
+      "description": "File or directory paths to delete before installing this part."
     }
   ],
   "valueKinds": [

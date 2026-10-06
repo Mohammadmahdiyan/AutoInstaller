@@ -63,6 +63,9 @@ public static class ModsynLanguageDefinition
     public static IReadOnlyDictionary<string, ModsynPropertyDefinition> AddToUserFileProperties { get; } =
         CreateProperties(Metadata.AddToUserFileProperties);
 
+    public static IReadOnlyDictionary<string, ModsynPropertyDefinition> MixedPartProperties { get; } =
+        CreateProperties(Metadata.MixedPartProperties);
+
     private static readonly IReadOnlyDictionary<string, ModsynTypeDefinition> TypeLookup = BuildTypeLookup();
 
     public static bool TryResolveType(string? value, out ModsynTypeDefinition? type)
@@ -149,6 +152,8 @@ public static class ModsynLanguageDefinition
         public List<PropertyMetadata> ReplacementProperties { get; init; } = new();
 
         public List<PropertyMetadata> AddToUserFileProperties { get; init; } = new();
+
+        public List<PropertyMetadata> MixedPartProperties { get; init; } = new();
     }
 
     private sealed class TypeMetadata

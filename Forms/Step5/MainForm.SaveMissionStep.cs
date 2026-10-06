@@ -456,19 +456,22 @@ public partial class MainForm
                     _saveMissionInstalledFiles.Add(addition.DestinationPath);
                 }
 
-            ModLoaderService.RecordUserFilesInstallation(
-                _selectedGamePath,
-                _selectedModName,
-                _selectedModManifest!.NormalizedType,
-                _saveMissionInstalledFiles,
-                userFilesRoot,
-                mergeExistingFiles: true,
-                sourcePackagePath: _selectedModPackageRoot);
+            if (!_isMixedInstallActive)
+            {
+                ModLoaderService.RecordUserFilesInstallation(
+                    _selectedGamePath,
+                    _selectedModName,
+                    _selectedModManifest!.NormalizedType,
+                    _saveMissionInstalledFiles,
+                    userFilesRoot,
+                    mergeExistingFiles: true,
+                    sourcePackagePath: _selectedModPackageRoot);
+            }
             CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
         }
         catch (Exception ex)
         {
-            if (_saveMissionInstalledFiles.Count > 0)
+            if (!_isMixedInstallActive && _saveMissionInstalledFiles.Count > 0)
             {
                 ModLoaderService.RecordUserFilesInstallation(
                     _selectedGamePath,
@@ -480,13 +483,25 @@ public partial class MainForm
                     sourcePackagePath: _selectedModPackageRoot);
             }
 
+            if (_isMixedInstallActive && _saveMissionInstalledFiles.Count > 0
+                && (uint)_mixedPartIndex < (uint)_mixedParts.Count)
+            {
+                AddMixedInstalledPart(_mixedParts[_mixedPartIndex], _saveMissionInstalledFiles);
+                RecordCurrentMixedInstallation();
+            }
+
             FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (_isMixedInstallActive)
+            {
+                GoToStep(WizardStep.Step5);
+            }
+
             return;
         }
 
         _selectedSaveMissionSlot = null;
-        if (_selectedModManifest.NormalizedType == "savesandmissions"
+        if (_selectedModManifest?.NormalizedType == "savesandmissions"
             && _saveMissionFileIndex + 1 < _saveMissionPackageFiles.Count)
         {
             _saveMissionFileIndex++;
@@ -497,6 +512,12 @@ public partial class MainForm
 
         _isSaveMissionStepActive = false;
         _lastActionWasDelete = false;
+        if (_isMixedInstallActive)
+        {
+            await CompleteCurrentMixedPartAsync(_saveMissionInstalledFiles.ToList());
+            return;
+        }
+
         RefreshModList();
         GoToStep(WizardStep.Step6);
     }

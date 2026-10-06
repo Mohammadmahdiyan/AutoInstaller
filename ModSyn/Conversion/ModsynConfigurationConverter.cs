@@ -31,7 +31,8 @@ public static class ModsynConfigurationConverter
             InstallFolders = installFolders,
             IgnoreFiles = ignoreFiles,
             IgnoreFolders = ignoreFolders,
-            AddToUserFile = ReadUserFileEntries(root)
+            AddToUserFile = ReadUserFileEntries(root),
+            MixedParts = ReadMixedParts(root, packageRoot)
         };
         manifest.Requires.AddRange(validation.Requirements.Select(requirement => new ModRequirementEntry
         {
@@ -98,6 +99,105 @@ public static class ModsynConfigurationConverter
                 To = FindString(entry, "to") is { } to ? NormalizePath(to) : string.Empty
             })
             .ToList();
+    }
+
+    private static List<ModMixedPackagePart> ReadMixedParts(ModsynObjectNode root, string? packageRoot)
+    {
+        var list = FindProperty(root, "list")?.Value as ModsynArrayNode;
+        if (list is null)
+        {
+            return new List<ModMixedPackagePart>();
+        }
+
+        var parts = new List<ModMixedPackagePart>();
+        foreach (var part in list.Items.OfType<ModsynObjectNode>())
+        {
+            var rawType = FindValue(part, "type");
+            var folderName = FindString(part, "folderName") ?? string.Empty;
+            if (!ModsynLanguageDefinition.TryResolveType(rawType, out var resolvedType) || resolvedType is null)
+            {
+                continue;
+            }
+
+            var partRoot = ResolveMixedPartRoot(packageRoot, folderName);
+            var installPaths = ReadPaths(part, "installThis", "installThese");
+            var ignorePaths = ReadPaths(part, "ignoreThis", "ignoreThese");
+            var (installFiles, installFolders) = ClassifyPackagePaths(installPaths, partRoot);
+            var (ignoreFiles, ignoreFolders) = ClassifyPackagePaths(ignorePaths, partRoot);
+            var manifest = new ModManifest
+            {
+                Type = resolvedType.Name,
+                DeleteThis = ReadPaths(part, "deleteThis", "deleteThese"),
+                InstallFiles = installFiles,
+                InstallFolders = installFolders,
+                IgnoreFiles = ignoreFiles,
+                IgnoreFolders = ignoreFolders
+            };
+
+            var backupMode = FindValue(part, "backup")?.ToLowerInvariant() switch
+            {
+                "none" => ModsynBackupMode.None,
+                "some" => ModsynBackupMode.Some,
+                _ => ModsynBackupMode.All
+            };
+            parts.Add(new ModMixedPackagePart
+            {
+                Type = resolvedType.Name,
+                FolderName = NormalizePath(folderName),
+                Manifest = manifest,
+                Replacements = ReadReplacements(part),
+                BackupMode = backupMode.ToString(),
+                BackupPaths = ReadPaths(part, "backupThis", "backupThese"),
+                ExcludedBackupPaths = ReadPaths(part, "dontBackupThis", "dontBackupThese")
+            });
+        }
+
+        return parts;
+    }
+
+    private static string? FindValue(ModsynObjectNode value, string propertyName)
+    {
+        return value.Properties
+            .FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal))?
+            .Value switch
+        {
+            ModsynStringNode stringNode => stringNode.Value,
+            ModsynIdentifierNode identifierNode => identifierNode.Name,
+            _ => null
+        };
+    }
+
+    private static ModsynPropertyNode? FindProperty(ModsynObjectNode value, string propertyName)
+    {
+        return value.Properties.FirstOrDefault(property =>
+            string.Equals(property.Name, propertyName, StringComparison.Ordinal));
+    }
+
+    private static string? FindString(ModsynObjectNode value, string propertyName)
+    {
+        return value.Properties
+            .FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal))?
+            .Value is ModsynStringNode stringNode
+                ? stringNode.Value
+                : null;
+    }
+
+    private static string? ResolveMixedPartRoot(string? packageRoot, string folderName)
+    {
+        if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
+        {
+            return null;
+        }
+
+        var fullRoot = Path.GetFullPath(packageRoot);
+        var fullPartRoot = Path.GetFullPath(Path.Combine(fullRoot, folderName.Replace('\\', Path.DirectorySeparatorChar)));
+        var prefix = Path.TrimEndingDirectorySeparator(fullRoot) + Path.DirectorySeparatorChar;
+        if (!fullPartRoot.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) || !Directory.Exists(fullPartRoot))
+        {
+            throw new InvalidDataException("Mixed folderName was not found inside the package: " + folderName);
+        }
+
+        return fullPartRoot;
     }
 
     private static List<string> BuildRequirementPaths(ModsynResolvedRequirement requirement)
@@ -190,15 +290,6 @@ public static class ModsynConfigurationConverter
         }
 
         return replacements;
-    }
-
-    private static string? FindString(ModsynObjectNode value, string propertyName)
-    {
-        return value.Properties
-            .FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal))?
-            .Value is ModsynStringNode stringNode
-                ? stringNode.Value
-                : null;
     }
 
     private static string NormalizePath(string path)

@@ -50,6 +50,21 @@ public class InstallationManifestEntry
     public string SourcePackagePath { get; set; } = string.Empty;
 
     public string InstalledDestination { get; set; } = string.Empty;
+
+    public List<InstallationManifestPart> MixedParts { get; set; } = new();
+}
+
+public sealed class InstallationManifestPart
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Type { get; set; } = string.Empty;
+
+    public string ModId { get; set; } = string.Empty;
+
+    public string InstalledDestination { get; set; } = string.Empty;
+
+    public List<string> InstalledFiles { get; set; } = new();
 }
 
 public class InstallationManifest

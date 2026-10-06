@@ -90,6 +90,8 @@ public class ModManifest
 
     public List<ModUserFileInstallEntry> AddToUserFile { get; set; } = new();
 
+    public List<ModMixedPackagePart> MixedParts { get; set; } = new();
+
     public bool HasInstallFiles => InstallFiles.Count > 0;
 
     public bool HasInstallFolders => InstallFolders.Count > 0;
@@ -125,6 +127,7 @@ public class ModManifest
                 "saveandmission" or "sam" => "saveandmission",
                 "savesandmissions" or "sms" => "savesandmissions",
                 "missiondsl" or "dsl" => "missiondsl",
+                "mixed" or "mix" => "mixed",
                 _ => normalized
             };
         }
@@ -157,7 +160,26 @@ public class ModManifest
 
     public bool IsMultiAssetPackage => NormalizedType == "vehiclesandskinsandweapons";
 
+    public bool IsMixedPackage => NormalizedType == "mixed";
+
     public bool SupportsAssetSelection => IsSingleAssetPackage || IsMultiAssetPackage;
 }
 
 public sealed record ModReplacementEntry(string Source, string Target);
+
+public sealed class ModMixedPackagePart
+{
+    public string Type { get; set; } = string.Empty;
+
+    public string FolderName { get; set; } = string.Empty;
+
+    public ModManifest Manifest { get; set; } = new();
+
+    public List<ModReplacementEntry> Replacements { get; set; } = new();
+
+    public string BackupMode { get; set; } = "all";
+
+    public List<string> BackupPaths { get; set; } = new();
+
+    public List<string> ExcludedBackupPaths { get; set; } = new();
+}

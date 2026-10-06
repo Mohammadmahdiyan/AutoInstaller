@@ -114,6 +114,38 @@ public sealed class ModsynConfigurationConverterTests
         Assert.AreEqual("MPACK", converted.Manifest.AddToUserFile[1].To);
     }
 
+      [TestMethod]
+      public void Convert_MapsMixedPackagePartsAndTheirBackupOptions()
+      {
+        var packageRoot = Path.Combine(Path.GetTempPath(), "ModsynMixed-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(Path.Combine(packageRoot, "gta3img"));
+        Directory.CreateDirectory(Path.Combine(packageRoot, "animations"));
+        try
+        {
+          var converted = ModsynConfigurationConverter.Convert(ModsynParser.Parse("""
+            mod {
+              type: MIX
+              list: [
+              { type: VSW folderName: "gta3img" }
+              { type: Replacing folderName: "animations" backup: none }
+              ]
+            }
+            """), packageRoot);
+
+          Assert.AreEqual("Mixed", converted.Manifest.Type);
+          Assert.AreEqual(2, converted.Manifest.MixedParts.Count);
+          Assert.AreEqual("VehicleAndSkinAndWeapon", converted.Manifest.MixedParts[0].Type);
+          Assert.AreEqual("gta3img", converted.Manifest.MixedParts[0].FolderName);
+          Assert.AreEqual("Replacing", converted.Manifest.MixedParts[1].Type);
+          Assert.AreEqual("animations", converted.Manifest.MixedParts[1].FolderName);
+          Assert.AreEqual("None", converted.Manifest.MixedParts[1].BackupMode);
+        }
+        finally
+        {
+          Directory.Delete(packageRoot, recursive: true);
+        }
+      }
+
     [TestMethod]
     public void Convert_DefaultsTypeAndBackupWithoutChangingExistingDefaults()
     {

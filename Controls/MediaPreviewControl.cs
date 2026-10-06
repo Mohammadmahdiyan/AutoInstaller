@@ -26,6 +26,7 @@ public sealed class MediaPreviewControl : Panel
 
     public event EventHandler? RightClicked;
     public event EventHandler? SoundStateChanged;
+    public event EventHandler? Clicked;
 
     public MediaPreviewControl()
     {
@@ -85,6 +86,10 @@ public sealed class MediaPreviewControl : Panel
                 {
                     ToggleSound();
                     e.Handled = true;
+                }
+                else
+                {
+                    Clicked?.Invoke(this, EventArgs.Empty);
                 }
             };
 
@@ -155,6 +160,10 @@ public sealed class MediaPreviewControl : Panel
                 if (e.Button == MouseButtons.Right)
                 {
                     RightClicked?.Invoke(this, EventArgs.Empty);
+                }
+                else if (e.Button == MouseButtons.Left)
+                {
+                    Clicked?.Invoke(this, EventArgs.Empty);
                 }
             };
             Controls.Add(_imageBox);

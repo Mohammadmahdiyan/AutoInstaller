@@ -494,7 +494,11 @@ public partial class MainForm : Form
         MessageBox.Show(summary, _appName, MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
-    private async Task InstallMissionDslPackageAsync(string packageRoot, string modName)
+    private async Task InstallMissionDslPackageAsync(
+        string packageRoot,
+        string modName,
+        bool recordInstallation = true,
+        List<string>? installedFilesOutput = null)
     {
         var userFilesRoot = GetGtaUserFilesDirectory();
         var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
@@ -602,20 +606,38 @@ public partial class MainForm : Form
                 Path.GetRelativePath(userFilesRoot, addition.DestinationPath));
         }
 
-        ModLoaderService.RecordUserFilesInstallation(
-            _selectedGamePath,
-            modName,
-            "missiondsl",
-            packageFiles.Select(path => Path.Combine(dslRoot, Path.GetRelativePath(packageRoot, path)))
-                .Concat(userFileAdditions.Select(copy => copy.DestinationPath)));
+        var installedFiles = packageFiles
+            .Select(path => Path.Combine(dslRoot, Path.GetRelativePath(packageRoot, path)))
+            .Concat(userFileAdditions.Select(copy => copy.DestinationPath))
+            .Where(File.Exists)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        installedFilesOutput?.AddRange(installedFiles);
+        if (recordInstallation)
+        {
+            ModLoaderService.RecordUserFilesInstallation(
+                _selectedGamePath,
+                modName,
+                "missiondsl",
+                installedFiles);
+        }
         CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
-        GoToStep(WizardStep.Step6);
+        if (_isMixedInstallActive)
+        {
+            await CompleteCurrentMixedPartAsync(installedFiles);
+        }
+        else
+        {
+            GoToStep(WizardStep.Step6);
+        }
     }
 
     private async Task<bool> InstallPutInCleoPackageAsync(
         string packageRoot,
         string modName,
-        GtaSaModManager.Models.ModManifest manifest)
+        GtaSaModManager.Models.ModManifest manifest,
+        bool recordInstallation = true,
+        List<string>? installedFilesOutput = null)
     {
         DeleteManifestEntries(manifest);
         var cleoRoot = Path.Combine(_selectedGamePath, "cleo");
@@ -678,15 +700,19 @@ public partial class MainForm : Form
                     destination,
                     entries[index].RelativeDestination);
                 installedFiles.Add(destination);
+                installedFilesOutput?.Add(destination);
             }
 
-            ModLoaderService.RecordGameInstallation(
-                _selectedGamePath,
-                "putincleo",
-                modName,
-                packageRoot,
-                cleoRoot,
-                installedFiles);
+            if (recordInstallation)
+            {
+                ModLoaderService.RecordGameInstallation(
+                    _selectedGamePath,
+                    "putincleo",
+                    modName,
+                    packageRoot,
+                    cleoRoot,
+                    installedFiles);
+            }
             CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
             RefreshModList();
             return true;
@@ -703,7 +729,15 @@ public partial class MainForm : Form
         }
     }
 
-    private async Task<bool> InstallTypedPackageAsync(string payloadPath, string modName, string packageRoot, GtaSaModManager.Models.ModManifest manifest)
+    private async Task<bool> InstallTypedPackageAsync(
+        string payloadPath,
+        string modName,
+        string packageRoot,
+        GtaSaModManager.Models.ModManifest manifest,
+        GtaSaModManager.Modsyn.Conversion.ModsynBackupConfiguration? backupOverride = null,
+        IReadOnlyList<GtaSaModManager.Models.ModReplacementEntry>? replacementsOverride = null,
+        bool recordInstallation = true,
+        List<string>? installedFilesOutput = null)
     {
         DeleteManifestEntries(manifest);
 
@@ -796,7 +830,7 @@ public partial class MainForm : Form
         var replacementTargets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         if (manifest.NormalizedType == "putandreplace")
         {
-            var replacements = ModPackageService.ReadReplacementEntries(packageRoot);
+            var replacements = replacementsOverride ?? ModPackageService.ReadReplacementEntries(packageRoot);
             foreach (var sourcePath in packageFiles)
             {
                 var relativePath = Path.GetRelativePath(payloadPath, sourcePath);
@@ -829,7 +863,7 @@ public partial class MainForm : Form
             }
         }
 
-        var backupConfiguration = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
+        var backupConfiguration = backupOverride ?? ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
         var filesToBackup = BackupStorageService.SelectFilesToBackup(
             _selectedGamePath,
             replacementTargets.Values.Where(path => !previousPutInGameFolderFiles.Contains(Path.GetFullPath(path))),
@@ -945,6 +979,7 @@ public partial class MainForm : Form
                     destinationPath,
                     Path.GetRelativePath(payloadPath, sourcePath));
                 installedDestinationFiles.Add(destinationPath);
+                installedFilesOutput?.Add(destinationPath);
             }
 
             if (previousPutInGameFolderFiles.Count > 0)
@@ -977,7 +1012,7 @@ public partial class MainForm : Form
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            if (installAsModLoader)
+            if (recordInstallation && installAsModLoader)
             {
                 var installType = manifest.IsMultiAssetPackage
                     ? manifest.NormalizedType
@@ -994,7 +1029,7 @@ public partial class MainForm : Form
                     installedFiles,
                     mergeExistingFiles: _pendingExistingAssetInstallAction == DialogResult.No);
             }
-            else
+            else if (recordInstallation)
             {
                 ModLoaderService.RecordGameInstallation(_selectedGamePath, manifest.NormalizedType, modName, packageRoot, targetRoot, installedFiles);
             }
@@ -1100,9 +1135,15 @@ public partial class MainForm : Form
         return fullPath;
     }
 
-    private async Task InstallReplacingPackageAsync(string payloadPath, string modName, string packageRoot)
+    private async Task<bool> InstallReplacingPackageAsync(
+        string payloadPath,
+        string modName,
+        string packageRoot,
+        GtaSaModManager.Modsyn.Conversion.ModsynBackupConfiguration? backupOverride = null,
+        bool recordInstallation = true,
+        List<string>? installedFilesOutput = null)
     {
-        var backupConfiguration = ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
+        var backupConfiguration = backupOverride ?? ModPackageService.ResolveModsynConfiguration(packageRoot).Backup;
         var filesToReplace = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
@@ -1111,7 +1152,7 @@ public partial class MainForm : Form
         if (filesToReplace.Count == 0)
         {
             MessageBox.Show(_localizationService.GetString("ModSourceInvalid", "The selected replacement package does not contain any files to replace."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
+            return false;
         }
 
         var replacementTargets = filesToReplace
@@ -1138,14 +1179,14 @@ public partial class MainForm : Form
                 var alternativeRoot = PromptForFolderSelection("Choose another backup location", _selectedGamePath);
                 if (string.IsNullOrWhiteSpace(alternativeRoot))
                 {
-                    return;
+                    return false;
                 }
 
                 backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup, alternativeRoot);
                 if (!backupPlan.HasBackup)
                 {
                     MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    return false;
                 }
             }
             else
@@ -1157,7 +1198,7 @@ public partial class MainForm : Form
                     MessageBoxIcon.Warning);
                 if (installWithoutBackup != DialogResult.Yes)
                 {
-                    return;
+                    return false;
                 }
             }
         }
@@ -1200,6 +1241,7 @@ public partial class MainForm : Form
 
                 await CopyStep4FileAsync(i, sourceFile, destinationFile, relativePath);
                 installedFiles.Add(destinationFile);
+                installedFilesOutput?.Add(destinationFile);
 
                 var record = new ReplaceInstallationRecord
                 {
@@ -1225,21 +1267,29 @@ public partial class MainForm : Form
 
             }
 
-            ModLoaderService.RecordGameInstallation(
-                _selectedGamePath,
-                "replacing",
-                modName,
-                packageRoot,
-                _selectedGamePath,
-                installedFiles);
+            if (recordInstallation)
+            {
+                ModLoaderService.RecordGameInstallation(
+                    _selectedGamePath,
+                    "replacing",
+                    modName,
+                    packageRoot,
+                    _selectedGamePath,
+                    installedFiles);
+            }
 
             CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
-            GoToStep(WizardStep.Step6);
+            if (!_isMixedInstallActive)
+            {
+                GoToStep(WizardStep.Step6);
+            }
+            return true;
         }
         catch (Exception ex)
         {
             FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
     }
 

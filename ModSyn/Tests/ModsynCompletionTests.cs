@@ -112,6 +112,20 @@ public sealed class ModsynCompletionTests
     }
 
     [TestMethod]
+    public void GetCompletions_MixedListUsesMixedPartMetadata()
+    {
+        var source = "mod { type: MIX list: [{ ";
+        var completions = GetAtEnd(source);
+
+        CollectionAssert.AreEquivalent(
+            ModsynLanguageDefinition.MixedPartProperties.Keys.ToArray(),
+            completions.Select(item => item.Label).ToArray());
+        Assert.AreEqual(
+            ModsynCompletionContext.MixedPartProperties,
+            ModsynCompletionContextDetector.Detect(source, source.Length));
+    }
+
+    [TestMethod]
     public void GetCompletions_TypeContextProvidesCanonicalTypesAliasesAndDescriptions()
     {
         var identifierValue = GetAtEnd("mod { type: ");

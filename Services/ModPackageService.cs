@@ -112,7 +112,8 @@ public class ModPackageService
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
             or GtaSaModManager.Modsyn.Lexer.ModsynLexException
-            or GtaSaModManager.Modsyn.Parser.ModsynParseException)
+            or GtaSaModManager.Modsyn.Parser.ModsynParseException
+            or InvalidDataException)
         {
             error = ex.Message;
             return false;
@@ -457,7 +458,7 @@ public class ModPackageService
 
     public static string GetInstallPayloadDirectory(string packageRoot, ModManifest manifest)
     {
-        if (manifest.NormalizedType is "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" or "replacing" or "saveandmission" or "savesandmissions"
+        if (manifest.NormalizedType is "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" or "replacing" or "saveandmission" or "savesandmissions" or "mixed"
             || manifest.IsSingleAssetPackage
             || manifest.IsMultiAssetPackage)
         {
@@ -469,7 +470,7 @@ public class ModPackageService
 
     public static string GetPreviewDirectory(string packageRoot, string payloadPath, ModManifest manifest)
     {
-        return manifest.NormalizedType == "missiondsl" ? packageRoot : payloadPath;
+        return manifest.NormalizedType is "missiondsl" or "mixed" ? packageRoot : payloadPath;
     }
 
     public static List<SelectedInstallEntry> ResolveInstallSelection(string packageRoot, ModManifest manifest)

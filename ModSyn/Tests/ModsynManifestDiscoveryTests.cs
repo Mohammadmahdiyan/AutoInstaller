@@ -223,6 +223,33 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void MixedAlias_ResolvesPartsAndUsesPackageRootAsPayload()
+    {
+        WithPackage("Mixed Pack", packageRoot =>
+        {
+            Directory.CreateDirectory(Path.Combine(packageRoot, "gta3img"));
+            Directory.CreateDirectory(Path.Combine(packageRoot, "animations"));
+            Write(packageRoot, "mod.modsyn", """
+                mod {
+                  type: MIX
+                  list: [
+                    { type: VSW folderName: "gta3img" }
+                    { type: Replacing folderName: "animations" backup: none }
+                  ]
+                }
+                """);
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual("mixed", manifest.NormalizedType);
+            Assert.AreEqual(2, manifest.MixedParts.Count);
+            Assert.AreEqual(
+                Path.GetFullPath(packageRoot),
+                ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest));
+        });
+    }
+
+    [TestMethod]
     public void PackageInstallation_RecordsVssAsMultiAssetType()
     {
         WithPackage("package", packageRoot =>
@@ -244,6 +271,65 @@ public sealed class ModsynManifestDiscoveryTests
             var recordedInstallation = ModLoaderService.LoadInstallationManifest(installationsPath).Entries.Single();
 
             Assert.AreEqual("vehiclesandskinsandweapons", recordedInstallation.Type);
+        });
+    }
+
+    [TestMethod]
+    public void MixedInstallation_RecordsFilesPerPartAndFindsParentBySource()
+    {
+        WithPackage("Mixed Pack", packageRoot =>
+        {
+            var gameRoot = Path.Combine(packageRoot, "game");
+            var vehicleFile = Path.Combine(gameRoot, "modloader", "Mixed Pack", "gta3img", "male01.dff");
+            var animationFile = Path.Combine(gameRoot, "anim", "anim.ifp");
+            Directory.CreateDirectory(Path.GetDirectoryName(vehicleFile)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(animationFile)!);
+            File.WriteAllText(vehicleFile, "model");
+            File.WriteAllText(animationFile, "animation");
+
+            ModLoaderService.RecordMixedInstallation(
+                gameRoot,
+                "Mixed Pack",
+                packageRoot,
+                Path.Combine(gameRoot, "modloader", "Mixed Pack"),
+                new[]
+                {
+                    new InstallationManifestPart
+                    {
+                        Name = "gta3img",
+                        Type = "vehicleandskinandweapon",
+                        ModId = "Mixed Pack_gta3img",
+                        InstalledDestination = Path.GetDirectoryName(vehicleFile)!,
+                        InstalledFiles = new List<string> { vehicleFile }
+                    },
+                    new InstallationManifestPart
+                    {
+                        Name = "animations",
+                        Type = "replacing",
+                        ModId = "Mixed Pack_animations",
+                        InstalledDestination = gameRoot,
+                        InstalledFiles = new List<string> { animationFile }
+                    }
+                });
+
+            var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(gameRoot);
+            var entry = ModLoaderService.FindGameInstallationRecord(gameRoot, "mixed", "Mixed Pack", packageRoot);
+
+            Assert.IsNotNull(entry);
+            Assert.AreEqual("mixed", entry.Type);
+            Assert.AreEqual(2, entry.MixedParts.Count);
+            CollectionAssert.AreEquivalent(new[] { vehicleFile, animationFile }, entry.InstalledFiles);
+            Assert.AreEqual(1, ModLoaderService.LoadInstallationManifest(manifestPath).Entries.Count);
+
+            Assert.IsTrue(ModLoaderService.RemoveMixedInstallationPart(gameRoot, "Mixed Pack", "Mixed Pack_gta3img"));
+            var remainingPart = ModLoaderService.FindGameInstallationRecord(gameRoot, "mixed", "Mixed Pack", packageRoot);
+            Assert.IsNotNull(remainingPart);
+            Assert.AreEqual(1, remainingPart.MixedParts.Count);
+            CollectionAssert.AreEqual(new[] { animationFile }, remainingPart.InstalledFiles);
+
+            Assert.IsTrue(ModLoaderService.RemoveMixedInstallationPart(gameRoot, "Mixed Pack", "Mixed Pack_animations"));
+            Assert.IsNull(ModLoaderService.FindGameInstallationRecord(gameRoot, "mixed", "Mixed Pack", packageRoot));
+            Assert.AreEqual(0, ModLoaderService.LoadInstallationManifest(manifestPath).Entries.Count);
         });
     }
 

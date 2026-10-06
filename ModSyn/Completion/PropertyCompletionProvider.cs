@@ -14,6 +14,7 @@ public sealed class PropertyCompletionProvider
             ModsynCompletionContext.RootProperties => ModsynLanguageDefinition.RootProperties,
             ModsynCompletionContext.RequirementProperties => ModsynLanguageDefinition.RequirementProperties,
             ModsynCompletionContext.AddToUserFileProperties => ModsynLanguageDefinition.AddToUserFileProperties,
+            ModsynCompletionContext.MixedPartProperties => ModsynLanguageDefinition.MixedPartProperties,
             _ => null
         };
 

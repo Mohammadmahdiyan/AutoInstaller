@@ -12,7 +12,8 @@ public static class ModsynCompletionService
         return context switch
         {
             ModsynCompletionContext.RootProperties or ModsynCompletionContext.RequirementProperties
-                or ModsynCompletionContext.AddToUserFileProperties =>
+                or ModsynCompletionContext.AddToUserFileProperties
+                or ModsynCompletionContext.MixedPartProperties =>
                 PropertyProvider.GetCompletions(context),
             ModsynCompletionContext.TypeValues => ValueProvider.GetTypeCompletions(),
             _ => Array.Empty<ModsynCompletionItem>()
@@ -34,7 +35,8 @@ public static class ModsynCompletionService
         return context switch
         {
             ModsynCompletionContext.RootProperties or ModsynCompletionContext.RequirementProperties
-                or ModsynCompletionContext.AddToUserFileProperties =>
+                or ModsynCompletionContext.AddToUserFileProperties
+                or ModsynCompletionContext.MixedPartProperties =>
                 PropertyProvider.GetCompletions(context, prefix, existingPropertyNames),
             ModsynCompletionContext.TypeValues => ValueProvider.GetTypeCompletions(prefix),
             ModsynCompletionContext.PropertyValues when propertyName is not null =>

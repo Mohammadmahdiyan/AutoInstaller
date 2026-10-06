@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GtaSaModManager.Controls;
 using GtaSaModManager.Services;
@@ -38,6 +37,7 @@ public partial class MainForm : Form
             LoadSettingsIntoUi();
             UpdateSidebarState();
             GameService.EnsureModLoaderFolder(selected);
+            RefreshStep1DeleteButton();
         };
 
         var flow = new FlowLayoutPanel
@@ -64,9 +64,22 @@ public partial class MainForm : Form
             Padding = new Padding(0),
             BackColor = Color.Transparent
         };
+        var deleteSomeModsButton = new RoundedButton
+        {
+            Name = "Step1DeleteSomeModsButton",
+            Text = _localizationService.GetString("DeleteSomeMods", "Delete some mods"),
+            Width = 200,
+            Height = 38,
+            Margin = new Padding(0, 14, 0, 0),
+            Visible = false
+        };
+        ApplyBrowseButtonStyle(deleteSomeModsButton, Color.FromArgb(220, 38, 38));
+        deleteSomeModsButton.Click += (_, _) => OpenDeleteSomeModsFromStep1();
+
         stack.Controls.Add(title);
         stack.Controls.Add(description);
         stack.Controls.Add(flow);
+        stack.Controls.Add(deleteSomeModsButton);
 
         panel.Controls.Add(stack);
 
@@ -215,33 +228,14 @@ public partial class MainForm : Form
                 return;
             }
 
-            var manifestPath = ModPackageService.GetManifestPath(selected);
-            if (manifestPath is null)
+            if (ModPackageService.GetManifestPath(selected) is not null
+                && !ModPackageService.TryValidateModsyn(selected, out var configError))
             {
-                try
-                {
-                    manifestPath = ModPackageService.CreateDefaultManifestFile(selected);
-                }
-                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
-                {
-                    MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
                 MessageBox.Show(
-                    _localizationService.GetString("ModsynMissingCreated", "A default mod.modsyn was created and will open in Notepad."),
+                    configError ?? "The Modsyn package configuration is invalid.",
                     _appName,
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                OpenModsynInNotepad(manifestPath);
-                return;
-            }
-
-            if (!ModPackageService.TryValidateModsyn(selected, out var configError))
-            {
-                ShowModsynErrorDialog(
-                    configError ?? "The Modsyn package configuration is invalid.",
-                    manifestPath);
+                    MessageBoxIcon.Warning);
                 return;
             }
 
@@ -408,91 +402,6 @@ public partial class MainForm : Form
             RefreshStep3Images(panel, _selectedModPayloadPath);
         }
         return panel;
-    }
-
-    private void OpenModsynInNotepad(string manifestPath)
-    {
-        try
-        {
-            var notepadPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.System),
-                "notepad.exe");
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = notepadPath,
-                Arguments = "\"" + Path.GetFullPath(manifestPath) + "\"",
-                UseShellExecute = false
-            };
-            if (Process.Start(startInfo) is null)
-            {
-                throw new InvalidOperationException("Notepad did not start.");
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(
-                _localizationService.GetString("ModsynOpenFailed", "Could not open the Modsyn file in Notepad.")
-                    + Environment.NewLine + ex.Message,
-                _appName,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-        }
-    }
-
-    private void ShowModsynErrorDialog(string error, string manifestPath)
-    {
-        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
-        using var dialog = new Form
-        {
-            Text = _localizationService.GetString("ModsynErrorTitle", "Modsyn validation error"),
-            StartPosition = FormStartPosition.CenterParent,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
-            MinimizeBox = false,
-            MaximizeBox = false,
-            ShowInTaskbar = false,
-            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No,
-            RightToLeftLayout = isRtl,
-            ClientSize = new Size(620, 300)
-        };
-        var errorText = new TextBox
-        {
-            Multiline = true,
-            ReadOnly = true,
-            ScrollBars = ScrollBars.Vertical,
-            Text = error,
-            Dock = DockStyle.Fill,
-            Margin = new Padding(10),
-            Font = new Font("Segoe UI", 10F)
-        };
-        var buttons = new FlowLayoutPanel
-        {
-            Dock = DockStyle.Bottom,
-            Height = 52,
-            Padding = new Padding(8),
-            FlowDirection = isRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight,
-            WrapContents = false
-        };
-        var openButton = new Button
-        {
-            Text = _localizationService.GetString("OpenModsynButton", "Open mod.modsyn in Notepad"),
-            AutoSize = true,
-            Height = 34
-        };
-        var closeButton = new Button
-        {
-            Text = _localizationService.GetString("Close", "Close"),
-            Width = 100,
-            Height = 34,
-            DialogResult = DialogResult.Cancel
-        };
-        openButton.Click += (_, _) => OpenModsynInNotepad(manifestPath);
-        buttons.Controls.Add(openButton);
-        buttons.Controls.Add(closeButton);
-        dialog.Controls.Add(errorText);
-        dialog.Controls.Add(buttons);
-        dialog.CancelButton = closeButton;
-        ThemeManager.ApplyTheme(dialog, ThemeManager.ParseTheme(_settings.Theme));
-        dialog.ShowDialog(this);
     }
 
     private void RefreshStep3Images(Control step3Panel, string modFolder, bool resetIndex = true)

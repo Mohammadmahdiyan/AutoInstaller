@@ -1,29 +1,3 @@
-13. میخام یک key value به modsyn اضافه کنم 
-که فقط مخصوص 
-MissionDSL
-SaveAndMission
-SavesAndMissions
-هست اینطوری که بعضی وقتا هست میخاد غیر از مرحله میخاد یکچزای دیگه هم نصب بشه در user file 
-
-```modsyn
-mod {
-    type: DSL,
-    addToUserFile: [
-        {
-            from: "JLNSJ", // => منظورش اینکه داخل پوشه مد یک پوشه JLNSJ هست بریز توی to
-            to: "" // => \Documents\GTA San Andreas User Files\ => (اینجا منظورشه) (اگر to نبود هم منظورش همینجاست)
-        },
-        {
-            fromBase: "Scripts\\DYOM\\Dyom IX Addon TR Yama By Eren Unal Fix v3\text.gxt", // => Base Mods Address\ (این برای اینکه از ادرس بیس خواسته باشن یک چیزی رو نصب کنن)
-            to: "MPACK" // => \Documents\GTA San Andreas User Files\MPACK\ (text.gxt رو اینجا باید بریزه)
-        }
-    ]
-}
-```
-باید from باشه
-باید مقدار داشته باشه
-باید یا from باشه یا fromBase
-
 13. Mixed
 این تایپ هم میخام اضافه کنی 
 مخفف : MIX
@@ -70,5 +44,11 @@ Forms\DeleteSomeModUi\DeleteSomeModUi.html
     عکس و گیف و ویدیو مد برای از پوشه مد لود کنه نه از پوشه بازی 
     ادرس مد در installing.json هست
 )
-14. میخام optional رو ...
+14. میخام optional رو توضیح بدم
+
+14. میخام optionals رو توضیح بدم
+
 15. میخام منطق نصب هر تایپ در modsyn type در یک فایل جداگانه پیاده سازی بشه چون حجم فایل زیاد شده
+16. یک دکمه میخام در step 1 که کارش این باشه یک مد رندوم رو بیاره
+اینجوری که کلیک میشه بره step 3 و اون ادرس مد توی broswe step 3 باشه
+توی پوشه های base mod یکی رندوم پیدا کنه 

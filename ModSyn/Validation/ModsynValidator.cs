@@ -18,6 +18,7 @@ public static class ModsynValidator
         {
             ValidateBackupApplicability(document.Body, normalizedType, errors);
         }
+        ValidateMixedPackage(document.Body, normalizedType, errors, warnings);
         var (backupMode, backupModeIsValid) = ResolveBackupMode(document.Body, errors);
         ValidateBackupSelectors(document.Body, backupMode, backupModeIsValid, errors, warnings);
         if (typeIsValid
@@ -67,6 +68,99 @@ public static class ModsynValidator
             requirements.AsReadOnly(),
             errors.AsReadOnly(),
             warnings.AsReadOnly());
+    }
+
+    private static void ValidateMixedPackage(
+        ModsynObjectNode root,
+        string normalizedType,
+        List<ModsynValidationError> errors,
+        List<ModsynValidationWarning> warnings)
+    {
+        var listProperty = FindProperty(root, "list");
+        if (!string.Equals(normalizedType, "Mixed", StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        if (listProperty?.Value is not ModsynArrayNode parts)
+        {
+            errors.Add(new ModsynValidationError(
+                "Mixed requires a list containing at least two package entries.",
+                listProperty?.Value.Location ?? root.Location));
+            return;
+        }
+
+        if (parts.Items.Count < 2)
+        {
+            errors.Add(new ModsynValidationError(
+                "Mixed list requires at least two package entries.",
+                parts.Location));
+        }
+
+        var folderNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var part in parts.Items.OfType<ModsynObjectNode>())
+        {
+            ValidatePropertySet(part, ModsynLanguageDefinition.MixedPartProperties, "mixed part", errors);
+
+            var folderName = FindProperty(part, "folderName");
+            if (folderName?.Value is not ModsynStringNode folderPath
+                || !IsSafeRelativePath(folderPath.Value, allowEmpty: false))
+            {
+                errors.Add(new ModsynValidationError(
+                    "Each Mixed list entry requires a non-empty relative folderName without '..'.",
+                    folderName?.Value.Location ?? part.Location));
+            }
+            else if (!folderNames.Add(folderPath.Value.Replace('\\', '/').Trim('/')))
+            {
+                errors.Add(new ModsynValidationError(
+                    "Mixed list entries must use distinct folderName values.",
+                    folderPath.Location));
+            }
+
+            var typeProperty = FindProperty(part, "type");
+            if (typeProperty is null)
+            {
+                errors.Add(new ModsynValidationError(
+                    "Each Mixed list entry requires a type.",
+                    part.Location));
+                continue;
+            }
+
+            var (partType, partTypeIsValid) = ResolveType(typeProperty, errors);
+            if (!partTypeIsValid)
+            {
+                continue;
+            }
+
+            if (partType == "Mixed")
+            {
+                errors.Add(new ModsynValidationError(
+                    "A Mixed package cannot contain another Mixed package.",
+                    typeProperty.Value.Location));
+                continue;
+            }
+
+            ValidateBackupApplicability(part, partType, errors);
+            var (backupMode, backupModeIsValid) = ResolveBackupMode(part, errors);
+            ValidateBackupSelectors(part, backupMode, backupModeIsValid, errors, warnings);
+            if (partType == "PutAndReplace"
+                && backupModeIsValid
+                && backupMode != ModsynBackupMode.Some
+                && !part.Properties.Any(property => property.Name is "backupThis" or "backupThese" or "dontBackupThis" or "dontBackupThese"))
+            {
+                errors.Add(new ModsynValidationError(
+                    "PutAndReplace requires at least one backup selector with backup: some.",
+                    typeProperty.Value.Location));
+            }
+
+            if (FindProperty(part, "replacements")?.Value is ModsynArrayNode replacements)
+            {
+                foreach (var replacement in replacements.Items.OfType<ModsynObjectNode>())
+                {
+                    ValidateReplacement(replacement, errors);
+                }
+            }
+        }
     }
 
     private static (string TypeName, bool IsValid) ResolveType(

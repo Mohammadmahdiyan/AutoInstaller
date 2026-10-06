@@ -340,6 +340,22 @@ Documents\GTA San Andreas User Files\DYOM v8.1
 
 ---
 
+## Mixed (MIX)
+
+نوع `Mixed` دو یا چند پوشهٔ دارای نوع نصب متفاوت را از ریشهٔ پکیج، به‌ترتیب فهرست نصب می‌کند. هر `folderName` باید یک مسیر نسبی و پوشهٔ موجود باشد. اگر یک بخش نیاز به انتخاب Asset داشته باشد، ویزارد برای انتخاب به Step 5 می‌رود و فقط پس از پایان آخرین بخش به Step 6 می‌رسد.
+
+```modsyn
+mod {
+  type: MIX
+  list: [
+    { type: VSW folderName: "gta3img" }
+    { type: Replacing folderName: "animations" backup: none }
+  ]
+}
+```
+
+هر بخش از نوع‌های نصب موجود به‌جز `Mixed` تو‌در‌تو پشتیبانی می‌کند. تنظیمات backup و `replacements` داخل همان object قرار می‌گیرند و فقط روی همان بخش اعمال می‌شوند. اگر یک Mixed نصب‌شده دوباره انتخاب شود، امکان حذف بخش‌ها در Step 5 نمایش داده می‌شود؛ دکمهٔ حذف Step 1 نیز بخش‌ها را جداگانه فهرست می‌کند.
+
 # نکات مهم درباره رفتار سیستم
 
 - اعتبارسنجی `type` در حال حاضر، پس از استانداردسازی، این مقادیر را می‌پذیرد:
@@ -355,6 +371,7 @@ vehicleandskinandweapon
 vehiclesandskinsandweapons
 savesandmissions
 missiondsl
+mixed
 ```
 
 - مقدار `VehicleAndSkinsAndWeapons` به نوع **تک‌Asset** تبدیل می‌شود، زیرا فاقد `Vehicles` به‌صورت جمع است.

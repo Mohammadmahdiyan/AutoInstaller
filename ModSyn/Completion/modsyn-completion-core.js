@@ -62,6 +62,7 @@ function propertyMap(metadata, scope) {
   if (scope === "requirement") return metadata.requirementProperties;
   if (scope === "replacement") return metadata.replacementProperties;
   if (scope === "userFile") return metadata.addToUserFileProperties;
+  if (scope === "mixedPart") return metadata.mixedPartProperties;
   return [];
 }
 
@@ -126,6 +127,8 @@ function detectContext(source, cursorOffset, metadata) {
             ? "replacement"
             : frame.scope === "root" && frame.property === "addToUserFile"
               ? "userFile"
+              : frame.scope === "root" && frame.property === "list"
+                ? "mixedPart"
             : null;
       stack.push({
         kind: "array",
@@ -174,7 +177,7 @@ function detectContext(source, cursorOffset, metadata) {
   }
   const usedProperties = frame.properties ?? new Set();
   if (frame.state === "value" && frame.property) {
-    if (frame.scope === "root" && frame.property === "type")
+    if ((frame.scope === "root" || frame.scope === "mixedPart") && frame.property === "type")
       return { kind: "type", property: frame.property, prefix: active.prefix };
     const definition = propertyDefinition(
       metadata,
@@ -193,6 +196,8 @@ function detectContext(source, cursorOffset, metadata) {
           ? "requirement"
             : frame.scope === "userFile"
               ? "userFile"
+              : frame.scope === "mixedPart"
+                ? "mixedPart"
           : "none",
     usedProperties,
     prefix: active.prefix,
@@ -223,6 +228,12 @@ function getCompletions(source, cursorOffset, metadata) {
       );
   } else if (context.kind === "userFile") {
     items = propertyMap(metadata, "userFile")
+      .filter((property) => !context.usedProperties?.has(property.name))
+      .map((property) =>
+        item(property.name, property.name, property.description, "property"),
+      );
+  } else if (context.kind === "mixedPart") {
+    items = propertyMap(metadata, "mixedPart")
       .filter((property) => !context.usedProperties?.has(property.name))
       .map((property) =>
         item(property.name, property.name, property.description, "property"),
@@ -413,7 +424,7 @@ function getDiagnostics(source, metadata) {
       }
     }
 
-    if (scope === "root" && property.name === "type") {
+    if ((scope === "root" || scope === "mixedPart") && property.name === "type") {
       const typeValue = property.value.value;
       if (
         (property.value.kind === "string" ||
@@ -424,11 +435,16 @@ function getDiagnostics(source, metadata) {
           property.value.token,
           `Unsupported package type '${typeValue ?? ""}'.`,
         );
+      } else if (
+        scope === "mixedPart" &&
+        normalizeType(typeValue) === "mixed"
+      ) {
+        addDiagnostic(property.value.token, "A Mixed package cannot contain another Mixed package.");
       }
     }
 
     if (
-      scope === "root" &&
+      (scope === "root" || scope === "mixedPart") &&
       property.name === "backup" &&
       !["all", "none", "some"].includes(
         String(property.value.value).toLowerCase(),
@@ -458,6 +474,8 @@ function getDiagnostics(source, metadata) {
               ? "replacement"
               : scope === "root" && property.name === "addToUserFile"
                 ? "userFile"
+                : scope === "root" && property.name === "list"
+                  ? "mixedPart"
               : "other";
         validateObject(itemNode, nestedScope);
       }
@@ -498,6 +516,49 @@ function getDiagnostics(source, metadata) {
         continue;
       }
       validateProperty(property, definition, scope);
+    }
+
+    if (scope === "mixedPart") {
+      const typeProperty = objectNode.properties.find((property) => property.name === "type");
+      const typeValue = typeProperty?.value.value;
+      const matchedType = metadata.types.find((type) =>
+        [type.name, ...type.aliases].some((candidate) => normalizeType(candidate) === normalizeType(typeValue ?? "")),
+      );
+      if (!typeProperty) {
+        addDiagnostic(objectNode.token, "Each Mixed list entry requires a type.");
+      }
+
+      const folderName = objectNode.properties.find((property) => property.name === "folderName");
+      if (!folderName) {
+        addDiagnostic(objectNode.token, "Each Mixed list entry requires a folderName.");
+      }
+
+      for (const property of objectNode.properties) {
+        const definition = definitions.find((candidate) => candidate.name === property.name);
+        if (matchedType && definition?.applicableTypes.length && !definition.applicableTypes.includes(matchedType.name)) {
+          addDiagnostic(
+            property.token,
+            `Property '${property.name}' is only valid for types: ${definition.applicableTypes.join(", ")}.`,
+          );
+        }
+      }
+
+      const backupMode = String(objectNode.properties.find((property) => property.name === "backup")?.value.value ?? "all").toLowerCase();
+      const selectors = objectNode.properties.filter((property) =>
+        ["backupThis", "backupThese", "dontBackupThis", "dontBackupThese"].includes(property.name),
+      );
+      if (backupMode !== "some") {
+        for (const property of selectors) {
+          addDiagnostic(property.token, `Property '${property.name}' requires backup: some.`, "backup-selector-requires-some");
+        }
+      } else if (!selectors.some((property) => property.value.kind === "string" && property.value.value.trim() !== ""
+        || property.value.kind === "Array" && property.value.items.some((itemNode) => itemNode.kind === "string" && itemNode.value.trim() !== ""))) {
+        addDiagnostic(
+          objectNode.properties.find((property) => property.name === "backup")?.value.token ?? objectNode.token,
+          "backup: some requires at least one backup selector with a value.",
+          "backup-some-without-selection",
+        );
+      }
     }
 
     if (scope === "replacement") {
@@ -566,6 +627,50 @@ function getDiagnostics(source, metadata) {
     const resolvedType = !typeProperty
       ? metadata.defaultTypeName
       : matchedType?.name;
+    if (resolvedType === "Mixed") {
+      const listProperty = objectNode.properties.find((property) => property.name === "list");
+      if (!listProperty || listProperty.value.kind !== "Array") {
+        addDiagnostic(
+          listProperty?.value.token ?? objectNode.token,
+          "Mixed requires a list containing at least two package entries.",
+        );
+      } else {
+        if (listProperty.value.items.length < 2) {
+          addDiagnostic(listProperty.value.token, "Mixed list requires at least two package entries.");
+        }
+
+        const seenFolderNames = new Set();
+        for (const part of listProperty.value.items) {
+          if (part.kind !== "Object") continue;
+          const partType = part.properties.find((property) => property.name === "type");
+          const folderName = part.properties.find((property) => property.name === "folderName");
+          if (!partType || !["string", "identifier"].includes(partType.value.kind)) {
+            addDiagnostic(part.token, "Each Mixed list entry requires a type.");
+          } else {
+            const normalizedPartType = normalizeType(partType.value.value ?? "");
+            const matchedPartType = metadata.types.find((type) =>
+              [type.name, ...type.aliases].some((candidate) => normalizeType(candidate) === normalizedPartType),
+            );
+            if (!matchedPartType || ["Mixed", "SaveAndMission", "SavesAndMissions", "MissionDsl"].includes(matchedPartType.name)) {
+              addDiagnostic(partType.value.token, `Package type '${partType.value.value}' is not supported inside Mixed.`);
+            }
+          }
+
+          const folderValue = folderName?.value;
+          const folderPath = folderValue?.value ?? "";
+          const normalizedFolder = folderPath.replace(/\\/g, "/");
+          if (folderValue?.kind !== "string" || folderPath.trim() === "") {
+            addDiagnostic(folderValue?.token ?? part.token, "Each Mixed list entry requires a non-empty relative folderName.");
+          } else if (/^(?:[a-z]:|\/|\\\\)/i.test(folderPath) || normalizedFolder.split("/").includes("..")) {
+            addDiagnostic(folderValue.token, "Mixed folderName must stay inside the package root.");
+          } else if (seenFolderNames.has(normalizedFolder.toLowerCase())) {
+            addDiagnostic(folderValue.token, "Mixed list entries must use distinct folderName values.");
+          } else {
+            seenFolderNames.add(normalizedFolder.toLowerCase());
+          }
+        }
+      }
+    }
     const backupSelectorNames = [
       "backupThis",
       "backupThese",
