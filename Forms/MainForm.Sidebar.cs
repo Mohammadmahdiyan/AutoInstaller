@@ -400,7 +400,10 @@ public partial class MainForm : Form
 
         var remainingHeight = Math.Max(150, _sidebarPanel.Height - 280);
         var imageSpace = hasVisibleImage ? Math.Max(90, remainingHeight / 2) : 0;
-        var maxAllowed = Math.Max(90, remainingHeight - imageSpace);
+        var readmeButtonSpace = _sidebarReadmeButton == null
+            ? 58
+            : _sidebarReadmeButton.Height + _sidebarReadmeButton.Margin.Vertical + 6;
+        var maxAllowed = Math.Max(90, remainingHeight - imageSpace - readmeButtonSpace);
         var requiredHeight = size.Height + 18;
         var targetHeight = Math.Clamp(requiredHeight, 80, maxAllowed);
 
