@@ -758,20 +758,29 @@ public sealed class ModsynManifestDiscoveryTests
     [TestMethod]
     public void SaveMissionNameReader_ReadsNameFromDyomMissionHeader()
     {
-        var missionPath = Path.Combine(Path.GetTempPath(), "ModsynMissionName-" + Guid.NewGuid().ToString("N") + ".dat");
-        var bytes = new byte[64];
-        new byte[] { 0xFC, 0xFF, 0xFF, 0xFF }.CopyTo(bytes, 0);
-        System.Text.Encoding.ASCII.GetBytes("Kill The Johnsons Mother").CopyTo(bytes, 4);
-
-        try
+        var headers = new[]
         {
-            File.WriteAllBytes(missionPath, bytes);
+            (Header: new byte[] { 0xFC, 0xFF, 0xFF, 0xFF }, Name: "Kill The Johnsons Mother"),
+            (Header: new byte[] { 0x06, 0x00, 0x00, 0x00 }, Name: "CMEPTELJHAR FOHKA"),
+            (Header: new byte[] { 0xFA, 0xFF, 0xFF, 0xFF }, Name: "CMEPTELJHAR FOHKA")
+        };
 
-            Assert.AreEqual("Kill The Johnsons Mother", GtaSaModManager.Services.SaveMissionNameReader.TryReadDyomMissionName(missionPath));
-        }
-        finally
+        foreach (var header in headers)
         {
-            File.Delete(missionPath);
+            var missionPath = Path.Combine(Path.GetTempPath(), "ModsynMissionName-" + Guid.NewGuid().ToString("N") + ".dat");
+            var bytes = new byte[64];
+            header.Header.CopyTo(bytes, 0);
+            System.Text.Encoding.ASCII.GetBytes(header.Name).CopyTo(bytes, 4);
+            try
+            {
+                File.WriteAllBytes(missionPath, bytes);
+
+                Assert.AreEqual(header.Name, GtaSaModManager.Services.SaveMissionNameReader.TryReadDyomMissionName(missionPath));
+            }
+            finally
+            {
+                File.Delete(missionPath);
+            }
         }
     }
 

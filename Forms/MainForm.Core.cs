@@ -86,6 +86,7 @@ public partial class MainForm : Form
     private readonly List<SourceModel> _multiSourceModels = new();
     private readonly List<SaveMissionSourceFile> _saveMissionPackageFiles = new();
     private readonly List<string> _saveMissionInstalledFiles = new();
+    private readonly Dictionary<string, string> _saveMissionInstalledTargets = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<RadioButton> _saveMissionSlotButtons = new();
     private int _multiIndex;
     private int _saveMissionFileIndex;

@@ -8,6 +8,8 @@ public static class SaveMissionNameReader
     private const int NameOffset = 9;
     private static readonly byte[] GtaSaveSignature = Encoding.ASCII.GetBytes("BLOCK");
     private static readonly byte[] DyomMissionSignature = { 0xFC, 0xFF, 0xFF, 0xFF };
+    private static readonly byte[] DyomVersionSixSignature = { 0x06, 0x00, 0x00, 0x00 };
+    private static readonly byte[] DyomAlternateSignature = { 0xFA, 0xFF, 0xFF, 0xFF };
 
     public static string? TryReadGtaSaveName(string path)
     {
@@ -16,7 +18,9 @@ public static class SaveMissionNameReader
 
     public static string? TryReadDyomMissionName(string path)
     {
-        return TryReadHeaderName(path, DyomMissionSignature, DyomMissionSignature.Length);
+        return TryReadHeaderName(path, DyomMissionSignature, DyomMissionSignature.Length)
+            ?? TryReadHeaderName(path, DyomVersionSixSignature, DyomVersionSixSignature.Length)
+            ?? TryReadHeaderName(path, DyomAlternateSignature, DyomAlternateSignature.Length);
     }
 
     private static string? TryReadHeaderName(

@@ -12,6 +12,7 @@ public partial class MainForm
     {
         _saveMissionPackageFiles.Clear();
         _saveMissionInstalledFiles.Clear();
+        _saveMissionInstalledTargets.Clear();
         _saveMissionFileIndex = 0;
         _selectedSaveMissionSlot = null;
 
@@ -285,18 +286,28 @@ public partial class MainForm
 
     private void ShowSaveMissionStatus()
     {
-        var lines = _saveMissionPackageFiles.Select((file, index) =>
+        var lines = _saveMissionPackageFiles.Select(file =>
         {
-            var installedName = index < _saveMissionInstalledFiles.Count
-                ? Path.GetFileName(_saveMissionInstalledFiles[index])
+            var sourceName = FormatSaveMissionStatusFile(file.Path, file.IsMission);
+            var targetName = _saveMissionInstalledTargets.TryGetValue(file.Path, out var destination)
+                ? FormatSaveMissionStatusFile(destination, file.IsMission)
                 : _localizationService.GetString("Pending", "Pending");
-            return Path.GetFileName(file.Path) + " -> " + installedName;
+            return sourceName + " => " + targetName;
         });
         MessageBox.Show(
             string.Join(Environment.NewLine, lines),
             _localizationService.GetString("MultiAssetSummaryTitle", "Mod Status"),
             MessageBoxButtons.OK,
             MessageBoxIcon.Information);
+    }
+
+    private static string FormatSaveMissionStatusFile(string path, bool isMission)
+    {
+        var fileName = Path.GetFileName(path);
+        var title = isMission
+            ? SaveMissionNameReader.TryReadDyomMissionName(path)
+            : SaveMissionNameReader.TryReadGtaSaveName(path);
+        return string.IsNullOrWhiteSpace(title) ? fileName : fileName + " (" + title + ")";
     }
 
     private async Task InstallSelectedSaveMissionFileAsync()
@@ -378,6 +389,7 @@ public partial class MainForm
         {
                 await CopyStep4FileAsync(0, sourceFile.Path, destination, relativeName);
             _saveMissionInstalledFiles.Add(destination);
+            _saveMissionInstalledTargets[sourceFile.Path] = destination;
                 for (var index = 0; index < userFileAdditions.Count; index++)
                 {
                     var addition = userFileAdditions[index];
