@@ -321,7 +321,7 @@
       ========================================================= */
 
     .progress {
-      width: 26px;
+      width: auto;
       height: 26px;
 
       position: relative;
@@ -330,6 +330,7 @@
 
       align-items: center;
       justify-content: center;
+      gap: 6px;
     }
 
     .progress.show {
@@ -340,7 +341,16 @@
       width: 26px;
       height: 26px;
 
+      flex-shrink: 0;
+
       transform: rotate(-90deg);
+    }
+
+    .progress-count {
+      color: var(--muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .progress-track,
@@ -1092,8 +1102,9 @@
       }
     }
   </style>
-  
+
 </head>
+
 <body>
   <!-- =========================================================
          MAIN DELETE WINDOW
@@ -1137,8 +1148,9 @@
         </div>
       </section>
 
-      <div class="media-empty-state" id="mediaEmptyState" hidden lang="fa" dir="rtl">
-        NO Photo and No Text for this Mod
+      <div class="media-empty-state" id="mediaEmptyState" hidden lang="fa" dir="rtl"
+        style="text-align: center; font-size: 24px; font-weight: 600;">
+        No Photo's and No Readme's for this Mod
       </div>
     </div>
   </div>
@@ -1186,6 +1198,7 @@
 
       {
         name: "Four Screenshots",
+        fileCount: 65,
 
         description: "This mod contains exactly four screenshots.",
 
@@ -1221,6 +1234,7 @@
 
       {
         name: "Screenshots And Video",
+        fileCount: 42,
 
         description: "This mod contains two screenshots and one video.",
 
@@ -1251,6 +1265,7 @@
 
       {
         name: "Animated GIF",
+        fileCount: 87,
 
         description: "This mod contains only one animated GIF.",
 
@@ -1272,6 +1287,7 @@
 
       {
         name: "Text Only",
+        fileCount: 31,
 
         description:
           "This mod does not contain any image, GIF or video. " +
@@ -1290,6 +1306,7 @@
 
       {
         name: "Image Only",
+        fileCount: 54,
 
         description: "",
 
@@ -1310,6 +1327,7 @@
 
       {
         name: "Mixed Media",
+        fileCount: 76,
 
         description:
           "This mod contains an image, an animated GIF " + "and a video.",
@@ -1341,6 +1359,7 @@
 
       {
         name: "Video Only",
+        fileCount: 23,
 
         description: "This mod contains only a video.",
 
@@ -1362,6 +1381,7 @@
 
       {
         name: "Complete Media Pack",
+        fileCount: 98,
 
         description:
           "This mod contains multiple images, GIFs and videos. " +
@@ -1412,6 +1432,7 @@
 
       {
         name: "Empty Mod",
+        fileCount: 47,
         description: "",
         media: [],
       },
@@ -1545,6 +1566,8 @@
 
             <div class="progress">
 
+              <span class="progress-count">0/${mod.fileCount}</span>
+
               <svg viewBox="0 0 26 26">
 
                 <circle
@@ -1574,7 +1597,7 @@
       item.querySelector(".item-text").textContent =
         `${index + 1}. ${mod.name || ""}`;
 
-      setupDelete(item);
+      setupDelete(item, mod);
 
       /*
        ========================================================
@@ -1600,7 +1623,7 @@
        DELETE SYSTEM
     ========================================================= */
 
-    function setupDelete(item) {
+    function setupDelete(item, mod) {
       const trash = item.querySelector(".trash-button");
 
       const confirm = item.querySelector(".confirm");
@@ -1612,6 +1635,8 @@
       const progress = item.querySelector(".progress");
 
       const progressBar = item.querySelector(".progress-bar");
+
+      const progressCount = item.querySelector(".progress-count");
 
       const success = item.querySelector(".success-check");
 
@@ -1660,6 +1685,9 @@
           progressBar.style.strokeDashoffset =
             circumference - circumference * value;
 
+          progressCount.textContent =
+            `${Math.floor(mod.fileCount * value)}/${mod.fileCount}`;
+
           if (value < 1) {
             requestAnimationFrame(animate);
 
@@ -1667,6 +1695,8 @@
           }
 
           progress.classList.remove("show");
+
+          progressCount.textContent = `${mod.fileCount}/${mod.fileCount}`;
 
           success.classList.add("show");
 
