@@ -59,6 +59,15 @@ public sealed class ModConflictCleanupEntry
         && (ReplacesWith == null || ReplacesWith.Count == 0);
 }
 
+public sealed class ModUserFileInstallEntry
+{
+    public string? From { get; set; }
+
+    public string? FromBase { get; set; }
+
+    public string? To { get; set; }
+}
+
 public class ModManifest
 {
     public string Type { get; set; } = string.Empty;
@@ -78,6 +87,8 @@ public class ModManifest
     public List<string> IgnoreFiles { get; set; } = new();
 
     public List<string> IgnoreFolders { get; set; } = new();
+
+    public List<ModUserFileInstallEntry> AddToUserFile { get; set; } = new();
 
     public bool HasInstallFiles => InstallFiles.Count > 0;
 

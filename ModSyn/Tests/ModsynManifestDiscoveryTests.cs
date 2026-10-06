@@ -651,6 +651,64 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public async Task AddToUserFile_CopiesPackageAndBaseSourcesAndUninstallsRecordedFiles()
+    {
+        var gameFolder = Path.Combine(Path.GetTempPath(), "ModsynUserFileAddOn-" + Guid.NewGuid().ToString("N"));
+        var packageRoot = Path.Combine(gameFolder, "Package");
+        var packageFolder = Path.Combine(packageRoot, "JLNSJ");
+        var baseModsRoot = Path.Combine(gameFolder, "BaseMods");
+        var baseFile = Path.Combine(baseModsRoot, "Scripts", "DYOM", "text.gxt");
+        var userFilesRoot = Path.Combine(gameFolder, "Documents", "GTA San Andreas User Files");
+        var unrelatedFile = Path.Combine(userFilesRoot, "unrelated.txt");
+        Directory.CreateDirectory(packageFolder);
+        Directory.CreateDirectory(Path.GetDirectoryName(baseFile)!);
+        Directory.CreateDirectory(userFilesRoot);
+        await File.WriteAllTextAsync(Path.Combine(packageFolder, "addon.dat"), "package addon");
+        await File.WriteAllTextAsync(baseFile, "base addon");
+        await File.WriteAllTextAsync(unrelatedFile, "keep");
+
+        try
+        {
+            var plan = UserFilesInstallService.CreateCopyPlan(
+                new[]
+                {
+                    new ModUserFileInstallEntry { From = "JLNSJ" },
+                    new ModUserFileInstallEntry { FromBase = "Scripts\\DYOM\\text.gxt", To = "MPACK" }
+                },
+                packageRoot,
+                baseModsRoot,
+                userFilesRoot);
+
+            Assert.AreEqual(2, plan.Count);
+            Assert.IsTrue(plan.Any(copy => copy.DestinationPath == Path.Combine(userFilesRoot, "JLNSJ", "addon.dat")));
+            Assert.IsTrue(plan.Any(copy => copy.DestinationPath == Path.Combine(userFilesRoot, "MPACK", "text.gxt")));
+            foreach (var copy in plan)
+            {
+                await FileCopyService.CopyFileAsync(copy.SourcePath, copy.DestinationPath);
+            }
+
+            ModLoaderService.RecordUserFilesInstallation(
+                gameFolder,
+                "Add-on package",
+                "savesandmissions",
+                plan.Select(copy => copy.DestinationPath),
+                userFilesRoot);
+
+            Assert.IsTrue(ModLoaderService.TryUninstallByModId(
+                "Add-on package",
+                "savesandmissions",
+                installedDestination: null,
+                gamePath: gameFolder));
+            Assert.IsFalse(plan.Any(copy => File.Exists(copy.DestinationPath)));
+            Assert.IsTrue(File.Exists(unrelatedFile));
+        }
+        finally
+        {
+            Directory.Delete(gameFolder, recursive: true);
+        }
+    }
+
+    [TestMethod]
     public void SaveMissionNameReader_ReadsNameFromGtaSaveHeader()
     {
         var savePath = Path.Combine(Path.GetTempPath(), "ModsynSaveName-" + Guid.NewGuid().ToString("N") + ".b");

@@ -61,6 +61,7 @@ function propertyMap(metadata, scope) {
   if (scope === "root") return metadata.rootProperties;
   if (scope === "requirement") return metadata.requirementProperties;
   if (scope === "replacement") return metadata.replacementProperties;
+  if (scope === "userFile") return metadata.addToUserFileProperties;
   return [];
 }
 
@@ -123,6 +124,8 @@ function detectContext(source, cursorOffset, metadata) {
           ? "requirement"
           : frame.scope === "root" && frame.property === "replacements"
             ? "replacement"
+            : frame.scope === "root" && frame.property === "addToUserFile"
+              ? "userFile"
             : null;
       stack.push({
         kind: "array",
@@ -188,6 +191,8 @@ function detectContext(source, cursorOffset, metadata) {
         ? "root"
         : frame.scope === "requirement"
           ? "requirement"
+            : frame.scope === "userFile"
+              ? "userFile"
           : "none",
     usedProperties,
     prefix: active.prefix,
@@ -212,6 +217,12 @@ function getCompletions(source, cursorOffset, metadata) {
       );
   } else if (context.kind === "requirement") {
     items = propertyMap(metadata, "requirement")
+      .filter((property) => !context.usedProperties?.has(property.name))
+      .map((property) =>
+        item(property.name, property.name, property.description, "property"),
+      );
+  } else if (context.kind === "userFile") {
+    items = propertyMap(metadata, "userFile")
       .filter((property) => !context.usedProperties?.has(property.name))
       .map((property) =>
         item(property.name, property.name, property.description, "property"),
@@ -445,6 +456,8 @@ function getDiagnostics(source, metadata) {
             ? "requirement"
             : scope === "root" && property.name === "replacements"
               ? "replacement"
+              : scope === "root" && property.name === "addToUserFile"
+                ? "userFile"
               : "other";
         validateObject(itemNode, nestedScope);
       }
@@ -499,6 +512,37 @@ function getDiagnostics(source, metadata) {
           addDiagnostic(
             objectNode.token,
             `Replacement object requires a '${requiredName}' string property.`,
+          );
+        }
+      }
+    }
+
+    if (scope === "userFile") {
+      const sources = objectNode.properties.filter((property) =>
+        ["from", "fromBase"].includes(property.name),
+      );
+      if (sources.length !== 1) {
+        addDiagnostic(
+          objectNode.token,
+          "Each addToUserFile entry requires exactly one of 'from' or 'fromBase'.",
+        );
+      }
+      for (const property of [...sources, ...objectNode.properties.filter((item) => item.name === "to")]) {
+        if (property.value.kind !== "string") continue;
+        const value = property.value.value;
+        const normalized = value.replace(/\\/g, "/");
+        const rooted = /^(?:[a-z]:|\/|\\\\)/i.test(value);
+        if (property.name !== "to" && value.trim() === "") {
+          addDiagnostic(
+            property.value.token,
+            `Property '${property.name}' requires a non-empty relative path without '..'.`,
+          );
+        } else if (rooted || normalized.split("/").includes("..")) {
+          addDiagnostic(
+            property.value.token,
+            property.name === "to"
+              ? "Property 'to' requires a relative path without '..'."
+              : `Property '${property.name}' requires a non-empty relative path without '..'.`,
           );
         }
       }

@@ -500,6 +500,24 @@ public partial class MainForm : Form
         var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
             ? _selectedModSourcePath
             : _settings.ModSourceFolder ?? string.Empty;
+        IReadOnlyList<UserFilesInstallCopy> userFileAdditions;
+        try
+        {
+            userFileAdditions = UserFilesInstallService.CreateCopyPlan(
+                _selectedModManifest?.AddToUserFile,
+                Directory.Exists(_selectedModPackageRoot) ? _selectedModPackageRoot : packageRoot,
+                baseModsFolder,
+                userFilesRoot);
+        }
+        catch (Exception ex) when (ex is InvalidDataException or IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            MessageBox.Show("Could not resolve addToUserFile entries: " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var userFileSourcePaths = userFileAdditions
+            .Select(copy => Path.GetFullPath(copy.SourcePath))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var dslRoot = Path.Combine(userFilesRoot, "DSL");
         var installDyomDependency = !Directory.Exists(dslRoot);
         var dyomDependencyRoot = Path.Combine(baseModsFolder, "Scripts", "DYOM", "DYOM v8.1");
@@ -515,6 +533,7 @@ public partial class MainForm : Form
 
         var packageFiles = Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)
             .Where(file => !ModPackageService.IsMetadataOrNonInstallableFile(file, packageRoot))
+            .Where(file => !userFileSourcePaths.Contains(Path.GetFullPath(file)))
             .ToList();
         if (packageFiles.Count == 0)
         {
@@ -532,6 +551,9 @@ public partial class MainForm : Form
         var progressFiles = dependencyFiles
             .Select(path => (path, Path.Combine("DYOM v8.1", Path.GetRelativePath(dyomDependencyRoot, path))))
             .Concat(packageFiles.Select(path => (path, Path.Combine("DSL", Path.GetRelativePath(packageRoot, path)))))
+            .Concat(userFileAdditions.Select(copy => (
+                copy.SourcePath,
+                Path.GetRelativePath(userFilesRoot, copy.DestinationPath))))
             .ToList();
         var progressTitle = _localizationService.GetString("Installing", "Installing") + " " + modName;
         BeginStep4Progress(progressTitle, progressFiles);
@@ -570,11 +592,22 @@ public partial class MainForm : Form
             packageFiles,
             dependencyFiles.Count,
             packageDisplayNames);
+        for (var index = 0; index < userFileAdditions.Count; index++)
+        {
+            var addition = userFileAdditions[index];
+            await CopyStep4FileAsync(
+                dependencyFiles.Count + packageFiles.Count + index,
+                addition.SourcePath,
+                addition.DestinationPath,
+                Path.GetRelativePath(userFilesRoot, addition.DestinationPath));
+        }
+
         ModLoaderService.RecordUserFilesInstallation(
             _selectedGamePath,
             modName,
             "missiondsl",
-            packageFiles.Select(path => Path.Combine(dslRoot, Path.GetRelativePath(packageRoot, path))));
+            packageFiles.Select(path => Path.Combine(dslRoot, Path.GetRelativePath(packageRoot, path)))
+                .Concat(userFileAdditions.Select(copy => copy.DestinationPath)));
         CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
         GoToStep(WizardStep.Step6);
     }

@@ -13,6 +13,7 @@ public sealed class PropertyCompletionProvider
         {
             ModsynCompletionContext.RootProperties => ModsynLanguageDefinition.RootProperties,
             ModsynCompletionContext.RequirementProperties => ModsynLanguageDefinition.RequirementProperties,
+            ModsynCompletionContext.AddToUserFileProperties => ModsynLanguageDefinition.AddToUserFileProperties,
             _ => null
         };
 

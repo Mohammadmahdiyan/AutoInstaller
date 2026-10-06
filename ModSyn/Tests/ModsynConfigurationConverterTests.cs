@@ -94,6 +94,27 @@ public sealed class ModsynConfigurationConverterTests
     }
 
     [TestMethod]
+    public void Convert_MapsAddToUserFileSourcesAndDefaultsDestinationToRoot()
+    {
+        var converted = Convert("""
+            mod {
+              type: DSL
+              addToUserFile: [
+                { from: "JLNSJ" }
+                { fromBase: "Scripts\\DYOM\\text.gxt" to: "MPACK" }
+              ]
+            }
+            """);
+
+        Assert.AreEqual(2, converted.Manifest.AddToUserFile.Count);
+        Assert.AreEqual("JLNSJ", converted.Manifest.AddToUserFile[0].From);
+        Assert.IsNull(converted.Manifest.AddToUserFile[0].FromBase);
+        Assert.AreEqual(string.Empty, converted.Manifest.AddToUserFile[0].To);
+        Assert.AreEqual("Scripts\\DYOM\\text.gxt", converted.Manifest.AddToUserFile[1].FromBase);
+        Assert.AreEqual("MPACK", converted.Manifest.AddToUserFile[1].To);
+    }
+
+    [TestMethod]
     public void Convert_DefaultsTypeAndBackupWithoutChangingExistingDefaults()
     {
         var converted = Convert("mod { installThis: \"one.cs\" }");

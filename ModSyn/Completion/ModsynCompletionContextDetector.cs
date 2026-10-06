@@ -15,6 +15,7 @@ public static class ModsynCompletionContextDetector
     {
         Root,
         Requirement,
+        AddToUserFile,
         Other
     }
 
@@ -38,6 +39,8 @@ public static class ModsynCompletionContextDetector
         public HashSet<string> PropertyNames { get; } = new(StringComparer.Ordinal);
 
         public bool ContainsRequirementObjects { get; init; }
+
+        public bool ContainsUserFileObjects { get; init; }
 
         public string? ArrayPropertyName { get; init; }
 
@@ -132,11 +135,14 @@ public static class ModsynCompletionContextDetector
             if (token.Kind == ModsynTokenKind.LeftBrace)
             {
                 var scope = current.Kind == ContainerKind.Array && current.ContainsRequirementObjects
-                    || current.Kind == ContainerKind.Object
-                        && current.State == ObjectState.ExpectingValue
-                        && current.PropertyName == "require"
                     ? ObjectScope.Requirement
-                    : ObjectScope.Other;
+                    : current.Kind == ContainerKind.Array && current.ContainsUserFileObjects
+                        ? ObjectScope.AddToUserFile
+                        : current.Kind == ContainerKind.Object
+                            && current.State == ObjectState.ExpectingValue
+                            && current.PropertyName == "require"
+                                ? ObjectScope.Requirement
+                                : ObjectScope.Other;
                 containers.Add(new ContainerFrame { Kind = ContainerKind.Object, Scope = scope });
                 CompleteParentValue(containers, current);
                 continue;
@@ -151,11 +157,16 @@ public static class ModsynCompletionContextDetector
                     && current.State == ObjectState.ExpectingValue
                     && current.Scope == ObjectScope.Root
                     && current.PropertyName == "requires";
+                var containsUserFileObjects = current.Kind == ContainerKind.Object
+                    && current.State == ObjectState.ExpectingValue
+                    && current.Scope == ObjectScope.Root
+                    && current.PropertyName == "addToUserFile";
                 containers.Add(new ContainerFrame
                 {
                     Kind = ContainerKind.Array,
                     Scope = ObjectScope.Other,
                     ContainsRequirementObjects = containsRequirementObjects,
+                    ContainsUserFileObjects = containsUserFileObjects,
                     ArrayPropertyName = current.PropertyName,
                     ArrayItemKinds = propertyDefinition?.ArrayItemKinds ?? Array.Empty<ModsynValueKind>()
                 });
@@ -215,6 +226,7 @@ public static class ModsynCompletionContextDetector
             {
                 ObjectScope.Root => ModsynCompletionContext.RootProperties,
                 ObjectScope.Requirement => ModsynCompletionContext.RequirementProperties,
+                ObjectScope.AddToUserFile => ModsynCompletionContext.AddToUserFileProperties,
                 _ => ModsynCompletionContext.None
             };
         }
@@ -281,6 +293,7 @@ public static class ModsynCompletionContextDetector
         {
             ObjectScope.Root => ModsynLanguageDefinition.RootProperties,
             ObjectScope.Requirement => ModsynLanguageDefinition.RequirementProperties,
+            ObjectScope.AddToUserFile => ModsynLanguageDefinition.AddToUserFileProperties,
             ObjectScope.Other => ModsynLanguageDefinition.ReplacementProperties,
             _ => null
         };

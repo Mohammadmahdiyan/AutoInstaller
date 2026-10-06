@@ -30,7 +30,8 @@ public static class ModsynConfigurationConverter
             InstallFiles = installFiles,
             InstallFolders = installFolders,
             IgnoreFiles = ignoreFiles,
-            IgnoreFolders = ignoreFolders
+            IgnoreFolders = ignoreFolders,
+            AddToUserFile = ReadUserFileEntries(root)
         };
         manifest.Requires.AddRange(validation.Requirements.Select(requirement => new ModRequirementEntry
         {
@@ -83,6 +84,20 @@ public static class ModsynConfigurationConverter
         }
 
         return NormalizePaths(paths);
+    }
+
+    private static List<ModUserFileInstallEntry> ReadUserFileEntries(ModsynObjectNode root)
+    {
+        return root.Properties
+            .Where(property => property.Name == "addToUserFile" && property.Value is ModsynArrayNode)
+            .SelectMany(property => ((ModsynArrayNode)property.Value).Items.OfType<ModsynObjectNode>())
+            .Select(entry => new ModUserFileInstallEntry
+            {
+                From = FindString(entry, "from") is { } from ? NormalizePath(from) : null,
+                FromBase = FindString(entry, "fromBase") is { } fromBase ? NormalizePath(fromBase) : null,
+                To = FindString(entry, "to") is { } to ? NormalizePath(to) : string.Empty
+            })
+            .ToList();
     }
 
     private static List<string> BuildRequirementPaths(ModsynResolvedRequirement requirement)
@@ -188,6 +203,12 @@ public static class ModsynConfigurationConverter
 
     private static string NormalizePath(string path)
     {
-        return path.Trim().Replace('/', '\\');
+        var normalized = path.Trim().Replace('/', '\\');
+        while (normalized.Contains("\\\\", StringComparison.Ordinal))
+        {
+            normalized = normalized.Replace("\\\\", "\\", StringComparison.Ordinal);
+        }
+
+        return normalized;
     }
 }

@@ -52,6 +52,13 @@ public static class ModsynValidator
                     ValidateReplacement(replacement, errors);
                 }
             }
+            else if (property.Name == "addToUserFile" && property.Value is ModsynArrayNode userFileEntries)
+            {
+                foreach (var entry in userFileEntries.Items.OfType<ModsynObjectNode>())
+                {
+                    ValidateUserFileEntry(entry, errors);
+                }
+            }
         }
 
         return new ModsynValidationResult(
@@ -273,6 +280,53 @@ public static class ModsynValidator
                     replacement.Location));
             }
         }
+    }
+
+    private static void ValidateUserFileEntry(
+        ModsynObjectNode entry,
+        List<ModsynValidationError> errors)
+    {
+        ValidatePropertySet(entry, ModsynLanguageDefinition.AddToUserFileProperties, "addToUserFile entry", errors);
+
+        var from = FindProperty(entry, "from");
+        var fromBase = FindProperty(entry, "fromBase");
+        if ((from is null) == (fromBase is null))
+        {
+            errors.Add(new ModsynValidationError(
+                "Each addToUserFile entry requires exactly one of 'from' or 'fromBase'.",
+                entry.Location));
+        }
+
+        foreach (var property in new[] { from, fromBase })
+        {
+            if (property?.Value is ModsynStringNode source
+                && !IsSafeRelativePath(source.Value, allowEmpty: false))
+            {
+                errors.Add(new ModsynValidationError(
+                    $"Property '{property.Name}' requires a non-empty relative path without '..'.",
+                    source.Location));
+            }
+        }
+
+        var destination = FindProperty(entry, "to");
+        if (destination?.Value is ModsynStringNode destinationPath
+            && !IsSafeRelativePath(destinationPath.Value, allowEmpty: true))
+        {
+            errors.Add(new ModsynValidationError(
+                "Property 'to' requires a relative path without '..'.",
+                destinationPath.Location));
+        }
+    }
+
+    private static bool IsSafeRelativePath(string path, bool allowEmpty)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return allowEmpty;
+        }
+
+        return !Path.IsPathRooted(path)
+            && !path.Replace('\\', '/').Split('/').Any(segment => segment == "..");
     }
 
     private static void ValidatePropertySet(

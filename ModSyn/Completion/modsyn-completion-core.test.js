@@ -82,6 +82,17 @@ test("every existing key is omitted in root and requirement objects", () => {
   );
 });
 
+test("addToUserFile objects complete only their source and destination keys", () => {
+  const items = atMarker('mod { type: DSL addToUserFile: [{ from: "JLNSJ", | }] }');
+  assert.deepEqual(
+    items.map((item) => item.label),
+    ["fromBase", "to"],
+  );
+
+  const sourceValue = atMarker('mod { type: DSL addToUserFile: [{ from: "JL|" }] }');
+  assert.deepEqual(sourceValue, []);
+});
+
 test("empty root object contains keys only, never words from values", () => {
   const source =
     'mod { installThis: "models/example.dff" replacements: [{ source: "data/handling.cfg" target: "data/handling.cfg" }] | }';
@@ -149,6 +160,19 @@ test("unknown root and nested keys produce diagnostics", () => {
       "Unknown requirement property 'checkFile'. (line 1, column 32).",
     ],
   );
+});
+
+test("addToUserFile diagnostics require one non-empty relative source", () => {
+  const diagnostics = core.getDiagnostics(
+    'mod { type: DSL addToUserFile: [{ from: "" fromBase: "../bad" to: "../outside" }] }',
+    metadata,
+  );
+  assert.equal(
+    diagnostics.some((issue) => issue.message.includes("exactly one of 'from' or 'fromBase'")),
+    true,
+  );
+  assert.equal(diagnostics.some((issue) => issue.message.includes("non-empty relative path")), true);
+  assert.equal(diagnostics.some((issue) => issue.message.includes("Property 'to' requires a relative path")), true);
 });
 
 test("unknown keys suggest a unique close key in root and nested scopes", () => {

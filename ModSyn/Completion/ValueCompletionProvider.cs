@@ -95,7 +95,9 @@ public sealed class ValueCompletionProvider
             ? rootProperty
             : ModsynLanguageDefinition.RequirementProperties.TryGetValue(propertyName, out var requirementProperty)
                 ? requirementProperty
-                : ModsynLanguageDefinition.ReplacementProperties.GetValueOrDefault(propertyName);
+                : ModsynLanguageDefinition.ReplacementProperties.TryGetValue(propertyName, out var replacementProperty)
+                    ? replacementProperty
+                    : ModsynLanguageDefinition.AddToUserFileProperties.GetValueOrDefault(propertyName);
     }
 
     private static ModsynCompletionItem Literal(string value, string description)

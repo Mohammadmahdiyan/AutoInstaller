@@ -94,6 +94,13 @@
       "description": "File or directory paths to delete."
     },
     {
+      "name": "addToUserFile",
+      "allowedValueKinds": ["Array"],
+      "arrayItemKinds": ["Object"],
+      "applicableTypes": ["MissionDsl", "SaveAndMission", "SavesAndMissions"],
+      "description": "Additional files or folders to install in GTA San Andreas User Files."
+    },
+    {
       "name": "replacements",
       "allowedValueKinds": ["Array"],
       "arrayItemKinds": ["String", "Object"],
@@ -215,6 +222,29 @@
       "arrayItemKinds": [],
       "applicableTypes": [],
       "description": "A game-relative destination path."
+    }
+  ],
+  "addToUserFileProperties": [
+    {
+      "name": "from",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "A path relative to this mod package."
+    },
+    {
+      "name": "fromBase",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "A path relative to the Base Mods folder."
+    },
+    {
+      "name": "to",
+      "allowedValueKinds": ["String"],
+      "arrayItemKinds": [],
+      "applicableTypes": [],
+      "description": "A destination folder relative to GTA San Andreas User Files; defaults to its root."
     }
   ],
   "valueKinds": [

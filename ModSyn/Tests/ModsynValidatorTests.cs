@@ -13,7 +13,7 @@ public sealed class ModsynValidatorTests
         var expected = new[]
         {
             "type", "require", "requires", "deleteThis", "deleteThese", "replacements",
-            "backup", "backupThis", "backupThese", "dontBackupThis", "dontBackupThese",
+            "addToUserFile", "backup", "backupThis", "backupThese", "dontBackupThis", "dontBackupThese",
             "installThis", "installThese", "ignoreThis", "ignoreThese"
         };
 
@@ -92,6 +92,38 @@ public sealed class ModsynValidatorTests
         Assert.AreEqual(new GtaSaModManager.Modsyn.Lexer.ModsynSourceLocation(2, 16), result.Errors[0].Location);
         Assert.AreEqual(new GtaSaModManager.Modsyn.Lexer.ModsynSourceLocation(3, 22), result.Errors[1].Location);
         Assert.AreEqual(new GtaSaModManager.Modsyn.Lexer.ModsynSourceLocation(4, 16), result.Errors[2].Location);
+    }
+
+    [TestMethod]
+    public void Validate_AddToUserFileRequiresExactlyOneNonEmptyRelativeSource()
+    {
+        Assert.IsTrue(Validate("mod { type: DSL addToUserFile: [{ from: \"JLNSJ\" } { fromBase: \"Scripts\\\\DYOM\\\\text.gxt\" to: \"MPACK\" }] }").IsValid);
+
+        foreach (var entry in new[]
+        {
+            "{ to: \"MPACK\" }",
+            "{ from: \"one\" fromBase: \"two\" }",
+            "{ from: \"\" }",
+            "{ from: \"../outside\" }",
+            "{ fromBase: \"Scripts/file\" to: \"../outside\" }"
+        })
+        {
+            var result = Validate($"mod {{ type: SavesAndMissions addToUserFile: [{entry}] }}");
+            Assert.IsFalse(result.IsValid, entry);
+        }
+    }
+
+    [TestMethod]
+    public void Validate_AddToUserFileIsRestrictedToMissionAndSaveTypes()
+    {
+        foreach (var type in new[] { "DSL", "SaveAndMission", "SavesAndMissions" })
+        {
+            Assert.IsTrue(Validate($"mod {{ type: {type} addToUserFile: [{{ from: \"extra.dat\" }}] }}").IsValid, type);
+        }
+
+        var result = Validate("mod { type: Replacing addToUserFile: [{ from: \"extra.dat\" }] }");
+        Assert.IsFalse(result.IsValid);
+        StringAssert.Contains(result.Errors[0].Message, "only valid for types");
     }
 
     [TestMethod]

@@ -97,6 +97,21 @@ public sealed class ModsynCompletionTests
     }
 
     [TestMethod]
+    public void GetCompletions_AddToUserFileArrayUsesItsOwnPropertyScope()
+    {
+        var completions = GetAtEnd("mod { type: DSL addToUserFile: [{ ");
+
+        CollectionAssert.AreEquivalent(
+            ModsynLanguageDefinition.AddToUserFileProperties.Keys.ToArray(),
+            completions.Select(item => item.Label).ToArray());
+        Assert.AreEqual(
+            ModsynCompletionContext.PathValues,
+            ModsynCompletionContextDetector.Detect(
+                "mod { type: DSL addToUserFile: [{ from: \"JLNSJ",
+                "mod { type: DSL addToUserFile: [{ from: \"JLNSJ".Length));
+    }
+
+    [TestMethod]
     public void GetCompletions_TypeContextProvidesCanonicalTypesAliasesAndDescriptions()
     {
         var identifierValue = GetAtEnd("mod { type: ");

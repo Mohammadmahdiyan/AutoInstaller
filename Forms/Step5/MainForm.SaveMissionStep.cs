@@ -20,8 +20,31 @@ public partial class MainForm
             return false;
         }
 
+        var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        IReadOnlyList<UserFilesInstallCopy> userFileAdditions;
+        try
+        {
+            userFileAdditions = UserFilesInstallService.CreateCopyPlan(
+                _selectedModManifest?.AddToUserFile,
+                Directory.Exists(_selectedModPackageRoot) ? _selectedModPackageRoot : _selectedModPayloadPath,
+                baseModsFolder,
+                GetGtaUserFilesDirectory());
+        }
+        catch (Exception ex) when (ex is InvalidDataException or IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            MessageBox.Show("Could not resolve addToUserFile entries: " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        var userFileSourcePaths = userFileAdditions
+            .Select(copy => Path.GetFullPath(copy.SourcePath))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
         _saveMissionPackageFiles.AddRange(Directory.GetFiles(_selectedModPayloadPath, "*", SearchOption.AllDirectories)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, _selectedModPackageRoot))
+            .Where(path => !userFileSourcePaths.Contains(Path.GetFullPath(path)))
             .Where(path => Path.GetExtension(path).Equals(".b", StringComparison.OrdinalIgnoreCase)
                 || Path.GetExtension(path).Equals(".dat", StringComparison.OrdinalIgnoreCase))
             .Select(path => new SaveMissionSourceFile(
@@ -287,6 +310,29 @@ public partial class MainForm
         var sourceFile = _saveMissionPackageFiles[_saveMissionFileIndex];
         var slot = _selectedSaveMissionSlot.Value;
         var userFilesRoot = GetGtaUserFilesDirectory();
+        var isLastFile = _selectedModManifest?.NormalizedType == "saveandmission"
+            || _saveMissionFileIndex + 1 >= _saveMissionPackageFiles.Count;
+        IReadOnlyList<UserFilesInstallCopy> userFileAdditions = Array.Empty<UserFilesInstallCopy>();
+        if (isLastFile)
+        {
+            var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
+                ? _selectedModSourcePath
+                : _settings.ModSourceFolder ?? string.Empty;
+            try
+            {
+                userFileAdditions = UserFilesInstallService.CreateCopyPlan(
+                    _selectedModManifest?.AddToUserFile,
+                    Directory.Exists(_selectedModPackageRoot) ? _selectedModPackageRoot : _selectedModPayloadPath,
+                    baseModsFolder,
+                    userFilesRoot);
+            }
+            catch (Exception ex) when (ex is InvalidDataException or IOException or UnauthorizedAccessException or ArgumentException)
+            {
+                MessageBox.Show("Could not resolve addToUserFile entries: " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+        }
+
         var targetName = (sourceFile.IsMission ? "DYOM" : "GTASAsf")
             + slot
             + (sourceFile.IsMission ? ".dat" : ".b");
@@ -323,13 +369,26 @@ public partial class MainForm
         }
 
             var relativeName = Path.GetRelativePath(_selectedModPackageRoot, sourceFile.Path);
-        BeginStep4Progress(
-            _localizationService.GetString("Installing", "Installing") + " " + _selectedModName,
-            new[] { (sourceFile.Path, relativeName) });
+            var progressFiles = new List<(string SourcePath, string RelativeName)> { (sourceFile.Path, relativeName) };
+            progressFiles.AddRange(userFileAdditions.Select(copy => (
+                copy.SourcePath,
+                Path.GetRelativePath(userFilesRoot, copy.DestinationPath))));
+            BeginStep4Progress(_localizationService.GetString("Installing", "Installing") + " " + _selectedModName, progressFiles);
         try
         {
                 await CopyStep4FileAsync(0, sourceFile.Path, destination, relativeName);
             _saveMissionInstalledFiles.Add(destination);
+                for (var index = 0; index < userFileAdditions.Count; index++)
+                {
+                    var addition = userFileAdditions[index];
+                    await CopyStep4FileAsync(
+                        index + 1,
+                        addition.SourcePath,
+                        addition.DestinationPath,
+                        Path.GetRelativePath(userFilesRoot, addition.DestinationPath));
+                    _saveMissionInstalledFiles.Add(addition.DestinationPath);
+                }
+
             ModLoaderService.RecordUserFilesInstallation(
                 _selectedGamePath,
                 _selectedModName,
@@ -342,6 +401,18 @@ public partial class MainForm
         }
         catch (Exception ex)
         {
+            if (_saveMissionInstalledFiles.Count > 0)
+            {
+                ModLoaderService.RecordUserFilesInstallation(
+                    _selectedGamePath,
+                    _selectedModName,
+                    _selectedModManifest!.NormalizedType,
+                    _saveMissionInstalledFiles,
+                    userFilesRoot,
+                    mergeExistingFiles: true,
+                    sourcePackagePath: _selectedModPackageRoot);
+            }
+
             FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
             MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
