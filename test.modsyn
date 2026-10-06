@@ -1,0 +1,13 @@
+mod {
+    type: MIX
+    list: [
+        {
+            type: VSW
+            folderName: "Pers ELX"
+        }
+        {
+            type: RIP
+            folderName: "animation"
+        }
+    ]
+}

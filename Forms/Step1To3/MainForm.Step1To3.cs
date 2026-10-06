@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using GtaSaModManager.Controls;
+using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 using GtaSaModManager.UI;
 
@@ -8,6 +9,9 @@ namespace GtaSaModManager.Forms;
 
 public partial class MainForm : Form
 {
+    private Button? _step3BrowseButton;
+    private string? _pendingStep3FolderSelection;
+
     private Panel CreateWizardStep1()
     {
         var panel = new Panel { BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle, Padding = new Padding(18), AutoSize = true };
@@ -76,10 +80,22 @@ public partial class MainForm : Form
         ApplyBrowseButtonStyle(deleteSomeModsButton, Color.FromArgb(220, 38, 38));
         deleteSomeModsButton.Click += (_, _) => OpenDeleteSomeModsFromStep1();
 
+        var randomModButton = new RoundedButton
+        {
+            Name = "Step1RandomModButton",
+            Text = _localizationService.GetString("OpenRandomMod", "Open a random mod"),
+            Width = 200,
+            Height = 38,
+            Margin = new Padding(0, 8, 0, 0)
+        };
+        ApplyBrowseButtonStyle(randomModButton, Color.FromArgb(22, 142, 76));
+        randomModButton.Click += async (_, _) => await OpenRandomModFromStep1Async();
+
         stack.Controls.Add(title);
         stack.Controls.Add(description);
         stack.Controls.Add(flow);
         stack.Controls.Add(deleteSomeModsButton);
+        stack.Controls.Add(randomModButton);
 
         panel.Controls.Add(stack);
 
@@ -89,6 +105,57 @@ public partial class MainForm : Form
         }
 
         return panel;
+    }
+
+    private async Task OpenRandomModFromStep1Async()
+    {
+        var baseModsRoot = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(baseModsRoot) || !Directory.Exists(baseModsRoot))
+        {
+            MessageBox.Show(
+                _localizationService.GetString("InvalidModLibraryFolder", "Select a valid Base Mods folder first."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        List<ModPackageInfo> candidates;
+        try
+        {
+            candidates = await Task.Run(() => ModPackageService.DiscoverModPackages(baseModsRoot)
+                .Where(package => !package.HasConfigError
+                    && !string.IsNullOrWhiteSpace(package.PayloadPath)
+                    && Directory.Exists(package.PayloadPath))
+                .ToList());
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (candidates.Count == 0)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("NoRandomModsAvailable", "No valid mod packages were found in the Base Mods folder."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        if (_step3BrowseButton == null || _step3BrowseButton.IsDisposed)
+        {
+            MessageBox.Show(_localizationService.GetString("SelectModFirst", "The mod selection step is not ready."), _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        _pendingStep3FolderSelection = candidates[Random.Shared.Next(candidates.Count)].PackageRootPath;
+        NavigateToStep(WizardStep.Step3);
+        _step3BrowseButton.PerformClick();
     }
 
     private Panel CreateWizardStep2()
@@ -173,6 +240,8 @@ public partial class MainForm : Form
         var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold), Margin = new Padding(0, 0, 0, 8) };
         var folderText = new TextBox { Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
         var browse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        folderText.Name = "Step3ModFolderTextBox";
+        _step3BrowseButton = browse;
         var selectedName = new Label
         {
             Name = "Step3DetectedModStatus",
@@ -196,7 +265,12 @@ public partial class MainForm : Form
                     ? _settings.ModSourceFolder
                     : null);
             initial = NormalizeExistingDirectory(initial);
-            var selected = PromptForModFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
+            var selected = _pendingStep3FolderSelection;
+            _pendingStep3FolderSelection = null;
+            if (string.IsNullOrWhiteSpace(selected))
+            {
+                selected = PromptForModFolderSelection(_localizationService.GetString("SelectModFolder", "Select the mod folder"), initial);
+            }
             if (string.IsNullOrWhiteSpace(selected) || !Directory.Exists(selected))
             {
                 _multiSourceModels.Clear();
