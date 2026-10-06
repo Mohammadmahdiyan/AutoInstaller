@@ -222,12 +222,11 @@ public partial class MainForm : Form
             Name = "SaveMissionSlotLayout",
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 4,
+            RowCount = 3,
             Margin = new Padding(0),
             Padding = new Padding(0)
         };
         saveMissionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         saveMissionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -245,7 +244,7 @@ public partial class MainForm : Form
         var saveMissionTitle = new Label
         {
             Name = "SaveMissionTitle",
-            Text = _localizationService.GetString("SelectItem", "Select Item"),
+            Text = _selectedModName,
             AutoSize = true,
             Font = new Font("Segoe UI", 18F, FontStyle.Bold),
             Margin = new Padding(0, 4, 12, 4)
@@ -283,16 +282,6 @@ public partial class MainForm : Form
             Font = new Font("Segoe UI", 10F),
             Margin = new Padding(0, 0, 0, 10)
         };
-        _saveMissionActiveLabel = new Label
-        {
-            Name = "SaveMissionActiveModLabel",
-            AutoSize = true,
-            MaximumSize = new Size(760, 0),
-            Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(91, 103, 124),
-            Margin = new Padding(0, 0, 0, 6),
-            Visible = false
-        };
         var saveMissionSlots = new TableLayoutPanel
         {
             Name = "SaveMissionSlots",
@@ -311,6 +300,7 @@ public partial class MainForm : Form
         }
 
         _saveMissionSlotButtons.Clear();
+        _saveMissionSlotBaseTexts.Clear();
         for (var slot = 1; slot <= 8; slot++)
         {
             var slotButton = new RadioButton
@@ -341,19 +331,21 @@ public partial class MainForm : Form
                         badge.Text = selectedSlot.ToString();
                     }
 
-                    UpdateSaveMissionActiveLabel(selectedSlot);
                     RefreshSaveMissionSlotAppearance();
+                    UpdateSaveMissionSelectedSlotText(selectedSlot);
                     UpdateSidebarState();
                 }
             };
+            slotButton.MouseEnter += (_, _) => ApplySaveMissionSlotAppearance(slotButton, isHovered: true);
+            slotButton.MouseLeave += (_, _) => ApplySaveMissionSlotAppearance(slotButton, isHovered: false);
+            _saveMissionSlotBaseTexts.Add(string.Empty);
             _saveMissionSlotButtons.Add(slotButton);
             saveMissionSlots.Controls.Add(slotButton, 0, slot - 1);
         }
 
         saveMissionLayout.Controls.Add(saveMissionHeader, 0, 0);
-        saveMissionLayout.Controls.Add(_saveMissionActiveLabel, 0, 1);
-        saveMissionLayout.Controls.Add(saveMissionSourceLabel, 0, 2);
-        saveMissionLayout.Controls.Add(saveMissionSlots, 0, 3);
+        saveMissionLayout.Controls.Add(saveMissionSourceLabel, 0, 1);
+        saveMissionLayout.Controls.Add(saveMissionSlots, 0, 2);
         saveMissionPanel.Controls.Add(saveMissionLayout);
         panel.Controls.Add(saveMissionPanel);
         saveMissionPanel.BringToFront();

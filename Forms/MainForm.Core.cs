@@ -72,13 +72,14 @@ public partial class MainForm : Form
     private Label? _globalLoadingLabel;
     private Label? _globalLoadingSpinnerLabel;
     private readonly System.Windows.Forms.Timer _loadingSpinnerTimer = new();
-    private readonly System.Windows.Forms.Timer _saveMissionActiveLabelTimer = new();
-    private Label? _saveMissionActiveLabel;
-    private Point _saveMissionActiveLabelTargetLocation;
-    private Point _saveMissionActiveLabelStartLocation;
-    private Color _saveMissionActiveLabelStartColor;
-    private Color _saveMissionActiveLabelTargetColor;
-    private int _saveMissionActiveLabelFrame;
+    private readonly System.Windows.Forms.Timer _saveMissionSlotAnimationTimer = new();
+    private readonly List<string> _saveMissionSlotBaseTexts = new();
+    private RadioButton? _saveMissionSlotAnimationButton;
+    private Color _saveMissionSlotAnimationStartColor;
+    private Color _saveMissionSlotAnimationTargetColor;
+    private Color _saveMissionSlotAnimationStartBackColor;
+    private Color _saveMissionSlotAnimationTargetBackColor;
+    private int _saveMissionSlotAnimationFrame;
     private float _loadingSpinnerAngle;
     private readonly List<GameAsset> _step5DetectedAssets = new();
     private readonly HashSet<string> _step5SelectedAssetKeys = new(StringComparer.OrdinalIgnoreCase);
@@ -127,9 +128,9 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
-        _saveMissionActiveLabelTimer.Interval = 15;
-        _saveMissionActiveLabelTimer.Tick += (_, _) => AnimateSaveMissionActiveLabel();
-        FormClosed += (_, _) => _saveMissionActiveLabelTimer.Dispose();
+        _saveMissionSlotAnimationTimer.Interval = 15;
+        _saveMissionSlotAnimationTimer.Tick += (_, _) => AnimateSaveMissionSlotSelection();
+        FormClosed += (_, _) => _saveMissionSlotAnimationTimer.Dispose();
         _settings = _settingsService.Load();
         SyncCachedGameDataFromFilesystem();
 

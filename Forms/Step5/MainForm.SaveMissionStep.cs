@@ -89,7 +89,9 @@ public partial class MainForm
         var extension = sourceFile.IsMission ? ".dat" : ".b";
         if (stepPanel.Controls.Find("SaveMissionTitle", true).FirstOrDefault() is Label title)
         {
-            title.Text = _localizationService.GetString("SelectItem", "Select Item");
+            title.Text = !string.IsNullOrWhiteSpace(_selectedModPackageRoot)
+                ? Path.GetFileName(Path.TrimEndingDirectorySeparator(_selectedModPackageRoot))
+                : _selectedModName;
         }
 
         if (stepPanel.Controls.Find("SaveMissionSourceLabel", true).FirstOrDefault() is Label sourceLabel)
@@ -132,11 +134,13 @@ public partial class MainForm
                     ? SaveMissionNameReader.TryReadDyomMissionName(existingPath) ?? existingFileName
                     : SaveMissionNameReader.TryReadGtaSaveName(existingPath) ?? existingFileName
                 : string.Empty;
-            _saveMissionSlotButtons[index].Text = File.Exists(existingPath)
+            var baseText = File.Exists(existingPath)
                 ? existingDisplayName
                 : sourceFile.IsMission
                     ? string.Format(_localizationService.GetString("MissionSlotEmpty", "slot {0} is empty"), slot)
                     : string.Format(_localizationService.GetString("SaveSlotMissing", "SAVE FILE {0} NOT PRESENT"), slot);
+            _saveMissionSlotBaseTexts[index] = baseText;
+            _saveMissionSlotButtons[index].Text = baseText;
             _saveMissionSlotButtons[index].Checked = _selectedSaveMissionSlot == slot;
         }
 
@@ -145,27 +149,28 @@ public partial class MainForm
             selectedSlotBadge.Text = _selectedSaveMissionSlot?.ToString() ?? "0";
         }
 
-        UpdateSaveMissionActiveLabel(_selectedSaveMissionSlot);
         RefreshSaveMissionSlotAppearance();
+        UpdateSaveMissionSelectedSlotText(_selectedSaveMissionSlot);
         UpdateSidebarState();
     }
 
-    private void UpdateSaveMissionActiveLabel(int? selectedSlot)
+    private void UpdateSaveMissionSelectedSlotText(int? selectedSlot)
     {
-        _saveMissionActiveLabel ??= _wizardPanels.TryGetValue(WizardStep.Step5, out var stepPanel)
-            ? stepPanel.Controls.Find("SaveMissionActiveModLabel", true).FirstOrDefault() as Label
-            : null;
-        if (_saveMissionActiveLabel == null || _saveMissionActiveLabel.IsDisposed)
+        _saveMissionSlotAnimationTimer.Stop();
+        if (_saveMissionSlotAnimationButton != null && !_saveMissionSlotAnimationButton.IsDisposed
+            && _saveMissionSlotAnimationButton.Tag is int oldSlot
+            && oldSlot >= 1 && oldSlot <= _saveMissionSlotBaseTexts.Count)
         {
-            return;
+            _saveMissionSlotAnimationButton.Text = _saveMissionSlotBaseTexts[oldSlot - 1];
         }
 
-        _saveMissionActiveLabelTimer.Stop();
         if (!_isSaveMissionStepActive
             || !selectedSlot.HasValue
-            || (uint)_saveMissionFileIndex >= (uint)_saveMissionPackageFiles.Count)
+            || (uint)_saveMissionFileIndex >= (uint)_saveMissionPackageFiles.Count
+            || selectedSlot.Value < 1
+            || selectedSlot.Value > _saveMissionSlotButtons.Count)
         {
-            _saveMissionActiveLabel.Visible = false;
+            _saveMissionSlotAnimationButton = null;
             return;
         }
 
@@ -182,59 +187,57 @@ public partial class MainForm
             folderName = _selectedModName;
         }
 
-        _saveMissionActiveLabel.Text = "<= " + title + " (" + folderName + ")";
+        var selectedIndex = selectedSlot.Value - 1;
+        var selectedButton = _saveMissionSlotButtons[selectedIndex];
+        selectedButton.Text = _saveMissionSlotBaseTexts[selectedIndex]
+            + " <= " + title + " (" + folderName + ")";
         var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
-        _saveMissionActiveLabelTargetColor = palette.Accent;
-        _saveMissionActiveLabelStartColor = palette.TextSecondary;
-        _saveMissionActiveLabel.Visible = true;
-        _saveMissionActiveLabelTargetLocation = _saveMissionActiveLabel.Location;
-        _saveMissionActiveLabelStartLocation = _saveMissionActiveLabelTargetLocation + new Size(0, 5);
-        _saveMissionActiveLabel.Location = _saveMissionActiveLabelStartLocation;
-        _saveMissionActiveLabel.ForeColor = _saveMissionActiveLabelStartColor;
-        _saveMissionActiveLabelFrame = 0;
-        _saveMissionActiveLabelTimer.Start();
+        _saveMissionSlotAnimationButton = selectedButton;
+        _saveMissionSlotAnimationStartColor = palette.Accent;
+        _saveMissionSlotAnimationTargetColor = Color.White;
+        _saveMissionSlotAnimationStartBackColor = palette.AccentSoft;
+        _saveMissionSlotAnimationTargetBackColor = palette.Accent;
+        selectedButton.ForeColor = _saveMissionSlotAnimationStartColor;
+        selectedButton.BackColor = _saveMissionSlotAnimationStartBackColor;
+        _saveMissionSlotAnimationFrame = 0;
+        _saveMissionSlotAnimationTimer.Start();
     }
 
-    private void AnimateSaveMissionActiveLabel()
+    private void AnimateSaveMissionSlotSelection()
     {
-        if (_saveMissionActiveLabel == null || _saveMissionActiveLabel.IsDisposed || !_saveMissionActiveLabel.Visible)
+        if (_saveMissionSlotAnimationButton == null || _saveMissionSlotAnimationButton.IsDisposed)
         {
-            _saveMissionActiveLabelTimer.Stop();
+            _saveMissionSlotAnimationTimer.Stop();
             return;
         }
 
         const int frameCount = 12;
-        _saveMissionActiveLabelFrame++;
-        var progress = Math.Min(1F, _saveMissionActiveLabelFrame / (float)frameCount);
+        _saveMissionSlotAnimationFrame++;
+        var progress = Math.Min(1F, _saveMissionSlotAnimationFrame / (float)frameCount);
         var eased = progress * progress * (3F - (2F * progress));
-        _saveMissionActiveLabel.Location = new Point(
-            _saveMissionActiveLabelTargetLocation.X,
-            (int)Math.Round(_saveMissionActiveLabelStartLocation.Y
-                + ((_saveMissionActiveLabelTargetLocation.Y - _saveMissionActiveLabelStartLocation.Y) * eased)));
-        _saveMissionActiveLabel.ForeColor = Color.FromArgb(
-            (int)Math.Round(_saveMissionActiveLabelStartColor.R + ((_saveMissionActiveLabelTargetColor.R - _saveMissionActiveLabelStartColor.R) * eased)),
-            (int)Math.Round(_saveMissionActiveLabelStartColor.G + ((_saveMissionActiveLabelTargetColor.G - _saveMissionActiveLabelStartColor.G) * eased)),
-            (int)Math.Round(_saveMissionActiveLabelStartColor.B + ((_saveMissionActiveLabelTargetColor.B - _saveMissionActiveLabelStartColor.B) * eased)));
+        _saveMissionSlotAnimationButton.ForeColor = Color.FromArgb(
+            (int)Math.Round(_saveMissionSlotAnimationStartColor.R + ((_saveMissionSlotAnimationTargetColor.R - _saveMissionSlotAnimationStartColor.R) * eased)),
+            (int)Math.Round(_saveMissionSlotAnimationStartColor.G + ((_saveMissionSlotAnimationTargetColor.G - _saveMissionSlotAnimationStartColor.G) * eased)),
+            (int)Math.Round(_saveMissionSlotAnimationStartColor.B + ((_saveMissionSlotAnimationTargetColor.B - _saveMissionSlotAnimationStartColor.B) * eased)));
+        _saveMissionSlotAnimationButton.BackColor = Color.FromArgb(
+            (int)Math.Round(_saveMissionSlotAnimationStartBackColor.R + ((_saveMissionSlotAnimationTargetBackColor.R - _saveMissionSlotAnimationStartBackColor.R) * eased)),
+            (int)Math.Round(_saveMissionSlotAnimationStartBackColor.G + ((_saveMissionSlotAnimationTargetBackColor.G - _saveMissionSlotAnimationStartBackColor.G) * eased)),
+            (int)Math.Round(_saveMissionSlotAnimationStartBackColor.B + ((_saveMissionSlotAnimationTargetBackColor.B - _saveMissionSlotAnimationStartBackColor.B) * eased)));
 
         if (progress >= 1F)
         {
-            _saveMissionActiveLabelTimer.Stop();
+            _saveMissionSlotAnimationTimer.Stop();
         }
     }
 
     private void RefreshSaveMissionSlotAppearance()
     {
-        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
         foreach (var button in _saveMissionSlotButtons)
         {
-            var isSelected = button.Tag is int slot && _selectedSaveMissionSlot == slot;
-            button.BackColor = isSelected ? palette.AccentSoft : palette.SurfaceSecondary;
-            button.ForeColor = palette.TextPrimary;
-            button.FlatAppearance.BorderColor = isSelected ? palette.Accent : palette.Border;
-            button.FlatAppearance.MouseOverBackColor = isSelected ? palette.AccentSoft : palette.Card;
-            button.FlatAppearance.MouseDownBackColor = palette.Accent;
+            ApplySaveMissionSlotAppearance(button, isHovered: false);
         }
 
+        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
         if (_wizardPanels.TryGetValue(WizardStep.Step5, out var stepPanel)
             && stepPanel.Controls.Find("SaveMissionSelectedSlotBadge", true).FirstOrDefault() is Label badge)
         {
@@ -242,6 +245,19 @@ public partial class MainForm
             badge.BackColor = hasSelection ? palette.AccentSoft : palette.SurfaceSecondary;
             badge.ForeColor = hasSelection ? palette.Accent : palette.TextSecondary;
         }
+    }
+
+    private void ApplySaveMissionSlotAppearance(RadioButton button, bool isHovered)
+    {
+        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
+        var isSelected = button.Tag is int slot && _selectedSaveMissionSlot == slot;
+        button.BackColor = isSelected
+            ? isHovered ? palette.AccentHover : palette.Accent
+            : isHovered ? palette.AccentSoft : palette.SurfaceSecondary;
+        button.ForeColor = isSelected ? Color.White : palette.TextPrimary;
+        button.FlatAppearance.BorderColor = isSelected || isHovered ? palette.Accent : palette.BorderSoft;
+        button.FlatAppearance.MouseOverBackColor = isSelected ? palette.AccentHover : palette.AccentSoft;
+        button.FlatAppearance.MouseDownBackColor = palette.AccentHover;
     }
 
     private void ShowSaveMissionStatus()
