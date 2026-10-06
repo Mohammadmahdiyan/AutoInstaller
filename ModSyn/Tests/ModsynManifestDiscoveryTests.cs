@@ -112,6 +112,32 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void CreateDefaultManifestFile_WritesValidModsynWhenMissing()
+    {
+        WithPackage("package", packageRoot =>
+        {
+            var manifestPath = ModPackageService.CreateDefaultManifestFile(packageRoot);
+
+            Assert.AreEqual(Path.Combine(packageRoot, "mod.modsyn"), manifestPath);
+            Assert.IsTrue(ModPackageService.TryValidateModsyn(packageRoot, out var error), error);
+            Assert.AreEqual(manifestPath, ModPackageService.GetManifestPath(packageRoot));
+        });
+    }
+
+    [TestMethod]
+    public void CreateDefaultManifestFile_DoesNotReplaceAnExistingInvalidManifest()
+    {
+        WithPackage("package", packageRoot =>
+        {
+            var manifestPath = Write(packageRoot, "mod.modsyn", "mod { type: @ }");
+
+            Assert.AreEqual(manifestPath, ModPackageService.CreateDefaultManifestFile(packageRoot));
+            Assert.AreEqual("mod { type: @ }", File.ReadAllText(manifestPath));
+            Assert.IsFalse(ModPackageService.TryValidateModsyn(packageRoot, out _));
+        });
+    }
+
+    [TestMethod]
     public void InvalidModsynIsRejectedWithLocation()
     {
         WithPackage("package", packageRoot =>

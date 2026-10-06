@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using GtaSaModManager.Controls;
 using GtaSaModManager.Services;
@@ -214,14 +215,38 @@ public partial class MainForm : Form
                 return;
             }
 
-            if (ModPackageService.GetManifestPath(selected) is not null
-                && !ModPackageService.TryValidateModsyn(selected, out var configError))
+            var manifestPath = ModPackageService.GetManifestPath(selected);
+            if (manifestPath is null)
+            {
+                try
+                {
+                    manifestPath = ModPackageService.CreateDefaultManifestFile(selected);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+                {
+                    MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                MessageBox.Show(
+                    _localizationService.GetString("ModsynMissingCreated", "A default mod.modsyn was created and will open in Notepad."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                OpenModsynInNotepad(manifestPath);
+                return;
+            }
+
+            if (!ModPackageService.TryValidateModsyn(selected, out var configError))
             {
                 MessageBox.Show(
-                    configError ?? "The Modsyn package configuration is invalid.",
+                    string.Format(
+                        _localizationService.GetString("ModsynInvalidOpen", "The Modsyn file contains an error. Fix it in Notepad, then select the mod again:\n{0}"),
+                        configError ?? "The Modsyn package configuration is invalid."),
                     _appName,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+                OpenModsynInNotepad(manifestPath);
                 return;
             }
 
@@ -388,6 +413,29 @@ public partial class MainForm : Form
             RefreshStep3Images(panel, _selectedModPayloadPath);
         }
         return panel;
+    }
+
+    private void OpenModsynInNotepad(string manifestPath)
+    {
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "notepad.exe",
+                UseShellExecute = true
+            };
+            startInfo.ArgumentList.Add(manifestPath);
+            Process.Start(startInfo);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                _localizationService.GetString("ModsynOpenFailed", "Could not open the Modsyn file in Notepad.")
+                    + Environment.NewLine + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
     }
 
     private void RefreshStep3Images(Control step3Panel, string modFolder, bool resetIndex = true)

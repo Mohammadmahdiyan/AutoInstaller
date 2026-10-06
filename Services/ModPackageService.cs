@@ -160,6 +160,27 @@ public class ModPackageService
         return null;
     }
 
+    public static string CreateDefaultManifestFile(string packageRoot)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(packageRoot);
+        if (!Directory.Exists(packageRoot))
+        {
+            throw new DirectoryNotFoundException("The selected mod folder could not be found.");
+        }
+
+        var existingManifest = GetManifestPath(packageRoot);
+        if (existingManifest is not null)
+        {
+            return existingManifest;
+        }
+
+        var manifestPath = Path.Combine(packageRoot, "mod.modsyn");
+        using var stream = new FileStream(manifestPath, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
+        using var writer = new StreamWriter(stream);
+        writer.Write("mod {\n    type: PutInModLoader\n}\n");
+        return manifestPath;
+    }
+
     public static ModManifest ResolveManifest(string basePath)
     {
         return TryReadManifest(basePath) ?? new ModManifest();
