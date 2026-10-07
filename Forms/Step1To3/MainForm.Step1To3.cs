@@ -10,6 +10,7 @@ namespace GtaSaModManager.Forms;
 public partial class MainForm : Form
 {
     private Button? _step3BrowseButton;
+    private Button? _step2RandomModButton;
     private string? _pendingStep3FolderSelection;
 
     private Panel CreateWizardStep1()
@@ -80,22 +81,10 @@ public partial class MainForm : Form
         ApplyBrowseButtonStyle(deleteSomeModsButton, Color.FromArgb(220, 38, 38));
         deleteSomeModsButton.Click += (_, _) => OpenDeleteSomeModsFromStep1();
 
-        var randomModButton = new RoundedButton
-        {
-            Name = "Step1RandomModButton",
-            Text = _localizationService.GetString("OpenRandomMod", "Open a random mod"),
-            Width = 200,
-            Height = 38,
-            Margin = new Padding(0, 8, 0, 0)
-        };
-        ApplyBrowseButtonStyle(randomModButton, Color.FromArgb(22, 142, 76));
-        randomModButton.Click += async (_, _) => await OpenRandomModFromStep1Async();
-
         stack.Controls.Add(title);
         stack.Controls.Add(description);
         stack.Controls.Add(flow);
         stack.Controls.Add(deleteSomeModsButton);
-        stack.Controls.Add(randomModButton);
 
         panel.Controls.Add(stack);
 
@@ -107,7 +96,7 @@ public partial class MainForm : Form
         return panel;
     }
 
-    private async Task OpenRandomModFromStep1Async()
+    private async Task OpenRandomModFromStep2Async()
     {
         var baseModsRoot = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
             ? _selectedModSourcePath
@@ -193,7 +182,24 @@ public partial class MainForm : Form
             }
 
             RefreshModLibrary();
+            if (_step2RandomModButton != null)
+            {
+                _step2RandomModButton.Visible = true;
+                _step2RandomModButton.Enabled = true;
+            }
         };
+
+        _step2RandomModButton = new RoundedButton
+        {
+            Name = "Step2RandomModButton",
+            Text = _localizationService.GetString("OpenRandomMod", "Open a random mod"),
+            Width = 200,
+            Height = 38,
+            Margin = new Padding(0, 12, 0, 0),
+            Visible = false
+        };
+        ApplyBrowseButtonStyle(_step2RandomModButton, Color.FromArgb(22, 142, 76));
+        _step2RandomModButton.Click += async (_, _) => await OpenRandomModFromStep2Async();
 
         var flow = new FlowLayoutPanel
         {
@@ -222,12 +228,18 @@ public partial class MainForm : Form
         stack.Controls.Add(title);
         stack.Controls.Add(subtitle);
         stack.Controls.Add(flow);
+        stack.Controls.Add(_step2RandomModButton);
 
         panel.Controls.Add(stack);
 
         if (!string.IsNullOrWhiteSpace(_settings.ModSourceFolder) && Directory.Exists(_settings.ModSourceFolder))
         {
             modBaseText.Text = _settings.ModSourceFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (_step2RandomModButton != null)
+            {
+                _step2RandomModButton.Visible = true;
+                _step2RandomModButton.Enabled = true;
+            }
         }
 
         return panel;

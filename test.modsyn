@@ -2,12 +2,26 @@ mod {
     type: MIX
     list: [
         {
-            type: VSW
-            folderName: "Pers ELX"
+            type: MIX,
+            folderName: "Pers ELX",
+            list: [
+                {
+                    type: RIP
+                    folderName: "losa"
+                }
+                {
+                    type: PIM
+                    folderName: "lose"
+                }
+            ]
         }
         {
             type: RIP
             folderName: "animation"
+        }
+        {
+            type: PGF
+            folderName: "animations"
         }
     ]
 }

@@ -228,7 +228,7 @@ public partial class MainForm : Form
             item.Value.Visible = item.Key == step;
         }
 
-        if (step == WizardStep.Step5 && !_isSaveMissionStepActive && !_isDeleteModsStepActive
+        if (step == WizardStep.Step5 && !_isSaveMissionStepActive && !_isDeleteModsStepActive && !_isOptionalsStepActive
             && !string.IsNullOrWhiteSpace(_selectedModPayloadPath) && Directory.Exists(_selectedModPayloadPath))
         {
             PrepareDetectedAssetStep(_selectedModPayloadPath, _selectedModManifest);
@@ -253,6 +253,13 @@ public partial class MainForm : Form
             if (_isDeleteModsStepActive)
             {
                 // The delete window is static; nothing to refresh.
+            }
+            else if (_isOptionalsStepActive)
+            {
+                if (_wizardPanels.TryGetValue(WizardStep.Step5, out var optionalsStep5Panel))
+                {
+                    ApplyOptionalsVisibility(optionalsStep5Panel, show: true);
+                }
             }
             else if (_isSaveMissionStepActive)
             {
@@ -330,14 +337,29 @@ public partial class MainForm : Form
                     _lastActionWasDelete ? "The mod and its files were deleted." : "Installation complete.");
             }
 
-            var hasOptionalPackages = GetOptionalPackageRootsForCurrentInstall().Count > 0;
-            _completionSecondsLeft = hasOptionalPackages ? 15 : 6;
-            _completionTimerActive = true;
-            _completionTimer.Start();
-            if (_wizardPanels[WizardStep.Step6].Controls.OfType<Label>().FirstOrDefault(x => x.Name == "CountdownLabel") is { } countdown)
+            // A mod with optional / optionals folders must stay open so the extras can be installed.
+            var hasOptionalPackages = !_lastActionWasDelete && HasOptionalContentForCurrentInstall();
+            var countdownLabel = _wizardPanels[WizardStep.Step6].Controls.OfType<Label>().FirstOrDefault(x => x.Name == "CountdownLabel");
+            if (hasOptionalPackages)
             {
-                countdown.Text = _localizationService.GetString("CompletedIn", "Completed") + " " + _completionSecondsLeft + "s";
+                _completionTimer.Stop();
+                _completionTimerActive = false;
+                if (countdownLabel != null)
+                {
+                    countdownLabel.Text = string.Empty;
+                }
             }
+            else
+            {
+                _completionSecondsLeft = 6;
+                _completionTimerActive = true;
+                _completionTimer.Start();
+                if (countdownLabel != null)
+                {
+                    countdownLabel.Text = _localizationService.GetString("CompletedIn", "Completed") + " " + _completionSecondsLeft + "s";
+                }
+            }
+
             RefreshStep6OptionalActions();
         }
         else
@@ -665,6 +687,11 @@ public partial class MainForm : Form
             if (_selectedModManifest.IsMixedPackage)
             {
                 await BeginMixedPackageInstallAsync();
+                return;
+            }
+
+            if (await TryHandleExistingModWithOptionalAsync())
+            {
                 return;
             }
 

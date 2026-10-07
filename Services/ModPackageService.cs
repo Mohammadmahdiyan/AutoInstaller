@@ -404,6 +404,12 @@ public class ModPackageService
 
         if (!string.IsNullOrWhiteSpace(packageRoot))
         {
+            // optional / optionals are installed on their own, never together with the base mod.
+            if (IsInsideOptionalContainer(path, packageRoot))
+            {
+                return true;
+            }
+
             var manifestPath = GetManifestPath(packageRoot);
             if (!string.IsNullOrWhiteSpace(manifestPath)
                 && string.Equals(Path.GetFullPath(path), Path.GetFullPath(manifestPath), StringComparison.OrdinalIgnoreCase))
@@ -551,7 +557,8 @@ public class ModPackageService
             {
                 var relativeFolder = GetPackageRelativePath(root, folderPath);
                 if (IsInIgnoredFolder(relativeFolder, ignoreFolders)
-                    || IsProtectedFolderName(Path.GetFileName(folderPath)))
+                    || IsProtectedFolderName(Path.GetFileName(folderPath))
+                    || IsOptionalContainerName(Path.GetFileName(folderPath)))
                 {
                     continue;
                 }
@@ -706,6 +713,69 @@ public class ModPackageService
         return false;
     }
 
+    private static string NormalizeOptionalFolderName(string? name)
+    {
+        return (name ?? string.Empty).Trim().Trim('(', ')').Trim().ToLowerInvariant();
+    }
+
+    /// <summary>optional, (optional) - one extra package that lives inside the mod folder.</summary>
+    public static bool IsOptionalFolderName(string? name) => NormalizeOptionalFolderName(name) == "optional";
+
+    /// <summary>optionals, (optionals) - a folder that contains several extra packages.</summary>
+    public static bool IsOptionalsFolderName(string? name) => NormalizeOptionalFolderName(name) == "optionals";
+
+    public static bool IsOptionalContainerName(string? name) => IsOptionalFolderName(name) || IsOptionalsFolderName(name);
+
+    public static string? FindOptionalFolder(string? packageRoot) => FindTopLevelFolder(packageRoot, IsOptionalFolderName);
+
+    public static string? FindOptionalsFolder(string? packageRoot) => FindTopLevelFolder(packageRoot, IsOptionalsFolderName);
+
+    private static string? FindTopLevelFolder(string? packageRoot, Func<string?, bool> nameMatches)
+    {
+        if (string.IsNullOrWhiteSpace(packageRoot) || !Directory.Exists(packageRoot))
+        {
+            return null;
+        }
+
+        return Directory.GetDirectories(packageRoot)
+            .Where(directory => nameMatches(Path.GetFileName(directory)))
+            .OrderBy(directory => directory, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    /// <summary>The direct sub folders of an optionals folder; each one is an independent package.</summary>
+    public static List<string> GetOptionalsPackageFolders(string? optionalsFolder)
+    {
+        if (string.IsNullOrWhiteSpace(optionalsFolder) || !Directory.Exists(optionalsFolder))
+        {
+            return new List<string>();
+        }
+
+        return Directory.GetDirectories(optionalsFolder)
+            .OrderBy(directory => directory, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    /// <summary>True when <paramref name="path"/> is inside a top level optional/optionals folder of the package.</summary>
+    public static bool IsInsideOptionalContainer(string? path, string? packageRoot)
+    {
+        if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(packageRoot))
+        {
+            return false;
+        }
+
+        var relative = Path.GetRelativePath(packageRoot, path);
+        if (Path.IsPathRooted(relative))
+        {
+            return false;
+        }
+
+        var firstSegment = relative.Split(
+            new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
+            StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        return firstSegment != null && firstSegment != ".." && IsOptionalContainerName(firstSegment);
+    }
+
     private static bool IsProtectedFolderName(string folderName)
     {
         return folderName.Equals(".git", StringComparison.OrdinalIgnoreCase)
@@ -723,7 +793,8 @@ public class ModPackageService
         var candidateDirectories = Directory.GetDirectories(packageRoot)
             .Where(dir => !string.Equals(Path.GetFileName(dir), "modloader", StringComparison.OrdinalIgnoreCase)
                 && !string.Equals(Path.GetFileName(dir), "screen", StringComparison.OrdinalIgnoreCase)
-                && !string.Equals(Path.GetFileName(dir), "preview", StringComparison.OrdinalIgnoreCase))
+                && !string.Equals(Path.GetFileName(dir), "preview", StringComparison.OrdinalIgnoreCase)
+                && !IsOptionalContainerName(Path.GetFileName(dir)))
             .OrderBy(dir => dir, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

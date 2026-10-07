@@ -115,17 +115,19 @@ public partial class MainForm
         if (show)
         {
             host.BringToFront();
+            var optionalsHost = step5Panel.Controls.Find("OptionalsHost", true).FirstOrDefault();
+            if (optionalsHost != null) optionalsHost.Visible = false;
             if (assetLayout != null) assetLayout.Visible = false;
             if (saveMissionPanel != null) saveMissionPanel.Visible = false;
         }
-        else if (assetLayout != null && !_isSaveMissionStepActive)
+        else if (assetLayout != null && !_isSaveMissionStepActive && !_isOptionalsStepActive)
         {
             assetLayout.Visible = true;
         }
     }
 
     /// <summary>Leaves the delete window (Previous button).</summary>
-    private void CloseDeleteModsStep()
+    private async void CloseDeleteModsStep()
     {
         if (_deleteModsPanel?.IsBusy == true)
         {
@@ -142,6 +144,39 @@ public partial class MainForm
         _selectedImageFiles = _deleteModsSavedImages;
         _deleteModsSavedReadme = string.Empty;
         _deleteModsSavedImages = new List<string>();
+
+        if (_deleteOptionalBaseRecordAfterSelection is { } baseRecord)
+        {
+            _deleteOptionalBaseRecordAfterSelection = null;
+            if (!_deleteOptionalRowsRemoved)
+            {
+                RefreshModList();
+                NavigateToStep(WizardStep.Step6);
+                return;
+            }
+
+            if (await DeleteInstallationRecordAsync(baseRecord))
+            {
+                _deleteOptionalRowsRemoved = false;
+                FinishExistingModDeletion();
+            }
+            else
+            {
+                _deleteOptionalRowsRemoved = false;
+                RefreshModList();
+                NavigateToStep(WizardStep.Step6);
+            }
+
+            return;
+        }
+
+        if (_deleteOptionalRowsRemoved)
+        {
+            _deleteOptionalRowsRemoved = false;
+            FinishOptionalChildrenDeletion();
+            return;
+        }
+
         RefreshModList();
         NavigateToStep(_deleteModsReturnStep);
     }
@@ -381,6 +416,8 @@ public partial class MainForm
             await Task.Yield();
         }
 
+        PruneEmptyParentDirectories(entry.Files, gamePath);
+
         if (type == "missiondsl")
         {
             ModLoaderService.ClearDirectoryContents(Path.Combine(GetUserFilesRootPath(), "DSL"));
@@ -476,6 +513,40 @@ public partial class MainForm
         return true;
     }
 
+    /// <summary>
+    /// Removes the folders that became empty after deleting <paramref name="files"/>, but never the game folder,
+    /// the user files folder or their direct sub folders (modloader, cleo, ...).
+    /// </summary>
+    private static void PruneEmptyParentDirectories(IEnumerable<string> files, string gamePath)
+    {
+        var gameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(gamePath));
+        var userFilesRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(GetUserFilesRootPath()));
+        foreach (var directory in files
+                     .Select(file => Path.GetDirectoryName(Path.GetFullPath(file)))
+                     .Where(path => !string.IsNullOrWhiteSpace(path))
+                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                     .OrderByDescending(path => path!.Length))
+        {
+            var current = directory;
+            while (!string.IsNullOrWhiteSpace(current)
+                   && (IsInsideRoot(gameRoot, current) || IsInsideRoot(userFilesRoot, current))
+                   && Directory.Exists(current)
+                   && !Directory.EnumerateFileSystemEntries(current).Any())
+            {
+                var parent = Path.GetDirectoryName(current);
+                var parentIsRoot = string.Equals(parent, gameRoot, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(parent, userFilesRoot, StringComparison.OrdinalIgnoreCase);
+                if (parentIsRoot)
+                {
+                    break; // keep top level folders such as modloader or cleo
+                }
+
+                Directory.Delete(current);
+                current = parent;
+            }
+        }
+    }
+
     private static void PruneEmptyDirectories(string destination, string gamePath)
     {
         var fullDestination = Path.TrimEndingDirectorySeparator(Path.GetFullPath(destination));
@@ -545,6 +616,8 @@ public partial class MainForm
             progress.Report(++done);
             await Task.Yield();
         }
+
+        PruneEmptyParentDirectories(entry.Files, _selectedGamePath);
 
         // 2) copy the backed up originals back
         foreach (var operation in backupOperations)

@@ -350,6 +350,7 @@ public partial class MainForm : Form
         panel.Controls.Add(saveMissionPanel);
         saveMissionPanel.BringToFront();
         panel.Controls.Add(CreateDeleteModsHost());
+        panel.Controls.Add(CreateOptionalsHost());
         return panel;
     }
 
@@ -361,7 +362,7 @@ public partial class MainForm : Form
         }
 
         var modelFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(IsModelFile)
+            .Where(path => IsModelFile(path) && !ModPackageService.IsInsideOptionalContainer(path, _selectedModPackageRoot))
             .OrderBy(path => string.Equals(Path.GetExtension(path), ".dff", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .Select(path => Path.GetFileNameWithoutExtension(path))
             .Where(name => !string.IsNullOrWhiteSpace(name))
@@ -391,7 +392,9 @@ public partial class MainForm : Form
 
         var catalogAssets = _assetCatalogService.LoadAssets();
         return Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(path => IsModelFile(path) && !ModPackageService.IsMetadataOrNonInstallableFile(path))
+            .Where(path => IsModelFile(path)
+                && !ModPackageService.IsMetadataOrNonInstallableFile(path)
+                && !ModPackageService.IsInsideOptionalContainer(path, _selectedModPackageRoot))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .GroupBy(path => Path.GetFileNameWithoutExtension(path) ?? string.Empty, StringComparer.OrdinalIgnoreCase)
             .Where(group => !string.IsNullOrWhiteSpace(group.Key))
@@ -421,7 +424,7 @@ public partial class MainForm : Form
             .ToList();
     }
 
-    private static HashSet<string> GetSourceModelFilePaths(string payloadPath, string sourceModelName)
+    private HashSet<string> GetSourceModelFilePaths(string payloadPath, string sourceModelName)
     {
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath) || string.IsNullOrWhiteSpace(sourceModelName))
         {
@@ -429,7 +432,7 @@ public partial class MainForm : Form
         }
 
         var modelFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
-            .Where(IsModelFile)
+            .Where(path => IsModelFile(path) && !ModPackageService.IsInsideOptionalContainer(path, _selectedModPackageRoot))
             .ToList();
         var sourceFiles = modelFiles
             .Where(path => string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase))

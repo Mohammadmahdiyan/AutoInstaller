@@ -804,6 +804,12 @@ public partial class MainForm : Form
                     _sidebarNextButton.Enabled = false;
                     _sidebarNextButton.Text = _localizationService.GetString("DeleteModsTitle", "Delete Mods");
                 }
+                else if (_isOptionalsStepActive)
+                {
+                    _sidebarPreviousButton.Enabled = true;
+                    _sidebarNextButton.Enabled = true;
+                    _sidebarNextButton.Text = _localizationService.GetString("OptionalsFinish", "Finish");
+                }
                 else if (_isSaveMissionStepActive)
                 {
                     _sidebarNextButton.Enabled = _selectedSaveMissionSlot.HasValue;
@@ -990,6 +996,12 @@ public partial class MainForm : Form
                 return;
             }
 
+            if (_isOptionalsStepActive)
+            {
+                FinishOptionalsStep();
+                return;
+            }
+
             if (_isMixedInstallActive)
             {
                 if (_isSaveMissionStepActive && _saveMissionFileIndex > 0)
@@ -1110,6 +1122,10 @@ public partial class MainForm : Form
                     if (_isDeleteModsStepActive)
                     {
                         // Deleting is done row by row inside the window; there is no Next action.
+                    }
+                    else if (_isOptionalsStepActive)
+                    {
+                        FinishOptionalsStep();
                     }
                     else if (_isSaveMissionStepActive)
                     {

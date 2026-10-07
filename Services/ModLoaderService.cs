@@ -316,6 +316,70 @@ public class ModLoaderService
         return true;
     }
 
+    /// <summary>Marks the entries installed from an optional/optionals folder as children of the base mod.</summary>
+    public static bool TagOptionalInstallation(
+        string gamePath,
+        string optionalSourcePath,
+        string parentModId,
+        string optionalKind)
+    {
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        if (string.IsNullOrWhiteSpace(manifestPath) || string.IsNullOrWhiteSpace(optionalSourcePath))
+        {
+            return false;
+        }
+
+        var fullSource = Path.GetFullPath(optionalSourcePath);
+        var manifest = LoadInstallationManifest(manifestPath);
+        var changed = false;
+        foreach (var entry in manifest.Entries.Where(entry =>
+                     !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+                     && string.Equals(Path.GetFullPath(entry.SourcePackagePath), fullSource, StringComparison.OrdinalIgnoreCase)))
+        {
+            entry.ParentModId = parentModId;
+            entry.OptionalKind = optionalKind;
+            changed = true;
+        }
+
+        if (changed)
+        {
+            SaveInstallationManifest(manifestPath, manifest);
+        }
+
+        return changed;
+    }
+
+    /// <summary>The installation record of a base mod (never an optional child) found by its mod folder.</summary>
+    public static InstallationManifestEntry? FindBaseInstallationBySource(string gamePath, string sourcePackagePath)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || string.IsNullOrWhiteSpace(sourcePackagePath))
+        {
+            return null;
+        }
+
+        var fullSource = Path.GetFullPath(sourcePackagePath);
+        return LoadInstallationManifest(GetGameInstallationsManifestPath(gamePath)).Entries.LastOrDefault(entry =>
+            string.IsNullOrWhiteSpace(entry.ParentModId)
+            && !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+            && string.Equals(Path.GetFullPath(entry.SourcePackagePath), fullSource, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static List<InstallationManifestEntry> FindOptionalInstallations(
+        string gamePath,
+        string parentModId,
+        string? optionalKind = null)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || string.IsNullOrWhiteSpace(parentModId))
+        {
+            return new List<InstallationManifestEntry>();
+        }
+
+        return LoadInstallationManifest(GetGameInstallationsManifestPath(gamePath)).Entries
+            .Where(entry => string.Equals(entry.ParentModId, parentModId, StringComparison.OrdinalIgnoreCase)
+                && (optionalKind == null || string.Equals(entry.OptionalKind, optionalKind, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+    }
+
     public static bool RemoveGameInstallationRecord(string gamePath, string modId)
     {
         var manifestPath = GetGameInstallationsManifestPath(gamePath);

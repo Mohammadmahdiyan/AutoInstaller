@@ -52,6 +52,12 @@ public class InstallationManifestEntry
     public string InstalledDestination { get; set; } = string.Empty;
 
     public List<InstallationManifestPart> MixedParts { get; set; } = new();
+
+    /// <summary>ModId of the base mod when this entry is one of its optional/optionals packages.</summary>
+    public string ParentModId { get; set; } = string.Empty;
+
+    /// <summary>"optional" or "optionals" for entries installed from the base mod's optional folders.</summary>
+    public string OptionalKind { get; set; } = string.Empty;
 }
 
 public sealed class InstallationManifestPart
