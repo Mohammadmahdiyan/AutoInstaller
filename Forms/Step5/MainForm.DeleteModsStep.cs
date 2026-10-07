@@ -46,8 +46,9 @@ public partial class MainForm
                 ? RightToLeft.Yes
                 : RightToLeft.No
         };
-        _deleteModsPanel.BusyChanged += (_, _) => UpdateSidebarState();
-        _deleteModsPanel.EntryRemoved += (_, _) => UpdateSidebarState();
+        _deleteModsPanel.BusyChanged += (_, _) => BeginInvoke(UpdateSidebarState);
+        _deleteModsPanel.EntryRemoved += (_, _) => BeginInvoke(UpdateSidebarState);
+        _deleteModsPanel.AllRemoved += (_, _) => BeginInvoke(CloseDeleteModsStep);
         var host = new Panel
         {
             Name = "DeleteModsHost",

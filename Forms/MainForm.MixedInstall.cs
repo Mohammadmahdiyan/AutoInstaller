@@ -38,7 +38,7 @@ public partial class MainForm
             if (action == DialogResult.No)
             {
                 var deleteEntries = BuildMixedDeleteEntries(existing);
-                ShowDeleteModsStep(deleteEntries, DeleteInstalledEntryAsync, WizardStep.Step3, clearSidebarMedia: false);
+                ShowDeleteModsStep(deleteEntries, DeleteInstalledEntryAsync, WizardStep.Step6, clearSidebarMedia: false);
                 return;
             }
 
