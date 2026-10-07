@@ -801,8 +801,11 @@ public partial class MainForm : Form
                 if (_isDeleteModsStepActive)
                 {
                     _sidebarPreviousButton.Enabled = _deleteModsPanel?.IsBusy != true;
-                    _sidebarNextButton.Enabled = false;
-                    _sidebarNextButton.Text = _localizationService.GetString("DeleteModsTitle", "Delete Mods");
+                    _sidebarNextButton.Enabled = _deleteModsPanel?.IsBusy != true
+                        && _deleteModsPanel?.HasRemovedEntry == true;
+                    _sidebarNextButton.Text = _deleteModsPanel?.HasRemovedEntry == true
+                        ? _localizationService.GetString("Next", "Next")
+                        : _localizationService.GetString("DeleteModsTitle", "Delete Mods");
                 }
                 else if (_isOptionalsStepActive)
                 {
@@ -1121,7 +1124,10 @@ public partial class MainForm : Form
                 case WizardStep.Step5:
                     if (_isDeleteModsStepActive)
                     {
-                        // Deleting is done row by row inside the window; there is no Next action.
+                        if (_deleteModsPanel?.HasRemovedEntry == true)
+                        {
+                            CloseDeleteModsStep();
+                        }
                     }
                     else if (_isOptionalsStepActive)
                     {

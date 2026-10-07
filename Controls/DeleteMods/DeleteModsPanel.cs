@@ -53,6 +53,9 @@ public sealed class DeleteModsPanel : Panel
     /// <summary>True while at least one item is being deleted (the wizard should block navigation).</summary>
     public bool IsBusy => _busyCount > 0;
 
+    /// <summary>True after at least one entry has been successfully removed.</summary>
+    public bool HasRemovedEntry { get; private set; }
+
     public event EventHandler? BusyChanged;
     public event EventHandler<DeleteModEntry>? EntryRemoved;
     public event EventHandler? AllRemoved;
@@ -106,6 +109,7 @@ public sealed class DeleteModsPanel : Panel
         _rows.Clear();
         _table.Controls.Clear();
         _busyCount = 0;
+        HasRemovedEntry = false;
 
         for (var index = 0; index < entries.Count; index++)
         {
@@ -201,6 +205,7 @@ public sealed class DeleteModsPanel : Panel
     {
         _rows.Remove(row);
         _table.Controls.Remove(row);
+        HasRemovedEntry = true;
         EntryRemoved?.Invoke(this, row.Entry);
         row.Dispose();
         UpdateEmptyState();
