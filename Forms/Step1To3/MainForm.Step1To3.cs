@@ -10,8 +10,11 @@ namespace GtaSaModManager.Forms;
 public partial class MainForm : Form
 {
     private Button? _step3BrowseButton;
-    private Button? _step2RandomModButton;
+    private RoundedButton? _step2RandomModButton;
+    private ContextMenuStrip? _step2RandomModMenu;
+    private System.Windows.Forms.Timer? _step2RandomModClickTimer;
     private string? _pendingStep3FolderSelection;
+    private bool _isFindingRandomMod;
 
     private Panel CreateWizardStep1()
     {
@@ -75,7 +78,7 @@ public partial class MainForm : Form
             Text = _localizationService.GetString("DeleteSomeMods", "Delete some mods"),
             Width = 200,
             Height = 38,
-            Margin = new Padding(0, 14, 0, 0),
+            Margin = Padding.Empty,
             Visible = false
         };
         ApplyBrowseButtonStyle(deleteSomeModsButton, Color.FromArgb(220, 38, 38));
@@ -84,11 +87,14 @@ public partial class MainForm : Form
         stack.Controls.Add(title);
         stack.Controls.Add(description);
         stack.Controls.Add(flow);
+        stack.Controls.Add(new Panel { Width = 200, Height = 32, Margin = Padding.Empty });
         stack.Controls.Add(deleteSomeModsButton);
 
         panel.Controls.Add(stack);
 
-        if (!string.IsNullOrWhiteSpace(_settings.GamePath) && Directory.Exists(_settings.GamePath) && GameService.IsValidGameFolder(_settings.GamePath))
+        if (!string.IsNullOrWhiteSpace(_settings.GamePath)
+            && Directory.Exists(_settings.GamePath)
+            && GameService.IsValidGameFolder(_settings.GamePath))
         {
             pathText.Text = _settings.GamePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
@@ -96,7 +102,129 @@ public partial class MainForm : Form
         return panel;
     }
 
-    private async Task OpenRandomModFromStep2Async()
+    private void ShowRandomModCategoryMenu()
+    {
+        if (_step2RandomModButton is not { IsDisposed: false, Enabled: true } button)
+        {
+            return;
+        }
+
+        _step2RandomModMenu?.Close();
+        var menu = new ContextMenuStrip();
+        _step2RandomModMenu = menu;
+        AddRandomModCategory(menu, _localizationService.GetString("RandomCategoryAny", "Any mod"), null);
+
+        var baseModsRoot = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        if (Directory.Exists(baseModsRoot))
+        {
+            try
+            {
+                foreach (var folder in Directory.GetDirectories(baseModsRoot)
+                             .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase))
+                {
+                    var folderName = Path.GetFileName(folder);
+                    AddRandomModCategory(menu, folderName, folderName);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                menu.Dispose();
+                _step2RandomModMenu = null;
+                return;
+            }
+        }
+
+        menu.Closed += (_, _) =>
+        {
+            if (ReferenceEquals(_step2RandomModMenu, menu))
+            {
+                _step2RandomModMenu = null;
+            }
+
+            if (!IsDisposed && IsHandleCreated)
+            {
+                BeginInvoke((MethodInvoker)(() =>
+                {
+                    if (!menu.IsDisposed)
+                    {
+                        menu.Dispose();
+                    }
+                }));
+            }
+            else if (!menu.IsDisposed)
+            {
+                menu.Dispose();
+            }
+        };
+        menu.Show(button, new Point(0, button.Height));
+    }
+
+    private void AddRandomModCategory(ContextMenuStrip menu, string categoryName, string? categoryFolderName)
+    {
+        var item = new ToolStripMenuItem(categoryName);
+        item.Click += async (_, _) => await OpenRandomModFromStep2Async(categoryFolderName);
+        menu.Items.Add(item);
+    }
+
+    private static bool IsRandomModCategoryMatch(string baseModsRoot, string packageRoot, string? categoryFolderName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryFolderName))
+        {
+            return true;
+        }
+
+        var relativePath = Path.GetRelativePath(baseModsRoot, packageRoot);
+        if (Path.IsPathRooted(relativePath))
+        {
+            return false;
+        }
+
+        var topLevelFolder = relativePath
+            .Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
+
+        return string.Equals(topLevelFolder, categoryFolderName, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task OpenRandomModFromStep2Async(string? categoryFolderName)
+    {
+        if (_isFindingRandomMod)
+        {
+            return;
+        }
+
+        _isFindingRandomMod = true;
+        var originalText = _step2RandomModButton?.Text;
+        if (_step2RandomModButton is { IsDisposed: false } randomButton)
+        {
+            randomButton.Text = _localizationService.GetString("FindingRandomMod", "Finding a mod...");
+            randomButton.IsLoading = true;
+            randomButton.Enabled = false;
+            randomButton.Refresh();
+        }
+
+        try
+        {
+            await Task.Delay(120);
+            await FindAndOpenRandomModAsync(categoryFolderName);
+        }
+        finally
+        {
+            if (_step2RandomModButton is { IsDisposed: false } button)
+            {
+                button.IsLoading = false;
+                button.Text = originalText ?? _localizationService.GetString("OpenRandomMod", "Open a random mod");
+                button.Enabled = true;
+            }
+
+            _isFindingRandomMod = false;
+        }
+    }
+
+    private async Task FindAndOpenRandomModAsync(string? categoryFolderName)
     {
         var baseModsRoot = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
             ? _selectedModSourcePath
@@ -116,6 +244,8 @@ public partial class MainForm : Form
         {
             candidates = await Task.Run(() => ModPackageService.DiscoverModPackages(baseModsRoot)
                 .Where(package => !package.HasConfigError
+                    && ModPackageService.GetManifestPath(package.PackageRootPath) != null
+                    && IsRandomModCategoryMatch(baseModsRoot, package.PackageRootPath, categoryFolderName)
                     && !string.IsNullOrWhiteSpace(package.PayloadPath)
                     && Directory.Exists(package.PayloadPath))
                 .ToList());
@@ -192,14 +322,34 @@ public partial class MainForm : Form
         _step2RandomModButton = new RoundedButton
         {
             Name = "Step2RandomModButton",
-            Text = _localizationService.GetString("OpenRandomMod", "Open a random mod"),
+            Text = _localizationService.GetString("OpenRandomMod", "Choose a random mod..."),
             Width = 200,
             Height = 38,
-            Margin = new Padding(0, 12, 0, 0),
+            Margin = Padding.Empty,
             Visible = false
         };
         ApplyBrowseButtonStyle(_step2RandomModButton, Color.FromArgb(22, 142, 76));
-        _step2RandomModButton.Click += async (_, _) => await OpenRandomModFromStep2Async();
+        _step2RandomModClickTimer = new System.Windows.Forms.Timer
+        {
+            Interval = SystemInformation.DoubleClickTime
+        };
+        _step2RandomModClickTimer.Tick += (_, _) =>
+        {
+            _step2RandomModClickTimer.Stop();
+            ShowRandomModCategoryMenu();
+        };
+        _step2RandomModButton.Click += async (_, _) =>
+        {
+            if (_step2RandomModClickTimer.Enabled)
+            {
+                _step2RandomModClickTimer.Stop();
+                await OpenRandomModFromStep2Async(categoryFolderName: null);
+                return;
+            }
+
+            _step2RandomModClickTimer.Start();
+        };
+        Disposed += (_, _) => _step2RandomModClickTimer?.Dispose();
 
         var flow = new FlowLayoutPanel
         {
@@ -228,6 +378,7 @@ public partial class MainForm : Form
         stack.Controls.Add(title);
         stack.Controls.Add(subtitle);
         stack.Controls.Add(flow);
+        stack.Controls.Add(new Panel { Width = 200, Height = 32, Margin = Padding.Empty });
         stack.Controls.Add(_step2RandomModButton);
 
         panel.Controls.Add(stack);

@@ -8,10 +8,37 @@ public class RoundedButton : Button
     private bool _isHovered;
     private bool _isPressed;
     private bool _isFocused;
+    private bool _isLoading;
     private float _hoverProgress;
+    private float _loadingAngle;
     private readonly System.Windows.Forms.Timer _hoverTimer;
+    private readonly System.Windows.Forms.Timer _loadingTimer;
 
     public Color AccentColor { get; set; } = Color.FromArgb(37, 99, 235);
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set
+        {
+            if (_isLoading == value)
+            {
+                return;
+            }
+
+            _isLoading = value;
+            if (_isLoading)
+            {
+                _loadingTimer.Start();
+            }
+            else
+            {
+                _loadingTimer.Stop();
+            }
+
+            Invalidate();
+        }
+    }
 
     public RoundedButton()
     {
@@ -51,6 +78,14 @@ public class RoundedButton : Button
             Invalidate();
         };
 
+        _loadingTimer = new System.Windows.Forms.Timer { Interval = 45 };
+        _loadingTimer.Tick += (_, _) =>
+        {
+            _loadingAngle = (_loadingAngle + 24f) % 360f;
+            Invalidate();
+        };
+        Disposed += (_, _) => _loadingTimer.Dispose();
+
         Resize += (_, _) => UpdateRoundedRegion();
         SizeChanged += (_, _) => UpdateRoundedRegion();
         Layout += (_, _) => UpdateRoundedRegion();
@@ -88,6 +123,12 @@ public class RoundedButton : Button
         using var borderPen = new Pen(Color.FromArgb(120, 255, 255, 255), 1.25f);
         g.DrawPath(borderPen, rounded);
 
+        if (_isLoading)
+        {
+            DrawLoadingContent(g, textColor: Color.FromArgb(71, 85, 105));
+            return;
+        }
+
         if (Enabled && _isFocused)
         {
             using var focusPen = new Pen(Color.FromArgb(140, 255, 255, 255), 1.2f);
@@ -101,6 +142,44 @@ public class RoundedButton : Button
         var textX = (Width - textSize.Width) / 2f;
         var textY = (Height - textSize.Height) / 2f;
         g.DrawString(Text, Font, textBrush, textX, textY);
+    }
+
+    private void DrawLoadingContent(Graphics graphics, Color textColor)
+    {
+        const int spinnerSize = 16;
+        const int gap = 8;
+        var measuredText = graphics.MeasureString(Text, Font);
+        var maxTextWidth = Math.Max(0, Width - Padding.Horizontal - spinnerSize - gap - 8);
+        var textWidth = Math.Min(measuredText.Width, maxTextWidth);
+        var groupWidth = textWidth + spinnerSize + gap;
+        var groupLeft = (Width - groupWidth) / 2f;
+        var spinnerLeft = groupLeft;
+        var textLeft = groupLeft + spinnerSize + gap;
+        var isRightToLeft = RightToLeft == RightToLeft.Yes;
+        if (isRightToLeft)
+        {
+            textLeft = groupLeft;
+            spinnerLeft = groupLeft + textWidth + gap;
+        }
+
+        var spinnerBounds = new RectangleF(spinnerLeft, (Height - spinnerSize) / 2f, spinnerSize, spinnerSize);
+        using (var trackPen = new Pen(Color.FromArgb(70, AccentColor), 2.2f))
+        using (var spinnerPen = new Pen(AccentColor, 2.2f))
+        {
+            graphics.DrawEllipse(trackPen, spinnerBounds);
+            graphics.DrawArc(spinnerPen, spinnerBounds, _loadingAngle, 270f);
+        }
+
+        var textBounds = new RectangleF(textLeft, 0, textWidth, Height);
+        using var textBrush = new SolidBrush(textColor);
+        using var format = new StringFormat
+        {
+            Alignment = isRightToLeft ? StringAlignment.Far : StringAlignment.Near,
+            LineAlignment = StringAlignment.Center,
+            Trimming = StringTrimming.EllipsisCharacter,
+            FormatFlags = StringFormatFlags.NoWrap | (isRightToLeft ? StringFormatFlags.DirectionRightToLeft : 0)
+        };
+        graphics.DrawString(Text, Font, textBrush, textBounds, format);
     }
 
     protected override void OnGotFocus(EventArgs e)

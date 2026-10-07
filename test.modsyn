@@ -2,20 +2,6 @@ mod {
     type: MIX
     list: [
         {
-            type: MIX,
-            folderName: "Pers ELX",
-            list: [
-                {
-                    type: RIP
-                    folderName: "losa"
-                }
-                {
-                    type: PIM
-                    folderName: "lose"
-                }
-            ]
-        }
-        {
             type: RIP
             folderName: "animation"
         }
