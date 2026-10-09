@@ -221,7 +221,7 @@ public partial class MainForm
                 return;
             }
 
-            ShowDeleteModsStep(entries, DeleteInstalledEntryAsync, WizardStep.Step1, clearSidebarMedia: true);
+            ShowDeleteModsStep(entries, DeleteInstalledEntryAsync, WizardStep.Step6, clearSidebarMedia: true);
         }
         catch (Exception ex)
         {

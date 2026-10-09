@@ -97,7 +97,9 @@ public partial class MainForm
                 _selectedModPackageRoot = _mixedParentRoot;
                 _selectedModName = GetMixedPartInstallName(part);
                 _selectedReadmePath = FindReadmeFile(partRoot);
-                _selectedImageFiles = FindImageFiles(partRoot);
+                _selectedImageFiles = part.Manifest.SupportsAssetSelection
+                    ? FindImageFiles(_mixedParentRoot)
+                    : FindImageFiles(partRoot);
 
                 if (part.Manifest.NormalizedType is "saveandmission" or "savesandmissions")
                 {

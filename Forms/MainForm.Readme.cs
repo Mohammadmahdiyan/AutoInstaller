@@ -209,10 +209,19 @@ public partial class MainForm : Form
     // -------------------------------------------------------------------------
     private List<string> GetStep5ModImageFiles()
     {
-        return _selectedImageFiles
+        var imageFiles = _selectedImageFiles
             .Where(File.Exists)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+        if (IsMultiAssetModelMode())
+        {
+            return AssetCatalogService.FindNameFileImagePaths(
+                _multiSourceModels[_multiIndex].BaseName,
+                imageFiles).ToList();
+        }
+
+        return imageFiles;
     }
 
     private string TryReadTextFile(string path)

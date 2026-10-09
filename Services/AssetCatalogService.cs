@@ -84,6 +84,41 @@ public sealed class AssetCatalogService
         return _assets;
     }
 
+    public static string? ResolveNameFileImagePath(GameAsset asset, IEnumerable<string> candidateImagePaths)
+    {
+        if (asset is null || string.IsNullOrWhiteSpace(asset.NameFile))
+        {
+            return null;
+        }
+
+        return FindNameFileImagePaths(asset.NameFile, candidateImagePaths).FirstOrDefault();
+    }
+
+    public static IReadOnlyList<string> FindNameFileImagePaths(string nameFile, IEnumerable<string> candidateImagePaths)
+    {
+        if (string.IsNullOrWhiteSpace(nameFile))
+        {
+            return Array.Empty<string>();
+        }
+
+        var normalizedNameFile = Path.GetFileNameWithoutExtension(nameFile.Trim());
+        if (string.IsNullOrWhiteSpace(normalizedNameFile))
+        {
+            return Array.Empty<string>();
+        }
+
+        return candidateImagePaths
+            .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+            .Where(path => Path.GetFileNameWithoutExtension(path)
+                .Contains(normalizedNameFile, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => string.Equals(
+                Path.GetFileNameWithoutExtension(path),
+                normalizedNameFile,
+                StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ThenBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     public IReadOnlyList<GameAsset> FindAssetsInPackage(string packageRoot)
     {
         var files = Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)

@@ -1714,20 +1714,17 @@ public partial class MainForm : Form
 
         if (string.Equals(normalizedType, "Vehicle", StringComparison.OrdinalIgnoreCase))
         {
-            var height = Math.Max(120, (int)Math.Round(width * 0.62d));
-            return (width, height);
+            return (width, Math.Max(120, (int)Math.Round(width * 0.62d)));
         }
 
         if (string.Equals(normalizedType, "Weapon", StringComparison.OrdinalIgnoreCase))
         {
-            var height = Math.Max(110, (int)Math.Round(width * 0.88d));
-            return (width, height);
+            return (width, Math.Max(110, (int)Math.Round(width * 0.88d)));
         }
 
         if (string.Equals(normalizedType, "Skin", StringComparison.OrdinalIgnoreCase))
         {
-            var height = Math.Max(150, (int)Math.Round(width * 1.35d));
-            return (width, height);
+            return (width, Math.Max(150, (int)Math.Round(width * 1.35d)));
         }
 
         return (width, baseHeight);
@@ -1822,6 +1819,8 @@ public partial class MainForm : Form
         };
 
         var preview = new PictureBox { Width = innerWidth, Height = previewHeight, Location = new Point(8, 8), SizeMode = PictureBoxSizeMode.Zoom, BackColor = palette.SurfaceSecondary, BorderStyle = BorderStyle.None, Cursor = Cursors.Hand };
+        var idText = string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id;
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
         var caption = new AssetCardCaption(
             asset.NameFile,
             installedModName,
@@ -1833,8 +1832,6 @@ public partial class MainForm : Form
             Location = new Point(8, cardHeight - 28),
             Cursor = Cursors.Hand
         };
-        var idText = string.IsNullOrWhiteSpace(asset.Id) ? string.Empty : asset.Id;
-        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
         var idBadge = string.IsNullOrWhiteSpace(idText)
             ? null
             : new Panel
@@ -1872,7 +1869,6 @@ public partial class MainForm : Form
         Label? unavailableImageLabel = null;
         if (catalogImage == null)
         {
-            preview.Image = null;
             unavailableImageLabel = new Label
             {
                 Text = _localizationService.GetString("ImageUnavailableFriendly", "No image available"),
@@ -2025,15 +2021,13 @@ public partial class MainForm : Form
                 }
 
                 var occupiedImage = GetCachedOccupiedAssetImage(occupiedFolders[0], asset.NameFile);
-                if (occupiedImage == null)
+                if (occupiedImage != null)
                 {
-                    return;
-                }
-
-                preview.Image = occupiedImage;
-                if (unavailableImageLabel != null)
-                {
-                    unavailableImageLabel.Visible = false;
+                    preview.Image = occupiedImage;
+                    if (unavailableImageLabel != null)
+                    {
+                        unavailableImageLabel.Visible = false;
+                    }
                 }
             }));
         }
@@ -2057,31 +2051,21 @@ public partial class MainForm : Form
 
             var selectedIndex = _step5DetectedAssets
                 .Where(assetItem => string.Equals(assetItem.AssetType, asset.AssetType, StringComparison.OrdinalIgnoreCase))
-                .Select(assetItem => assetItem)
                 .ToList()
                 .FindIndex(item => string.Equals(GetAssetSelectionKey(item), selectionKey, StringComparison.OrdinalIgnoreCase));
-
             var imageList = _step5DetectedAssets
                 .Where(assetItem => string.Equals(assetItem.AssetType, asset.AssetType, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(item => item.NameFile, StringComparer.OrdinalIgnoreCase)
                 .Select(item => _assetCatalogService.ResolveImagePath(item))
                 .Where(path => !string.IsNullOrWhiteSpace(path))
                 .Select(path => path!)
-                .Where(path => File.Exists(path))
+                .Where(File.Exists)
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
-
-            if (imageList.Count == 0)
+            if (imageList.Count > 0)
             {
-                return;
+                OpenFullImageViewer(imageList, Math.Clamp(selectedIndex, 0, imageList.Count - 1), catalogImagePath);
             }
-
-            if (selectedIndex < 0 || selectedIndex >= imageList.Count)
-            {
-                selectedIndex = 0;
-            }
-
-            OpenFullImageViewer(imageList, selectedIndex, catalogImagePath);
         };
 
         card.Click += ToggleSelection;

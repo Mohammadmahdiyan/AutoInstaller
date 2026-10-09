@@ -1,7 +1,3 @@
-1. وقتی تمام ایتم ها پاک شد خودکار بره step بعدی
-2. میخام برای تایپ VSS یک چیزی اضافه کنم 
-در این عکس مشکل بزرک اینکه وقتی مد عکس داره اما چند فایل ماشین میخاد نصب کنیم بخاطر همین عکس هارو نمیاره
-برای همین میخام بگم اگر عکسی اسمش برابر بود با nameFile همون عکس رو برای همون فایل بیار
 3. delete some mod در step 1 فقط مد هایی که در installations.json نوشته شدن باید پاک کنه 
 4. وقتی داریم فایلی delete میکنیم پنجره بهم ریختس 
 نوار پیشرفت سبز رنگ رو هم نشون نمیدهس
@@ -9,15 +5,15 @@
 6. وقتی در Modsyn ارور داریم اوکی رو میزنیم modsyn رو باز نمیکنه
 7. توی حالتی که optinal موجوده میخام وقتی کلیک شد بره step 4 نصب کنه
 مد اینطوری بود 
-Base Mods Address\Cars\HorseCar\
-	HorseDataFile\data\cargrp.dat
-	HorseFile\Horse Car\
-		sweeper.dff
-		sweeper.txd
-	OPTIONAL\
-		Cavalo Branco\modloader\Horse Car\sweeper.txd
-		mod.modsyn
-	config.modsyn
+| Base Mods Address\Cars\HorseCar\
+|-- HorseDataFile\data\cargrp.dat
+|-- HorseFile\Horse Car\
+|---- sweeper.dff
+|---- sweeper.txd
+|-- OPTIONAL\
+|---- Cavalo Branco\modloader\Horse Car\sweeper.txd
+|-- mod.modsyn
+|-- config.modsyn
 config.modsyn (mod {
     type: MIX,
     list: [
@@ -36,28 +32,117 @@ OPTIONAL\mod.modsyn (mod {
     type: RIP
 })
 اینطوری نصب کرد
-Game Address\
-	.ModManager\backup\HorseCar_HorseDataFile\data\cargrp.dat
-	modloader\HorseCar\HorseFile\Horse Car\
-		sweeper.dff
-		sweeper.txd
-	Cavalo Branco\modloader\Horse Car\sweeper.txd
+| Game Address\
+|-- .ModManager\backup\HorseCar_HorseDataFile\data\cargrp.dat
+|-- modloader\HorseCar\HorseFile\Horse Car\
+|---- sweeper.dff
+|---- sweeper.txd
+|-- Cavalo Branco\modloader\Horse Car\sweeper.txd
 ولی انتظارم این بود 
-Game Address\
-	.ModManager\backup\HorseCar_HorseDataFile\
-		data\cargrp.dat
-		modloader\Horse Car\
-			sweeper.txd (model mod)
-	modloader\Horse Car\
-		sweeper.dff
-		sweeper.txd (model optional)
+| Game Address\
+|-- ModManager\backup\HorseCar_HorseDataFile\
+|---- data\cargrp.dat
+|---- modloader\Horse Car\
+|------ sweeper.txd (model mod)
+|-- modloader\Horse Car\
+|---- sweeper.dff
+|---- sweeper.txd (model optional)
 و اگر optional نصب نمیشد
-Game Address\
-	.ModManager\backup\HorseCar_HorseDataFile\data\cargrp.dat
-	modloader\Horse Car\
-		sweeper.dff
-		sweeper.txd
+| Game Address\
+|-- .ModManager\backup\HorseCar_HorseDataFile\data\cargrp.dat
+|-- modloader\Horse Car\
+|---- sweeper.dff
+|---- sweeper.txd
 نکته وقتی پوشه که داخل روت مد هست باید نصب بشه همه منطق نصب تایپ هارو اینطوری بکن بجز VSW
+یک مثال دیگه اینجوری مثلا 
+| Base Mods Address\Cars\GTA-V Car light pack\
+|-- Car Light Pack\
+|---- cleo\...
+|---- data\...
+|---- modloader\GTAV Car light pack\...
+|-- Read ME.txt
+|-- mod.modsyn
+```modsyn
+mod {
+    type: PAR
+    backupThese: [
+        "data\\carcols.dat"
+        "data\\cargrp.dat"
+        "data\\carmods.dat"
+        "data\\handling.cfg"
+	"data\\vehicles.ide"
+    ]
+}
+```
+و انتظار میره اینطوری نصب بشه
+| Game Address\
+|-- .ModManager\backup\Car Light Pack\
+|---- data\
+|------ carcols.dat
+|------ cargrp.dat
+|------ carmods.dat
+|------ handling.cfg
+|------ vehicles.ide
+|-- cleo\...
+|-- data\
+|---- carcols.dat
+|---- cargrp.dat
+|---- carmods.dat
+|---- handling.cfg
+|---- vehicles.ide
+|---- ...
+|-- modloader\GTAV Car light pack\...
+8. بعضی وقتا مد هست اینطوری VSS و VSW 
+| Base Mods Address\Cars\lamborghini\
+|-- infernus.dff
+|-- infernus.txd
+|-- Infernus1.txd
+|-- Infernus2.txd
+|-- Infernus3.txd
+|-- Infernus4.txd
+|-- gallery1.jpg
+|-- gallery2.jpg
+|-- gallery3.jpg
+|-- mod.modsyn
+
+```modsyn
+mod {
+    type: VSW
+}
+```
+العان اینطوری نصب میکنه مثلا وقتی bullet انتخاب میشه
+| Game Address\modloader\lamborghini\
+|-- bullet.dff
+|-- bullet.txd
+|-- gallery1.jpg
+|-- gallery2.jpg
+|-- gallery3.jpg
+ولی انتظار داشتم اینطوری نصب بشه
+| Game Address\modloader\lamborghini\
+|-- bullet.dff
+|-- bullet.txd
+|-- bullet1.txd
+|-- bullet2.txd
+|-- bullet3.txd
+|-- bullet4.txd
+|-- gallery1.jpg
+|-- gallery2.jpg
+|-- gallery3.jpg
+9. در step 5 weapons و vehicles و skins
+میخام یک باکس سرچ باشه بالا که اگر عدد وارد شد توی ایدی ها سرچ کنه اگه متن وارد شد توی category: all بگرده
+این با شورت کات 
+CTRL + F هم اماده نوشتن بشه
+10. میخام دکمه هارو براشون یک کلید کیبورد در نظر بگیرم که سریع تر جا به جا بشیم 
+دکمه Prev = ESC
+دکمه Next = Enter
+اگر در step از دکمه های فلش استفاده شد 
+حالتی که کلیک بشه با اینتر بره روی دکمه دیگر 
+مثلا در step 6 هستیم حالت کلیک روی next هست 
+فلش سمت راست رو میزینم باید حالت اینتر بیاد روی دکمه main اونی که نزدیک تر به next فکنم open game folder بود 
+حالا ما در نظر میگیرم همین باشه دکمه سمت راست رو زدیم چون از سمت راست نزدیک ترین اینه باید اون حالت باید روی open game folder بیاد روی این دکمه
+و با زدن دکمه enter این دکمه زده بشه و باقی سمت ها هم به همین صورت 
+و دکمه enter توی numLock همیشه برای دکمه next عمل کنه 
+---------- Big Change Convert This Project To V2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 
 به اسم 
 modsyn_auto_create
@@ -68,5 +153,19 @@ modsyn_auto_create
 در gta_sa_mod_manager در step 3 وقتی مدی انتخاب میشه اگر modsyn نداشت باید برنامه 
 اول modsyn_auto_create رو بهش درخواست بده 
 باید gta_sa_mod_manager لیست کامل تمام فایل های داخل پوشه بازی رو بهش بده 
-منم داخل پروژه اینا 
+منم داخل پروژه اینا  رو میزارم
+| Assets\Game Files List\
+|-- Mod List Before\
+|---- Cars.txt
+|---- ...
+|---- Weapons.txt
+|-- Mod List After\
+|---- Cars.txt
+|---- ...
+|---- Weapons.txt
+|-- models - inside .img files\
+|---- cutscene.txt
+|---- gta_int.txt
+|---- gta3.txt
+|---- player.txt
 اول ساختار پوشه بندی مد رو درست کنه بعد modsyn شو پایین من نمونه هایی که خودم مد هایی رو ساختار بندی پوششون رو درست کردم رو میزارم
