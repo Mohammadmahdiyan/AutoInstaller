@@ -424,7 +424,10 @@ public partial class MainForm : Form
             .ToList();
     }
 
-    private HashSet<string> GetSourceModelFilePaths(string payloadPath, string sourceModelName)
+    private HashSet<string> GetSourceModelFilePaths(
+        string payloadPath,
+        string sourceModelName,
+        bool includeNumberedTextureVariants = false)
     {
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath) || string.IsNullOrWhiteSpace(sourceModelName))
         {
@@ -437,6 +440,26 @@ public partial class MainForm : Form
         var sourceFiles = modelFiles
             .Where(path => string.Equals(Path.GetFileNameWithoutExtension(path), sourceModelName, StringComparison.OrdinalIgnoreCase))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (includeNumberedTextureVariants)
+        {
+            sourceFiles.UnionWith(modelFiles.Where(path =>
+            {
+                if (!Path.GetExtension(path).Equals(".txd", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                var fileName = Path.GetFileNameWithoutExtension(path);
+                if (!fileName.StartsWith(sourceModelName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                var suffix = fileName[sourceModelName.Length..];
+                return suffix.Length > 0 && suffix.All(char.IsDigit);
+            }));
+        }
 
         var sourceDff = sourceFiles.FirstOrDefault(path => Path.GetExtension(path).Equals(".dff", StringComparison.OrdinalIgnoreCase));
         var sourceTxd = sourceFiles.FirstOrDefault(path => Path.GetExtension(path).Equals(".txd", StringComparison.OrdinalIgnoreCase));
@@ -452,6 +475,25 @@ public partial class MainForm : Form
         }
 
         return sourceFiles;
+    }
+
+    private static string GetAssetInstallModelName(
+        string sourceFileName,
+        string sourceModelName,
+        string targetModelName,
+        bool isTexture)
+    {
+        if (isTexture
+            && sourceFileName.StartsWith(sourceModelName, StringComparison.OrdinalIgnoreCase))
+        {
+            var suffix = sourceFileName[sourceModelName.Length..];
+            if (suffix.Length > 0 && suffix.All(char.IsDigit))
+            {
+                return targetModelName + suffix;
+            }
+        }
+
+        return targetModelName;
     }
 
     private string DetectAssetTypeByName(string modelName)

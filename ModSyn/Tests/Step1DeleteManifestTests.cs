@@ -102,4 +102,47 @@ public sealed class Step1DeleteManifestTests
             Directory.Delete(packageRoot, recursive: true);
         }
     }
+
+    [TestMethod]
+    public void VswInstall_IncludesAndRenamesNumberedTextureVariants()
+    {
+        var packageRoot = Path.Combine(Path.GetTempPath(), "VswTextureVariants-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(packageRoot);
+
+        try
+        {
+            foreach (var fileName in new[]
+                     {
+                         "infernus.dff",
+                         "infernus.txd",
+                         "Infernus1.txd",
+                         "Infernus2.txd",
+                         "Infernus3.txd",
+                         "Infernus4.txd",
+                         "InfernusBackup.txd"
+                     })
+            {
+                File.WriteAllText(Path.Combine(packageRoot, fileName), string.Empty);
+            }
+
+            var form = (MainForm)RuntimeHelpers.GetUninitializedObject(typeof(MainForm));
+            typeof(MainForm).GetField("_selectedModPackageRoot", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(form, packageRoot);
+            var getSourceFiles = typeof(MainForm).GetMethod("GetSourceModelFilePaths", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var sourceFiles = (HashSet<string>)getSourceFiles.Invoke(form, [packageRoot, "infernus", true])!;
+
+            CollectionAssert.AreEquivalent(
+                new[] { "infernus.dff", "infernus.txd", "Infernus1.txd", "Infernus2.txd", "Infernus3.txd", "Infernus4.txd" },
+                sourceFiles.Select(Path.GetFileName).ToArray());
+
+            var mapName = typeof(MainForm).GetMethod("GetAssetInstallModelName", BindingFlags.Static | BindingFlags.NonPublic)!;
+            Assert.AreEqual("bullet", mapName.Invoke(null, ["infernus", "infernus", "bullet", false]));
+            Assert.AreEqual("bullet1", mapName.Invoke(null, ["Infernus1", "infernus", "bullet", true]));
+            Assert.AreEqual("bullet4", mapName.Invoke(null, ["Infernus4", "infernus", "bullet", true]));
+        }
+        finally
+        {
+            Directory.Delete(packageRoot, recursive: true);
+        }
+    }
 }

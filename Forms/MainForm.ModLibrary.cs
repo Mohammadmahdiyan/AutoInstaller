@@ -848,7 +848,10 @@ public partial class MainForm : Form
         var isAssetSelectionInstall = !isDirectGameInstall
             && (isAssetPackage || _selectedAssetForInstall != null);
         var sourceModelName = DetectSourceModelName(payloadPath);
-        var sourceModelFiles = GetSourceModelFilePaths(payloadPath, sourceModelName);
+        var sourceModelFiles = GetSourceModelFilePaths(
+            payloadPath,
+            sourceModelName,
+            includeNumberedTextureVariants: manifest.IsSingleAssetPackage);
         var multiSourceModelFiles = isMultiAssetModelInstall
             ? _multiSourceModels
                 .Where(model => model.Status is SourceModelStatus.Mapped or SourceModelStatus.KeepOriginal)
@@ -988,6 +991,16 @@ public partial class MainForm : Form
                     : sourceModel.Status == SourceModelStatus.Mapped
                         ? sourceModel.TargetAsset?.NameFile ?? sourceModel.BaseName
                         : sourceModel.BaseName;
+                if (manifest.IsSingleAssetPackage
+                    && sourceModelFiles.Contains(sourcePath)
+                    && !string.IsNullOrWhiteSpace(selectedTarget?.NameFile))
+                {
+                    destinationName = GetAssetInstallModelName(
+                        originalName,
+                        sourceModelName,
+                        selectedTarget.NameFile,
+                        extension.Equals(".txd", StringComparison.OrdinalIgnoreCase));
+                }
                 var isSourceModelFile = sourceModel != null || sourceModelFiles.Contains(sourcePath);
                 var isExternalAssetMediaFile = hasWrappedMultiAssetPayload
                     && isMediaFile

@@ -1,39 +1,3 @@
-2. بعضی وقتا مد هست اینطوری VSS و VSW 
-| Base Mods Address\Cars\lamborghini\
-|-- infernus.dff
-|-- infernus.txd
-|-- Infernus1.txd
-|-- Infernus2.txd
-|-- Infernus3.txd
-|-- Infernus4.txd
-|-- gallery1.jpg
-|-- gallery2.jpg
-|-- gallery3.jpg
-|-- mod.modsyn
-
-```modsyn
-mod {
-    type: VSW
-}
-```
-العان اینطوری نصب میکنه مثلا وقتی bullet انتخاب میشه
-| Game Address\modloader\lamborghini\
-|-- bullet.dff
-|-- bullet.txd
-|-- gallery1.jpg
-|-- gallery2.jpg
-|-- gallery3.jpg
-ولی انتظار داشتم اینطوری نصب بشه
-| Game Address\modloader\lamborghini\
-|-- bullet.dff
-|-- bullet.txd
-|-- bullet1.txd
-|-- bullet2.txd
-|-- bullet3.txd
-|-- bullet4.txd
-|-- gallery1.jpg
-|-- gallery2.jpg
-|-- gallery3.jpg
 3. در step 5 weapons و vehicles و skins
 میخام یک باکس سرچ باشه بالا که اگر عدد وارد شد توی ایدی ها سرچ کنه اگه متن وارد شد توی category: all بگرده
 این با شورت کات 

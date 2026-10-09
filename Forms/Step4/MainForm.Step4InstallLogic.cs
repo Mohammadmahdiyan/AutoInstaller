@@ -1057,12 +1057,19 @@ public partial class MainForm : Form
                 if (existingAssetInstallation != null && existingAssetAction == DialogResult.No
                     && !string.IsNullOrWhiteSpace(_selectedAssetForInstall?.NameFile))
                 {
+                    var sourceModelName = DetectSourceModelName(_selectedModPayloadPath);
                     var incomingModelPaths = GetSourceModelFilePaths(
                             _selectedModPayloadPath,
-                            DetectSourceModelName(_selectedModPayloadPath))
+                            sourceModelName,
+                            includeNumberedTextureVariants: _selectedModManifest?.IsSingleAssetPackage == true)
                         .Select(sourcePath => Path.Combine(
                             existingAssetInstallation.InstalledDestination,
-                            _selectedAssetForInstall.NameFile + Path.GetExtension(sourcePath)))
+                            GetAssetInstallModelName(
+                                Path.GetFileNameWithoutExtension(sourcePath),
+                                sourceModelName,
+                                _selectedAssetForInstall.NameFile,
+                                Path.GetExtension(sourcePath).Equals(".txd", StringComparison.OrdinalIgnoreCase))
+                            + Path.GetExtension(sourcePath)))
                         .Distinct(StringComparer.OrdinalIgnoreCase)
                         .ToList();
                     var existingModelPaths = incomingModelPaths.Where(File.Exists).ToList();
@@ -1147,8 +1154,18 @@ public partial class MainForm : Form
                             ?? GetSelectedAssetListForInstall(_selectedModManifest, _selectedModPayloadPath).FirstOrDefault()?.NameFile;
                         var replacementModelPaths = string.IsNullOrWhiteSpace(selectedAssetName)
                             ? new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                            : GetSourceModelFilePaths(_selectedModPayloadPath, DetectSourceModelName(_selectedModPayloadPath))
-                                .Select(sourcePath => Path.Combine(existingDestination, selectedAssetName + Path.GetExtension(sourcePath)))
+                            : GetSourceModelFilePaths(
+                                    _selectedModPayloadPath,
+                                    DetectSourceModelName(_selectedModPayloadPath),
+                                    includeNumberedTextureVariants: _selectedModManifest?.IsSingleAssetPackage == true)
+                                .Select(sourcePath => Path.Combine(
+                                    existingDestination,
+                                    GetAssetInstallModelName(
+                                        Path.GetFileNameWithoutExtension(sourcePath),
+                                        DetectSourceModelName(_selectedModPayloadPath),
+                                        selectedAssetName,
+                                        Path.GetExtension(sourcePath).Equals(".txd", StringComparison.OrdinalIgnoreCase))
+                                    + Path.GetExtension(sourcePath)))
                                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
                         previousModelFiles = existingModelFiles
