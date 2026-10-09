@@ -1,5 +1,4 @@
-5. وقتی برنامه رو باز میکنیم صدای ارور میاد سه بار اینو بردار 
-7. توی حالتی که optinal موجوده میخام وقتی کلیک شد بره step 4 نصب کنه
+1. توی حالتی که optinal موجوده میخام وقتی کلیک شد بره step 4 نصب کنه
 | Base Mods Address\Cars\HorseCar\
 |-- HorseDataFile\data\cargrp.dat
 |-- HorseFile\Horse Car\
@@ -28,11 +27,14 @@ OPTIONAL\mod.modsyn (mod {
 })
 اینطوری نصب کرد
 | Game Address\
-|-- .ModManager\backup\HorseCar_HorseDataFile\data\cargrp.dat
-|-- modloader\HorseCar\HorseFile\Horse Car\
-|---- sweeper.dff
-|---- sweeper.txd
-|-- Cavalo Branco\modloader\Horse Car\sweeper.txd
+|-- .ModManager\backup\
+|---- HorseCar_HorseDataFile\data\cargrp.dat
+|---- HorseCar (optional)\modloader\Horse Car\sweeper.txd
+|-- modloader\
+|---- Horse Car\
+|------ sweeper.dff
+|------ sweeper.txd
+|---- HorseCar\HorseFile\Horse Car\
 ولی انتظارم این بود 
 | Game Address\
 |-- ModManager\backup\HorseCar_HorseDataFile\
@@ -65,7 +67,7 @@ mod {
         "data\\cargrp.dat"
         "data\\carmods.dat"
         "data\\handling.cfg"
-	"data\\vehicles.ide"
+    "data\\vehicles.ide"
     ]
 }
 ```
@@ -87,7 +89,7 @@ mod {
 |---- vehicles.ide
 |---- ...
 |-- modloader\GTAV Car light pack\...
-8. بعضی وقتا مد هست اینطوری VSS و VSW 
+2. بعضی وقتا مد هست اینطوری VSS و VSW 
 | Base Mods Address\Cars\lamborghini\
 |-- infernus.dff
 |-- infernus.txd
@@ -123,11 +125,11 @@ mod {
 |-- gallery1.jpg
 |-- gallery2.jpg
 |-- gallery3.jpg
-9. در step 5 weapons و vehicles و skins
+3. در step 5 weapons و vehicles و skins
 میخام یک باکس سرچ باشه بالا که اگر عدد وارد شد توی ایدی ها سرچ کنه اگه متن وارد شد توی category: all بگرده
 این با شورت کات 
 CTRL + F هم اماده نوشتن بشه
-10. میخام دکمه هارو براشون یک کلید کیبورد در نظر بگیرم که سریع تر جا به جا بشیم 
+4. میخام دکمه هارو براشون یک کلید کیبورد در نظر بگیرم که سریع تر جا به جا بشیم 
 دکمه Prev = ESC
 دکمه Next = Enter
 اگر در step از دکمه های فلش استفاده شد 
@@ -137,6 +139,9 @@ CTRL + F هم اماده نوشتن بشه
 حالا ما در نظر میگیرم همین باشه دکمه سمت راست رو زدیم چون از سمت راست نزدیک ترین اینه باید اون حالت باید روی open game folder بیاد روی این دکمه
 و با زدن دکمه enter این دکمه زده بشه و باقی سمت ها هم به همین صورت 
 و دکمه enter توی numLock همیشه برای دکمه next عمل کنه 
+5. وقتی برنامه رو باز میکنیم صدای ارور میاد سه بار اینو بردار 
+6. وقتی مدی که optional داره رو میخایم حذف کنیم در step 6 دکمه Install optional رو میاره این دکمه رو بردار وقتی مد رو داریم حذف میکنیم
+7. مدی که optional داره روی دکمش باید بنویسه اسم مد چیه (مختص optional نه optionals)
 ---------- Big Change Convert This Project To V2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 
 به اسم 
