@@ -130,8 +130,11 @@ public partial class MainForm
         var optionalsFolder = GetOptionalsFolderForCurrentInstall();
         if (optionalFolder != null)
         {
+            var optionalName = GetOptionalPackageDisplayName(optionalFolder, _selectedModName);
             var button = CreateOptionalActionButton(
-                _localizationService.GetString("InstallOptionalButton", "Install optional"),
+                string.Format(
+                    _localizationService.GetString("InstallOptionalButton", "Install optional: {0}"),
+                    optionalName),
                 optionalFolder);
             button.Click += async (_, _) => await InstallOptionalPackageAsync(optionalFolder);
             host.Controls.Add(button);
@@ -148,6 +151,27 @@ public partial class MainForm
 
         host.Visible = host.Controls.Count > 0;
         host.AutoSize = true;
+    }
+
+    private static string GetOptionalPackageDisplayName(string optionalRoot, string parentModName)
+    {
+        if (!string.IsNullOrWhiteSpace(optionalRoot) && Directory.Exists(optionalRoot))
+        {
+            var manifest = ModPackageService.ResolveManifest(optionalRoot);
+            var payloadPath = ModPackageService.GetInstallPayloadDirectory(optionalRoot, manifest);
+            if (!string.IsNullOrWhiteSpace(payloadPath)
+                && Directory.Exists(payloadPath)
+                && !string.Equals(Path.GetFullPath(payloadPath), Path.GetFullPath(optionalRoot), StringComparison.OrdinalIgnoreCase))
+            {
+                var payloadName = Path.GetFileName(Path.TrimEndingDirectorySeparator(payloadPath));
+                if (!string.IsNullOrWhiteSpace(payloadName))
+                {
+                    return ModPackageService.NormalizeDisplayName(payloadName);
+                }
+            }
+        }
+
+        return ModPackageService.NormalizeDisplayName(parentModName);
     }
 
     private Button CreateOptionalActionButton(string text, string toolTipPath)

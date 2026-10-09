@@ -167,4 +167,28 @@ public sealed class Step1DeleteManifestTests
         CollectionAssert.AreEqual(new[] { "rancher" }, categoryResults.Select(asset => asset.NameFile).ToArray());
     }
 
+    [TestMethod]
+    public void OptionalButtonName_UsesNestedPackageNameAndFallsBackToParentName()
+    {
+        var packageRoot = Path.Combine(Path.GetTempPath(), "OptionalButtonName-" + Guid.NewGuid().ToString("N"));
+        var optionalRoot = Path.Combine(packageRoot, "OPTIONAL");
+        var optionalPackage = Path.Combine(optionalRoot, "Cavalo Branco");
+        Directory.CreateDirectory(Path.Combine(optionalPackage, "modloader", "Horse Car"));
+
+        try
+        {
+            var getName = typeof(MainForm).GetMethod("GetOptionalPackageDisplayName", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            Assert.AreEqual("Cavalo Branco", getName.Invoke(null, [optionalRoot, "HorseCar"]));
+
+            Directory.Delete(optionalPackage, recursive: true);
+            Directory.CreateDirectory(optionalRoot);
+            Assert.AreEqual("Horse Car", getName.Invoke(null, [optionalRoot, "Horse Car"]));
+        }
+        finally
+        {
+            Directory.Delete(packageRoot, recursive: true);
+        }
+    }
+
 }
