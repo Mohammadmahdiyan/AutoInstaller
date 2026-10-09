@@ -314,6 +314,38 @@ public partial class MainForm : Form
         }
     }
 
+    private async Task RefreshStartupDataAsync()
+    {
+        var errors = new List<string>();
+        try
+        {
+            await RefreshModLibraryAsync();
+        }
+        catch (Exception ex)
+        {
+            errors.Add("Mod library: " + ex.Message);
+        }
+
+        try
+        {
+            await RefreshModListAsync();
+        }
+        catch (Exception ex)
+        {
+            errors.Add("Installed mods: " + ex.Message);
+        }
+
+        if (errors.Count > 0)
+        {
+            MessageBox.Show(
+                this,
+                string.Join(Environment.NewLine, errors),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+    }
+
     // -------------------------------------------------------------------------
     // تا اینجا برای فایل MainForm.ModLibrary.cs
     // -------------------------------------------------------------------------

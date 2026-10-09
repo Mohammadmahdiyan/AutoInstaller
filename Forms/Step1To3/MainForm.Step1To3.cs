@@ -465,14 +465,33 @@ public partial class MainForm : Form
                 return;
             }
 
-            if (ModPackageService.GetManifestPath(selected) is not null
+            var modsynPath = ModPackageService.GetManifestPath(selected);
+            if (modsynPath is not null
                 && !ModPackageService.TryValidateModsyn(selected, out var configError))
             {
-                MessageBox.Show(
+                var result = MessageBox.Show(
                     configError ?? "The Modsyn package configuration is invalid.",
                     _appName,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+                if (result == DialogResult.OK)
+                {
+                    try
+                    {
+                        var editor = new System.Diagnostics.ProcessStartInfo(
+                            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "notepad.exe"))
+                        {
+                            UseShellExecute = false
+                        };
+                        editor.ArgumentList.Add(modsynPath);
+                        System.Diagnostics.Process.Start(editor);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
                 return;
             }
 

@@ -127,7 +127,7 @@ public partial class MainForm : Form
         // -------------------------------------------------------------------------
     // از اینجا برای فایل MainForm.Localization.cs
     // -------------------------------------------------------------------------
-    protected override void OnShown(EventArgs e)
+    protected override async void OnShown(EventArgs e)
     {
         base.OnShown(e);
 
@@ -163,6 +163,7 @@ public partial class MainForm : Form
         ApplyLocalization();
         UpdateSidebarState();
         GoToStep(_currentStep);
+        await RefreshStartupDataAsync();
     }
 
     private static string GetLanguageDisplayName(string language)

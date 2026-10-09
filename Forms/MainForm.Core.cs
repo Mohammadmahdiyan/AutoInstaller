@@ -193,8 +193,6 @@ public partial class MainForm : Form
         };
 
         GoToStep(_currentStep);
-        RefreshModLibrary();
-        RefreshModList();
         UpdateSidebarState();
 
     }

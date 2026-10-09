@@ -1,7 +1,5 @@
 5. وقتی برنامه رو باز میکنیم صدای ارور میاد سه بار اینو بردار 
-6. وقتی در Modsyn ارور داریم اوکی رو میزنیم modsyn رو باز نمیکنه
 7. توی حالتی که optinal موجوده میخام وقتی کلیک شد بره step 4 نصب کنه
-مد اینطوری بود 
 | Base Mods Address\Cars\HorseCar\
 |-- HorseDataFile\data\cargrp.dat
 |-- HorseFile\Horse Car\
