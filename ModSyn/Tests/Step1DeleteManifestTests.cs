@@ -192,6 +192,16 @@ public sealed class Step1DeleteManifestTests
     }
 
     [TestMethod]
+    public void RandomModCategoryMenuHeight_IsCappedToScrollableViewport()
+    {
+        var getHeight = typeof(MainForm).GetMethod("GetRandomModMenuHeight", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        Assert.AreEqual(116, getHeight.Invoke(null, [3, 900]));
+        Assert.AreEqual(420, getHeight.Invoke(null, [30, 900]));
+        Assert.AreEqual(184, getHeight.Invoke(null, [30, 200]));
+    }
+
+    [TestMethod]
     public void RebuildingWizard_DisposesPreviousPanelsAndTheirChildren()
     {
         using var host = new System.Windows.Forms.Panel();

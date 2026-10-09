@@ -11,7 +11,7 @@ public partial class MainForm : Form
 {
     private Button? _step3BrowseButton;
     private RoundedButton? _step2RandomModButton;
-    private ContextMenuStrip? _step2RandomModMenu;
+    private Form? _step2RandomModMenu;
     private System.Windows.Forms.Timer? _step2RandomModClickTimer;
     private string? _pendingStep3FolderSelection;
     private bool _isFindingRandomMod;
@@ -110,10 +110,10 @@ public partial class MainForm : Form
         }
 
         _step2RandomModMenu?.Close();
-        var menu = new ContextMenuStrip();
-        _step2RandomModMenu = menu;
-        AddRandomModCategory(menu, _localizationService.GetString("RandomCategoryAny", "Any mod"), null);
-
+        var entries = new List<(string CategoryName, string? CategoryFolderName)>
+        {
+            (_localizationService.GetString("RandomCategoryAny", "Any mod"), null)
+        };
         var baseModsRoot = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
             ? _selectedModSourcePath
             : _settings.ModSourceFolder ?? string.Empty;
@@ -121,52 +121,132 @@ public partial class MainForm : Form
         {
             try
             {
-                foreach (var folder in Directory.GetDirectories(baseModsRoot)
-                             .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase))
-                {
-                    var folderName = Path.GetFileName(folder);
-                    AddRandomModCategory(menu, folderName, folderName);
-                }
+                entries.AddRange(Directory.GetDirectories(baseModsRoot)
+                    .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase)
+                    .Select(folder => (Path.GetFileName(folder), (string?)Path.GetFileName(folder))));
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
                 MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                menu.Dispose();
-                _step2RandomModMenu = null;
                 return;
             }
         }
 
-        menu.Closed += (_, _) =>
+        const int menuWidth = 320;
+        var workingArea = Screen.FromControl(button).WorkingArea;
+        var menuHeight = GetRandomModMenuHeight(entries.Count, workingArea.Height);
+        var buttonTopLeft = button.PointToScreen(Point.Empty);
+        var isRtl = _localizationService.ParseLanguage(_settings.Language) == SupportedLanguage.Persian;
+        var menuX = isRtl ? buttonTopLeft.X + button.Width - menuWidth : buttonTopLeft.X;
+        menuX = Math.Clamp(menuX, workingArea.Left + 4, workingArea.Right - menuWidth - 4);
+        var belowButtonY = buttonTopLeft.Y + button.Height;
+        var menuY = belowButtonY + menuHeight <= workingArea.Bottom - 4
+            ? belowButtonY
+            : buttonTopLeft.Y - menuHeight;
+        menuY = Math.Clamp(menuY, workingArea.Top + 4, workingArea.Bottom - menuHeight - 4);
+
+        var palette = ThemeManager.ResolvePalette(ThemeManager.ParseTheme(_settings.Theme));
+        var menu = new Form
+        {
+            Name = "Step2RandomModCategoryPopup",
+            FormBorderStyle = FormBorderStyle.None,
+            StartPosition = FormStartPosition.Manual,
+            ShowInTaskbar = false,
+            ShowIcon = false,
+            KeyPreview = true,
+            ClientSize = new Size(menuWidth, menuHeight),
+            Location = new Point(menuX, menuY),
+            BackColor = palette.Surface,
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No
+        };
+        _step2RandomModMenu = menu;
+        var scrollPanel = new Panel
+        {
+            Dock = DockStyle.Fill,
+            AutoScroll = true,
+            Padding = new Padding(4),
+            BackColor = palette.Surface
+        };
+        var entriesPanel = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Margin = Padding.Empty,
+            Padding = Padding.Empty,
+            BackColor = palette.Surface
+        };
+
+        foreach (var entry in entries)
+        {
+            var itemButton = new Button
+            {
+                Text = entry.CategoryName,
+                Width = menuWidth - 24,
+                Height = 34,
+                Margin = new Padding(1),
+                FlatStyle = FlatStyle.Flat,
+                TextAlign = isRtl ? ContentAlignment.MiddleRight : ContentAlignment.MiddleLeft,
+                Padding = new Padding(8, 0, 8, 0),
+                BackColor = palette.Surface,
+                ForeColor = palette.TextPrimary,
+                Cursor = Cursors.Hand,
+                UseVisualStyleBackColor = false
+            };
+            itemButton.FlatAppearance.BorderSize = 0;
+            itemButton.FlatAppearance.MouseOverBackColor = palette.AccentSoft;
+            itemButton.Click += async (_, _) =>
+            {
+                menu.Close();
+                await OpenRandomModFromStep2Async(entry.CategoryFolderName);
+            };
+            entriesPanel.Controls.Add(itemButton);
+        }
+
+        scrollPanel.Controls.Add(entriesPanel);
+        menu.Controls.Add(scrollPanel);
+        menu.Paint += (_, e) =>
+        {
+            using var borderPen = new Pen(palette.BorderSoft);
+            e.Graphics.DrawRectangle(borderPen, 0, 0, menu.Width - 1, menu.Height - 1);
+        };
+        menu.Deactivate += (_, _) =>
+        {
+            if (!menu.IsDisposed)
+            {
+                menu.Close();
+            }
+        };
+        menu.KeyDown += (_, e) =>
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                menu.Close();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        };
+
+        menu.FormClosed += (_, _) =>
         {
             if (ReferenceEquals(_step2RandomModMenu, menu))
             {
                 _step2RandomModMenu = null;
             }
-
-            if (!IsDisposed && IsHandleCreated)
-            {
-                BeginInvoke((MethodInvoker)(() =>
-                {
-                    if (!menu.IsDisposed)
-                    {
-                        menu.Dispose();
-                    }
-                }));
-            }
-            else if (!menu.IsDisposed)
-            {
-                menu.Dispose();
-            }
         };
-        menu.Show(button, new Point(0, button.Height));
+        menu.Show(this);
     }
 
-    private void AddRandomModCategory(ContextMenuStrip menu, string categoryName, string? categoryFolderName)
+    private static int GetRandomModMenuHeight(int entryCount, int workingAreaHeight)
     {
-        var item = new ToolStripMenuItem(categoryName);
-        item.Click += async (_, _) => await OpenRandomModFromStep2Async(categoryFolderName);
-        menu.Items.Add(item);
+        const int entryHeight = 36;
+        const int verticalPadding = 8;
+        const int maximumMenuHeight = 420;
+        var availableHeight = Math.Max(80, Math.Min(maximumMenuHeight, workingAreaHeight - 16));
+        var contentHeight = Math.Max(entryHeight + verticalPadding, entryCount * entryHeight + verticalPadding);
+        return Math.Min(contentHeight, availableHeight);
     }
 
     private static bool IsRandomModCategoryMatch(string baseModsRoot, string packageRoot, string? categoryFolderName)
