@@ -13,8 +13,7 @@ public partial class MainForm
 {
     private enum DeleteEntryKind
     {
-        Recorded,          // has a record in <game>\.ModManager\installations.json
-        UntrackedModLoader // a folder inside <game>\modloader without a record
+        Recorded
     }
 
     private sealed record DeleteEntryInfo(
@@ -234,7 +233,6 @@ public partial class MainForm
         var entries = new List<DeleteModEntry>();
         var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(gamePath);
         var manifest = ModLoaderService.LoadInstallationManifest(manifestPath);
-        var coveredDestinations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var record in manifest.Entries
                      .GroupBy(item => item.ModId, StringComparer.OrdinalIgnoreCase)
@@ -247,11 +245,6 @@ public partial class MainForm
                 foreach (var part in record.MixedParts)
                 {
                     entries.Add(CreateMixedDeleteEntry(record, part));
-                }
-
-                if (!string.IsNullOrWhiteSpace(record.InstalledDestination))
-                {
-                    coveredDestinations.Add(Path.TrimEndingDirectorySeparator(record.InstalledDestination));
                 }
 
                 continue;
@@ -267,36 +260,10 @@ public partial class MainForm
                 files = Directory.GetFiles(record.InstalledDestination, "*", SearchOption.AllDirectories).ToList();
             }
 
-            if (!string.IsNullOrWhiteSpace(record.InstalledDestination))
-            {
-                coveredDestinations.Add(Path.TrimEndingDirectorySeparator(record.InstalledDestination));
-            }
-
             entries.Add(CreateDeleteEntry(
                 record.ModId,
                 files,
                 new DeleteEntryInfo(DeleteEntryKind.Recorded, record.ModId, record.Type, record.InstalledDestination, record.SourcePackagePath)));
-        }
-
-        var modLoaderRoot = GameService.GetModLoaderFolder(gamePath);
-        if (Directory.Exists(modLoaderRoot))
-        {
-            foreach (var directory in Directory.GetDirectories(modLoaderRoot)
-                         .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
-            {
-                if (coveredDestinations.Contains(Path.TrimEndingDirectorySeparator(directory)))
-                {
-                    continue;
-                }
-
-                var name = Path.GetFileName(directory);
-                var files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories).ToList();
-                // No mod folder is known for an untracked folder, so there is no media to show.
-                entries.Add(CreateDeleteEntry(
-                    name,
-                    files,
-                    new DeleteEntryInfo(DeleteEntryKind.UntrackedModLoader, name, "putinmodloader", directory, string.Empty)));
-            }
         }
 
         return entries;
