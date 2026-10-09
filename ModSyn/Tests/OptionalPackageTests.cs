@@ -36,6 +36,20 @@ public sealed class OptionalPackageTests
     }
 
     [TestMethod]
+    public void GetPayloadDirectory_PreservesMultipleTopLevelInstallFolders()
+    {
+        WithPackage(root =>
+        {
+            Directory.CreateDirectory(Path.Combine(root, "cleo"));
+            Directory.CreateDirectory(Path.Combine(root, "data"));
+            File.WriteAllText(Path.Combine(root, "cleo", "script.cs"), "cleo");
+            File.WriteAllText(Path.Combine(root, "data", "cargrp.dat"), "data");
+
+            Assert.AreEqual(root, ModPackageService.GetPayloadDirectory(root));
+        });
+    }
+
+    [TestMethod]
     public void IsMetadataOrNonInstallableFile_ExcludesFilesInsideOptionalFolders()
     {
         WithPackage(root =>

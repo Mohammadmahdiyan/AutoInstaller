@@ -92,8 +92,14 @@ public partial class MainForm
             {
                 var part = _mixedParts[_mixedPartIndex];
                 var partRoot = GetMixedPartRoot(part);
+                var partPayload = ModPackageService.GetInstallPayloadDirectory(partRoot, part.Manifest);
+                if (string.IsNullOrWhiteSpace(partPayload) || !Directory.Exists(partPayload))
+                {
+                    partPayload = partRoot;
+                }
+
                 _selectedModManifest = part.Manifest;
-                _selectedModPayloadPath = partRoot;
+                _selectedModPayloadPath = partPayload;
                 _selectedModPackageRoot = _mixedParentRoot;
                 _selectedModName = GetMixedPartInstallName(part);
                 _selectedReadmePath = FindReadmeFile(partRoot);
@@ -118,7 +124,7 @@ public partial class MainForm
                 {
                     var currentIndex = _mixedPartIndex;
                     GoToStep(WizardStep.Step4);
-                    await InstallMissionDslPackageAsync(partRoot, _selectedModName, recordInstallation: false);
+                        await InstallMissionDslPackageAsync(partPayload, _selectedModName, recordInstallation: false);
                     if (_isMixedInstallActive && _mixedPartIndex == currentIndex)
                     {
                         AbortMixedInstall();
@@ -137,7 +143,7 @@ public partial class MainForm
                     _multiIndex = 0;
                     if (part.Manifest.IsMultiAssetPackage)
                     {
-                        _multiSourceModels.AddRange(BuildSourceModels(partRoot));
+                        _multiSourceModels.AddRange(BuildSourceModels(partPayload));
                         if (_multiSourceModels.Count == 0)
                         {
                             MessageBox.Show("No model files were found in Mixed folder: " + part.FolderName, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -231,10 +237,23 @@ public partial class MainForm
         string partRoot,
         List<string> installedFiles)
     {
+        var payloadPath = ModPackageService.GetInstallPayloadDirectory(partRoot, part.Manifest);
+        if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
+        {
+            payloadPath = partRoot;
+        }
+
+        var installName = GetMixedPartInstallName(part);
+        if (part.Manifest.IsModLoader
+            && !string.Equals(Path.GetFullPath(payloadPath), Path.GetFullPath(partRoot), StringComparison.OrdinalIgnoreCase))
+        {
+            installName = Path.GetFileName(Path.TrimEndingDirectorySeparator(payloadPath));
+        }
+
         _selectedModManifest = part.Manifest;
-        _selectedModPayloadPath = partRoot;
+        _selectedModPayloadPath = payloadPath;
         _selectedModPackageRoot = _mixedParentRoot;
-        _selectedModName = GetMixedPartInstallName(part);
+        _selectedModName = installName;
         var backup = CreateMixedBackupConfiguration(part);
         GoToStep(WizardStep.Step4);
 
@@ -242,7 +261,7 @@ public partial class MainForm
         {
             DeleteManifestEntries(part.Manifest);
             return await InstallReplacingPackageAsync(
-                partRoot,
+                payloadPath,
                 _selectedModName,
                 partRoot,
                 backup,
@@ -256,6 +275,7 @@ public partial class MainForm
                 partRoot,
                 _selectedModName,
                 part.Manifest,
+                payloadRootOverride: payloadPath,
                 recordInstallation: false,
                 installedFilesOutput: installedFiles);
         }
@@ -269,7 +289,7 @@ public partial class MainForm
         }
 
         return await InstallTypedPackageAsync(
-            partRoot,
+            payloadPath,
             _selectedModName,
             partRoot,
             part.Manifest,
@@ -298,7 +318,7 @@ public partial class MainForm
             "missiondsl" => Path.Combine(GetUserFilesRootPath(), "DSL"),
             "saveandmission" or "savesandmissions" => GetUserFilesRootPath(),
             "replacing" or "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
-            _ => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), partModId)
+            _ => Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), _selectedModName)
         };
         _mixedInstalledParts.RemoveAll(existing =>
             string.Equals(existing.ModId, partModId, StringComparison.OrdinalIgnoreCase));

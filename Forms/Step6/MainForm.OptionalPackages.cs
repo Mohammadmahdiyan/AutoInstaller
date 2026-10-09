@@ -342,6 +342,7 @@ public partial class MainForm
         _isInstallingOptionalPackage = true;
         try
         {
+            GoToStep(WizardStep.Step4);
             await InstallSelectedModAsync();
         }
         finally

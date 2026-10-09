@@ -343,6 +343,42 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void Vss_UnwrapsModelFolderAndKeepsPackageRootForPreviews()
+    {
+        WithPackage("FunnyPackCar", packageRoot =>
+        {
+            var payloadRoot = Path.Combine(packageRoot, "Funny Cars");
+            Directory.CreateDirectory(payloadRoot);
+            Directory.CreateDirectory(Path.Combine(packageRoot, "Screenshots"));
+            File.WriteAllText(Path.Combine(payloadRoot, "greenwoo.dff"), "dff");
+            File.WriteAllText(Path.Combine(packageRoot, "Screenshots", "greenwoo.jpg"), "image");
+            Write(packageRoot, "mod.modsyn", "mod { type: VSS }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+            var payloadPath = ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest);
+
+            Assert.AreEqual(Path.GetFullPath(payloadRoot), payloadPath);
+            Assert.AreEqual(Path.GetFullPath(packageRoot), ModPackageService.GetPreviewDirectory(packageRoot, payloadPath, manifest));
+        });
+    }
+
+    [TestMethod]
+    public void Vsw_KeepsPackageRootForSourceModelNameMapping()
+    {
+        WithPackage("VehiclePack", packageRoot =>
+        {
+            var payloadRoot = Path.Combine(packageRoot, "Vehicle Files");
+            Directory.CreateDirectory(payloadRoot);
+            File.WriteAllText(Path.Combine(payloadRoot, "infernus.dff"), "dff");
+            Write(packageRoot, "mod.modsyn", "mod { type: VSW }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual(Path.GetFullPath(packageRoot), ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest));
+        });
+    }
+
+    [TestMethod]
     public void PutInGameFolder_UsesPackageRootAsInstallPayload()
     {
         WithPackage("Ragdoll", packageRoot =>
@@ -437,6 +473,54 @@ public sealed class ModsynManifestDiscoveryTests
                     ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest),
                     type);
             }
+        });
+    }
+
+    [TestMethod]
+    public void PutAndReplace_UsesSingleContentWrapperAsPayload()
+    {
+        WithPackage("GTA-V Car light pack", packageRoot =>
+        {
+            var payloadRoot = Path.Combine(packageRoot, "Car Light Pack");
+            Directory.CreateDirectory(Path.Combine(payloadRoot, "cleo"));
+            Directory.CreateDirectory(Path.Combine(payloadRoot, "data"));
+            Directory.CreateDirectory(Path.Combine(payloadRoot, "modloader", "GTAV Car light pack"));
+            File.WriteAllText(Path.Combine(payloadRoot, "data", "cargrp.dat"), "data");
+                        File.WriteAllText(Path.Combine(packageRoot, "Read ME.txt"), "readme");
+                        Write(packageRoot, "mod.modsyn", """
+                                mod {
+                                    type: PAR
+                                    backup: some
+                                    backupThese: ["data\\cargrp.dat"]
+                                }
+                                """);
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual("putandreplace", manifest.NormalizedType);
+            Assert.AreEqual(
+                Path.GetFullPath(payloadRoot),
+                ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest));
+        });
+    }
+
+    [TestMethod]
+    public void PutInModLoader_UsesSingleInnerDirectoryAsMixedPartPayload()
+    {
+        WithPackage("HorseFile", packageRoot =>
+        {
+            var payloadRoot = Path.Combine(packageRoot, "Horse Car");
+            Directory.CreateDirectory(payloadRoot);
+            File.WriteAllText(Path.Combine(payloadRoot, "sweeper.dff"), "dff");
+            File.WriteAllText(Path.Combine(payloadRoot, "sweeper.txd"), "txd");
+            Write(packageRoot, "mod.modsyn", "mod { type: PIM }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+
+            Assert.AreEqual("putinmodloader", manifest.NormalizedType);
+            Assert.AreEqual(
+                Path.GetFullPath(payloadRoot),
+                ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest));
         });
     }
 

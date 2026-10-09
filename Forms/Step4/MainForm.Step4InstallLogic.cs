@@ -74,7 +74,11 @@ public partial class MainForm : Form
         if (manifest.NormalizedType == "putincleo")
         {
             GoToStep(WizardStep.Step4);
-            if (await InstallPutInCleoPackageAsync(packageRoot, modName, manifest))
+                if (await InstallPutInCleoPackageAsync(
+                    packageRoot,
+                    modName,
+                    manifest,
+                    payloadRootOverride: payloadPath))
             {
                 await ShowStep4LoadingTransitionAsync(string.Empty);
                 GoToStep(WizardStep.Step6);
@@ -856,7 +860,11 @@ public partial class MainForm : Form
                     GoToStep(WizardStep.Step4);
                 }
 
-                if (await InstallPutInCleoPackageAsync(_selectedModPackageRoot, _selectedModName, _selectedModManifest))
+                if (await InstallPutInCleoPackageAsync(
+                    _selectedModPackageRoot,
+                    _selectedModName,
+                    _selectedModManifest,
+                    payloadRootOverride: _selectedModPayloadPath))
                 {
                     await ShowStep4LoadingTransitionAsync(string.Empty);
                     if (!_isInstallingOptionalPackage)

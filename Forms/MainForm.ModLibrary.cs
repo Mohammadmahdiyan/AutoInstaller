@@ -668,6 +668,7 @@ public partial class MainForm : Form
         string packageRoot,
         string modName,
         GtaSaModManager.Models.ModManifest manifest,
+        string? payloadRootOverride = null,
         bool recordInstallation = true,
         List<string>? installedFilesOutput = null)
     {
@@ -684,6 +685,20 @@ public partial class MainForm : Form
         {
             MessageBox.Show(ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(payloadRootOverride)
+            && Directory.Exists(payloadRootOverride)
+            && !string.Equals(Path.GetFullPath(payloadRootOverride), Path.GetFullPath(packageRoot), StringComparison.OrdinalIgnoreCase))
+        {
+            var payloadPrefix = Path.TrimEndingDirectorySeparator(Path.GetFullPath(payloadRootOverride)) + Path.DirectorySeparatorChar;
+            entries = entries
+                .Where(entry => Path.GetFullPath(entry.SourcePath).StartsWith(payloadPrefix, StringComparison.OrdinalIgnoreCase))
+                .Select(entry => entry with
+                {
+                    RelativeDestination = Path.GetRelativePath(payloadRootOverride, entry.SourcePath)
+                })
+                .ToList();
         }
 
         if (entries.Count == 0)
@@ -840,7 +855,16 @@ public partial class MainForm : Form
                 .Select(path => path!)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase)
             : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var payloadPrefix = Path.TrimEndingDirectorySeparator(Path.GetFullPath(payloadPath)) + Path.DirectorySeparatorChar;
+        var hasWrappedMultiAssetPayload = manifest.IsMultiAssetPackage
+            && !string.Equals(Path.GetFullPath(payloadPath), Path.GetFullPath(packageRoot), StringComparison.OrdinalIgnoreCase);
+        var externalAssetMediaFiles = hasWrappedMultiAssetPayload
+            ? Directory.GetFiles(packageRoot, "*", SearchOption.AllDirectories)
+                .Where(path => ModPackageService.IsMediaFile(path)
+                    && !Path.GetFullPath(path).StartsWith(payloadPrefix, StringComparison.OrdinalIgnoreCase))
+            : Enumerable.Empty<string>();
         var packageFiles = Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Concat(externalAssetMediaFiles)
             .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot)
                 || isAssetSelectionInstall && ModPackageService.IsMediaFile(path))
             .Where(path => !isAssetPackage
@@ -963,9 +987,12 @@ public partial class MainForm : Form
                         ? sourceModel.TargetAsset?.NameFile ?? sourceModel.BaseName
                         : sourceModel.BaseName;
                 var isSourceModelFile = sourceModel != null || sourceModelFiles.Contains(sourcePath);
+                var isExternalAssetMediaFile = hasWrappedMultiAssetPayload
+                    && isMediaFile
+                    && !Path.GetFullPath(sourcePath).StartsWith(payloadPrefix, StringComparison.OrdinalIgnoreCase);
                 var relativePath = isAssetSelectionInstall && !isMediaFile && isSourceModelFile
                     ? destinationName + extension
-                    : Path.GetRelativePath(payloadPath, sourcePath);
+                    : Path.GetRelativePath(isExternalAssetMediaFile ? packageRoot : payloadPath, sourcePath);
                 var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)
                     ? replacementTarget
                     : GetSafeGamePath(installAsModLoader

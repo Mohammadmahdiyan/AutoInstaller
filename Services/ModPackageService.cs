@@ -464,19 +464,58 @@ public class ModPackageService
 
     public static string GetInstallPayloadDirectory(string packageRoot, ModManifest manifest)
     {
-        if (manifest.NormalizedType is "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces" or "replacing" or "saveandmission" or "savesandmissions" or "mixed"
-            || manifest.IsSingleAssetPackage
-            || manifest.IsMultiAssetPackage)
+        if (manifest.NormalizedType == "mixed" || manifest.IsSingleAssetPackage)
         {
             return packageRoot;
+        }
+
+        if (manifest.IsMultiAssetPackage
+            || manifest.NormalizedType is "putincleo" or "putingamefolder" or "putandreplace" or "putandreplaces"
+                or "replacing" or "saveandmission" or "savesandmissions")
+        {
+            var wrapperPayload = GetPayloadDirectory(packageRoot);
+            return IsInstallPayloadWrapper(packageRoot, wrapperPayload)
+                ? wrapperPayload
+                : packageRoot;
         }
 
         return GetPayloadDirectory(packageRoot);
     }
 
+    private static bool IsInstallPayloadWrapper(string packageRoot, string payloadPath)
+    {
+        if (string.IsNullOrWhiteSpace(payloadPath)
+            || string.Equals(Path.GetFullPath(packageRoot), Path.GetFullPath(payloadPath), StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var payloadName = Path.GetFileName(Path.TrimEndingDirectorySeparator(payloadPath));
+        if (new[] { "data", "models", "cleo", "modloader", "audio", "anim", "animations", "scripts", "cars", "skins", "weapons", "vehicles" }
+            .Contains(payloadName, StringComparer.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var childFolders = Directory.GetDirectories(payloadPath)
+            .Select(Path.GetFileName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+        if (childFolders.Count == 0)
+        {
+            return Directory.GetFiles(payloadPath).Length > 0;
+        }
+
+        return childFolders.Count > 1
+            || childFolders.Any(name => new[] { "data", "cleo", "modloader", "models", "audio", "anim" }
+                .Contains(name, StringComparer.OrdinalIgnoreCase));
+    }
+
     public static string GetPreviewDirectory(string packageRoot, string payloadPath, ModManifest manifest)
     {
-        return manifest.NormalizedType is "missiondsl" or "mixed" ? packageRoot : payloadPath;
+        return manifest.NormalizedType is "missiondsl" or "mixed" || manifest.IsMultiAssetPackage
+            ? packageRoot
+            : payloadPath;
     }
 
     public static List<SelectedInstallEntry> ResolveInstallSelection(string packageRoot, ModManifest manifest)
@@ -793,31 +832,23 @@ public class ModPackageService
         var candidateDirectories = Directory.GetDirectories(packageRoot)
             .Where(dir => !string.Equals(Path.GetFileName(dir), "modloader", StringComparison.OrdinalIgnoreCase)
                 && !string.Equals(Path.GetFileName(dir), "screen", StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(Path.GetFileName(dir), "screenshots", StringComparison.OrdinalIgnoreCase)
                 && !string.Equals(Path.GetFileName(dir), "preview", StringComparison.OrdinalIgnoreCase)
-                && !IsOptionalContainerName(Path.GetFileName(dir)))
+                && !IsOptionalContainerName(Path.GetFileName(dir))
+                && !string.Equals(Path.GetFileName(dir), "config", StringComparison.OrdinalIgnoreCase)
+                && !Path.GetFileName(dir).StartsWith("preview", StringComparison.OrdinalIgnoreCase)
+                && !Path.GetFileName(dir).StartsWith("readme", StringComparison.OrdinalIgnoreCase))
             .OrderBy(dir => dir, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        foreach (var candidate in candidateDirectories)
+        if (candidateDirectories.Count == 1)
         {
-            var candidateName = Path.GetFileName(candidate);
-            if (string.IsNullOrWhiteSpace(candidateName))
-            {
-                continue;
-            }
+            return candidateDirectories[0];
+        }
 
-            if (string.Equals(candidateName, "config", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            if (candidateName.StartsWith("preview", StringComparison.OrdinalIgnoreCase) ||
-                candidateName.StartsWith("readme", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            return candidate;
+        if (candidateDirectories.Count > 1)
+        {
+            return packageRoot;
         }
 
         var filesAtRoot = Directory.GetFiles(packageRoot)
