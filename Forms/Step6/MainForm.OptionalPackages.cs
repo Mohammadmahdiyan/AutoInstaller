@@ -120,7 +120,8 @@ public partial class MainForm
 
         host.Controls.Clear();
         host.Visible = false;
-        if (_lastActionWasDelete)
+        if (_lastActionWasDelete
+            || ModLoaderService.FindBaseInstallationBySource(_selectedGamePath, _selectedModPackageRoot) is null)
         {
             return;
         }
