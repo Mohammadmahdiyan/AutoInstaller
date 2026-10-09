@@ -166,4 +166,5 @@ public sealed class Step1DeleteManifestTests
         var categoryResults = (List<GameAsset>)filter.Invoke(null, [assets, "Off Road"])!;
         CollectionAssert.AreEqual(new[] { "rancher" }, categoryResults.Select(asset => asset.NameFile).ToArray());
     }
+
 }

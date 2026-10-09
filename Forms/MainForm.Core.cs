@@ -134,6 +134,7 @@ public partial class MainForm : Form
             && !_isSaveMissionStepActive
             && !_isDeleteModsStepActive
             && !_isOptionalsStepActive
+            && _selectedModManifest?.SupportsAssetSelection == true
             && _wizardPanels.TryGetValue(WizardStep.Step5, out var step5Panel)
             && step5Panel.Controls.Find("AssetSearchTextBox", true).FirstOrDefault() is TextBox searchBox
             && searchBox.Visible
@@ -144,7 +145,175 @@ public partial class MainForm : Form
             return true;
         }
 
+        var keyCode = keyData & Keys.KeyCode;
+        var modifiers = keyData & Keys.Modifiers;
+        if (_currentStep == WizardStep.Step6 && modifiers == (Keys.Control | Keys.Shift))
+        {
+            var step6Shortcut = keyCode switch
+            {
+                Keys.G => "Step6OpenGameFolderButton",
+                Keys.U => "OpenUserFilesFolderButton",
+                Keys.R => "Step6RunGameButton",
+                Keys.M => "InstallMoreModsButton",
+                _ => null
+            };
+            if (step6Shortcut != null && PerformStepButton(step6Shortcut))
+            {
+                return true;
+            }
+        }
+
+        if (modifiers == (Keys.Control | Keys.Shift))
+        {
+            switch (keyCode)
+            {
+                case Keys.L:
+                    CycleComboBox(_sidebarLanguageComboBox);
+                    return true;
+                case Keys.T:
+                    CycleComboBox(_sidebarThemeComboBox);
+                    return true;
+                case Keys.D:
+                    if (_sidebarReadmeButton is { Visible: true, Enabled: true })
+                    {
+                        _sidebarReadmeButton.PerformClick();
+                    }
+                    return true;
+            }
+
+            if (_currentStep == WizardStep.Step5)
+            {
+                var step5Shortcut = keyCode switch
+                {
+                    Keys.S => _isSaveMissionStepActive ? "SaveMissionStatusButton" : "MultiAssetReviewButton",
+                    Keys.K => "MultiAssetKeepOriginalButton",
+                    Keys.X => "MultiAssetSkipModelButton",
+                    Keys.N => "MultiAssetInstallRemainingButton",
+                    _ => null
+                };
+                if (step5Shortcut != null && PerformStepButton(step5Shortcut))
+                {
+                    return true;
+                }
+
+                if (keyCode == Keys.Enter && PerformStepButton("MultiAssetFinishHereButton"))
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (modifiers == Keys.Control && keyCode == Keys.O && _currentStep is WizardStep.Step1 or WizardStep.Step2 or WizardStep.Step3)
+        {
+            var browseName = _currentStep switch
+            {
+                WizardStep.Step1 => "Step1GameFolderBrowseButton",
+                WizardStep.Step2 => "Step2ModLibraryBrowseButton",
+                _ => "Step3ModFolderBrowseButton"
+            };
+            if (PerformStepButton(browseName))
+            {
+                return true;
+            }
+        }
+
+        if (_currentStep == WizardStep.Step3 && keyCode is Keys.Left or Keys.Right)
+        {
+            var galleryButton = keyCode == Keys.Right
+                ? "Step3GalleryNextButton"
+                : "Step3GalleryPreviousButton";
+            if (PerformStepButton(galleryButton))
+            {
+                return true;
+            }
+        }
+
+        if (_currentStep is WizardStep.Step3 or WizardStep.Step4 or WizardStep.Step5 or WizardStep.Step6
+            && keyCode == Keys.Space)
+        {
+            OpenCurrentImageGallery();
+            return true;
+        }
+
+        if (_currentStep == WizardStep.Step5 && !_isSaveMissionStepActive && !_isDeleteModsStepActive && !_isOptionalsStepActive)
+        {
+            if (modifiers == Keys.Alt && keyCode == Keys.Down && CycleStep5ComboBox("AssetCategoryFilter"))
+            {
+                return true;
+            }
+
+            if (modifiers == Keys.Alt && keyCode == Keys.C && CycleStep5ComboBox("AssetColumns"))
+            {
+                return true;
+            }
+
+            if (modifiers == Keys.Alt && keyCode == Keys.S && CycleStep5ComboBox("AssetSortMode"))
+            {
+                return true;
+            }
+        }
+
+        if (keyCode == Keys.Enter)
+        {
+            _sidebarNextButton?.PerformClick();
+            return true;
+        }
+
+        if (keyCode == Keys.Escape)
+        {
+            _sidebarPreviousButton?.PerformClick();
+            return true;
+        }
+
         return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private bool PerformStepButton(string controlName)
+    {
+        return _wizardPanels.TryGetValue(_currentStep, out var panel)
+            && panel.Controls.Find(controlName, true).FirstOrDefault() is Button { Visible: true, Enabled: true } button
+            && ClickButton(button);
+    }
+
+    private static bool ClickButton(Button button)
+    {
+        button.PerformClick();
+        return true;
+    }
+
+    private static void CycleComboBox(ComboBox? comboBox)
+    {
+        if (comboBox is not { IsDisposed: false, Enabled: true } || comboBox.Items.Count < 2)
+        {
+            return;
+        }
+
+        comboBox.SelectedIndex = (comboBox.SelectedIndex + 1 + comboBox.Items.Count) % comboBox.Items.Count;
+    }
+
+    private bool CycleStep5ComboBox(string controlName)
+    {
+        if (!_wizardPanels.TryGetValue(WizardStep.Step5, out var panel)
+            || panel.Controls.Find(controlName, true).FirstOrDefault() is not ComboBox comboBox
+            || !comboBox.Visible || !comboBox.Enabled)
+        {
+            return false;
+        }
+
+        CycleComboBox(comboBox);
+        return true;
+    }
+
+    private void OpenCurrentImageGallery()
+    {
+        var imageFiles = _currentStep == WizardStep.Step5 ? GetStep5ModImageFiles() : _selectedImageFiles;
+        var validImages = imageFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        if (validImages.Count == 0)
+        {
+            return;
+        }
+
+        OpenFullImageViewer(validImages, Math.Clamp(_step4ImageIndex, 0, validImages.Count - 1), _selectedModName);
     }
 
     public MainForm()

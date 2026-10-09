@@ -387,13 +387,15 @@ public partial class MainForm : Form
             MaximizeBox = true,
             MinimizeBox = true,
             ShowIcon = false,
-            BackColor = Color.Black
+            BackColor = Color.Black,
+            KeyPreview = true
         };
 
         var closeButton = new Button
         {
             Text = _localizationService.GetString("Close", "Close"),
             AutoSize = true,
+            DialogResult = DialogResult.Cancel,
             Anchor = AnchorStyles.Top | AnchorStyles.Right,
             FlatStyle = FlatStyle.Flat,
             BackColor = Color.FromArgb(15, 23, 42),
@@ -520,6 +522,21 @@ public partial class MainForm : Form
                 video.ToggleSound();
             }
         };
+        viewer.KeyDown += (_, e) =>
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                viewer.Close();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.M && mediaView is MediaPreviewControl video)
+            {
+                video.ToggleSound();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        };
 
         var topBar = new FlowLayoutPanel
         {
@@ -538,6 +555,7 @@ public partial class MainForm : Form
 
         viewer.Controls.Add(content);
         viewer.Controls.Add(topBar);
+        viewer.CancelButton = closeButton;
         topBar.BringToFront();
         RenderCurrentImage();
         viewer.ShowDialog(this);

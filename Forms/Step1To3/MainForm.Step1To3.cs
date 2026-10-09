@@ -22,7 +22,7 @@ public partial class MainForm : Form
         var title = new Label { Text = _localizationService.GetString("Step1GameFolder", "Game folder"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
         var description = new Label { Text = _localizationService.GetString("GameFolderRequired", "Choose your GTA San Andreas folder."), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
         var pathText = new TextBox { Name = "Step1GamePathTextBox", Width = 560, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-        var browse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var browse = new RoundedButton { Name = "Step1GameFolderBrowseButton", Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
         ApplyPathSelectorTextBoxStyle(pathText);
         ApplyBrowseButtonStyle(browse, Color.FromArgb(37, 99, 235));
 
@@ -284,7 +284,7 @@ public partial class MainForm : Form
         var subtitle = new Label { Text = _localizationService.GetString("BaseModsFolderSubtitle", "Select the base mod folder for easy access"), AutoSize = true, MaximumSize = new Size(700, 0), Font = new Font("Segoe UI", 11F), Margin = new Padding(0, 0, 0, 10) };
 
         var modBaseText = new TextBox { Name = "Step2ModLibraryPathTextBox", Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-        var modBaseBrowse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var modBaseBrowse = new RoundedButton { Name = "Step2ModLibraryBrowseButton", Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
         ApplyPathSelectorTextBoxStyle(modBaseText);
         ApplyBrowseButtonStyle(modBaseBrowse, Color.FromArgb(37, 99, 235));
 
@@ -402,7 +402,7 @@ public partial class MainForm : Form
         var title = new Label { Text = _localizationService.GetString("Step3Mod", "Select mod"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0) };
         var folderLabel = new Label { Text = _localizationService.GetString("ModFolder", "Mod Folder"), AutoSize = true, Font = new Font("Segoe UI", 11F, FontStyle.Bold), Margin = new Padding(0, 0, 0, 8) };
         var folderText = new TextBox { Width = 520, Height = 38, ReadOnly = true, BorderStyle = BorderStyle.FixedSingle, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-        var browse = new RoundedButton { Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
+        var browse = new RoundedButton { Name = "Step3ModFolderBrowseButton", Text = _localizationService.GetString("Browse", "Browse"), Width = 140, Height = 38, Anchor = AnchorStyles.Left };
         folderText.Name = "Step3ModFolderTextBox";
         _step3BrowseButton = browse;
         var selectedName = new Label
@@ -799,6 +799,7 @@ public partial class MainForm : Form
         {
             var previous = new RoundedButton
             {
+                Name = "Step3GalleryPreviousButton",
                 Text = isRtl ? "▶" : "◀",
                 Width = 46,
                 Height = 36,
@@ -809,6 +810,7 @@ public partial class MainForm : Form
             };
             var next = new RoundedButton
             {
+                Name = "Step3GalleryNextButton",
                 Text = isRtl ? "◀" : "▶",
                 Width = 46,
                 Height = 36,

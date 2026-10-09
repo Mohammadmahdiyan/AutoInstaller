@@ -1795,6 +1795,36 @@ public partial class MainForm : Form
         };
 
         typeSelector.SelectedIndexChanged += (_, _) => okButton.Enabled = typeSelector.SelectedIndex >= 0;
+        dialog.KeyPreview = true;
+        dialog.KeyDown += (_, e) =>
+        {
+            if (e.Alt && e.KeyCode == Keys.Right)
+            {
+                typeSelector.SelectedIndex = (typeSelector.SelectedIndex + 1) % assetTypes.Length;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
+            }
+
+            if (!e.Alt)
+            {
+                return;
+            }
+
+            var selectedTypeIndex = e.KeyCode switch
+            {
+                Keys.V => 0,
+                Keys.K => 1,
+                Keys.W => 2,
+                _ => -1
+            };
+            if (selectedTypeIndex >= 0)
+            {
+                typeSelector.SelectedIndex = selectedTypeIndex;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        };
 
         dialog.Controls.Add(description);
         dialog.Controls.Add(typeSelector);

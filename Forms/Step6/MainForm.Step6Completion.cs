@@ -17,7 +17,7 @@ public partial class MainForm : Form
         var title = new Label { Name = "CompletionTitle", Text = _localizationService.GetString("Completed", "Completed"), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true };
         var description = new Label { Name = "CompletionDescription", Text = _localizationService.GetString("InstallationComplete", "Installation complete."), AutoSize = true, Font = new Font("Segoe UI", 11F) };
         var countdown = new Label { Name = "CountdownLabel", AutoSize = true, Font = new Font("Segoe UI", 10F) };
-        var openButton = new Button { Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
+        var openButton = new Button { Name = "Step6OpenGameFolderButton", Text = _localizationService.GetString("OpenGameFolder", "Open Game Folder"), Width = 180, Height = 42 };
         var openUserFilesButton = new Button
         {
             Name = "OpenUserFilesFolderButton",
@@ -26,7 +26,7 @@ public partial class MainForm : Form
             Height = 42,
             Visible = false
         };
-        var runButton = new Button { Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
+        var runButton = new Button { Name = "Step6RunGameButton", Text = _localizationService.GetString("RunGame", "Run Game"), Width = 150, Height = 42 };
         var installMoreButton = new Button { Name = "InstallMoreModsButton", Text = _localizationService.GetString("WannaInstallMoreMods", "Wanna install more mods?"), Width = 210, Height = 42 };
         var deleteSaveMissionButton = new Button
         {

@@ -187,7 +187,7 @@ public partial class MainForm
 
         if (stepPanel.Controls.Find("SaveMissionStatusButton", true).FirstOrDefault() is Button statusButton)
         {
-            var shouldShowStatus = _selectedModManifest?.NormalizedType == "savesandmissions";
+            var shouldShowStatus = _selectedModManifest?.NormalizedType is "saveandmission" or "savesandmissions";
             statusButton.Visible = shouldShowStatus;
             var header = stepPanel.Controls.Find("SaveMissionHeader", true).FirstOrDefault() as FlowLayoutPanel;
             if (header != null)
