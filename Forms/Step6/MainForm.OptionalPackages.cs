@@ -329,6 +329,17 @@ public partial class MainForm
         }
 
         var manifest = ModPackageService.ResolveManifest(optionalRoot);
+        var assetReplacement = await TryInstallOptionalAssetReplacementAsync(
+            optionalRoot,
+            installName,
+            parentName,
+            kind,
+            manifest);
+        if (assetReplacement.HasValue)
+        {
+            return assetReplacement.Value;
+        }
+
         if (manifest.SupportsAssetSelection
             || manifest.IsMixedPackage
             || manifest.NormalizedType is "saveandmission" or "savesandmissions")
@@ -389,6 +400,302 @@ public partial class MainForm
         }
 
         return tagged;
+    }
+
+    private async Task<bool?> TryInstallOptionalAssetReplacementAsync(
+        string optionalRoot,
+        string optionalName,
+        string parentName,
+        string optionalKind,
+        ModManifest optionalManifest)
+    {
+        var optionalPayload = ModPackageService.GetInstallPayloadDirectory(optionalRoot, optionalManifest);
+        if (string.IsNullOrWhiteSpace(optionalPayload) || !Directory.Exists(optionalPayload))
+        {
+            optionalPayload = optionalRoot;
+        }
+
+        var hasModelFiles = Directory.GetFiles(optionalPayload, "*", SearchOption.AllDirectories)
+            .Any(IsModelFile);
+        if (!hasModelFiles)
+        {
+            return null;
+        }
+
+        var parentUsesAssetSelection = _selectedModManifest?.SupportsAssetSelection == true
+            || _selectedModManifest?.MixedParts.Any(part => part.Manifest.SupportsAssetSelection) == true;
+        var parentRecord = ModLoaderService.FindBaseInstallationBySource(_selectedGamePath, _selectedModPackageRoot);
+        if (parentRecord is null)
+        {
+            if (parentUsesAssetSelection)
+            {
+                MessageBox.Show(
+                    _localizationService.GetString(
+                        "OptionalAssetMappingMissing",
+                        "The installed asset mapping is unavailable. Reinstall the parent mod before installing this Optional package."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return null;
+        }
+
+        var targets = new List<(string Destination, List<string> Files, List<InstallationAssetMapping> Mappings)>();
+        if (string.Equals(parentRecord.Type, "mixed", StringComparison.OrdinalIgnoreCase))
+        {
+            targets.AddRange(parentRecord.MixedParts
+                .Where(part => part.AssetMappings is { Count: > 0 })
+                .Select(part => (part.InstalledDestination, part.InstalledFiles, part.AssetMappings)));
+        }
+        else if (parentRecord.AssetMappings is { Count: > 0 })
+        {
+            targets.Add((parentRecord.InstalledDestination, parentRecord.InstalledFiles, parentRecord.AssetMappings));
+        }
+
+        if (targets.Count == 0)
+        {
+            if (parentUsesAssetSelection)
+            {
+                MessageBox.Show(
+                    _localizationService.GetString(
+                        "OptionalAssetMappingMissing",
+                        "The installed asset mapping is unavailable. Reinstall the parent mod before installing this Optional package."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return null;
+        }
+
+        var matchingTargets = new List<(
+            string Destination,
+            List<InstallationAssetMapping> Mappings,
+            IReadOnlyList<OptionalAssetInstallFile> Files)>();
+        foreach (var target in targets)
+        {
+            try
+            {
+                var files = OptionalAssetReplacementService.ResolveInstallFiles(
+                    optionalPayload,
+                    target.Destination,
+                    target.Files,
+                    target.Mappings);
+                if (files.Count > 0)
+                {
+                    matchingTargets.Add((target.Destination, target.Mappings, files));
+                }
+            }
+            catch (InvalidDataException)
+            {
+                // Another asset-bearing MIX part may be the target for this Optional package.
+            }
+        }
+
+        if (matchingTargets.Count == 0)
+        {
+            if (parentUsesAssetSelection || optionalManifest.SupportsAssetSelection)
+            {
+                MessageBox.Show(
+                    _localizationService.GetString(
+                        "OptionalAssetNoMatch",
+                        "The Optional package's model files do not match an asset installed by the parent mod."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return null;
+        }
+
+        if (matchingTargets.Count > 1)
+        {
+            MessageBox.Show(
+                _localizationService.GetString(
+                    "OptionalAssetAmbiguous",
+                    "The Optional package matches more than one installed asset. It cannot be replaced safely."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return false;
+        }
+
+        var match = matchingTargets[0];
+        var existingOptional = ModLoaderService.FindOptionalInstallations(_selectedGamePath, parentRecord.ModId, optionalKind)
+            .LastOrDefault(entry => !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+                && string.Equals(Path.GetFullPath(entry.SourcePackagePath), Path.GetFullPath(optionalRoot), StringComparison.OrdinalIgnoreCase));
+        var existingAssetOptional = ModLoaderService.FindOptionalInstallations(_selectedGamePath, parentRecord.ModId, optionalKind)
+            .LastOrDefault(entry => string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+                && string.Equals(Path.GetFullPath(entry.SourcePackagePath), Path.GetFullPath(optionalRoot), StringComparison.OrdinalIgnoreCase));
+
+        var currentDestinations = match.Files
+            .Select(file => Path.GetFullPath(file.DestinationPath))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var existingAssetOptionals = ModLoaderService.FindOptionalInstallations(_selectedGamePath, parentRecord.ModId)
+            .Where(entry => string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        foreach (var previous in existingAssetOptionals)
+        {
+            var isSamePackage = !string.IsNullOrWhiteSpace(previous.SourcePackagePath)
+                && string.Equals(Path.GetFullPath(previous.SourcePackagePath), Path.GetFullPath(optionalRoot), StringComparison.OrdinalIgnoreCase)
+                && string.Equals(previous.OptionalKind, optionalKind, StringComparison.OrdinalIgnoreCase);
+            var previousDestinations = (previous.InstalledFiles ?? new List<string>())
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Select(Path.GetFullPath)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var shouldRestorePrevious = OptionalAssetReplacementService.ShouldRestorePreviousInstallation(
+                previous.SourcePackagePath,
+                previous.OptionalKind,
+                previousDestinations,
+                optionalRoot,
+                optionalKind,
+                currentDestinations);
+            if (!shouldRestorePrevious)
+            {
+                continue;
+            }
+
+            await OptionalAssetReplacementService.RestoreAsync(
+                _selectedGamePath,
+                previous.OptionalAssetBackups ?? new List<OptionalAssetBackup>());
+            ModLoaderService.RemoveGameInstallationRecord(_selectedGamePath, previous.ModId);
+            if (!string.IsNullOrWhiteSpace(existingAssetOptional?.ModId)
+                && string.Equals(previous.ModId, existingAssetOptional.ModId, StringComparison.OrdinalIgnoreCase))
+            {
+                existingAssetOptional = null;
+            }
+        }
+
+        var previousBackups = existingAssetOptional?.OptionalAssetBackups ?? new List<OptionalAssetBackup>();
+        var gamePath = _selectedGamePath;
+        GoToStep(WizardStep.Step4);
+        BeginStep4Progress(
+            string.Format(_localizationService.GetString("Installing", "Installing") + " {0}", optionalName),
+            match.Files.Select(file => (file.SourcePath, Path.GetRelativePath(gamePath, file.DestinationPath))).ToList());
+
+        try
+        {
+            var backups = await OptionalAssetReplacementService.InstallAsync(
+                gamePath,
+                parentRecord.ModId,
+                match.Files,
+                previousBackups);
+            ModLoaderService.RecordOptionalAssetReplacementInstallation(
+                gamePath,
+                parentRecord.ModId,
+                optionalRoot,
+                optionalName,
+                optionalKind,
+                match.Destination,
+                match.Files.Select(file => file.DestinationPath),
+                match.Mappings,
+                backups);
+
+            for (var index = 0; index < match.Files.Count; index++)
+            {
+                AddCompletedStep4File(
+                    Path.GetRelativePath(gamePath, match.Files[index].DestinationPath),
+                    index + 1,
+                    match.Files.Count);
+            }
+
+            CompleteStep4Progress(_localizationService.GetString("InstallationCompleted", "Installation completed successfully."));
+            RemoveLegacyOptionalInstall(optionalRoot, parentRecord.ModId, optionalKind, match.Destination);
+            RefreshModList();
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            FailStep4Progress(_localizationService.GetString("InstallationFailed", "The mod could not be installed."));
+            MessageBox.Show(
+                _localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            GoToStep(WizardStep.Step6);
+            return false;
+        }
+    }
+
+    private void RemoveLegacyOptionalInstall(
+        string optionalRoot,
+        string parentModId,
+        string optionalKind,
+        string assetDestination)
+    {
+        var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(_selectedGamePath);
+        var manifest = ModLoaderService.LoadInstallationManifest(manifestPath);
+        var fullOptionalRoot = Path.GetFullPath(optionalRoot);
+        var legacyEntries = manifest.Entries
+            .Where(entry => !string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.ParentModId, parentModId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.OptionalKind, optionalKind, StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+                && string.Equals(Path.GetFullPath(entry.SourcePackagePath), fullOptionalRoot, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var changed = false;
+        foreach (var previous in legacyEntries)
+        {
+            if (string.IsNullOrWhiteSpace(previous.InstalledDestination)
+                || !IsStrictModLoaderSubfolder(_selectedGamePath, previous.InstalledDestination)
+                || string.Equals(
+                    Path.TrimEndingDirectorySeparator(Path.GetFullPath(previous.InstalledDestination)),
+                    Path.TrimEndingDirectorySeparator(Path.GetFullPath(assetDestination)),
+                    StringComparison.OrdinalIgnoreCase)
+                || !Directory.Exists(previous.InstalledDestination))
+            {
+                continue;
+            }
+
+            var previousRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(previous.InstalledDestination))
+                + Path.DirectorySeparatorChar;
+            var removedModels = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var file in previous.InstalledFiles ?? new List<string>())
+            {
+                if (string.IsNullOrWhiteSpace(file))
+                {
+                    continue;
+                }
+
+                var fullPath = Path.GetFullPath(file);
+                if (fullPath.StartsWith(previousRoot, StringComparison.OrdinalIgnoreCase)
+                    && IsModelFile(fullPath)
+                    && File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                    removedModels.Add(fullPath);
+                }
+            }
+
+            if (removedModels.Count == 0)
+            {
+                continue;
+            }
+
+            previous.InstalledFiles = (previous.InstalledFiles ?? new List<string>())
+                .Where(path => !string.IsNullOrWhiteSpace(path)
+                    && !removedModels.Contains(Path.GetFullPath(path))
+                    && File.Exists(path))
+                .ToList();
+            changed = true;
+            if (previous.InstalledFiles.Count == 0)
+            {
+                manifest.Entries.Remove(previous);
+                ModLoaderService.RemoveInstalledRecord(previous.ModId, previous.InstalledDestination);
+            }
+
+            PruneEmptyDirectories(previous.InstalledDestination, _selectedGamePath);
+        }
+
+        if (changed)
+        {
+            ModLoaderService.SaveInstallationManifest(manifestPath, manifest);
+        }
     }
 
     // ------------------------------------------------------------------

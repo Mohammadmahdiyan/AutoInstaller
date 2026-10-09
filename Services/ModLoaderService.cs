@@ -144,7 +144,8 @@ public class ModLoaderService
         string sourcePackagePath,
         string installedDestination,
         IEnumerable<string> installedFiles,
-        bool mergeExistingFiles = false)
+        bool mergeExistingFiles = false,
+        IEnumerable<InstallationAssetMapping>? assetMappings = null)
     {
         var gamePath = Path.GetDirectoryName(installedDestination);
         var manifestGamePath = !string.IsNullOrWhiteSpace(gamePath) && Directory.Exists(gamePath) && gamePath.Contains("modloader", StringComparison.OrdinalIgnoreCase)
@@ -182,7 +183,10 @@ public class ModLoaderService
             Type = modType,
             SourcePackagePath = sourcePackagePath,
             InstalledDestination = installedDestination,
-            InstalledFiles = filesToRecord
+            InstalledFiles = filesToRecord,
+            AssetMappings = (assetMappings ?? Enumerable.Empty<InstallationAssetMapping>())
+                .Select(CloneAssetMapping)
+                .ToList()
         });
         SaveInstallationManifest(manifestPath, manifest);
     }
@@ -212,7 +216,14 @@ public class ModLoaderService
         return true;
     }
 
-    public static void RecordGameInstallation(string gamePath, string modType, string modName, string sourcePackagePath, string installedDestination, IEnumerable<string> installedFiles)
+    public static void RecordGameInstallation(
+        string gamePath,
+        string modType,
+        string modName,
+        string sourcePackagePath,
+        string installedDestination,
+        IEnumerable<string> installedFiles,
+        IEnumerable<InstallationAssetMapping>? assetMappings = null)
     {
         var manifestPath = GetGameInstallationsManifestPath(gamePath);
         if (string.IsNullOrWhiteSpace(manifestPath))
@@ -232,6 +243,9 @@ public class ModLoaderService
             InstalledFiles = installedFiles
                 .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            AssetMappings = (assetMappings ?? Enumerable.Empty<InstallationAssetMapping>())
+                .Select(CloneAssetMapping)
                 .ToList()
         });
         SaveInstallationManifest(manifestPath, manifest);
@@ -260,6 +274,9 @@ public class ModLoaderService
                 InstalledFiles = (part.InstalledFiles ?? new List<string>())
                     .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList(),
+                AssetMappings = (part.AssetMappings ?? new List<InstallationAssetMapping>())
+                    .Select(CloneAssetMapping)
                     .ToList()
             })
             .ToList();
@@ -282,6 +299,81 @@ public class ModLoaderService
         });
         SaveInstallationManifest(manifestPath, manifest);
     }
+
+    public static InstallationManifestEntry RecordOptionalAssetReplacementInstallation(
+        string gamePath,
+        string parentModId,
+        string optionalSourcePath,
+        string optionalName,
+        string optionalKind,
+        string installedDestination,
+        IEnumerable<string> installedFiles,
+        IEnumerable<InstallationAssetMapping> assetMappings,
+        IEnumerable<OptionalAssetBackup> backups)
+    {
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        var manifest = LoadInstallationManifest(manifestPath);
+        var fullSourcePath = Path.GetFullPath(optionalSourcePath);
+        var existing = manifest.Entries.LastOrDefault(entry =>
+            string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase)
+            &&
+            string.Equals(entry.ParentModId, parentModId, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(entry.OptionalKind, optionalKind, StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+            && string.Equals(Path.GetFullPath(entry.SourcePackagePath), fullSourcePath, StringComparison.OrdinalIgnoreCase));
+        var modId = existing?.ModId;
+        if (string.IsNullOrWhiteSpace(modId))
+        {
+            modId = string.IsNullOrWhiteSpace(optionalName)
+                ? Guid.NewGuid().ToString("N")
+                : optionalName;
+            if (manifest.Entries.Any(entry => string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)))
+            {
+                modId += " (" + Guid.NewGuid().ToString("N") + ")";
+            }
+        }
+
+        manifest.Entries.RemoveAll(entry =>
+            (string.Equals(entry.ModId, modId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase))
+            || (string.Equals(entry.ParentModId, parentModId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(entry.SourcePackagePath)
+                && string.Equals(Path.GetFullPath(entry.SourcePackagePath), fullSourcePath, StringComparison.OrdinalIgnoreCase)));
+        var record = new InstallationManifestEntry
+        {
+            ModId = modId,
+            Type = "optionalassetreplacement",
+            SourcePackagePath = fullSourcePath,
+            InstalledDestination = installedDestination,
+            InstalledFiles = installedFiles
+                .Where(path => !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                .Select(Path.GetFullPath)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            AssetMappings = assetMappings.Select(CloneAssetMapping).ToList(),
+            OptionalAssetBackups = backups.Select(CloneOptionalAssetBackup).ToList(),
+            ParentModId = parentModId,
+            OptionalKind = optionalKind
+        };
+        manifest.Entries.Add(record);
+        SaveInstallationManifest(manifestPath, manifest);
+        return record;
+    }
+
+    private static InstallationAssetMapping CloneAssetMapping(InstallationAssetMapping mapping) => new()
+    {
+        SourceModelName = mapping.SourceModelName,
+        TargetModelName = mapping.TargetModelName,
+        AssetType = mapping.AssetType
+    };
+
+    private static OptionalAssetBackup CloneOptionalAssetBackup(OptionalAssetBackup backup) => new()
+    {
+        DestinationPath = backup.DestinationPath,
+        BackupFilePath = backup.BackupFilePath,
+        OriginalExisted = backup.OriginalExisted
+    };
 
     public static bool RemoveMixedInstallationPart(string gamePath, string parentModId, string partModId)
     {
@@ -378,6 +470,43 @@ public class ModLoaderService
             .Where(entry => string.Equals(entry.ParentModId, parentModId, StringComparison.OrdinalIgnoreCase)
                 && (optionalKind == null || string.Equals(entry.OptionalKind, optionalKind, StringComparison.OrdinalIgnoreCase)))
             .ToList();
+    }
+
+    public static async Task RestoreOptionalAssetReplacementsAsync(
+        string gamePath,
+        string parentModId,
+        IEnumerable<string>? affectedFiles = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(gamePath) || string.IsNullOrWhiteSpace(parentModId))
+        {
+            return;
+        }
+
+        var affectedPaths = (affectedFiles ?? Enumerable.Empty<string>())
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(Path.GetFullPath)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var manifestPath = GetGameInstallationsManifestPath(gamePath);
+        var manifest = LoadInstallationManifest(manifestPath);
+        var replacements = manifest.Entries
+            .Where(entry => string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(entry.ParentModId, parentModId, StringComparison.OrdinalIgnoreCase)
+                && (affectedPaths.Count == 0
+                    || (entry.InstalledFiles ?? new List<string>())
+                        .Any(path => affectedPaths.Contains(Path.GetFullPath(path)))))
+            .ToList();
+
+        foreach (var replacement in replacements)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await OptionalAssetReplacementService.RestoreAsync(
+                gamePath,
+                replacement.OptionalAssetBackups ?? new List<OptionalAssetBackup>(),
+                cancellationToken);
+            manifest.Entries.Remove(replacement);
+            SaveInstallationManifest(manifestPath, manifest);
+        }
     }
 
     public static bool RemoveGameInstallationRecord(string gamePath, string modId)

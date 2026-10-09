@@ -53,6 +53,10 @@ public class InstallationManifestEntry
 
     public List<InstallationManifestPart> MixedParts { get; set; } = new();
 
+    public List<InstallationAssetMapping> AssetMappings { get; set; } = new();
+
+    public List<OptionalAssetBackup> OptionalAssetBackups { get; set; } = new();
+
     /// <summary>ModId of the base mod when this entry is one of its optional/optionals packages.</summary>
     public string ParentModId { get; set; } = string.Empty;
 
@@ -71,6 +75,26 @@ public sealed class InstallationManifestPart
     public string InstalledDestination { get; set; } = string.Empty;
 
     public List<string> InstalledFiles { get; set; } = new();
+
+    public List<InstallationAssetMapping> AssetMappings { get; set; } = new();
+}
+
+public sealed class InstallationAssetMapping
+{
+    public string SourceModelName { get; set; } = string.Empty;
+
+    public string TargetModelName { get; set; } = string.Empty;
+
+    public string AssetType { get; set; } = string.Empty;
+}
+
+public sealed class OptionalAssetBackup
+{
+    public string DestinationPath { get; set; } = string.Empty;
+
+    public string BackupFilePath { get; set; } = string.Empty;
+
+    public bool OriginalExisted { get; set; }
 }
 
 public class InstallationManifest

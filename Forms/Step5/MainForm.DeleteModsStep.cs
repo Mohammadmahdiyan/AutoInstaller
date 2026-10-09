@@ -363,11 +363,36 @@ public partial class MainForm
         var type = (info.Type ?? string.Empty).Trim().ToLowerInvariant();
         var done = 0;
 
+        if (type == "optionalassetreplacement")
+        {
+            var optionalRecord = ModLoaderService.LoadInstallationManifest(
+                    ModLoaderService.GetGameInstallationsManifestPath(gamePath))
+                .Entries.LastOrDefault(item => string.Equals(item.ModId, info.ModId, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(item.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase));
+            if (optionalRecord is null)
+            {
+                return false;
+            }
+
+            await OptionalAssetReplacementService.RestoreAsync(
+                gamePath,
+                optionalRecord.OptionalAssetBackups ?? new List<OptionalAssetBackup>());
+            ModLoaderService.RemoveGameInstallationRecord(gamePath, optionalRecord.ModId);
+            foreach (var _ in optionalRecord.OptionalAssetBackups ?? new List<OptionalAssetBackup>())
+            {
+                progress.Report(++done);
+            }
+
+            return true;
+        }
+
         if (info.Kind == DeleteEntryKind.Recorded && type is "replacing" or "putandreplace" or "putandreplaces" or "putingamefolder")
         {
             // Originals must be restored from the backups; delegate to the restore logic.
             return await RestoreReplacementForDeleteAsync(info, entry, progress);
         }
+
+        await ModLoaderService.RestoreOptionalAssetReplacementsAsync(gamePath, info.ModId, entry.Files);
 
         foreach (var file in entry.Files)
         {
@@ -426,6 +451,10 @@ public partial class MainForm
             part.InstalledDestination,
             mixedInfo.SourcePackagePath);
         var type = part.Type.Trim().ToLowerInvariant();
+        await ModLoaderService.RestoreOptionalAssetReplacementsAsync(
+            _selectedGamePath,
+            mixedInfo.ParentModId,
+            part.InstalledFiles);
         if (type is "replacing" or "putandreplace" or "putandreplaces" or "putingamefolder")
         {
             if (!await RestoreReplacementForDeleteAsync(partInfo, entry, progress))

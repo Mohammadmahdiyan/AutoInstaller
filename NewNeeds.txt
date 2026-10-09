@@ -1,4 +1,3 @@
-4. وقتی برنامه رو باز میکنیم صدای ارور میاد سه بار اینو بردار 
 ---------- Big Change Convert This Project To Version 2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 
 به اسم 

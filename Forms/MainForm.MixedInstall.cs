@@ -211,11 +211,12 @@ public partial class MainForm
             }
 
             var files = new List<string>();
-            if (!await InstallMixedPartAsync(part, GetMixedPartRoot(part), files))
+            var assetMappings = new List<InstallationAssetMapping>();
+            if (!await InstallMixedPartAsync(part, GetMixedPartRoot(part), files, assetMappings))
             {
                 if (files.Count > 0)
                 {
-                    AddMixedInstalledPart(part, files);
+                    AddMixedInstalledPart(part, files, assetMappings);
                     RecordCurrentMixedInstallation();
                 }
 
@@ -223,7 +224,7 @@ public partial class MainForm
                 return;
             }
 
-            await CompleteCurrentMixedPartAsync(files);
+            await CompleteCurrentMixedPartAsync(files, assetMappings);
         }
         catch (Exception ex)
         {
@@ -235,7 +236,8 @@ public partial class MainForm
     private async Task<bool> InstallMixedPartAsync(
         ModMixedPackagePart part,
         string partRoot,
-        List<string> installedFiles)
+        List<string> installedFiles,
+        List<InstallationAssetMapping>? assetMappings = null)
     {
         var payloadPath = ModPackageService.GetInstallPayloadDirectory(partRoot, part.Manifest);
         if (string.IsNullOrWhiteSpace(payloadPath) || !Directory.Exists(payloadPath))
@@ -296,19 +298,25 @@ public partial class MainForm
             backup,
             part.Replacements,
             recordInstallation: false,
-            installedFilesOutput: installedFiles);
+            installedFilesOutput: installedFiles,
+            assetMappingsOutput: assetMappings);
     }
 
-    private async Task CompleteCurrentMixedPartAsync(List<string> installedFiles)
+    private async Task CompleteCurrentMixedPartAsync(
+        List<string> installedFiles,
+        IReadOnlyList<InstallationAssetMapping>? assetMappings = null)
     {
         var part = _mixedParts[_mixedPartIndex];
-        AddMixedInstalledPart(part, installedFiles);
+        AddMixedInstalledPart(part, installedFiles, assetMappings);
         RecordCurrentMixedInstallation();
         _mixedPartIndex++;
         await InstallNextMixedPartAsync();
     }
 
-    private void AddMixedInstalledPart(ModMixedPackagePart part, IEnumerable<string> installedFiles)
+    private void AddMixedInstalledPart(
+        ModMixedPackagePart part,
+        IEnumerable<string> installedFiles,
+        IEnumerable<InstallationAssetMapping>? assetMappings = null)
     {
         var partType = part.Manifest.NormalizedType;
         var partModId = GetMixedPartInstallName(part);
@@ -328,7 +336,8 @@ public partial class MainForm
             Type = partType,
             ModId = partModId,
             InstalledDestination = destination,
-            InstalledFiles = installedFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+            InstalledFiles = installedFiles.Where(File.Exists).Distinct(StringComparer.OrdinalIgnoreCase).ToList(),
+            AssetMappings = (assetMappings ?? Enumerable.Empty<InstallationAssetMapping>()).ToList()
         });
     }
 

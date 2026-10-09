@@ -1,4 +1,5 @@
 using GtaSaModManager.Controls;
+using GtaSaModManager.Models;
 using GtaSaModManager.Services;
 
 namespace GtaSaModManager.Forms;
@@ -137,6 +138,20 @@ public partial class MainForm
         string modType)
     {
         var normalizedName = ModPackageService.NormalizeDisplayName(modName);
+        var installationManifest = ModLoaderService.LoadInstallationManifest(
+            ModLoaderService.GetGameInstallationsManifestPath(gamePath));
+        var parentInstallation = installationManifest.Entries.LastOrDefault(entry =>
+            string.IsNullOrWhiteSpace(entry.ParentModId)
+            && (string.Equals(entry.ModId, normalizedName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(entry.InstalledDestination, installedDestination, StringComparison.OrdinalIgnoreCase)));
+        if (parentInstallation is not null)
+        {
+            await ModLoaderService.RestoreOptionalAssetReplacementsAsync(
+                gamePath,
+                parentInstallation.ModId,
+                parentInstallation.InstalledFiles);
+        }
+
         var removedRecord = ModLoaderService.RemoveInstalledRecord(normalizedName, installedDestination);
         var files = Directory.Exists(installedDestination)
             ? Directory.GetFiles(installedDestination, "*", SearchOption.AllDirectories)
@@ -360,6 +375,24 @@ public partial class MainForm
             ? userFilesInstallation.Item2
             : ModLoaderService.LoadInstallationManifest(manifestPath).Entries
                 .FirstOrDefault(item => string.Equals(item.ModId, modId, StringComparison.OrdinalIgnoreCase));
+        if (entry is not null && string.Equals(entry.Type, "optionalassetreplacement", StringComparison.OrdinalIgnoreCase))
+        {
+            await OptionalAssetReplacementService.RestoreAsync(
+                gamePath ?? _selectedGamePath,
+                entry.OptionalAssetBackups ?? new List<OptionalAssetBackup>());
+            ModLoaderService.RemoveGameInstallationRecord(gamePath ?? _selectedGamePath, entry.ModId);
+            CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));
+            return true;
+        }
+
+        if (entry is not null && !string.IsNullOrWhiteSpace(gamePath))
+        {
+            await ModLoaderService.RestoreOptionalAssetReplacementsAsync(
+                gamePath,
+                entry.ModId,
+                entry.InstalledFiles);
+        }
+
         var files = (entry?.InstalledFiles ?? new List<string>()).Where(File.Exists).ToList();
         var title = string.Format(_localizationService.GetString("DeletingMod", "Deleting {0}"), modId);
         BeginStep4Progress(title, files

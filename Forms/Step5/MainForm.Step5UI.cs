@@ -1015,6 +1015,7 @@ public partial class MainForm : Form
         }
 
         var mixedPartFiles = new List<string>();
+        var mixedPartAssetMappings = new List<InstallationAssetMapping>();
         if (await InstallTypedPackageAsync(
             _selectedModPayloadPath,
             _selectedModName,
@@ -1023,11 +1024,12 @@ public partial class MainForm : Form
             backupOverride: _isMixedInstallActive ? CreateMixedBackupConfiguration(_mixedParts[_mixedPartIndex]) : null,
             replacementsOverride: _isMixedInstallActive ? _mixedParts[_mixedPartIndex].Replacements : null,
             recordInstallation: !_isMixedInstallActive,
-            installedFilesOutput: mixedPartFiles))
+            installedFilesOutput: mixedPartFiles,
+            assetMappingsOutput: mixedPartAssetMappings))
         {
             if (_isMixedInstallActive)
             {
-                await CompleteCurrentMixedPartAsync(mixedPartFiles);
+                await CompleteCurrentMixedPartAsync(mixedPartFiles, mixedPartAssetMappings);
                 return;
             }
 
@@ -1043,7 +1045,7 @@ public partial class MainForm : Form
             if (_isMixedInstallActive && mixedPartFiles.Count > 0
                 && (uint)_mixedPartIndex < (uint)_mixedParts.Count)
             {
-                AddMixedInstalledPart(_mixedParts[_mixedPartIndex], mixedPartFiles);
+                AddMixedInstalledPart(_mixedParts[_mixedPartIndex], mixedPartFiles, mixedPartAssetMappings);
                 RecordCurrentMixedInstallation();
             }
 

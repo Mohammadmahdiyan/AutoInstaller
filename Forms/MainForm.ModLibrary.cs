@@ -342,7 +342,7 @@ public partial class MainForm : Form
                 string.Join(Environment.NewLine, errors),
                 _appName,
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+                MessageBoxIcon.None);
         }
     }
 
@@ -784,7 +784,8 @@ public partial class MainForm : Form
         GtaSaModManager.Modsyn.Conversion.ModsynBackupConfiguration? backupOverride = null,
         IReadOnlyList<GtaSaModManager.Models.ModReplacementEntry>? replacementsOverride = null,
         bool recordInstallation = true,
-        List<string>? installedFilesOutput = null)
+        List<string>? installedFilesOutput = null,
+        List<InstallationAssetMapping>? assetMappingsOutput = null)
     {
         DeleteManifestEntries(manifest);
 
@@ -881,6 +882,7 @@ public partial class MainForm : Form
 
         var selectedTarget = _selectedAssetForInstall ?? selectedAssetList.FirstOrDefault() ?? _assetCatalogService.LoadAssets()
             .FirstOrDefault(asset => string.Equals(asset.NameFile, sourceModelName, StringComparison.OrdinalIgnoreCase));
+        var assetMappings = BuildInstallationAssetMappings(manifest, sourceModelName, selectedTarget);
 
         if (packageFiles.Count == 0)
         {
@@ -1085,6 +1087,7 @@ public partial class MainForm : Form
                 .Where(File.Exists)
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
+            assetMappingsOutput?.AddRange(assetMappings);
 
             if (recordInstallation && installAsModLoader)
             {
@@ -1101,7 +1104,8 @@ public partial class MainForm : Form
                     packageRoot,
                     targetRoot,
                     installedFiles,
-                    mergeExistingFiles: _pendingExistingAssetInstallAction == DialogResult.No);
+                    mergeExistingFiles: _pendingExistingAssetInstallAction == DialogResult.No,
+                    assetMappings: assetMappings);
             }
             else if (recordInstallation)
             {
@@ -1118,6 +1122,46 @@ public partial class MainForm : Form
             MessageBox.Show(_localizationService.GetString("InstallationFailed", "The mod could not be installed.") + " " + ex.Message, _appName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
+    }
+
+    private List<InstallationAssetMapping> BuildInstallationAssetMappings(
+        GtaSaModManager.Models.ModManifest manifest,
+        string sourceModelName,
+        GameAsset? selectedTarget)
+    {
+        if (manifest.IsSingleAssetPackage)
+        {
+            return string.IsNullOrWhiteSpace(sourceModelName) || string.IsNullOrWhiteSpace(selectedTarget?.NameFile)
+                ? new List<InstallationAssetMapping>()
+                : new List<InstallationAssetMapping>
+                {
+                    new()
+                    {
+                        SourceModelName = sourceModelName,
+                        TargetModelName = selectedTarget.NameFile,
+                        AssetType = selectedTarget.AssetType
+                    }
+                };
+        }
+
+        if (!manifest.IsMultiAssetPackage)
+        {
+            return new List<InstallationAssetMapping>();
+        }
+
+        return _multiSourceModels
+            .Where(model => model.Status is SourceModelStatus.Mapped or SourceModelStatus.KeepOriginal)
+            .Select(model => new InstallationAssetMapping
+            {
+                SourceModelName = model.BaseName,
+                TargetModelName = model.Status == SourceModelStatus.Mapped
+                    ? model.TargetAsset?.NameFile ?? model.BaseName
+                    : model.BaseName,
+                AssetType = model.TargetAsset?.AssetType ?? model.DetectedAssetType
+            })
+            .Where(mapping => !string.IsNullOrWhiteSpace(mapping.SourceModelName)
+                && !string.IsNullOrWhiteSpace(mapping.TargetModelName))
+            .ToList();
     }
 
     private string GetPackageModId(string packageRoot)
