@@ -41,6 +41,12 @@ public partial class MainForm : Form
         _isApplyingLanguage = true;
         try
         {
+            await Task.Yield();
+            if (IsDisposed || selectedComboBox.IsDisposed)
+            {
+                return;
+            }
+
             _settings.Language = requestedLanguage;
             ApplyCurrentLanguage();
             ShowGlobalLoadingOverlay(_localizationService.GetString("LoadingAssets", "Loading..."));
@@ -174,6 +180,8 @@ public partial class MainForm : Form
     private void ApplyCurrentLanguage()
     {
         var culture = _localizationService.GetCultureForLanguage(_settings.Language);
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
         ApplyRtlForLanguage(_localizationService.ParseLanguage(_settings.Language));
