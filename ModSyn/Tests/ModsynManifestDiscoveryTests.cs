@@ -44,7 +44,7 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
-    public void GetManifestPath_PrefersModThenConfigThenPackageName()
+    public void GetManifestPath_PrefersConfigThenModThenPackageName()
     {
         WithPackage("package", packageRoot =>
         {
@@ -52,14 +52,51 @@ public sealed class ModsynManifestDiscoveryTests
             var config = Write(packageRoot, "config.modsyn", "mod { type: PutInCleo }");
             var mod = Write(packageRoot, "mod.modsyn", "mod { type: Replacing }");
 
-            Assert.AreEqual(mod, ModPackageService.GetManifestPath(packageRoot));
-            Assert.AreEqual("Replacing", ModPackageService.ResolveManifest(packageRoot).Type);
-            File.Delete(mod);
             Assert.AreEqual(config, ModPackageService.GetManifestPath(packageRoot));
             Assert.AreEqual("PutInCleo", ModPackageService.ResolveManifest(packageRoot).Type);
             File.Delete(config);
+            Assert.AreEqual(mod, ModPackageService.GetManifestPath(packageRoot));
+            Assert.AreEqual("Replacing", ModPackageService.ResolveManifest(packageRoot).Type);
+            File.Delete(mod);
             Assert.AreEqual(named, ModPackageService.GetManifestPath(packageRoot));
             Assert.AreEqual("MissionDsl", ModPackageService.ResolveManifest(packageRoot).Type);
+        });
+    }
+
+    [TestMethod]
+    public void GetManifestPath_UsesMixedConfigWhenBothRootManifestsExist()
+    {
+        WithPackage("HorseCar", packageRoot =>
+        {
+            var dataPart = Path.Combine(packageRoot, "HorseDataFile");
+            var modelPart = Path.Combine(packageRoot, "HorseFile", "Horse Car");
+            Directory.CreateDirectory(dataPart);
+            Directory.CreateDirectory(modelPart);
+            File.WriteAllText(Path.Combine(dataPart, "cargrp.dat"), "data");
+            File.WriteAllText(Path.Combine(modelPart, "sweeper.dff"), "dff");
+            File.WriteAllText(Path.Combine(modelPart, "sweeper.txd"), "txd");
+            Write(packageRoot, "mod.modsyn", "mod { type: PIM }");
+            var config = Write(packageRoot, "config.modsyn", """
+                mod {
+                  type: MIX
+                  list: [
+                    { type: RIP folderName: "HorseDataFile" }
+                    { type: PIM folderName: "HorseFile" }
+                  ]
+                }
+                """);
+
+            Assert.AreEqual(config, ModPackageService.GetManifestPath(packageRoot));
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+            Assert.IsTrue(manifest.IsMixedPackage);
+            Assert.AreEqual(2, manifest.MixedParts.Count);
+
+            var modelRoot = Path.Combine(packageRoot, manifest.MixedParts[1].FolderName);
+            Assert.AreEqual(
+                Path.GetFullPath(modelPart),
+                ModPackageService.GetInstallPayloadDirectory(
+                    modelRoot,
+                    manifest.MixedParts[1].Manifest));
         });
     }
 

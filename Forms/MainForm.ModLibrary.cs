@@ -823,7 +823,9 @@ public partial class MainForm : Form
             }
         }
 
-        if (manifest.NormalizedType == "putinmodloader" && Directory.Exists(targetRoot))
+        if (manifest.NormalizedType == "putinmodloader"
+            && Directory.Exists(targetRoot)
+            && !_isMixedInstallActive)
         {
             var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), modName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result != DialogResult.Yes)

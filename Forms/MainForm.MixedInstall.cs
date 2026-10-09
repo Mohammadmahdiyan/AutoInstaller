@@ -335,7 +335,11 @@ public partial class MainForm
     private void RecordCurrentMixedInstallation()
     {
         var destination = Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), ModPackageService.SanitizeFolderName(_mixedParentName));
-        Directory.CreateDirectory(destination);
+        if (Directory.Exists(destination) && !Directory.EnumerateFileSystemEntries(destination).Any())
+        {
+            Directory.Delete(destination);
+        }
+
         ModLoaderService.RecordMixedInstallation(
             _selectedGamePath,
             _mixedParentName,

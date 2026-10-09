@@ -135,7 +135,7 @@ public class ModPackageService
         }
 
         var folderName = Path.GetFileName(basePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-        var candidateNames = new[] { "mod.modsyn", "config.modsyn", folderName + ".modsyn" };
+        var candidateNames = new[] { "config.modsyn", "mod.modsyn", folderName + ".modsyn" };
         try
         {
             var files = Directory.EnumerateFiles(basePath, "*", SearchOption.TopDirectoryOnly).ToList();
