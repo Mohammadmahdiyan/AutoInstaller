@@ -21,7 +21,7 @@ public partial class MainForm : Form
             Name = "AssetStepLayout",
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 6,
+            RowCount = 7,
             Padding = new Padding(0),
             Margin = new Padding(0),
             BackColor = Color.Transparent
@@ -32,9 +32,20 @@ public partial class MainForm : Form
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
         var title = new Label { Name = "AssetStepTitle", Text = _localizationService.GetString("AssetStepTitleGeneric", "If you wish to select the model to be replaced..."), Font = new Font("Segoe UI", 18F, FontStyle.Bold), AutoSize = true, Margin = new Padding(0, 0, 12, 8) };
+        var searchBox = new TextBox
+        {
+            Name = "AssetSearchTextBox",
+            Dock = DockStyle.Fill,
+            Height = 32,
+            Margin = new Padding(0, 0, 0, 6),
+            Font = new Font("Segoe UI", 10F),
+            PlaceholderText = _localizationService.GetString("AssetSearchPlaceholder", "Search by ID or name"),
+            AccessibleName = _localizationService.GetString("AssetSearchPlaceholder", "Search by ID or name")
+        };
         var reviewModelsButton = new Button
         {
             Name = "MultiAssetReviewButton",
@@ -78,6 +89,16 @@ public partial class MainForm : Form
         });
         sorting.SelectedItem = _localizationService.GetString("SortByFileName", "Sort by file name");
         _step5SortMode = Step5SortByName;
+        searchBox.TextChanged += (_, _) =>
+        {
+            _step5SearchQuery = searchBox.Text;
+            if (!string.IsNullOrWhiteSpace(_step5SearchQuery))
+            {
+                _step5CategoryFilter = _localizationService.GetString("AssetAll", "All");
+            }
+
+            RefreshAssetStep();
+        };
 
         var multiAssetActions = new FlowLayoutPanel
         {
@@ -202,11 +223,12 @@ public partial class MainForm : Form
 
         layout.Controls.Add(title, 0, 0);
             layout.Controls.Add(header, 0, 0);
-        layout.Controls.Add(filters, 0, 1);
-        layout.Controls.Add(multiAssetTabs, 0, 2);
-        layout.Controls.Add(unknownModelNotice, 0, 3);
-        layout.Controls.Add(multiAssetActions, 0, 4);
-        layout.Controls.Add(gallery, 0, 5);
+        layout.Controls.Add(searchBox, 0, 1);
+        layout.Controls.Add(filters, 0, 2);
+        layout.Controls.Add(multiAssetTabs, 0, 3);
+        layout.Controls.Add(unknownModelNotice, 0, 4);
+        layout.Controls.Add(multiAssetActions, 0, 5);
+        layout.Controls.Add(gallery, 0, 6);
         panel.Controls.Add(layout);
 
         var saveMissionPanel = new Panel
@@ -1366,6 +1388,7 @@ public partial class MainForm : Form
         }
 
         var gallery = panel.Controls.Find("AssetGallery", true).FirstOrDefault() as FlowLayoutPanel;
+        var searchBox = panel.Controls.Find("AssetSearchTextBox", true).FirstOrDefault() as TextBox;
         var categoryFilter = panel.Controls.Find("AssetCategoryFilter", true).FirstOrDefault() as ComboBox;
         var categoryLabel = panel.Controls.Find("AssetCategoryLabel", true).FirstOrDefault() as Label;
         var title = panel.Controls.Find("AssetStepTitle", true).FirstOrDefault() as Label;
@@ -1450,19 +1473,26 @@ public partial class MainForm : Form
 
         var hasCategories = categories.Count > 0;
         var hasMeaningfulCategories = categories.Count > 1;
+        var searchQuery = searchBox?.Text.Trim() ?? string.Empty;
+        var hasSearchQuery = searchQuery.Length > 0;
+        var allText = _localizationService.GetString("AssetAll", "All");
+        if (hasSearchQuery)
+        {
+            _step5CategoryFilter = allText;
+        }
+
         Debug.WriteLine($"[Step5] detectedAssets={assets.Count}; categories={categories.Count}; categoryList={string.Join(" | ", categories)}; selectedFilter={_step5CategoryFilter}; sourceType={sourceType}; meaningful={hasMeaningfulCategories}");
 
         if (categoryFilter != null)
         {
             categoryFilter.Visible = hasCategories;
-            categoryFilter.Enabled = hasCategories;
+            categoryFilter.Enabled = hasCategories && !hasSearchQuery;
         }
         if (categoryLabel != null)
         {
             categoryLabel.Visible = hasCategories;
         }
 
-        var allText = _localizationService.GetString("AssetAll", "All");
         if (categoryFilter != null)
         {
             categoryFilter.Items.Clear();
@@ -1517,6 +1547,8 @@ public partial class MainForm : Form
                 .Where(asset => string.Equals(NormalizeCategoryValue(asset.Category), normalizedSelectedCategory, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
+
+            visibleAssets = FilterAssetsBySearch(visibleAssets, searchQuery);
 
         if (_step5SortMode == Step5SortById)
         {
@@ -1580,6 +1612,43 @@ public partial class MainForm : Form
             HideGlobalLoadingOverlay();
         }
     }
+
+        private static List<GameAsset> FilterAssetsBySearch(IEnumerable<GameAsset> assets, string query)
+        {
+            var trimmedQuery = query.Trim();
+            if (trimmedQuery.Length == 0)
+            {
+                return assets.ToList();
+            }
+
+            if (TryNormalizeNumericAssetIdQuery(trimmedQuery, out var normalizedIdQuery))
+            {
+                return assets
+                    .Where(asset => !string.IsNullOrWhiteSpace(asset.Id)
+                        && asset.Id.Contains(normalizedIdQuery, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            return assets
+                .Where(asset => asset.Name.Contains(trimmedQuery, StringComparison.OrdinalIgnoreCase)
+                    || asset.NameFile.Contains(trimmedQuery, StringComparison.OrdinalIgnoreCase)
+                    || asset.Category.Contains(trimmedQuery, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        private static bool TryNormalizeNumericAssetIdQuery(string query, out string normalizedQuery)
+        {
+            normalizedQuery = string.Empty;
+            if (query.Length == 0 || !query.All(char.IsDigit))
+            {
+                return false;
+            }
+
+            normalizedQuery = new string(query
+                .Select(character => (char)('0' + (int)char.GetNumericValue(character)))
+                .ToArray());
+            return true;
+        }
 
     private async Task EnsureStep5OccupiedAssetFoldersAsync()
     {

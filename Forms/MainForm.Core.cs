@@ -108,6 +108,7 @@ public partial class MainForm : Form
     private bool _step5PreparationAttempted;
     private int _step5ColumnCount = 3;
     private string _step5CategoryFilter = string.Empty;
+    private string _step5SearchQuery = string.Empty;
     private string _step5SortMode = "Name";
     private const string Step5SortByName = "Name";
     private const string Step5SortById = "Id";
@@ -125,6 +126,26 @@ public partial class MainForm : Form
     }
 
     private sealed record SaveMissionSourceFile(string Path, bool IsMission);
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == (Keys.Control | Keys.F)
+            && _currentStep == WizardStep.Step5
+            && !_isSaveMissionStepActive
+            && !_isDeleteModsStepActive
+            && !_isOptionalsStepActive
+            && _wizardPanels.TryGetValue(WizardStep.Step5, out var step5Panel)
+            && step5Panel.Controls.Find("AssetSearchTextBox", true).FirstOrDefault() is TextBox searchBox
+            && searchBox.Visible
+            && searchBox.Enabled)
+        {
+            searchBox.Focus();
+            searchBox.SelectAll();
+            return true;
+        }
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
 
     public MainForm()
     {

@@ -1,7 +1,3 @@
-3. در step 5 weapons و vehicles و skins
-میخام یک باکس سرچ باشه بالا که اگر عدد وارد شد توی ایدی ها سرچ کنه اگه متن وارد شد توی category: all بگرده
-این با شورت کات 
-CTRL + F هم اماده نوشتن بشه
 4. میخام دکمه هارو براشون یک کلید کیبورد در نظر بگیرم که سریع تر جا به جا بشیم 
 دکمه Prev = ESC
 دکمه Next = Enter
@@ -15,7 +11,7 @@ CTRL + F هم اماده نوشتن بشه
 5. وقتی برنامه رو باز میکنیم صدای ارور میاد سه بار اینو بردار 
 6. وقتی مدی که optional داره رو میخایم حذف کنیم در step 6 دکمه Install optional رو میاره این دکمه رو بردار وقتی مد رو داریم حذف میکنیم
 7. مدی که optional داره روی دکمش باید بنویسه اسم مد چیه (مختص optional نه optionals)
----------- Big Change Convert This Project To V2
+---------- Big Change Convert This Project To Version 2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 
 به اسم 
 modsyn_auto_create

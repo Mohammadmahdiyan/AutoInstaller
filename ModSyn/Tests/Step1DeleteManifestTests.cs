@@ -145,4 +145,25 @@ public sealed class Step1DeleteManifestTests
             Directory.Delete(packageRoot, recursive: true);
         }
     }
+
+    [TestMethod]
+    public void Step5AssetSearch_NumericQueriesMatchIdsAndTextQueriesSearchAllFields()
+    {
+        var assets = new List<GameAsset>
+        {
+            new() { Id = "400", Name = "Police Car", NameFile = "copcarla", Category = "Emergency" },
+            new() { Id = "401", Name = "Rancher", NameFile = "rancher", Category = "Off Road" },
+            new() { Id = "402", Name = "Tow Truck", NameFile = "towtruck", Category = "Utility" }
+        };
+        var filter = typeof(MainForm).GetMethod("FilterAssetsBySearch", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        var numericResults = (List<GameAsset>)filter.Invoke(null, [assets, "۴۰۱"])!;
+        CollectionAssert.AreEqual(new[] { "rancher" }, numericResults.Select(asset => asset.NameFile).ToArray());
+
+        var textResults = (List<GameAsset>)filter.Invoke(null, [assets, "truck"])!;
+        CollectionAssert.AreEqual(new[] { "towtruck" }, textResults.Select(asset => asset.NameFile).ToArray());
+
+        var categoryResults = (List<GameAsset>)filter.Invoke(null, [assets, "Off Road"])!;
+        CollectionAssert.AreEqual(new[] { "rancher" }, categoryResults.Select(asset => asset.NameFile).ToArray());
+    }
 }
