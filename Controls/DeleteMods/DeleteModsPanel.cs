@@ -43,6 +43,7 @@ public sealed class DeleteModsPanel : Panel
         Margin = new Padding(0),
         Padding = new Padding(0)
     };
+    private readonly Panel _header = new() { Width = WindowWidth - 2, Height = HeaderHeight, Margin = new Padding(0), BackColor = Color.Transparent };
     private readonly Label _emptyLabel = new() { Width = WindowWidth - 2, Height = 80, Margin = new Padding(0), TextAlign = ContentAlignment.MiddleCenter, Visible = false };
     private readonly List<DeleteModRow> _rows = new();
     private DeleteModHandler? _handler;
@@ -66,22 +67,21 @@ public sealed class DeleteModsPanel : Panel
         BackColor = Color.Transparent;
         DoubleBuffered = true;
 
-        var header = new Panel { Width = WindowWidth - 2, Height = HeaderHeight, Margin = new Padding(0), BackColor = Color.Transparent };
         _title.Dock = DockStyle.Fill;
         _title.Padding = new Padding(20, 0, 20, 0);
         _title.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
         _title.ForeColor = Color.FromArgb(0xF1, 0xF3, 0xF5);
-        header.Controls.Add(_title);
-        header.Paint += (_, e) =>
+        _header.Controls.Add(_title);
+        _header.Paint += (_, e) =>
         {
             using var pen = new Pen(DeleteModRow.BorderColor);
-            e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
+            e.Graphics.DrawLine(pen, 0, _header.Height - 1, _header.Width, _header.Height - 1);
         };
 
         _emptyLabel.ForeColor = DeleteModRow.MutedColor;
         _emptyLabel.Font = new Font("Segoe UI", 10F);
 
-        _window.Controls.Add(header);
+        _window.Controls.Add(_header);
         _window.Controls.Add(_table);
         _window.Controls.Add(_emptyLabel);
         _window.Paint += (_, e) =>
@@ -92,7 +92,7 @@ public sealed class DeleteModsPanel : Panel
         Controls.Add(_window);
         Resize += (_, _) => CenterWindow();
         RightToLeftChanged += (_, _) => ApplyDirection();
-        _window.SizeChanged += (_, _) => CenterWindow();
+        _window.SizeChanged += (_, _) => UpdateScrollSize();
         Click += (_, _) => CloseAllConfirms(null);
     }
 
@@ -176,6 +176,7 @@ public sealed class DeleteModsPanel : Panel
             if (ok)
             {
                 row.ReportProgress(entry.Files.Count);
+                await Task.Delay(250);
                 row.Complete();
             }
             else
@@ -223,8 +224,26 @@ public sealed class DeleteModsPanel : Panel
 
     private void CenterWindow()
     {
+        var windowWidth = Math.Clamp(
+            ClientSize.Width - 16 - SystemInformation.VerticalScrollBarWidth,
+            1,
+            WindowWidth);
+        var contentWidth = Math.Max(1, windowWidth - 2);
+        _header.Width = contentWidth;
+        _table.Width = contentWidth;
+        _emptyLabel.Width = contentWidth;
+        foreach (var row in _rows)
+        {
+            row.Width = contentWidth;
+        }
+
         var x = Math.Max(0, (ClientSize.Width - _window.Width) / 2);
         _window.Location = new Point(x + AutoScrollPosition.X, 12 + AutoScrollPosition.Y);
+        UpdateScrollSize();
+    }
+
+    private void UpdateScrollSize()
+    {
         AutoScrollMinSize = new Size(0, _window.Height + 24);
     }
 }

@@ -409,7 +409,7 @@ internal sealed class DeleteModRow : Control
             g.DrawEllipse(track, ring);
         }
 
-        using (var bar = new Pen(AccentColor, 2.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round })
+        using (var bar = new Pen(GreenColor, 2.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round })
         {
             var sweep = Math.Max(2f, 360f * _progress);
             g.DrawArc(bar, ring, -90f, sweep);
