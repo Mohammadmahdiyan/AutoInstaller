@@ -341,27 +341,16 @@ public partial class MainForm : Form
                     _lastActionWasDelete ? "The mod and its files were deleted." : "Installation complete.");
             }
 
-            // A mod with optional / optionals folders must stay open so the extras can be installed.
+            // Give users time to choose optional content before automatically closing Step 6.
             var hasOptionalPackages = !_lastActionWasDelete && HasOptionalContentForCurrentInstall();
             var countdownLabel = _wizardPanels[WizardStep.Step6].Controls.OfType<Label>().FirstOrDefault(x => x.Name == "CountdownLabel");
-            if (hasOptionalPackages)
+            _completionSecondsLeft = hasOptionalPackages ? 10 : 6;
+            _completionTimerActive = true;
+            _completionTimer.Stop();
+            _completionTimer.Start();
+            if (countdownLabel != null)
             {
-                _completionTimer.Stop();
-                _completionTimerActive = false;
-                if (countdownLabel != null)
-                {
-                    countdownLabel.Text = string.Empty;
-                }
-            }
-            else
-            {
-                _completionSecondsLeft = 6;
-                _completionTimerActive = true;
-                _completionTimer.Start();
-                if (countdownLabel != null)
-                {
-                    countdownLabel.Text = _localizationService.GetString("CompletedIn", "Completed") + " " + _completionSecondsLeft + "s";
-                }
+                countdownLabel.Text = _localizationService.GetString("CompletedIn", "Completed") + " " + _completionSecondsLeft + "s";
             }
 
             RefreshStep6OptionalActions();

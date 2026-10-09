@@ -191,4 +191,21 @@ public sealed class Step1DeleteManifestTests
         }
     }
 
+    [TestMethod]
+    public void RebuildingWizard_DisposesPreviousPanelsAndTheirChildren()
+    {
+        using var host = new System.Windows.Forms.Panel();
+        var oldPanel = new System.Windows.Forms.Panel();
+        var oldButton = new System.Windows.Forms.Button();
+        oldPanel.Controls.Add(oldButton);
+        host.Controls.Add(oldPanel);
+
+        typeof(MainForm).GetMethod("DisposeChildControls", BindingFlags.Static | BindingFlags.NonPublic)!
+            .Invoke(null, [host]);
+
+        Assert.IsTrue(oldPanel.IsDisposed);
+        Assert.IsTrue(oldButton.IsDisposed);
+        Assert.AreEqual(0, host.Controls.Count);
+    }
+
 }

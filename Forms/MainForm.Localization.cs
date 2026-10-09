@@ -259,7 +259,7 @@ public partial class MainForm : Form
         }
 
         _wizardPanels.Clear();
-        _wizardHost.Controls.Clear();
+        DisposeChildControls(_wizardHost);
 
         _wizardPanels[WizardStep.Step0] = CreateWizardStep0();
         _wizardPanels[WizardStep.Step1] = CreateWizardStep1();
@@ -277,5 +277,15 @@ public partial class MainForm : Form
         }
 
         GoToStep(_currentStep);
+    }
+
+    private static void DisposeChildControls(Control parent)
+    {
+        var children = parent.Controls.Cast<Control>().ToList();
+        parent.Controls.Clear();
+        foreach (var child in children)
+        {
+            child.Dispose();
+        }
     }
 }
