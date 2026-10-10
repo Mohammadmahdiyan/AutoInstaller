@@ -1,5 +1,4 @@
 1. وقتی برنامه رو باز میکنیم صدای ارور میاد چهار بار اینو بردار 
-3. در step 1 delete some mod وقتی وقتی بیاد که حدعقل یک ایتم در installing.json باشه
 4. اگر مدی خواستیم نصب کنیم و برنامه ESSENTIALS (A1-MyReqFiles) پیدا نکرد باید از کاربر بخواد انتخاب کنه این نصب بشه بعد و همچنین برای مرحله های dyom
 ---------- Big Change Convert This Project To Version 2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 

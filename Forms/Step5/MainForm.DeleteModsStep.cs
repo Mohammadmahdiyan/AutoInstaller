@@ -196,8 +196,19 @@ public partial class MainForm
         if (panel.Controls.Find("Step1DeleteSomeModsButton", true).FirstOrDefault() is Button button)
         {
             button.Text = _localizationService.GetString("DeleteSomeMods", "Delete some mods");
-            button.Visible = GameService.IsValidGameFolder(_selectedGamePath);
+            button.Visible = HasInstallationManifestEntries(_selectedGamePath);
         }
+    }
+
+    private static bool HasInstallationManifestEntries(string gamePath)
+    {
+        if (!GameService.IsValidGameFolder(gamePath))
+        {
+            return false;
+        }
+
+        var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(gamePath);
+        return ModLoaderService.LoadInstallationManifest(manifestPath).Entries?.Count > 0;
     }
 
     private async void OpenDeleteSomeModsFromStep1()

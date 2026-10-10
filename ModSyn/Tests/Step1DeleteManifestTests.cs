@@ -54,6 +54,40 @@ public sealed class Step1DeleteManifestTests
     }
 
     [TestMethod]
+    public void HasInstallationManifestEntries_RequiresAtLeastOneRecordedEntry()
+    {
+        var gameRoot = Path.Combine(Path.GetTempPath(), "Step1DeleteVisibility-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(gameRoot);
+        File.WriteAllText(Path.Combine(gameRoot, "gta_sa.exe"), string.Empty);
+
+        try
+        {
+            var hasEntries = typeof(MainForm).GetMethod("HasInstallationManifestEntries", BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            Assert.IsFalse((bool)hasEntries.Invoke(null, [gameRoot])!);
+
+            var manifestPath = ModLoaderService.GetGameInstallationsManifestPath(gameRoot);
+            ModLoaderService.SaveInstallationManifest(manifestPath, new InstallationManifest
+            {
+                Entries =
+                [
+                    new InstallationManifestEntry
+                    {
+                        ModId = "Recorded Mod",
+                        Type = "putinmodloader"
+                    }
+                ]
+            });
+
+            Assert.IsTrue((bool)hasEntries.Invoke(null, [gameRoot])!);
+        }
+        finally
+        {
+            Directory.Delete(gameRoot, recursive: true);
+        }
+    }
+
+    [TestMethod]
     public void RecordCurrentMixedInstallation_DoesNotCreateEmptyModLoaderContainer()
     {
         var gameRoot = Path.Combine(Path.GetTempPath(), "MixedInstallRecord-" + Guid.NewGuid().ToString("N"));
