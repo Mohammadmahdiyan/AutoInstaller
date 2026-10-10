@@ -1,24 +1,7 @@
-1. وقتی برنامه رو باز میکنیم صدای ارور میاد سه بار اینو بردار 
+1. وقتی برنامه رو باز میکنیم صدای ارور میاد چهار بار اینو بردار 
 2. در step 1 دکمه browse از سمت راست یکم زده بیرون
 3. در step 1 delete some mod وقتی وقتی بیاد که حدعقل یک ایتم در installing.json باشه
 4. اگر مدی خواستیم نصب کنیم و برنامه ESSENTIALS (A1-MyReqFiles) پیدا نکرد باید از کاربر بخواد انتخاب کنه این نصب بشه بعد و همچنین برای مرحله های dyom
-5. چرا عکس ها و ردمی رو نیاورد 
-این مد رو خواستم نصب کنم 
-| Base Mods Address\Cleo scripts\Advanced Aiming Mod\
-|-- GTA V Aming\
-|---- aimingSets.dat
-|---- imCamAim.SA.asi
-|-- after.png
-|-- before.png
-|-- Readme (or die).txt
-|-- config.modsyn
-
-```modsyn
-mod {
-    type: PGF
-}
-```
-مد رو درست نصب کرد ولی readme و png هارو لود نکرد 
 ---------- Big Change Convert This Project To Version 2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 
 به اسم 

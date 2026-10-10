@@ -581,6 +581,27 @@ public sealed class ModsynManifestDiscoveryTests
     }
 
     [TestMethod]
+    public void PutInGameFolderWrapper_UsesPackageRootForReadmeAndImagePreviews()
+    {
+        WithPackage("Advanced Aiming Mod", packageRoot =>
+        {
+            var payloadRoot = Path.Combine(packageRoot, "GTA V Aiming");
+            Directory.CreateDirectory(payloadRoot);
+            File.WriteAllText(Path.Combine(payloadRoot, "aimingSets.dat"), "data");
+            File.WriteAllText(Path.Combine(packageRoot, "after.png"), "image");
+            File.WriteAllText(Path.Combine(packageRoot, "Readme (or die).txt"), "instructions");
+            Write(packageRoot, "config.modsyn", "mod { type: PGF }");
+
+            var manifest = ModPackageService.ResolveManifest(packageRoot);
+            var payloadPath = ModPackageService.GetInstallPayloadDirectory(packageRoot, manifest);
+
+            Assert.AreEqual(Path.GetFullPath(payloadRoot), Path.GetFullPath(payloadPath));
+            Assert.AreEqual(Path.GetFullPath(packageRoot), Path.GetFullPath(
+                ModPackageService.GetPreviewDirectory(packageRoot, payloadPath, manifest)));
+        });
+    }
+
+    [TestMethod]
     public void ModsynPackageLoading_UsesConvertedCleoSelectionsAndReplacementEntries()
     {
         WithPackage("package", packageRoot =>

@@ -513,9 +513,7 @@ public class ModPackageService
 
     public static string GetPreviewDirectory(string packageRoot, string payloadPath, ModManifest manifest)
     {
-        return manifest.NormalizedType is "missiondsl" or "mixed" || manifest.IsMultiAssetPackage
-            ? packageRoot
-            : payloadPath;
+        return packageRoot;
     }
 
     public static List<SelectedInstallEntry> ResolveInstallSelection(string packageRoot, ModManifest manifest)
