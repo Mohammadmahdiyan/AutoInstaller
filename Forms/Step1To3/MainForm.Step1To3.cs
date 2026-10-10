@@ -59,7 +59,7 @@ public partial class MainForm : Form
             Padding = new Padding(0),
             BackColor = Color.Transparent
         };
-        flow.Controls.Add(CreateBrowseInputGroup(pathText, browse, 560));
+        flow.Controls.Add(CreateBrowseInputGroup(pathText, browse, 520));
 
         var stack = new FlowLayoutPanel
         {
