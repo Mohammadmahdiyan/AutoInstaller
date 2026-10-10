@@ -533,16 +533,46 @@ public partial class MainForm
         var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath) && Directory.Exists(_selectedModSourcePath)
             ? _selectedModSourcePath
             : _settings.ModSourceFolder ?? string.Empty;
-        var dependencyRoot = Path.Combine(baseModsFolder, "Scripts", "DYOM", "DYOM v8.2");
-        if (!Directory.Exists(dependencyRoot))
+        var defaultDependencyRoot = Directory.Exists(baseModsFolder)
+            ? Path.Combine(baseModsFolder, "Scripts", "DYOM", "DYOM v8.2")
+            : string.Empty;
+        var dependencyRoot = new[] { _settings.DyomPackagePath, defaultDependencyRoot }
+            .Where(path => !string.IsNullOrWhiteSpace(path)
+                && Directory.Exists(path)
+                && Directory.GetFiles(path, "*", SearchOption.AllDirectories).Length > 0)
+            .FirstOrDefault();
+        if (dependencyRoot is null)
         {
             MessageBox.Show(
-                _localizationService.GetString("ModSourceInvalid", "DYOM dependency was not found in the Base Mods folder.")
-                    + Environment.NewLine + dependencyRoot,
+                _localizationService.GetString(
+                    "DyomDependencyMissingPrompt",
+                    "DYOM v8.2 files are required. Select the DYOM v8.2 folder to install them now."),
                 _appName,
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
-            return false;
+                MessageBoxIcon.Information);
+            dependencyRoot = PromptForFolderSelection(
+                _localizationService.GetString("SelectDyomDependency", "Select the DYOM v8.2 dependency folder"),
+                Directory.Exists(baseModsFolder) ? Path.Combine(baseModsFolder, "Scripts", "DYOM") : null);
+            if (string.IsNullOrWhiteSpace(dependencyRoot))
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(dependencyRoot)
+                || Directory.GetFiles(dependencyRoot, "*", SearchOption.AllDirectories).Length == 0)
+            {
+                MessageBox.Show(
+                    _localizationService.GetString(
+                        "DyomDependencyInvalid",
+                        "The selected DYOM dependency folder is empty or invalid."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            _settings.DyomPackagePath = dependencyRoot;
+            _settingsService.Save(_settings);
         }
 
         var dependencyFiles = Directory.GetFiles(dependencyRoot, "*", SearchOption.AllDirectories).ToList();

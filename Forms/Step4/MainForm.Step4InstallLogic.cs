@@ -476,16 +476,60 @@ public partial class MainForm : Form
 
     private async Task<bool> EnsureDependenciesBeforeInstallAsync()
     {
+        if (DependencyInstallationService.AreDependenciesInstalled(_selectedGamePath))
+        {
+            return true;
+        }
+
         var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
             ? _selectedModSourcePath
             : _settings.ModSourceFolder ?? string.Empty;
-        var result = await DependencyInstallationService.EnsureInstalledAsync(_selectedGamePath, baseModsFolder);
+        var defaultDependencyRoot = Directory.Exists(baseModsFolder)
+            ? Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles")
+            : string.Empty;
+        var dependencyRoot = new[] { _settings.EssentialsPackagePath, defaultDependencyRoot }
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .FirstOrDefault(IsValidEssentialsPackage);
+
+        if (dependencyRoot is null)
+        {
+            MessageBox.Show(
+                _localizationService.GetString(
+                    "EssentialsDependencyMissingPrompt",
+                    "Required CLEO/ModLoader Essentials were not found. Select the A1-MyReqFiles package folder to install them now."),
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            dependencyRoot = PromptForModFolderSelection(
+                _localizationService.GetString("SelectEssentialsDependency", "Select the A1-MyReqFiles dependency folder"),
+                Directory.Exists(baseModsFolder) ? baseModsFolder : null);
+            if (string.IsNullOrWhiteSpace(dependencyRoot))
+            {
+                return false;
+            }
+
+            if (!IsValidEssentialsPackage(dependencyRoot))
+            {
+                MessageBox.Show(
+                    _localizationService.GetString(
+                        "EssentialsDependencyInvalid",
+                        "The selected folder is not a valid PutInGameFolder A1-MyReqFiles package."),
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            _settings.EssentialsPackagePath = dependencyRoot;
+            _settingsService.Save(_settings);
+        }
+
+        var result = await DependencyInstallationService.EnsureInstalledAsync(_selectedGamePath, dependencyRoot);
         if (result.Success)
         {
             if (string.IsNullOrWhiteSpace(_selectedReadmePath))
             {
-                var dependencyReadmeRoot = Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles");
-                _selectedReadmePath = FindReadmeFile(dependencyReadmeRoot);
+                _selectedReadmePath = FindReadmeFile(dependencyRoot);
             }
 
             return true;
@@ -493,6 +537,14 @@ public partial class MainForm : Form
 
         MessageBox.Show(result.ErrorMessage, _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         return false;
+    }
+
+    private static bool IsValidEssentialsPackage(string? packageRoot)
+    {
+        return !string.IsNullOrWhiteSpace(packageRoot)
+            && Directory.Exists(packageRoot)
+            && ModPackageService.TryReadModsynConfiguration(packageRoot, out var configuration, out _)
+            && configuration?.Manifest.NormalizedType == "putingamefolder";
     }
 
     private async Task<bool> EnsureRequiredPackagesBeforeInstallAsync()

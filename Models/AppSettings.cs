@@ -27,6 +27,10 @@ public class AppSettings
 
     public string? ModSourceFolder { get; set; }
 
+    public string? EssentialsPackagePath { get; set; }
+
+    public string? DyomPackagePath { get; set; }
+
     public string? GameExecutableName { get; set; }
 
     public string? GameProfileId { get; set; }

@@ -22,7 +22,7 @@ public static class DependencyInstallationService
 
     public static async Task<DependencyInstallationResult> EnsureInstalledAsync(
         string gameFolder,
-        string baseModsFolder,
+        string dependencyRoot,
         CancellationToken cancellationToken = default)
     {
         if (AreDependenciesInstalled(gameFolder))
@@ -30,13 +30,12 @@ public static class DependencyInstallationService
             return new DependencyInstallationResult { Success = true };
         }
 
-        if (string.IsNullOrWhiteSpace(baseModsFolder) || !Directory.Exists(baseModsFolder))
+        if (string.IsNullOrWhiteSpace(dependencyRoot) || !Directory.Exists(dependencyRoot))
         {
-            return Failure("The Base Mods Folder is not configured or does not exist.");
+            return Failure("The selected Essentials dependency folder does not exist.");
         }
 
-        var dependencyRoot = Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles");
-        if (!Directory.Exists(dependencyRoot) || ModPackageService.GetManifestPath(dependencyRoot) is null)
+        if (ModPackageService.GetManifestPath(dependencyRoot) is null)
         {
             return Failure("Missing dependency Modsyn configuration: " + dependencyRoot);
         }
