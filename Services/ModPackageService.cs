@@ -439,7 +439,61 @@ public class ModPackageService
             return true;
         }
 
-        return IsMediaFile(fileName);
+        // Images are previews (shown in Step 3, never installed) only when they sit in the package root or in
+        // a preview folder (gallery, images, screenshots, ...). An image inside the folder that is being
+        // installed (for example Bullethole\bullethole.png) is a real mod file and must be installed.
+        return IsMediaFile(fileName) && IsPreviewMediaLocation(path, packageRoot);
+    }
+
+    private static readonly string[] PreviewFolderNames =
+    {
+        "gallery", "images", "image", "screenshot", "screenshots", "preview", "previews"
+    };
+
+    public static bool IsPreviewFolderName(string? folderName)
+    {
+        return !string.IsNullOrWhiteSpace(folderName)
+            && PreviewFolderNames.Contains(folderName.Trim(), StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// True when <paramref name="path"/> is where preview images live: directly in the package root, or inside a
+    /// folder named gallery / images / image / screenshot(s) / preview(s). When the package root is unknown the
+    /// location cannot be judged and the file is treated as a preview (the old behaviour).
+    /// </summary>
+    public static bool IsPreviewMediaLocation(string path, string? packageRoot)
+    {
+        if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(packageRoot))
+        {
+            return true;
+        }
+
+        string relative;
+        try
+        {
+            relative = Path.GetRelativePath(Path.GetFullPath(packageRoot), Path.GetFullPath(path));
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException)
+        {
+            return true;
+        }
+
+        if (Path.IsPathRooted(relative)
+            || relative == ".."
+            || relative.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        var segments = relative.Split(
+            new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
+            StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length <= 1)
+        {
+            return true; // directly in the package root
+        }
+
+        return segments.Take(segments.Length - 1).Any(segment => IsPreviewFolderName(segment));
     }
 
     private static bool IsLegacyJsonManifestFile(string path, string packageRoot)
@@ -536,7 +590,6 @@ public class ModPackageService
         {
             var sourceRelativePath = GetPackageRelativePath(root, sourcePath);
             if (IsMetadataOrNonInstallableFile(sourcePath, root)
-                || IsMediaFile(sourcePath)
                 || IsIgnoredFile(sourceRelativePath, ignoreFiles)
                 || IsInIgnoredFolder(sourceRelativePath, ignoreFolders)
                 || ContainsImplicitlyExcludedFolder(sourceRelativePath, explicitlyInstalledFolders))
@@ -833,6 +886,7 @@ public class ModPackageService
                 && !string.Equals(Path.GetFileName(dir), "screenshots", StringComparison.OrdinalIgnoreCase)
                 && !string.Equals(Path.GetFileName(dir), "preview", StringComparison.OrdinalIgnoreCase)
                 && !IsOptionalContainerName(Path.GetFileName(dir))
+                && !IsPreviewFolderName(Path.GetFileName(dir))
                 && !string.Equals(Path.GetFileName(dir), "config", StringComparison.OrdinalIgnoreCase)
                 && !Path.GetFileName(dir).StartsWith("preview", StringComparison.OrdinalIgnoreCase)
                 && !Path.GetFileName(dir).StartsWith("readme", StringComparison.OrdinalIgnoreCase))

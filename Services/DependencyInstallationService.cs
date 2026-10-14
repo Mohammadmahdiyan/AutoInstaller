@@ -13,11 +13,16 @@ public static class DependencyInstallationService
     private static readonly string[] RequiredFiles = { "cleo.asi", "modloader.asi" };
     private static readonly string[] RequiredDirectories = { "cleo", "modloader" };
 
+    /// <summary>
+    /// True only when cleo.asi, modloader.asi and both the cleo and modloader folders exist.
+    /// (It used to be "files OR folders": after an old-CLEO mod was deleted the two empty folders were
+    /// enough to make the manager believe CLEO/ModLoader were installed, so ReqFiles was never reinstalled.)
+    /// </summary>
     public static bool AreDependenciesInstalled(string gameFolder)
     {
         var filesInstalled = RequiredFiles.All(file => File.Exists(Path.Combine(gameFolder, file)));
         var directoriesInstalled = RequiredDirectories.All(directory => Directory.Exists(Path.Combine(gameFolder, directory)));
-        return filesInstalled || directoriesInstalled;
+        return filesInstalled && directoriesInstalled;
     }
 
     public static async Task<DependencyInstallationResult> EnsureInstalledAsync(
@@ -113,7 +118,14 @@ public static class DependencyInstallationService
             var relative = Path.GetRelativePath(sourceDirectory, file);
             var destination = GetSafePath(destinationDirectory, relative, "Dependency destination");
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-            await Task.Run(() => File.Copy(file, destination, true), cancellationToken);
+            if (File.Exists(destination))
+            {
+                // Repair mode: never overwrite what is already in the game (user settings, a CLEO/ModLoader
+                // version required by an installed mod, ...). Only the missing files are put back.
+                continue;
+            }
+
+            await Task.Run(() => File.Copy(file, destination, false), cancellationToken);
             copiedEntries++;
         }
 

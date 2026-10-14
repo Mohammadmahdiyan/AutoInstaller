@@ -96,6 +96,30 @@ public partial class MainForm : Form
     // -------------------------------------------------------------------------
     // از اینجا برای فایل MainForm.Sidebar.cs
     // -------------------------------------------------------------------------
+    /// <summary>
+    /// Keeps the "Detected mod: name" label inside the sidebar: a long mod name wraps onto the next line
+    /// (long words are broken) instead of growing past the sidebar width.
+    /// </summary>
+    private void FitSidebarDetectedModLabel()
+    {
+        if (_sidebarDetectedModLabel == null || _sidebarDetectedModLabel.IsDisposed)
+        {
+            return;
+        }
+
+        var stackWidth = _sidebarStack != null && !_sidebarStack.IsDisposed
+            ? _sidebarStack.ClientSize.Width
+            : 0;
+        if (stackWidth <= 0)
+        {
+            stackWidth = _sidebarPanel != null ? _sidebarPanel.Width - _sidebarPanel.Padding.Horizontal : 228;
+        }
+
+        var availableWidth = Math.Max(80, stackWidth - _sidebarDetectedModLabel.Margin.Horizontal);
+        _sidebarDetectedModLabel.AutoSize = true;
+        _sidebarDetectedModLabel.MaximumSize = new Size(availableWidth, 0);
+    }
+
     private void InitializeSidebar()
     {
         if (MainPanel == null)
@@ -329,6 +353,8 @@ public partial class MainForm : Form
         _sidebarStack.Controls.Add(new Label { Name = "SidebarThemeLabel", Text = _localizationService.GetString("Theme", "Theme"), AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) }, 0, 4);
         _sidebarStack.Controls.Add(_sidebarThemeComboBox, 0, 5);
         _sidebarStack.Controls.Add(_sidebarDetectedModLabel, 0, 6);
+        _sidebarStack.SizeChanged += (_, _) => FitSidebarDetectedModLabel();
+        FitSidebarDetectedModLabel();
         _sidebarStack.Controls.Add(_sidebarSelectedModelPanel, 0, 7);
         _sidebarStack.Controls.Add(_sidebarStep3GalleryPanel, 0, 8);
         _sidebarStack.Controls.Add(_sidebarStep4Image, 0, 9);
@@ -570,6 +596,7 @@ public partial class MainForm : Form
 
         _sidebarDetectedModLabel.Visible = hasDetectedMod;
         _sidebarDetectedModLabel.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
+        FitSidebarDetectedModLabel();
 
         if (hasSelectedAssetModel)
         {

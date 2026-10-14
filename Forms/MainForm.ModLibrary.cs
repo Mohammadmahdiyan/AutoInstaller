@@ -787,10 +787,12 @@ public partial class MainForm : Form
         List<string>? installedFilesOutput = null,
         List<InstallationAssetMapping>? assetMappingsOutput = null)
     {
-        DeleteManifestEntries(manifest);
-
         var isPutInGameFolder = manifest.NormalizedType == "putingamefolder";
         var isDirectGameInstall = manifest.NormalizedType is "putingamefolder" or "putandreplace" or "putandreplaces";
+        if (!isDirectGameInstall)
+        {
+            DeleteManifestEntries(manifest);
+        }
         var installAsModLoader = !isDirectGameInstall
             && (manifest.IsModLoader
                 || manifest.IsSingleAssetPackage
@@ -820,7 +822,7 @@ public partial class MainForm : Form
             {
                 previousPutInGameFolderFiles.UnionWith((previousInstallation.InstalledFiles ?? new List<string>())
                     .Where(path => !string.IsNullOrWhiteSpace(path))
-                    .Select(Path.GetFullPath));
+                    .Select(path => Path.GetFullPath(path)));
             }
         }
 
@@ -932,10 +934,31 @@ public partial class MainForm : Form
             replacementTargets.Values.Where(path => !previousPutInGameFolderFiles.Contains(Path.GetFullPath(path))),
             backupConfiguration);
         var filesToBackupSet = filesToBackup.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var backupPlan = filesToBackup.Count > 0
-            ? BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup)
+
+        // deleteThese: what the mod asks to remove is MOVED to the backup folder (never simply deleted), so
+        // deleting the mod later brings it back (e.g. the new CLEO / ModLoader that an old-CLEO mod replaces).
+        var deleteThisTargets = isDirectGameInstall
+            ? ResolveDeleteThisTargets(manifest)
+            : new List<DeleteThisTarget>();
+        var deleteThisFiles = deleteThisTargets
+            .SelectMany(target => target.IsDirectory
+                ? Directory.GetFiles(target.FullPath, "*", SearchOption.AllDirectories)
+                : new[] { target.FullPath })
+            .Select(path => Path.GetFullPath(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        // Files installed by a previous install of this same package are already backed up (or never existed).
+        var deleteThisFilesToBackup = deleteThisFiles
+            .Where(path => !previousPutInGameFolderFiles.Contains(path))
+            .ToList();
+        var backupCandidates = filesToBackup
+            .Concat(deleteThisFilesToBackup)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var backupPlan = backupCandidates.Count > 0
+            ? BackupStorageService.CreatePlan(_selectedGamePath, modName, backupCandidates)
             : new BackupStoragePlan { HasBackup = true };
-        if (filesToBackup.Count > 0 && !backupPlan.HasBackup)
+        if (backupCandidates.Count > 0 && !backupPlan.HasBackup)
         {
             var chooseAlternative = MessageBox.Show(
                 "The game drive and drive C do not have enough space for the backup.\n\nWould you like to choose another location?",
@@ -950,7 +973,7 @@ public partial class MainForm : Form
                     return false;
                 }
 
-                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, filesToBackup, alternativeRoot);
+                backupPlan = BackupStorageService.CreatePlan(_selectedGamePath, modName, backupCandidates, alternativeRoot);
                 if (!backupPlan.HasBackup)
                 {
                     MessageBox.Show(backupPlan.ErrorMessage ?? "The selected location does not have enough free space.", _appName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -972,6 +995,11 @@ public partial class MainForm : Form
         {
             var records = new List<ReplaceInstallationRecord>();
             var installedDestinationFiles = new List<string>();
+            var deleteThisBackups = await BackupAndRemoveDeleteThisAsync(
+                deleteThisTargets,
+                deleteThisFilesToBackup,
+                modName,
+                backupPlan);
             for (var index = 0; index < packageFiles.Count; index++)
             {
                 var sourcePath = packageFiles[index];
@@ -1031,6 +1059,13 @@ public partial class MainForm : Form
                             backupPlan.BackupRoot);
                     }
 
+                    if (string.IsNullOrWhiteSpace(backupFilePath)
+                        && deleteThisBackups.TryGetValue(Path.GetFullPath(destinationPath), out var movedBackupPath))
+                    {
+                        // The original was moved to the backup folder by deleteThese before this copy.
+                        backupFilePath = movedBackupPath;
+                    }
+
                     records.Add(new ReplaceInstallationRecord
                     {
                         BackupId = Guid.NewGuid().ToString("N"),
@@ -1038,7 +1073,7 @@ public partial class MainForm : Form
                         GameFolder = _selectedGamePath,
                         OriginalFilePath = destinationPath,
                         BackupFilePath = backupFilePath,
-                        BackupDirectoryPath = filesToBackup.Count > 0 && backupPlan.HasBackup
+                        BackupDirectoryPath = backupCandidates.Count > 0 && backupPlan.HasBackup
                             ? Path.Combine(backupPlan.BackupRoot, ModPackageService.SanitizeFolderName(modName))
                             : string.Empty,
                         InstalledModFile = sourcePath,
@@ -1063,7 +1098,7 @@ public partial class MainForm : Form
                 var gameRootPrefix = Path.TrimEndingDirectorySeparator(Path.GetFullPath(_selectedGamePath))
                     + Path.DirectorySeparatorChar;
                 var currentInstallFiles = installedDestinationFiles
-                    .Select(Path.GetFullPath)
+                    .Select(path => Path.GetFullPath(path))
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
                 foreach (var previousFile in previousPutInGameFolderFiles)
                 {
@@ -1076,6 +1111,27 @@ public partial class MainForm : Form
 
                     File.Delete(previousFile);
                 }
+            }
+
+            var recordedOriginals = records
+                .Select(record => Path.GetFullPath(record.OriginalFilePath))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var removed in deleteThisBackups.Where(item => !recordedOriginals.Contains(item.Key)))
+            {
+                records.Add(new ReplaceInstallationRecord
+                {
+                    BackupId = Guid.NewGuid().ToString("N"),
+                    ModName = modName,
+                    GameFolder = _selectedGamePath,
+                    OriginalFilePath = removed.Key,
+                    BackupFilePath = removed.Value,
+                    BackupDirectoryPath = Path.Combine(backupPlan.BackupRoot, ModPackageService.SanitizeFolderName(modName)),
+                    InstalledModFile = string.Empty,
+                    InstallationType = manifest.NormalizedType,
+                    ReplacementSucceeded = true,
+                    OriginalBackupAvailable = true,
+                    StatusMessage = "Removed by deleteThese and backed up."
+                });
             }
 
             foreach (var record in records)
@@ -1200,6 +1256,109 @@ public partial class MainForm : Form
     private string GetSafeGamePath(string relativePath)
     {
         return GetSafePath(_selectedGamePath, relativePath, "Game path");
+    }
+
+    private sealed record DeleteThisTarget(string FullPath, bool IsDirectory);
+
+    /// <summary>Existing files/folders requested by deleteThis/deleteThese (always inside the game folder).</summary>
+    private List<DeleteThisTarget> ResolveDeleteThisTargets(GtaSaModManager.Models.ModManifest manifest)
+    {
+        var targets = new List<DeleteThisTarget>();
+        if (!manifest.HasDeleteThis)
+        {
+            return targets;
+        }
+
+        foreach (var relativePath in manifest.DeleteThis
+                     .Where(path => !string.IsNullOrWhiteSpace(path))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            try
+            {
+                var fullPath = GetSafeGamePath(relativePath.Trim());
+                if (File.Exists(fullPath))
+                {
+                    targets.Add(new DeleteThisTarget(fullPath, false));
+                }
+                else if (Directory.Exists(fullPath))
+                {
+                    targets.Add(new DeleteThisTarget(fullPath, true));
+                }
+            }
+            catch (InvalidDataException ex)
+            {
+                MessageBox.Show(
+                    "Ignored an invalid deleteThese path: " + relativePath + Environment.NewLine + ex.Message,
+                    _appName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+        }
+
+        return targets;
+    }
+
+    /// <summary>
+    /// Copies every file that deleteThese removes into the mod's backup folder, then removes the originals.
+    /// Returns original path -> backup path. Without a backup plan (the user accepted "no backup") the files
+    /// are removed without a copy, exactly like the old behaviour.
+    /// </summary>
+    private async Task<Dictionary<string, string>> BackupAndRemoveDeleteThisAsync(
+        IReadOnlyList<DeleteThisTarget> targets,
+        IReadOnlyList<string> filesToBackup,
+        string modName,
+        BackupStoragePlan backupPlan)
+    {
+        var backups = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (targets.Count == 0)
+        {
+            return backups;
+        }
+
+        if (backupPlan.HasBackup && !string.IsNullOrWhiteSpace(backupPlan.BackupRoot))
+        {
+            foreach (var file in filesToBackup)
+            {
+                if (!File.Exists(file))
+                {
+                    continue;
+                }
+
+                var backupPath = await ModPackageService.BackupOriginalFileForReplacementAsync(
+                    _selectedGamePath,
+                    file,
+                    modName,
+                    backupPlan.BackupRoot);
+                if (File.Exists(backupPath))
+                {
+                    backups[Path.GetFullPath(file)] = backupPath;
+                }
+            }
+        }
+
+        foreach (var target in targets)
+        {
+            // Only remove what is safely backed up (or everything when the user chose "no backup").
+            if (target.IsDirectory)
+            {
+                var allBackedUp = !backupPlan.HasBackup
+                    || Directory.GetFiles(target.FullPath, "*", SearchOption.AllDirectories)
+                        .Select(path => Path.GetFullPath(path))
+                        .All(path => backups.ContainsKey(path) || !filesToBackup.Contains(path, StringComparer.OrdinalIgnoreCase));
+                if (allBackedUp && Directory.Exists(target.FullPath))
+                {
+                    Directory.Delete(target.FullPath, true);
+                }
+            }
+            else if (File.Exists(target.FullPath)
+                     && (!backupPlan.HasBackup || backups.ContainsKey(Path.GetFullPath(target.FullPath))
+                         || !filesToBackup.Contains(target.FullPath, StringComparer.OrdinalIgnoreCase)))
+            {
+                File.Delete(target.FullPath);
+            }
+        }
+
+        return backups;
     }
 
     private void DeleteManifestEntries(GtaSaModManager.Models.ModManifest manifest)

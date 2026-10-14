@@ -660,6 +660,11 @@ public partial class MainForm
             Directory.Delete(directory, recursive: true);
         }
 
+        PruneEmptyParentDirectories(
+            entry.Files.Concat(records.Select(record => record.OriginalFilePath))
+                .Where(path => !string.IsNullOrWhiteSpace(path)),
+            _selectedGamePath);
+
         var remaining = ModPackageService.LoadReplacementRecords();
         remaining.RemoveAll(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase)
             && !string.IsNullOrWhiteSpace(record.GameFolder)

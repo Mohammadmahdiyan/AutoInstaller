@@ -101,6 +101,12 @@ public partial class MainForm : Form
 
         if (manifest.NormalizedType is "putinmodloader" or "putingamefolder" or "putandreplace" or "putandreplaces" or "vehicleandskinandweapon" or "vehiclesandskinsandweapons")
         {
+            if (manifest.NormalizedType is "putandreplace" or "putandreplaces"
+                && !await PrepareExistingReplacingInstallationAsync(modName, packageRoot, manifest.NormalizedType))
+            {
+                return;
+            }
+
             GoToStep(WizardStep.Step4);
             await InstallTypedPackageAsync(payloadPath, modName, packageRoot, manifest);
             return;
@@ -852,6 +858,17 @@ public partial class MainForm : Form
                 }
             }
 
+            if ((isPutAndReplacesPackage || isPutAndReplacePackage) && !_isInstallingOptionalPackage)
+            {
+                if (!await PrepareExistingReplacingInstallationAsync(
+                        _selectedModName,
+                        _selectedModPackageRoot,
+                        _selectedModManifest.NormalizedType))
+                {
+                    return;
+                }
+            }
+
             if (!await EnsureDependenciesBeforeInstallAsync())
             {
                 return;
@@ -1322,16 +1339,26 @@ public partial class MainForm : Form
         }
     }
 
-    private async Task<bool> PrepareExistingReplacingInstallationAsync(string modName, string packageRoot)
+    /// <summary>
+    /// Shows the "Mod already installed" window (Reinstall / Delete / Cancel) for the packages that replace
+    /// files inside the game folder (Replacing, PutAndReplace, PutAndReplaces).
+    /// Reinstall and Delete both restore the backed up originals first, so the next install never backs up the
+    /// mod's own files over the real originals.
+    /// Returns true when the caller must continue with a fresh install.
+    /// </summary>
+    private async Task<bool> PrepareExistingReplacingInstallationAsync(
+        string modName,
+        string packageRoot,
+        string installationType = "replacing")
     {
         var installation = ModLoaderService.FindGameInstallationRecord(
             _selectedGamePath,
-            "replacing",
+            installationType,
             modName,
             packageRoot);
         var hasReplacementHistory = ModPackageService.LoadReplacementRecords().Any(record =>
             string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(record.InstallationType, "replacing", StringComparison.OrdinalIgnoreCase)
+            && string.Equals(record.InstallationType, installationType, StringComparison.OrdinalIgnoreCase)
             && !string.IsNullOrWhiteSpace(record.GameFolder)
             && string.Equals(
                 Path.GetFullPath(record.GameFolder),

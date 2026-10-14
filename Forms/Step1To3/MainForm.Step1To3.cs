@@ -631,6 +631,7 @@ public partial class MainForm : Form
             {
                 _sidebarDetectedModLabel.Text = _localizationService.GetString("DetectedMod", "Detected mod") + ": " + _selectedModName;
                 _sidebarDetectedModLabel.Visible = true;
+                FitSidebarDetectedModLabel();
             }
 
             _detectedModTimer.Stop();
@@ -652,10 +653,11 @@ public partial class MainForm : Form
                     var packageRoot = _selectedModPackageRoot;
                     var payloadPath = _selectedModPayloadPath;
                     var mediaRoot = previewRoot;
+                    var previewManifest = _selectedModManifest;
                     var checkTask = Task.Run(() => (
                         ExistingInstallation: FindExistingAssetInstallation(packageRoot),
                         ReadmePath: FindReadmeFile(mediaRoot),
-                        ImageFiles: FindImageFiles(mediaRoot)));
+                        ImageFiles: FindStep3PreviewMedia(mediaRoot, previewManifest)));
                     await Task.WhenAll(checkTask, Task.Delay(1000));
                     var checkResult = await checkTask;
                     _selectedReadmePath = checkResult.ReadmePath;
@@ -680,7 +682,7 @@ public partial class MainForm : Form
             else
             {
                 _selectedReadmePath = FindReadmeFile(previewRoot);
-                _selectedImageFiles = FindImageFiles(previewRoot);
+                _selectedImageFiles = FindStep3PreviewMedia(previewRoot, _selectedModManifest);
                 UpdateSidebarState();
                 RefreshStep3Images(panel, previewRoot);
             }

@@ -330,6 +330,14 @@ public partial class MainForm
                 }
             }
 
+            // Remove the folders the mod created and that are now empty (top level folders such as
+            // cleo / modloader are never removed, so the other mods stored inside them stay untouched).
+            PruneEmptyParentDirectories(
+                (installationEntry?.InstalledFiles ?? new List<string>())
+                    .Concat(records.Select(record => record.OriginalFilePath))
+                    .Where(path => !string.IsNullOrWhiteSpace(path)),
+                gameRoot);
+
             var installationRecordRemoved = ModLoaderService.RemoveGameInstallationRecord(gameRoot, modName);
 
             var remaining = ModPackageService.LoadReplacementRecords();

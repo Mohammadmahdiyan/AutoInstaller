@@ -1,4 +1,834 @@
-1. وقتی برنامه رو باز میکنیم صدای ارور ویندوز ده میده میاد چهار بار اینو بردار
+1. مشکل PRS حل نشد 
+داخل پوشه modloader و cleo در reqFile
+
+├── 📁 01-CLEO
+│   ├── 📄 CLEO+.cleo
+│   ├── 📄 FileSystemOperations.cleo
+│   ├── 📄 IniFiles.cleo
+│   ├── 📄 IntOperations.cleo
+│   ├── 📄 memory2048.cs
+│   └── 📄 RZL-Trainer.cs
+├── 📁 02-modloader
+│   ├── 📁 01-.data
+│   │   ├── 📁 01-licenses\...
+│   │   ├── 📁 02-plugins
+│   │   │   └── 📁 gta3
+│   │   │       ├── 📄 std.asi.dll
+│   │   │       ├── 📄 std.asi.md
+│   │   │       ├── 📄 std.bank.dll
+│   │   │       ├── 📄 std.bank.md
+│   │   │       ├── 📄 std.data.dll
+│   │   │       ├── 📄 std.data.md
+│   │   │       ├── 📄 std.fx.dll
+│   │   │       ├── 📄 std.fx.md
+│   │   │       ├── 📄 std.movies.dll
+│   │   │       ├── 📄 std.movies.md
+│   │   │       ├── 📄 std.scm.dll
+│   │   │       ├── 📄 std.scm.md
+│   │   │       ├── 📄 std.sprites.dll
+│   │   │       ├── 📄 std.sprites.md
+│   │   │       ├── 📄 std.stream.dll
+│   │   │       ├── 📄 std.stream.md
+│   │   │       ├── 📄 std.text.dll
+│   │   │       ├── 📄 std.text.md
+│   │   │       ├── 📄 std.tracks.dll
+│   │   │       └── 📄 std.tracks.md
+│   │   ├── 📁 03-text
+│   │   │   ├── 📁 01-1033
+│   │   │   │   └── 📄 menu.fxt
+│   │   │   ├── 📁 02-1046
+│   │   │   │   └── 📄 menu.fxt
+│   │   │   └── 📁 03-2070
+│   │   │       └── 📄 menu.fxt
+│   │   ├── 📄 CHANGELOG.md
+│   │   ├── 📄 Command Line Arguments.md
+│   │   ├── 📄 Leia-me.md
+│   │   ├── 📄 Profiles.md
+│   │   └── 📄 Readme.md
+│   └── 📁 02-_ESSENTIALS
+│       ├── 📁 01-FramerateVigilante
+│       │   ├── 📄 Framerate Vigilante.url
+│       │   ├── 📄 FramerateVigilante.ini
+│       │   └── 📄 FramerateVigilante.SA.asi
+│       ├── 📁 02-Open Limit Adjuster
+│       │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│       │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│       ├── 📁 03-RepairGTA
+│       │   ├── 📄 RepairGTA.SA.asi
+│       │   └── 📄 RepairGTA.url
+│       ├── 📁 04-RunDLL32 Fix
+│       │   ├── 📄 RunDLL32 Fix.url
+│       │   └── 📄 rundll32exefix.asi
+│       ├── 📁 05-SilentPatch
+│       │   ├── 📄 SilentPatch.url
+│       │   ├── 📄 SilentPatchSA.asi
+│       │   └── 📄 SilentPatchSA.ini
+│       ├── 📁 06-Widescreen Fix by ThirteenAG
+│       │   ├── 📄 GTASA.WidescreenFix.asi
+│       │   ├── 📄 GTASA.WidescreenFix.ini
+│       │   └── 📄 Widescreen Fix.url
+│       └── 📁 07-Windowed Mode
+│           ├── 📄 III.VC.SA.WindowedMode.asi
+│           └── 📄 III.VC.SA.WindowedMode.ini
+├── 📄 CLEO.asi
+├── 📄 LibraryTree.txt
+└── 📄 modloader.asi
+
+────────────────────────────
+📚 داخل Ben10 Ultimate Alien Mod By KING OF GTA
+
+├── 📁 01-cleo
+│   ├── 📁 cleo_text
+│   │   ├── 📄 example.fxt
+│   │   └── 📄 rcf_ctp_names.fxt
+│   ├── 📄 FileSystemOperations.cleo
+│   ├── 📄 fpsunlimiter.cs
+│   ├── 📄 IniFiles.cleo
+│   ├── 📄 IntOperations.cleo
+│   ├── 📄 MemFix.cs
+│   ├── 📄 memory1024.cs
+│   ├── 📄 memory2048.cs
+│   ├── 📄 memory512.cs
+│   ├── 📄 SightDistance_by_0x688.cleo
+│   ├── 📄 StreamIniExtender.cs
+│   └── 📄 test tree remove.cs
+├── 📁 02-cleo_readme
+│   ├── 📄 ASI Loader ReadMe.txt
+│   ├── 📄 CHANGELOG.md
+│   └── 📄 README.md
+├── 📁 03-cleo_sdk
+│   ├── 📁 demo_plugins
+│   │   ├── 📁 01-FileSystemOperations
+│   │   │   └── 📁 FileSystemOperations
+│   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   ├── 📁 02-IniFiles
+│   │   │   └── 📁 IniFiles
+│   │   │       ├── 📄 IniFiles.cpp
+│   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   └── 📁 03-IntOperations
+│   │       └── 📁 IntOperations
+│   │           ├── 📄 IntOperations.cpp
+│   │           ├── 📄 IntOperations.vcxproj
+│   │           └── 📄 IntOperations.vcxproj.filters
+│   ├── 📄 CLEO.h
+│   └── 📄 CLEO.lib
+├── 📁 04-modloader
+│   ├── 📁 01-.data
+│   │   ├── 📁 01-licenses
+│   │   │   ├── 📄 boost.txt
+│   │   │   ├── 📄 cereal.txt
+│   │   │   ├── 📄 tinympl.txt
+│   │   │   └── 📄 utf8-cpp.txt
+│   │   ├── 📁 02-plugins
+│   │   │   ├── 📁 gta3
+│   │   │   │   ├── 📄 std.asi.dll
+│   │   │   │   ├── 📄 std.asi.md
+│   │   │   │   ├── 📄 std.bank.dll
+│   │   │   │   ├── 📄 std.bank.md
+│   │   │   │   ├── 📄 std.data.dll
+│   │   │   │   ├── 📄 std.data.md
+│   │   │   │   ├── 📄 std.fx.dll
+│   │   │   │   ├── 📄 std.fx.md
+│   │   │   │   ├── 📄 std.movies.dll
+│   │   │   │   ├── 📄 std.movies.md
+│   │   │   │   ├── 📄 std.scm.dll
+│   │   │   │   ├── 📄 std.scm.md
+│   │   │   │   ├── 📄 std.sprites.dll
+│   │   │   │   ├── 📄 std.sprites.md
+│   │   │   │   ├── 📄 std.stream.dll
+│   │   │   │   ├── 📄 std.stream.md
+│   │   │   │   ├── 📄 std.text.dll
+│   │   │   │   ├── 📄 std.text.md
+│   │   │   │   ├── 📄 std.tracks.dll
+│   │   │   │   └── 📄 std.tracks.md
+│   │   │   └── 📄 plugins.ini
+│   │   ├── 📁 03-text
+│   │   │   ├── 📁 01-1033
+│   │   │   │   └── 📄 menu.fxt
+│   │   │   └── 📁 02-1046
+│   │   │       └── 📄 menu.fxt
+│   │   ├── 📄 CHANGELOG.md
+│   │   ├── 📄 Command Line Arguments.md
+│   │   ├── 📄 config.ini
+│   │   ├── 📄 Leia-me.md
+│   │   ├── 📄 Profiles.md
+│   │   └── 📄 Readme.md
+│   ├── 📁 02-Ben10 Mod
+│   │   ├── 📁 01-Ben Transform
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   ├── 📁 SOUND
+│   │   │   │   │   ├── 📄 arbol.mp3
+│   │   │   │   │   ├── 📄 bigchill.wav
+│   │   │   │   │   ├── 📄 ghostfreak.wav
+│   │   │   │   │   ├── 📄 houmangsour.wav
+│   │   │   │   │   ├── 📄 rath.wav
+│   │   │   │   │   ├── 📄 swampfire.wav
+│   │   │   │   │   ├── 📄 tesh.mp3
+│   │   │   │   │   ├── 📄 transformation.wav
+│   │   │   │   │   └── 📄 xlr8.wav
+│   │   │   │   └── 📄 Ben10.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 ben10.dff
+│   │   │       ├── 📄 ben10.txd
+│   │   │       └── 📄 transform.ifp
+│   │   ├── 📁 02-bigchill
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 bigchill.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 big.dff
+│   │   │       ├── 📄 big.txd
+│   │   │       ├── 📄 dead_mantxd.txd
+│   │   │       ├── 📄 KMB_DEADTORSO.dff
+│   │   │       └── 📄 ul_bi.ifp
+│   │   ├── 📁 03-ghostfreak
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 ghostfreak.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 Ghost.dff
+│   │   │       └── 📄 Ghost.txd
+│   │   ├── 📁 04-houmangsour
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 houmangsour.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 Humng.dff
+│   │   │       └── 📄 Humng.txd
+│   │   ├── 📁 05-rath
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 rath.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 rath.dff
+│   │   │       └── 📄 rath.txd
+│   │   ├── 📁 06-swampfire
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   └── 📄 swampfire.cs
+│   │   │   ├── 📁 02-data
+│   │   │   │   ├── 📁 maps
+│   │   │   │   │   └── 📁 generic
+│   │   │   │   │       └── 📄 procobj.IDE
+│   │   │   │   └── 📄 procobj.dat
+│   │   │   └── 📁 03-gta3.img
+│   │   │       ├── 📄 2han.ifp
+│   │   │       ├── 📄 dead_tree_11.dff
+│   │   │       ├── 📄 dead_tree_11.txd
+│   │   │       ├── 📄 dead_tree_19.dff
+│   │   │       ├── 📄 dead_tree_19.txd
+│   │   │       ├── 📄 DEAD_TREE_20.dff
+│   │   │       ├── 📄 FFIRE.ifp
+│   │   │       ├── 📄 gun_vibe2.dff
+│   │   │       ├── 📄 gun_vibe2.txd
+│   │   │       ├── 📄 kkid.ifp
+│   │   │       ├── 📄 levi.ifp
+│   │   │       ├── 📄 Madara.ifp
+│   │   │       ├── 📄 mopincho.txd
+│   │   │       ├── 📄 Susano1.dff
+│   │   │       ├── 📄 Susano1.txd
+│   │   │       ├── 📄 Swamp.dff
+│   │   │       ├── 📄 Swamp.txd
+│   │   │       └── 📄 ul_sw.ifp
+│   │   └── 📁 07-xlr8
+│   │       ├── 📁 01-CLEO
+│   │       │   ├── 📁 SKILL
+│   │       │   │   └── 📁 xlr8
+│   │       │   │       └── 📄 RUN.xlr8
+│   │       │   └── 📄 xlr8.cs
+│   │       └── 📁 02-gta3.img
+│   │           ├── 📄 Ninja1.ifp
+│   │           ├── 📄 VMAFF1.dff
+│   │           └── 📄 VMAFF1.txd
+│   ├── 📄 modloader.ini
+│   └── 📄 modloader.log
+├── 📁 05-scripts
+│   ├── 📄 flickr.asi
+│   ├── 📄 global.ini
+│   ├── 📄 limit_adjuster_gta3vcsa.asi
+│   ├── 📄 limit_adjuster_gta3vcsa.ini
+│   └── 📄 NoShadows.asi
+├── 📄 bass.dll
+├── 📄 cleo.asi
+├── 📄 LibraryTree.txt
+├── 📄 modloader.asi
+├── 📄 vorbisFile.dll
+├── 📄 vorbisHooked.dll
+└── 📄 Z-ReadMe.txt
+
+────────────────────────────
+📚 داخل پوشه بازی بعد از نصب 
+
+├── 📁 01-.ModManager
+│   ├── 📁 backup
+│   │   └── 📁 Ben10 Ultimate Alien Mod By KING OF GTA
+│   │       ├── 📁 01-cleo
+│   │       │   ├── 📄 fpsunlimiter.cs
+│   │       │   ├── 📄 MemFix.cs
+│   │       │   ├── 📄 memory1024.cs
+│   │       │   ├── 📄 memory2048.cs
+│   │       │   ├── 📄 memory512.cs
+│   │       │   ├── 📄 SightDistance_by_0x688.cleo
+│   │       │   ├── 📄 StreamIniExtender.cs
+│   │       │   └── 📄 test tree remove.cs
+│   │       ├── 📁 02-cleo_readme
+│   │       │   └── 📄 CHANGELOG.md
+│   │       ├── 📁 03-cleo_sdk
+│   │       │   ├── 📁 demo_plugins
+│   │       │   │   ├── 📁 01-FileSystemOperations
+│   │       │   │   │   └── 📁 FileSystemOperations
+│   │       │   │   │       ├── 📄 FileSystemOperations.cpp
+│   │       │   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │       │   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │       │   │   ├── 📁 02-IniFiles
+│   │       │   │   │   └── 📁 IniFiles
+│   │       │   │   │       ├── 📄 IniFiles.cpp
+│   │       │   │   │       ├── 📄 IniFiles.vcxproj
+│   │       │   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │       │   │   └── 📁 03-IntOperations
+│   │       │   │       └── 📁 IntOperations
+│   │       │   │           ├── 📄 IntOperations.cpp
+│   │       │   │           ├── 📄 IntOperations.vcxproj
+│   │       │   │           └── 📄 IntOperations.vcxproj.filters
+│   │       │   ├── 📄 CLEO.h
+│   │       │   └── 📄 CLEO.lib
+│   │       ├── 📁 04-modloader
+│   │       │   └── 📁 Ben10 Mod
+│   │       │       ├── 📁 01-Ben Transform
+│   │       │       │   ├── 📁 01-cleo
+│   │       │       │   │   ├── 📁 SOUND
+│   │       │       │   │   │   ├── 📄 arbol.mp3
+│   │       │       │   │   │   ├── 📄 bigchill.wav
+│   │       │       │   │   │   ├── 📄 ghostfreak.wav
+│   │       │       │   │   │   ├── 📄 houmangsour.wav
+│   │       │       │   │   │   ├── 📄 rath.wav
+│   │       │       │   │   │   ├── 📄 swampfire.wav
+│   │       │       │   │   │   ├── 📄 tesh.mp3
+│   │       │       │   │   │   ├── 📄 transformation.wav
+│   │       │       │   │   │   └── 📄 xlr8.wav
+│   │       │       │   │   └── 📄 Ben10.cs
+│   │       │       │   └── 📁 02-gta3.img
+│   │       │       │       ├── 📄 ben10.dff
+│   │       │       │       ├── 📄 ben10.txd
+│   │       │       │       └── 📄 transform.ifp
+│   │       │       ├── 📁 02-bigchill
+│   │       │       │   ├── 📁 01-CLEO
+│   │       │       │   │   └── 📄 bigchill.cs
+│   │       │       │   └── 📁 02-gta3.img
+│   │       │       │       ├── 📄 big.dff
+│   │       │       │       ├── 📄 big.txd
+│   │       │       │       ├── 📄 dead_mantxd.txd
+│   │       │       │       ├── 📄 KMB_DEADTORSO.dff
+│   │       │       │       └── 📄 ul_bi.ifp
+│   │       │       ├── 📁 03-ghostfreak
+│   │       │       │   ├── 📁 01-CLEO
+│   │       │       │   │   └── 📄 ghostfreak.cs
+│   │       │       │   └── 📁 02-gta3.img
+│   │       │       │       ├── 📄 Ghost.dff
+│   │       │       │       └── 📄 Ghost.txd
+│   │       │       ├── 📁 04-houmangsour
+│   │       │       │   ├── 📁 01-CLEO
+│   │       │       │   │   └── 📄 houmangsour.cs
+│   │       │       │   └── 📁 02-gta3.img
+│   │       │       │       ├── 📄 Humng.dff
+│   │       │       │       └── 📄 Humng.txd
+│   │       │       ├── 📁 05-rath
+│   │       │       │   ├── 📁 01-CLEO
+│   │       │       │   │   └── 📄 rath.cs
+│   │       │       │   └── 📁 02-gta3.img
+│   │       │       │       ├── 📄 rath.dff
+│   │       │       │       └── 📄 rath.txd
+│   │       │       ├── 📁 06-swampfire
+│   │       │       │   ├── 📁 01-cleo
+│   │       │       │   │   └── 📄 swampfire.cs
+│   │       │       │   ├── 📁 02-data
+│   │       │       │   │   ├── 📁 maps
+│   │       │       │   │   │   └── 📁 generic
+│   │       │       │   │   │       └── 📄 procobj.IDE
+│   │       │       │   │   └── 📄 procobj.dat
+│   │       │       │   └── 📁 03-gta3.img
+│   │       │       │       ├── 📄 2han.ifp
+│   │       │       │       ├── 📄 dead_tree_11.dff
+│   │       │       │       ├── 📄 dead_tree_11.txd
+│   │       │       │       ├── 📄 dead_tree_19.dff
+│   │       │       │       ├── 📄 dead_tree_19.txd
+│   │       │       │       ├── 📄 DEAD_TREE_20.dff
+│   │       │       │       ├── 📄 FFIRE.ifp
+│   │       │       │       ├── 📄 gun_vibe2.dff
+│   │       │       │       ├── 📄 gun_vibe2.txd
+│   │       │       │       ├── 📄 kkid.ifp
+│   │       │       │       ├── 📄 levi.ifp
+│   │       │       │       ├── 📄 Madara.ifp
+│   │       │       │       ├── 📄 mopincho.txd
+│   │       │       │       ├── 📄 Susano1.dff
+│   │       │       │       ├── 📄 Susano1.txd
+│   │       │       │       ├── 📄 Swamp.dff
+│   │       │       │       ├── 📄 Swamp.txd
+│   │       │       │       └── 📄 ul_sw.ifp
+│   │       │       └── 📁 07-xlr8
+│   │       │           ├── 📁 01-CLEO
+│   │       │           │   ├── 📁 SKILL
+│   │       │           │   │   └── 📁 xlr8
+│   │       │           │   │       └── 📄 RUN.xlr8
+│   │       │           │   └── 📄 xlr8.cs
+│   │       │           └── 📁 02-gta3.img
+│   │       │               ├── 📄 Ninja1.ifp
+│   │       │               ├── 📄 VMAFF1.dff
+│   │       │               └── 📄 VMAFF1.txd
+│   │       ├── 📁 05-scripts
+│   │       │   ├── 📄 flickr.asi
+│   │       │   ├── 📄 global.ini
+│   │       │   ├── 📄 limit_adjuster_gta3vcsa.asi
+│   │       │   ├── 📄 limit_adjuster_gta3vcsa.ini
+│   │       │   └── 📄 NoShadows.asi
+│   │       ├── 📄 bass.dll
+│   │       ├── 📄 vorbisFile.dll
+│   │       └── 📄 vorbisHooked.dll
+│   ├── 📄 BackupStorageIdentity.json
+│   └── 📄 installations.json
+├── 📁 02-CLEO
+│   ├── 📁 01-cleo_text
+│   │   ├── 📄 example.fxt
+│   │   └── 📄 rcf_ctp_names.fxt
+│   ├── 📁 02-RZL-Trainer
+│   │   ├── 📁 01-Music
+│   │   │   └── 📄 .File Name Rules.txt
+│   │   ├── 📁 02-SoundFX
+│   │   │   ├── 📄 .File Name Rules.txt
+│   │   │   ├── 📄 GTA SA Accept FX.MP3
+│   │   │   ├── 📄 GTA SA Back FX.MP3
+│   │   │   ├── 📄 GTA SA Navigation FX.MP3
+│   │   │   ├── 📄 GTA SA Notification FX.MP3
+│   │   │   ├── 📄 GTA SA Start FX.MP3
+│   │   │   ├── 📄 GTA V Accept FX.MP3
+│   │   │   ├── 📄 GTA V Back FX.MP3
+│   │   │   ├── 📄 GTA V Navigation FX.MP3
+│   │   │   ├── 📄 GTA V Notification FX.MP3
+│   │   │   ├── 📄 GTA V Online Notification FX.MP3
+│   │   │   ├── 📄 RDR 2 Accept FX.MP3
+│   │   │   ├── 📄 RDR 2 Back FX.MP3
+│   │   │   ├── 📄 RDR 2 High Honor Notification FX.MP3
+│   │   │   └── 📄 RDR 2 Navigation FX.MP3
+│   │   ├── 📄 Saved Teleport.ini
+│   │   └── 📄 Saved Vehicle.ini
+│   ├── 📄 FileSystemOperations.cleo
+│   ├── 📄 fpsunlimiter.cs
+│   ├── 📄 IniFiles.cleo
+│   ├── 📄 IntOperations.cleo
+│   ├── 📄 MemFix.cs
+│   ├── 📄 memory1024.cs
+│   ├── 📄 memory2048.cs
+│   ├── 📄 memory512.cs
+│   ├── 📄 RZL-Trainer.cs
+│   ├── 📄 RZL-Trainer.ini
+│   ├── 📄 SightDistance_by_0x688.cleo
+│   ├── 📄 StreamIniExtender.cs
+│   └── 📄 test tree remove.cs
+├── 📁 03-cleo_readme
+│   └── 📄 CHANGELOG.md
+├── 📁 04-cleo_sdk
+│   ├── 📁 demo_plugins
+│   │   ├── 📁 01-FileSystemOperations
+│   │   │   └── 📁 FileSystemOperations
+│   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   ├── 📁 02-IniFiles
+│   │   │   └── 📁 IniFiles
+│   │   │       ├── 📄 IniFiles.cpp
+│   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   └── 📁 03-IntOperations
+│   │       └── 📁 IntOperations
+│   │           ├── 📄 IntOperations.cpp
+│   │           ├── 📄 IntOperations.vcxproj
+│   │           └── 📄 IntOperations.vcxproj.filters
+│   ├── 📄 CLEO.h
+│   └── 📄 CLEO.lib
+├── 📁 05-modloader
+│   ├── 📁 01-.data
+│   │   ├── 📁 01-licenses
+│   │   │   ├── 📄 boost.txt
+│   │   │   ├── 📄 cereal.txt
+│   │   │   ├── 📄 tinympl.txt
+│   │   │   └── 📄 utf8-cpp.txt
+│   │   ├── 📁 02-plugins
+│   │   │   ├── 📁 gta3
+│   │   │   │   ├── 📄 std.asi.dll
+│   │   │   │   ├── 📄 std.asi.md
+│   │   │   │   ├── 📄 std.bank.dll
+│   │   │   │   ├── 📄 std.bank.md
+│   │   │   │   ├── 📄 std.data.dll
+│   │   │   │   ├── 📄 std.data.md
+│   │   │   │   ├── 📄 std.fx.dll
+│   │   │   │   ├── 📄 std.fx.md
+│   │   │   │   ├── 📄 std.movies.dll
+│   │   │   │   ├── 📄 std.movies.md
+│   │   │   │   ├── 📄 std.scm.dll
+│   │   │   │   ├── 📄 std.scm.md
+│   │   │   │   ├── 📄 std.sprites.dll
+│   │   │   │   ├── 📄 std.sprites.md
+│   │   │   │   ├── 📄 std.stream.dll
+│   │   │   │   ├── 📄 std.stream.md
+│   │   │   │   ├── 📄 std.text.dll
+│   │   │   │   ├── 📄 std.text.md
+│   │   │   │   ├── 📄 std.tracks.dll
+│   │   │   │   └── 📄 std.tracks.md
+│   │   │   └── 📄 plugins.ini
+│   │   ├── 📁 03-text
+│   │   │   ├── 📁 01-1033
+│   │   │   │   └── 📄 menu.fxt
+│   │   │   └── 📁 02-1046
+│   │   │       └── 📄 menu.fxt
+│   │   ├── 📄 CHANGELOG.md
+│   │   ├── 📄 Command Line Arguments.md
+│   │   ├── 📄 config.ini
+│   │   ├── 📄 Leia-me.md
+│   │   └── 📄 Profiles.md
+│   ├── 📁 02-_ESSENTIALS
+│   │   ├── 📁 01-FramerateVigilante
+│   │   │   ├── 📄 Framerate Vigilante.url
+│   │   │   ├── 📄 FramerateVigilante.ini
+│   │   │   └── 📄 FramerateVigilante.SA.asi
+│   │   ├── 📁 02-Open Limit Adjuster
+│   │   │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   │   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   ├── 📁 03-RepairGTA
+│   │   │   ├── 📄 RepairGTA.log
+│   │   │   ├── 📄 RepairGTA.SA.asi
+│   │   │   └── 📄 RepairGTA.url
+│   │   ├── 📁 04-RunDLL32 Fix
+│   │   │   ├── 📄 RunDLL32 Fix.url
+│   │   │   └── 📄 rundll32exefix.asi
+│   │   ├── 📁 05-SilentPatch
+│   │   │   ├── 📄 SilentPatch.url
+│   │   │   ├── 📄 SilentPatchSA.asi
+│   │   │   └── 📄 SilentPatchSA.ini
+│   │   ├── 📁 06-Widescreen Fix by ThirteenAG
+│   │   │   ├── 📄 GTASA.WidescreenFix.asi
+│   │   │   ├── 📄 GTASA.WidescreenFix.ini
+│   │   │   └── 📄 Widescreen Fix.url
+│   │   └── 📁 07-Windowed Mode
+│   │       ├── 📄 III.VC.SA.WindowedMode.asi
+│   │       └── 📄 III.VC.SA.WindowedMode.ini
+│   ├── 📁 03-Ben10 Mod
+│   │   ├── 📁 01-Ben Transform
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   ├── 📁 SOUND
+│   │   │   │   │   ├── 📄 arbol.mp3
+│   │   │   │   │   ├── 📄 bigchill.wav
+│   │   │   │   │   ├── 📄 ghostfreak.wav
+│   │   │   │   │   ├── 📄 houmangsour.wav
+│   │   │   │   │   ├── 📄 rath.wav
+│   │   │   │   │   ├── 📄 swampfire.wav
+│   │   │   │   │   ├── 📄 tesh.mp3
+│   │   │   │   │   ├── 📄 transformation.wav
+│   │   │   │   │   └── 📄 xlr8.wav
+│   │   │   │   └── 📄 Ben10.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 ben10.dff
+│   │   │       ├── 📄 ben10.txd
+│   │   │       └── 📄 transform.ifp
+│   │   ├── 📁 02-bigchill
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 bigchill.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 big.dff
+│   │   │       ├── 📄 big.txd
+│   │   │       ├── 📄 dead_mantxd.txd
+│   │   │       ├── 📄 KMB_DEADTORSO.dff
+│   │   │       └── 📄 ul_bi.ifp
+│   │   ├── 📁 03-ghostfreak
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 ghostfreak.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 Ghost.dff
+│   │   │       └── 📄 Ghost.txd
+│   │   ├── 📁 04-houmangsour
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 houmangsour.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 Humng.dff
+│   │   │       └── 📄 Humng.txd
+│   │   ├── 📁 05-rath
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 rath.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 rath.dff
+│   │   │       └── 📄 rath.txd
+│   │   ├── 📁 06-swampfire
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   └── 📄 swampfire.cs
+│   │   │   ├── 📁 02-data
+│   │   │   │   ├── 📁 maps
+│   │   │   │   │   └── 📁 generic
+│   │   │   │   │       └── 📄 procobj.IDE
+│   │   │   │   └── 📄 procobj.dat
+│   │   │   └── 📁 03-gta3.img
+│   │   │       ├── 📄 2han.ifp
+│   │   │       ├── 📄 dead_tree_11.dff
+│   │   │       ├── 📄 dead_tree_11.txd
+│   │   │       ├── 📄 dead_tree_19.dff
+│   │   │       ├── 📄 dead_tree_19.txd
+│   │   │       ├── 📄 DEAD_TREE_20.dff
+│   │   │       ├── 📄 FFIRE.ifp
+│   │   │       ├── 📄 gun_vibe2.dff
+│   │   │       ├── 📄 gun_vibe2.txd
+│   │   │       ├── 📄 kkid.ifp
+│   │   │       ├── 📄 levi.ifp
+│   │   │       ├── 📄 Madara.ifp
+│   │   │       ├── 📄 mopincho.txd
+│   │   │       ├── 📄 Susano1.dff
+│   │   │       ├── 📄 Susano1.txd
+│   │   │       ├── 📄 Swamp.dff
+│   │   │       ├── 📄 Swamp.txd
+│   │   │       └── 📄 ul_sw.ifp
+│   │   └── 📁 07-xlr8
+│   │       ├── 📁 01-CLEO
+│   │       │   ├── 📁 SKILL
+│   │       │   │   └── 📁 xlr8
+│   │       │   │       └── 📄 RUN.xlr8
+│   │       │   └── 📄 xlr8.cs
+│   │       └── 📁 02-gta3.img
+│   │           ├── 📄 Ninja1.ifp
+│   │           ├── 📄 VMAFF1.dff
+│   │           └── 📄 VMAFF1.txd
+│   ├── 📁 04-Empty DFF
+│   │   └── 📄 empty.dff
+│   ├── 📁 05-RZL-Skin
+│   │   ├── 📄 .File Name Rules.txt
+│   │   └── 📄 .Folder Name Rules.txt
+│   ├── 📄 modloader.ini
+│   └── 📄 modloader.log
+├── 📁 06-scripts
+│   ├── 📄 flickr.asi
+│   ├── 📄 global.ini
+│   ├── 📄 limit_adjuster_gta3vcsa.asi
+│   ├── 📄 limit_adjuster_gta3vcsa.ini
+│   └── 📄 NoShadows.asi
+├── 📄 bass.dll
+├── 📄 cleo.asi
+├── 📄 LibraryTree.txt
+├── 📄 modloader.asi
+├── 📄 vorbisFile.dll
+└── 📄 vorbisHooked.dll
+
+────────────────────────────
+📚 داخل پوشه بازی بعد از حذف نصب 
+
+├── 📁 01-.ModManager
+│   ├── 📄 BackupStorageIdentity.json
+│   └── 📄 installations.json
+├── 📁 02-CLEO
+│   ├── 📁 RZL-Trainer
+│   │   ├── 📁 01-Music
+│   │   │   └── 📄 .File Name Rules.txt
+│   │   ├── 📁 02-SoundFX
+│   │   │   ├── 📄 .File Name Rules.txt
+│   │   │   ├── 📄 GTA SA Accept FX.MP3
+│   │   │   ├── 📄 GTA SA Back FX.MP3
+│   │   │   ├── 📄 GTA SA Navigation FX.MP3
+│   │   │   ├── 📄 GTA SA Notification FX.MP3
+│   │   │   ├── 📄 GTA SA Start FX.MP3
+│   │   │   ├── 📄 GTA V Accept FX.MP3
+│   │   │   ├── 📄 GTA V Back FX.MP3
+│   │   │   ├── 📄 GTA V Navigation FX.MP3
+│   │   │   ├── 📄 GTA V Notification FX.MP3
+│   │   │   ├── 📄 GTA V Online Notification FX.MP3
+│   │   │   ├── 📄 RDR 2 Accept FX.MP3
+│   │   │   ├── 📄 RDR 2 Back FX.MP3
+│   │   │   ├── 📄 RDR 2 High Honor Notification FX.MP3
+│   │   │   └── 📄 RDR 2 Navigation FX.MP3
+│   │   ├── 📄 Saved Teleport.ini
+│   │   └── 📄 Saved Vehicle.ini
+│   ├── 📄 fpsunlimiter.cs
+│   ├── 📄 MemFix.cs
+│   ├── 📄 memory1024.cs
+│   ├── 📄 memory2048.cs
+│   ├── 📄 memory512.cs
+│   ├── 📄 RZL-Trainer.cs
+│   ├── 📄 RZL-Trainer.ini
+│   ├── 📄 SightDistance_by_0x688.cleo
+│   ├── 📄 StreamIniExtender.cs
+│   └── 📄 test tree remove.cs
+├── 📁 03-cleo_readme
+│   └── 📄 CHANGELOG.md
+├── 📁 04-cleo_sdk
+│   ├── 📁 demo_plugins
+│   │   ├── 📁 01-FileSystemOperations
+│   │   │   └── 📁 FileSystemOperations
+│   │   │       ├── 📄 FileSystemOperations.cpp
+│   │   │       ├── 📄 FileSystemOperations.vcxproj
+│   │   │       └── 📄 FileSystemOperations.vcxproj.filters
+│   │   ├── 📁 02-IniFiles
+│   │   │   └── 📁 IniFiles
+│   │   │       ├── 📄 IniFiles.cpp
+│   │   │       ├── 📄 IniFiles.vcxproj
+│   │   │       └── 📄 IniFiles.vcxproj.filters
+│   │   └── 📁 03-IntOperations
+│   │       └── 📁 IntOperations
+│   │           ├── 📄 IntOperations.cpp
+│   │           ├── 📄 IntOperations.vcxproj
+│   │           └── 📄 IntOperations.vcxproj.filters
+│   ├── 📄 CLEO.h
+│   └── 📄 CLEO.lib
+├── 📁 05-modloader
+│   ├── 📁 01-_ESSENTIALS
+│   │   ├── 📁 01-FramerateVigilante
+│   │   │   ├── 📄 Framerate Vigilante.url
+│   │   │   ├── 📄 FramerateVigilante.ini
+│   │   │   └── 📄 FramerateVigilante.SA.asi
+│   │   ├── 📁 02-Open Limit Adjuster
+│   │   │   ├── 📄 III.VC.SA.LimitAdjuster.asi
+│   │   │   └── 📄 III.VC.SA.LimitAdjuster.ini
+│   │   ├── 📁 03-RepairGTA
+│   │   │   ├── 📄 RepairGTA.log
+│   │   │   ├── 📄 RepairGTA.SA.asi
+│   │   │   └── 📄 RepairGTA.url
+│   │   ├── 📁 04-RunDLL32 Fix
+│   │   │   ├── 📄 RunDLL32 Fix.url
+│   │   │   └── 📄 rundll32exefix.asi
+│   │   ├── 📁 05-SilentPatch
+│   │   │   ├── 📄 SilentPatch.url
+│   │   │   ├── 📄 SilentPatchSA.asi
+│   │   │   └── 📄 SilentPatchSA.ini
+│   │   ├── 📁 06-Widescreen Fix by ThirteenAG
+│   │   │   ├── 📄 GTASA.WidescreenFix.asi
+│   │   │   ├── 📄 GTASA.WidescreenFix.ini
+│   │   │   └── 📄 Widescreen Fix.url
+│   │   └── 📁 07-Windowed Mode
+│   │       ├── 📄 III.VC.SA.WindowedMode.asi
+│   │       └── 📄 III.VC.SA.WindowedMode.ini
+│   ├── 📁 02-Ben10 Mod
+│   │   ├── 📁 01-Ben Transform
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   ├── 📁 SOUND
+│   │   │   │   │   ├── 📄 arbol.mp3
+│   │   │   │   │   ├── 📄 bigchill.wav
+│   │   │   │   │   ├── 📄 ghostfreak.wav
+│   │   │   │   │   ├── 📄 houmangsour.wav
+│   │   │   │   │   ├── 📄 rath.wav
+│   │   │   │   │   ├── 📄 swampfire.wav
+│   │   │   │   │   ├── 📄 tesh.mp3
+│   │   │   │   │   ├── 📄 transformation.wav
+│   │   │   │   │   └── 📄 xlr8.wav
+│   │   │   │   └── 📄 Ben10.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 ben10.dff
+│   │   │       ├── 📄 ben10.txd
+│   │   │       └── 📄 transform.ifp
+│   │   ├── 📁 02-bigchill
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 bigchill.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 big.dff
+│   │   │       ├── 📄 big.txd
+│   │   │       ├── 📄 dead_mantxd.txd
+│   │   │       ├── 📄 KMB_DEADTORSO.dff
+│   │   │       └── 📄 ul_bi.ifp
+│   │   ├── 📁 03-ghostfreak
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 ghostfreak.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 Ghost.dff
+│   │   │       └── 📄 Ghost.txd
+│   │   ├── 📁 04-houmangsour
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 houmangsour.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 Humng.dff
+│   │   │       └── 📄 Humng.txd
+│   │   ├── 📁 05-rath
+│   │   │   ├── 📁 01-CLEO
+│   │   │   │   └── 📄 rath.cs
+│   │   │   └── 📁 02-gta3.img
+│   │   │       ├── 📄 rath.dff
+│   │   │       └── 📄 rath.txd
+│   │   ├── 📁 06-swampfire
+│   │   │   ├── 📁 01-cleo
+│   │   │   │   └── 📄 swampfire.cs
+│   │   │   ├── 📁 02-data
+│   │   │   │   ├── 📁 maps
+│   │   │   │   │   └── 📁 generic
+│   │   │   │   │       └── 📄 procobj.IDE
+│   │   │   │   └── 📄 procobj.dat
+│   │   │   └── 📁 03-gta3.img
+│   │   │       ├── 📄 2han.ifp
+│   │   │       ├── 📄 dead_tree_11.dff
+│   │   │       ├── 📄 dead_tree_11.txd
+│   │   │       ├── 📄 dead_tree_19.dff
+│   │   │       ├── 📄 dead_tree_19.txd
+│   │   │       ├── 📄 DEAD_TREE_20.dff
+│   │   │       ├── 📄 FFIRE.ifp
+│   │   │       ├── 📄 gun_vibe2.dff
+│   │   │       ├── 📄 gun_vibe2.txd
+│   │   │       ├── 📄 kkid.ifp
+│   │   │       ├── 📄 levi.ifp
+│   │   │       ├── 📄 Madara.ifp
+│   │   │       ├── 📄 mopincho.txd
+│   │   │       ├── 📄 Susano1.dff
+│   │   │       ├── 📄 Susano1.txd
+│   │   │       ├── 📄 Swamp.dff
+│   │   │       ├── 📄 Swamp.txd
+│   │   │       └── 📄 ul_sw.ifp
+│   │   └── 📁 07-xlr8
+│   │       ├── 📁 01-CLEO
+│   │       │   ├── 📁 SKILL
+│   │       │   │   └── 📁 xlr8
+│   │       │   │       └── 📄 RUN.xlr8
+│   │       │   └── 📄 xlr8.cs
+│   │       └── 📁 02-gta3.img
+│   │           ├── 📄 Ninja1.ifp
+│   │           ├── 📄 VMAFF1.dff
+│   │           └── 📄 VMAFF1.txd
+│   ├── 📁 03-Empty DFF
+│   │   └── 📄 empty.dff
+│   └── 📁 04-RZL-Skin
+│       ├── 📄 .File Name Rules.txt
+│       └── 📄 .Folder Name Rules.txt
+├── 📁 06-scripts
+│   ├── 📄 flickr.asi
+│   ├── 📄 global.ini
+│   ├── 📄 limit_adjuster_gta3vcsa.asi
+│   ├── 📄 limit_adjuster_gta3vcsa.ini
+│   └── 📄 NoShadows.asi
+├── 📄 bass.dll
+├── 📄 LibraryTree.txt
+├── 📄 vorbisFile.dll
+└── 📄 vorbisHooked.dll
+
+────────────────────────────
+کامل فایل هارو گذاشتم
+1.1. درست و کامل حذف نمیکنه 
+1.2. گفتم دیگه انتظار 
+قتی مد میگه برای نصب من باید cleo و Modloader قدیمی باشه 
+تمام فایل های cleo و Modloader جدید رو باید پاک کنیم ولی مد های داخلش باشن هم cleo وهم modloader و وقتی مد خواست پاک بشه کل فایل های مد رو پاک کنه و چون cleo و modlaoder  قدیمی نصب شده بود فایل های cleo و modlaoder قدیمی پاک بشه و فایل های cleo و modloader نصب بشه و cleo و modloader جدید نصب بشه
+2. متن detected mod : [name mod]
+اگه اسم مد طولانی باشه نمیشکنه میزنه بیرون باید بشکنه وقتی خاصت از عرض ساید بار بزنه بیرون
+3. ببین در موضوع عکس مشکل داره 
+مثلا مد هست 
+| Base Mods Address\Cleo scripts\bullethole\
+|-- Bullethole\
+|---- bullethole.asi
+|---- bullethole.ini
+|---- bullethole.png
+|---- bullethole_material.json
+|---- bullethole_texture.json
+|---- bullethole_weapon.json
+|-- mod.modsyn
+|-- screen.png
+عکسی که باید در step 3 نشان بده 
+یا در در روت هست 
+یا در پوشه هایی با اسم های 
+gallery
+images
+image
+screenshot
+screenshots
+Preview
+Previews
+هست باید در step 3 نشون بده و نصب نکنه
+(اگر تایپ VSW بود و عکس در روت بود عکس رو هم نصب کنه چون این تایپ استثنا هست که اگه عکس در روت بود نصب کنه که العان همینطور هست)
+اما در مدی که برای مثال اوردم png نصب نمیشه با اینکه داخل پوشه ای که باید نصب بشه و باید نصب بشه
+3. وقتی برنامه رو باز میکنیم صدای ارور ویندوز ده میده میاد چهار بار اینو بردار
 ---------- Big Change Convert This Project To Version 2
 99. میخام یک برنامه درست کنی جدا از این gta_sa_mod_manager 
 به اسم 

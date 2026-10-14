@@ -172,6 +172,28 @@ public partial class MainForm : Form
             .ToList();
     }
 
+    /// <summary>
+    /// Step 3 preview media. For normal mods only the images in the package root or in a preview folder
+    /// (gallery, images, screenshots, ...) are previews; images inside the folder being installed are mod files.
+    /// Videos and the asset packages (VSW / VSS) keep the previous behaviour.
+    /// </summary>
+    private static List<string> FindStep3PreviewMedia(string root, GtaSaModManager.Models.ModManifest? manifest)
+    {
+        var allMedia = FindImageFiles(root);
+        if (manifest == null
+            || manifest.SupportsAssetSelection
+            || manifest.IsSingleAssetPackage
+            || manifest.IsMultiAssetPackage)
+        {
+            return allMedia;
+        }
+
+        return allMedia
+            .Where(path => !ModPackageService.IsMediaFile(path)
+                || ModPackageService.IsPreviewMediaLocation(path, root))
+            .ToList();
+    }
+
     private void ShowReadmeDialog(string path)
     {
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
