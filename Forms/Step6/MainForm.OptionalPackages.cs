@@ -128,7 +128,7 @@ public partial class MainForm
 
         var optionalFolder = GetOptionalFolderForCurrentInstall();
         var optionalsFolder = GetOptionalsFolderForCurrentInstall();
-        if (optionalFolder != null)
+        if (optionalFolder != null && !IsOptionalSourceInstalled(optionalFolder, OptionalKindSingle))
         {
             var optionalName = GetOptionalPackageDisplayName(optionalFolder, _selectedModName);
             var button = CreateOptionalActionButton(
@@ -140,7 +140,10 @@ public partial class MainForm
             host.Controls.Add(button);
         }
 
-        if (optionalsFolder != null && ModPackageService.GetOptionalsPackageFolders(optionalsFolder).Count > 0)
+        // The "Install optionals" button stays only while at least one optional package is not installed yet.
+        if (optionalsFolder != null
+            && ModPackageService.GetOptionalsPackageFolders(optionalsFolder)
+                .Any(folder => !IsOptionalSourceInstalled(folder, OptionalKindMany)))
         {
             var button = CreateOptionalActionButton(
                 _localizationService.GetString("InstallOptionalsButton", "Install optionals"),
@@ -151,6 +154,20 @@ public partial class MainForm
 
         host.Visible = host.Controls.Count > 0;
         host.AutoSize = true;
+    }
+
+    /// <summary>True when the optional package at <paramref name="optionalFolder"/> is installed for the current mod.</summary>
+    private bool IsOptionalSourceInstalled(string optionalFolder, string kind)
+    {
+        if (string.IsNullOrWhiteSpace(optionalFolder))
+        {
+            return false;
+        }
+
+        var fullFolder = Path.GetFullPath(optionalFolder);
+        return ModLoaderService.FindOptionalInstallations(_selectedGamePath, _selectedModName, kind)
+            .Any(record => !string.IsNullOrWhiteSpace(record.SourcePackagePath)
+                && string.Equals(Path.GetFullPath(record.SourcePackagePath), fullFolder, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string GetOptionalPackageDisplayName(string optionalRoot, string parentModName)

@@ -1274,9 +1274,36 @@ public partial class MainForm : Form
 
             DeleteManifestEntries(_selectedModManifest);
             var modLoaderFolder = GameService.GetModLoaderFolder(_selectedGamePath);
-            var targetDir = Path.Combine(modLoaderFolder, _selectedModName);
+            // PutInModLoader: the content of the folder inside the mod folder goes straight into modloader.
+            var directModLoaderFolders = _selectedModManifest.IsModLoader && !_step5UnknownAssetTypeCancelled
+                ? GetDirectModLoaderFolders(_selectedModPayloadPath, _selectedModPackageRoot)
+                : null;
+            // Recorded destination: never the modloader folder itself (uninstalling must not remove it).
+            var targetDir = Path.Combine(modLoaderFolder, directModLoaderFolders?[0] ?? _selectedModName);
+            var copyTargetDir = directModLoaderFolders != null ? modLoaderFolder : targetDir;
 
-            if (Directory.Exists(targetDir) && !_step5UnknownAssetTypeCancelled)
+            if (directModLoaderFolders != null)
+            {
+                var existingFolders = directModLoaderFolders
+                    .Select(folder => Path.Combine(modLoaderFolder, folder))
+                    .Where(Directory.Exists)
+                    .ToList();
+                if (existingFolders.Count > 0)
+                {
+                    var existingNames = string.Join(", ", existingFolders.Select(folder => Path.GetFileName(folder)));
+                    var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), existingNames), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result != DialogResult.Yes)
+                    {
+                        return;
+                    }
+
+                    foreach (var folder in existingFolders)
+                    {
+                        Directory.Delete(folder, true);
+                    }
+                }
+            }
+            else if (Directory.Exists(targetDir) && !_step5UnknownAssetTypeCancelled)
             {
                 var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), _selectedModName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result != DialogResult.Yes)
@@ -1300,9 +1327,17 @@ public partial class MainForm : Form
             }
             await CopyPayloadWithProgressAsync(
                 _selectedModPayloadPath,
-                targetDir,
+                copyTargetDir,
                 _step5UnknownAssetTypeCancelled,
                 _selectedModPackageRoot);
+            // Only this mod's files are recorded (never everything that is inside modloader).
+            var installedModFiles = directModLoaderFolders != null
+                ? directModLoaderFolders
+                    .Select(folder => Path.Combine(modLoaderFolder, folder))
+                    .Where(Directory.Exists)
+                    .SelectMany(folder => Directory.GetFiles(folder, "*", SearchOption.AllDirectories))
+                    .ToArray()
+                : Directory.GetFiles(targetDir, "*", SearchOption.AllDirectories);
             ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
             var installRecordType = _selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage
                 || _step5UnknownAssetTypeCancelled
@@ -1314,7 +1349,7 @@ public partial class MainForm : Form
                 packageModId,
                 _selectedModPackageRoot,
                 targetDir,
-                Directory.GetFiles(targetDir, "*", SearchOption.AllDirectories));
+                installedModFiles);
             _step5UnknownAssetTypeCancelled = false;
             await ShowStep4LoadingTransitionAsync(GetCurrentStep5AssetType());
             if (!_isInstallingOptionalPackage)

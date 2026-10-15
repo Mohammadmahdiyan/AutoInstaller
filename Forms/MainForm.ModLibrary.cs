@@ -798,8 +798,15 @@ public partial class MainForm : Form
                 || manifest.IsSingleAssetPackage
                 || manifest.IsMultiAssetPackage
                 || _selectedAssetForInstall != null);
+        var modLoaderRootFolder = GameService.GetModLoaderFolder(_selectedGamePath);
+        var directModLoaderFolders = installAsModLoader
+            && manifest.NormalizedType == "putinmodloader"
+            && _selectedAssetForInstall == null
+                ? GetDirectModLoaderFolders(payloadPath, packageRoot)
+                : null;
+        // Recorded destination: never the modloader folder itself (uninstalling must not remove it).
         var targetRoot = installAsModLoader
-            ? Path.Combine(GameService.GetModLoaderFolder(_selectedGamePath), modName)
+            ? Path.Combine(modLoaderRootFolder, directModLoaderFolders?[0] ?? modName)
             : manifest.NormalizedType switch
             {
                 "putingamefolder" or "putandreplace" or "putandreplaces" => _selectedGamePath,
@@ -826,17 +833,32 @@ public partial class MainForm : Form
             }
         }
 
-        if (manifest.NormalizedType == "putinmodloader"
-            && Directory.Exists(targetRoot)
-            && !_isMixedInstallActive)
+        if (manifest.NormalizedType == "putinmodloader" && !_isMixedInstallActive)
         {
-            var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), modName), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result != DialogResult.Yes)
+            var existingFolders = directModLoaderFolders != null
+                ? directModLoaderFolders
+                    .Select(folder => Path.Combine(modLoaderRootFolder, folder))
+                    .Where(Directory.Exists)
+                    .ToList()
+                : Directory.Exists(targetRoot)
+                    ? new List<string> { targetRoot }
+                    : new List<string>();
+            if (existingFolders.Count > 0)
             {
-                return false;
-            }
+                var existingNames = directModLoaderFolders != null
+                    ? string.Join(", ", existingFolders.Select(folder => Path.GetFileName(folder)))
+                    : modName;
+                var result = MessageBox.Show(string.Format(_localizationService.GetString("DuplicateModPrompt", "A mod named '{0}' already exists. Replace it?"), existingNames), _appName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return false;
+                }
 
-            Directory.Delete(targetRoot, true);
+                foreach (var folder in existingFolders)
+                {
+                    Directory.Delete(folder, true);
+                }
+            }
         }
 
         var selectedAssetList = GetSelectedAssetListForInstall(manifest, payloadPath);
@@ -1041,7 +1063,9 @@ public partial class MainForm : Form
                 var destinationPath = replacementTargets.TryGetValue(sourcePath, out var replacementTarget)
                     ? replacementTarget
                     : GetSafeGamePath(installAsModLoader
-                        ? Path.Combine("modloader", modName, relativePath)
+                        ? directModLoaderFolders != null
+                            ? Path.Combine("modloader", relativePath)
+                            : Path.Combine("modloader", modName, relativePath)
                         : relativePath);
 
                 if (replacementTargets.ContainsKey(sourcePath)
@@ -1288,6 +1312,46 @@ public partial class MainForm : Form
     }
 
     private sealed record DeleteThisTarget(string FullPath, bool IsDirectory);
+
+    /// <summary>
+    /// PutInModLoader packages whose payload is a folder inside the mod folder (for example
+    /// "Pack\GTA V Anims\Animations\...") install the CONTENT of that folder straight into modloader
+    /// ("modloader\Animations\..."), not into a folder named after the package. Returns the top level
+    /// folder names that go into modloader, or null when the package keeps its own folder
+    /// (loose files in the payload, or no wrapper folder), like the VSW asset types.
+    /// </summary>
+    private static List<string>? GetDirectModLoaderFolders(string payloadPath, string packageRoot)
+    {
+        if (string.IsNullOrWhiteSpace(payloadPath)
+            || string.IsNullOrWhiteSpace(packageRoot)
+            || !Directory.Exists(payloadPath))
+        {
+            return null;
+        }
+
+        var fullPayload = Path.TrimEndingDirectorySeparator(Path.GetFullPath(payloadPath));
+        var fullPackage = Path.TrimEndingDirectorySeparator(Path.GetFullPath(packageRoot));
+        if (string.Equals(fullPayload, fullPackage, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var folders = Directory.GetDirectories(payloadPath)
+            .Select(directory => Path.GetFileName(directory))
+            .Where(name => !string.IsNullOrWhiteSpace(name)
+                && !ModPackageService.IsPreviewFolderName(name)
+                && !ModPackageService.IsOptionalContainerName(name))
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (folders.Count == 0)
+        {
+            return null;
+        }
+
+        var hasLooseInstallableFiles = Directory.GetFiles(payloadPath)
+            .Any(file => !ModPackageService.IsMetadataOrNonInstallableFile(file, packageRoot));
+        return hasLooseInstallableFiles ? null : folders;
+    }
 
     /// <summary>Marks a replacement record that stands for a folder created by the mod (not a file).</summary>
     private const string CreatedDirectoryRecordMessage = "Directory created by the mod.";
