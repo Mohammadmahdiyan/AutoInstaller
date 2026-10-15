@@ -322,6 +322,7 @@ public partial class MainForm
                 }
             }
 
+            var restoredDirectories = RestoreBackedUpDirectories(backupDirectories, gameRoot);
             foreach (var backupDirectory in backupDirectories)
             {
                 if (Directory.Exists(backupDirectory))
@@ -330,13 +331,14 @@ public partial class MainForm
                 }
             }
 
-            // Remove the folders the mod created and that are now empty (top level folders such as
-            // cleo / modloader are never removed, so the other mods stored inside them stay untouched).
-            PruneEmptyParentDirectories(
-                (installationEntry?.InstalledFiles ?? new List<string>())
-                    .Concat(records.Select(record => record.OriginalFilePath))
-                    .Where(path => !string.IsNullOrWhiteSpace(path)),
-                gameRoot);
+            // Remove the folders the mod created and that are now empty. The standard game folders (cleo,
+            // modloader, scripts, ...) always stay, so the other mods stored inside them are untouched.
+            var touchedFiles = (installationEntry?.InstalledFiles ?? new List<string>())
+                .Concat(GetRecordPathsForPrune(records))
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .ToList();
+            PruneEmptyParentDirectories(touchedFiles, gameRoot, restoredDirectories);
+            var touchesCore = TouchesCleoOrModLoaderCore(touchedFiles, gameRoot);
 
             var installationRecordRemoved = ModLoaderService.RemoveGameInstallationRecord(gameRoot, modName);
 
@@ -345,6 +347,11 @@ public partial class MainForm
                 && !string.IsNullOrWhiteSpace(record.GameFolder)
                 && string.Equals(Path.GetFullPath(record.GameFolder), gameRoot, StringComparison.OrdinalIgnoreCase));
             ModPackageService.SaveReplacementRecords(remaining);
+            if (touchesCore)
+            {
+                await ReinstallEssentialsAfterCoreRemovalAsync();
+            }
+
             if (restored || installationRecordRemoved || records.Count > 0)
             {
                 CompleteStep4Progress(_localizationService.GetString("DeleteProgressComplete", "Deletion complete."));

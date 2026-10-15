@@ -526,7 +526,87 @@ public partial class MainForm
     /// Removes the folders that became empty after deleting <paramref name="files"/>, but never the game folder,
     /// the user files folder or their direct sub folders (modloader, cleo, ...).
     /// </summary>
-    private static void PruneEmptyParentDirectories(IEnumerable<string> files, string gamePath)
+    // Top level game folders that are never removed, even when they become empty.
+    private static readonly HashSet<string> ProtectedTopLevelFolders = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "cleo", "modloader", "scripts", "data", "models", "audio", "anim", "text", "movies", ".modmanager"
+    };
+
+    /// <summary>Recreates the (possibly empty) folders stored in the backup folders, e.g. cleo_saves.</summary>
+    private static HashSet<string> RestoreBackedUpDirectories(IEnumerable<string> backupDirectories, string gameRoot)
+    {
+        var restored = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var fullGameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(gameRoot));
+        foreach (var backupDirectory in backupDirectories.Where(Directory.Exists))
+        {
+            foreach (var directory in Directory.GetDirectories(backupDirectory, "*", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(backupDirectory, directory);
+                var target = Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.Combine(fullGameRoot, relative)));
+                if (!IsInsideRoot(fullGameRoot, target))
+                {
+                    continue;
+                }
+
+                Directory.CreateDirectory(target);
+                restored.Add(target);
+            }
+        }
+
+        return restored;
+    }
+
+    private static bool TouchesCleoOrModLoaderCore(IEnumerable<string> paths, string gameRoot)
+    {
+        var fullGameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(gameRoot));
+        return paths
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(path => Path.GetRelativePath(fullGameRoot, Path.GetFullPath(path)))
+            .Any(relative => relative.Equals("cleo.asi", StringComparison.OrdinalIgnoreCase)
+                || relative.Equals("modloader.asi", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// After a mod that replaced cleo.asi / modloader.asi is deleted, the CLEO / ModLoader Essentials
+    /// (A1-MyReqFiles) are installed again, so the game always ends up with the new CLEO and ModLoader.
+    /// Mods stored inside cleo and modloader are not touched; existing .ini/.log/.json files are kept.
+    /// </summary>
+    private async Task ReinstallEssentialsAfterCoreRemovalAsync()
+    {
+        var baseModsFolder = !string.IsNullOrWhiteSpace(_selectedModSourcePath)
+            ? _selectedModSourcePath
+            : _settings.ModSourceFolder ?? string.Empty;
+        var defaultDependencyRoot = Directory.Exists(baseModsFolder)
+            ? Path.Combine(baseModsFolder, "Scripts", "A1-MyReqFiles")
+            : string.Empty;
+        var dependencyRoot = new[] { _settings.EssentialsPackagePath, defaultDependencyRoot }
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .FirstOrDefault(IsValidEssentialsPackage);
+        if (dependencyRoot is null)
+        {
+            // The next install asks for the folder (the dependency check sees cleo.asi / modloader.asi missing).
+            return;
+        }
+
+        var result = await DependencyInstallationService.EnsureInstalledAsync(
+            _selectedGamePath,
+            dependencyRoot,
+            default,
+            forceReinstall: true);
+        if (!result.Success)
+        {
+            MessageBox.Show(
+                "Could not reinstall CLEO / ModLoader Essentials: " + result.ErrorMessage,
+                _appName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        }
+    }
+
+    private static void PruneEmptyParentDirectories(
+        IEnumerable<string> files,
+        string gamePath,
+        ISet<string>? protectedDirectories = null)
     {
         var gameRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(gamePath));
         var userFilesRoot = Path.TrimEndingDirectorySeparator(Path.GetFullPath(GetUserFilesRootPath()));
@@ -543,11 +623,25 @@ public partial class MainForm
                    && !Directory.EnumerateFileSystemEntries(current).Any())
             {
                 var parent = Path.GetDirectoryName(current);
-                var parentIsRoot = string.Equals(parent, gameRoot, StringComparison.OrdinalIgnoreCase)
+                if (protectedDirectories != null
+                    && protectedDirectories.Contains(Path.TrimEndingDirectorySeparator(current)))
+                {
+                    break; // a folder that was just restored from the backup (for example an empty cleo_saves)
+                }
+
+                var parentIsGameRoot = string.Equals(parent, gameRoot, StringComparison.OrdinalIgnoreCase);
+                var parentIsRoot = parentIsGameRoot
                     || string.Equals(parent, userFilesRoot, StringComparison.OrdinalIgnoreCase);
                 if (parentIsRoot)
                 {
-                    break; // keep top level folders such as modloader or cleo
+                    // Top level folders created by the mod (cleo_readme, cleo_sdk, ...) are removed once empty;
+                    // the standard game folders (cleo, modloader, scripts, ...) always stay.
+                    if (parentIsGameRoot && !ProtectedTopLevelFolders.Contains(Path.GetFileName(current)))
+                    {
+                        Directory.Delete(current);
+                    }
+
+                    break;
                 }
 
                 Directory.Delete(current);
@@ -655,15 +749,17 @@ public partial class MainForm
             await Task.Yield();
         }
 
+        var restoredDirectories = RestoreBackedUpDirectories(backupDirectories, gameRoot);
         foreach (var directory in backupDirectories.Where(Directory.Exists))
         {
             Directory.Delete(directory, recursive: true);
         }
 
-        PruneEmptyParentDirectories(
-            entry.Files.Concat(records.Select(record => record.OriginalFilePath))
-                .Where(path => !string.IsNullOrWhiteSpace(path)),
-            _selectedGamePath);
+        var touchedFiles = entry.Files.Concat(GetRecordPathsForPrune(records))
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .ToList();
+        PruneEmptyParentDirectories(touchedFiles, _selectedGamePath, restoredDirectories);
+        var touchesCore = TouchesCleoOrModLoaderCore(touchedFiles, gameRoot);
 
         var remaining = ModPackageService.LoadReplacementRecords();
         remaining.RemoveAll(record => string.Equals(record.ModName, modName, StringComparison.OrdinalIgnoreCase)
@@ -677,6 +773,11 @@ public partial class MainForm
         }
 
         RemoveInstallationRecord(_selectedGamePath, info);
+        if (touchesCore)
+        {
+            await ReinstallEssentialsAfterCoreRemovalAsync();
+        }
+
         return true;
     }
 }

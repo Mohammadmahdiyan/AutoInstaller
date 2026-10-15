@@ -28,9 +28,10 @@ public static class DependencyInstallationService
     public static async Task<DependencyInstallationResult> EnsureInstalledAsync(
         string gameFolder,
         string dependencyRoot,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        bool forceReinstall = false)
     {
-        if (AreDependenciesInstalled(gameFolder))
+        if (!forceReinstall && AreDependenciesInstalled(gameFolder))
         {
             return new DependencyInstallationResult { Success = true };
         }
@@ -60,7 +61,7 @@ public static class DependencyInstallationService
 
             if (string.Equals(dependencyType, "putingamefolder", StringComparison.OrdinalIgnoreCase))
             {
-                var copiedDependencyEntries = await CopyDirectoryContentsAsync(payloadRoot, gameFolder, cancellationToken);
+                var copiedDependencyEntries = await CopyDirectoryContentsAsync(payloadRoot, gameFolder, cancellationToken, forceReinstall);
                 var dependenciesComplete = AreDependenciesInstalled(gameFolder);
                 return dependenciesComplete
                     ? new DependencyInstallationResult
@@ -97,7 +98,19 @@ public static class DependencyInstallationService
         return fullPath;
     }
 
-    private static async Task<int> CopyDirectoryContentsAsync(string sourceDirectory, string destinationDirectory, CancellationToken cancellationToken)
+    private static bool IsUserConfigurationFile(string path)
+    {
+        var extension = Path.GetExtension(path);
+        return extension.Equals(".ini", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".log", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".json", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static async Task<int> CopyDirectoryContentsAsync(
+        string sourceDirectory,
+        string destinationDirectory,
+        CancellationToken cancellationToken,
+        bool overwriteExisting = false)
     {
         if (!Directory.Exists(sourceDirectory))
         {
@@ -120,8 +133,18 @@ public static class DependencyInstallationService
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
             if (File.Exists(destination))
             {
-                // Repair mode: never overwrite what is already in the game (user settings, a CLEO/ModLoader
-                // version required by an installed mod, ...). Only the missing files are put back.
+                // Repair mode (default): never overwrite what is already in the game (user settings, a
+                // CLEO/ModLoader version required by an installed mod, ...). Only missing files are put back.
+                // Reinstall mode: the Essentials files replace the existing ones, except the user's
+                // configuration files (.ini/.log/.json), so settings are not reset.
+                if (!overwriteExisting || IsUserConfigurationFile(destination))
+                {
+                    continue;
+                }
+
+                var existing = destination;
+                await Task.Run(() => File.Copy(file, existing, true), cancellationToken);
+                copiedEntries++;
                 continue;
             }
 

@@ -1113,6 +1113,35 @@ public partial class MainForm : Form
                 }
             }
 
+            if (manifest.NormalizedType is "putingamefolder" or "putandreplaces" && !isAssetPackage)
+            {
+                // Empty folders of the mod (cleo_saves, modloader\.profiles, ...) are part of the mod too.
+                foreach (var emptyDirectory in FindEmptyPayloadDirectories(payloadPath))
+                {
+                    var destinationDirectory = GetSafeGamePath(Path.GetRelativePath(payloadPath, emptyDirectory));
+                    if (Directory.Exists(destinationDirectory))
+                    {
+                        continue;
+                    }
+
+                    Directory.CreateDirectory(destinationDirectory);
+                    records.Add(new ReplaceInstallationRecord
+                    {
+                        BackupId = Guid.NewGuid().ToString("N"),
+                        ModName = modName,
+                        GameFolder = _selectedGamePath,
+                        OriginalFilePath = destinationDirectory,
+                        BackupFilePath = string.Empty,
+                        BackupDirectoryPath = string.Empty,
+                        InstalledModFile = string.Empty,
+                        InstallationType = manifest.NormalizedType,
+                        ReplacementSucceeded = true,
+                        OriginalBackupAvailable = false,
+                        StatusMessage = CreatedDirectoryRecordMessage
+                    });
+                }
+            }
+
             var recordedOriginals = records
                 .Select(record => Path.GetFullPath(record.OriginalFilePath))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -1260,6 +1289,32 @@ public partial class MainForm : Form
 
     private sealed record DeleteThisTarget(string FullPath, bool IsDirectory);
 
+    /// <summary>Marks a replacement record that stands for a folder created by the mod (not a file).</summary>
+    private const string CreatedDirectoryRecordMessage = "Directory created by the mod.";
+
+    /// <summary>Empty folders inside the payload (never preview or optional folders).</summary>
+    private static List<string> FindEmptyPayloadDirectories(string payloadPath)
+    {
+        return Directory.GetDirectories(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(directory => !Directory.EnumerateFileSystemEntries(directory).Any())
+            .Where(directory => !Path.GetRelativePath(payloadPath, directory)
+                .Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+                .Any(segment => ModPackageService.IsPreviewFolderName(segment)
+                    || ModPackageService.IsOptionalContainerName(segment)))
+            .ToList();
+    }
+
+    /// <summary>Paths used to remove the folders a mod leaves empty; a created folder counts as a file inside it.</summary>
+    private static List<string> GetRecordPathsForPrune(IEnumerable<ReplaceInstallationRecord> records)
+    {
+        return records
+            .Where(record => !string.IsNullOrWhiteSpace(record.OriginalFilePath))
+            .Select(record => string.Equals(record.StatusMessage, CreatedDirectoryRecordMessage, StringComparison.Ordinal)
+                ? Path.Combine(record.OriginalFilePath, "_")
+                : record.OriginalFilePath)
+            .ToList();
+    }
+
     /// <summary>Existing files/folders requested by deleteThis/deleteThese (always inside the game folder).</summary>
     private List<DeleteThisTarget> ResolveDeleteThisTargets(GtaSaModManager.Models.ModManifest manifest)
     {
@@ -1347,6 +1402,18 @@ public partial class MainForm : Form
                         .All(path => backups.ContainsKey(path) || !filesToBackup.Contains(path, StringComparer.OrdinalIgnoreCase));
                 if (allBackedUp && Directory.Exists(target.FullPath))
                 {
+                    if (backupPlan.HasBackup && !string.IsNullOrWhiteSpace(backupPlan.BackupRoot))
+                    {
+                        // Keep the folder structure (also empty folders such as cleo_saves) in the backup,
+                        // so deleting the mod brings the folders back exactly as they were.
+                        var modBackupRoot = Path.Combine(backupPlan.BackupRoot, ModPackageService.SanitizeFolderName(modName));
+                        Directory.CreateDirectory(Path.Combine(modBackupRoot, Path.GetRelativePath(_selectedGamePath, target.FullPath)));
+                        foreach (var subDirectory in Directory.GetDirectories(target.FullPath, "*", SearchOption.AllDirectories))
+                        {
+                            Directory.CreateDirectory(Path.Combine(modBackupRoot, Path.GetRelativePath(_selectedGamePath, subDirectory)));
+                        }
+                    }
+
                     Directory.Delete(target.FullPath, true);
                 }
             }
