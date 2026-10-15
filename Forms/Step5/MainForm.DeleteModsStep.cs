@@ -352,6 +352,43 @@ public partial class MainForm
         return Path.GetFullPath(path).StartsWith(fullRoot, StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>
+    /// Copies back the files an Optional package overwrote in its base mod. A file is only restored while the
+    /// base mod's folder inside modloader still exists (when the base mod was deleted first, nothing is brought back).
+    /// </summary>
+    private static void RestoreOptionalOverwrittenFiles(string gamePath, string packageModId)
+    {
+        var backupRoot = GetOptionalOverwriteBackupRoot(gamePath, packageModId);
+        if (!Directory.Exists(backupRoot))
+        {
+            return;
+        }
+
+        var modLoaderFolder = Path.TrimEndingDirectorySeparator(Path.GetFullPath(GameService.GetModLoaderFolder(gamePath)));
+        foreach (var file in Directory.GetFiles(backupRoot, "*", SearchOption.AllDirectories))
+        {
+            var destination = Path.GetFullPath(Path.Combine(gamePath, Path.GetRelativePath(backupRoot, file)));
+            if (!IsInsideRoot(modLoaderFolder, destination))
+            {
+                continue;
+            }
+
+            var relativeToModLoader = Path.GetRelativePath(modLoaderFolder, destination);
+            var firstFolder = relativeToModLoader
+                .Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
+                .FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(firstFolder) || !Directory.Exists(Path.Combine(modLoaderFolder, firstFolder)))
+            {
+                continue;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+            File.Copy(file, destination, true);
+        }
+
+        Directory.Delete(backupRoot, recursive: true);
+    }
+
     private static bool IsStrictModLoaderSubfolder(string gamePath, string destination)
     {
         return !string.IsNullOrWhiteSpace(destination)
@@ -421,6 +458,14 @@ public partial class MainForm
             await Task.Yield();
         }
 
+        // An Optional package that was merged into its base mod: put back the base files it overwrote and
+        // never delete the whole folder (it belongs to the base mod).
+        var isOptionalMerge = Directory.Exists(GetOptionalOverwriteBackupRoot(gamePath, info.ModId));
+        if (isOptionalMerge)
+        {
+            RestoreOptionalOverwrittenFiles(gamePath, info.ModId);
+        }
+
         PruneEmptyParentDirectories(entry.Files, gamePath);
 
         if (type == "missiondsl")
@@ -429,7 +474,7 @@ public partial class MainForm
         }
 
         var destination = info.Destination;
-        if (IsStrictModLoaderSubfolder(gamePath, destination) && Directory.Exists(destination))
+        if (!isOptionalMerge && IsStrictModLoaderSubfolder(gamePath, destination) && Directory.Exists(destination))
         {
             await Task.Run(() => Directory.Delete(destination, true));
         }

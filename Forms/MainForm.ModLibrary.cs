@@ -833,7 +833,8 @@ public partial class MainForm : Form
             }
         }
 
-        if (manifest.NormalizedType == "putinmodloader" && !_isMixedInstallActive)
+        if (manifest.NormalizedType == "putinmodloader" && !_isMixedInstallActive
+            && !(directModLoaderFolders != null && _isInstallingOptionalPackage))
         {
             var existingFolders = directModLoaderFolders != null
                 ? directModLoaderFolders
@@ -1312,6 +1313,24 @@ public partial class MainForm : Form
     }
 
     private sealed record DeleteThisTarget(string FullPath, bool IsDirectory);
+
+    /// <summary>Where the files an Optional package overwrote in its base mod are kept until it is deleted.</summary>
+    private static string GetOptionalOverwriteBackupRoot(string gamePath, string packageModId)
+    {
+        return Path.Combine(gamePath, ".ModManager", "optional-overwrites", ModPackageService.SanitizeFolderName(packageModId));
+    }
+
+    /// <summary>The files of a "straight into modloader" package and where each one goes.</summary>
+    private static List<(string Source, string Destination)> GetDirectModLoaderFileMap(
+        string payloadPath,
+        string packageRoot,
+        string modLoaderFolder)
+    {
+        return Directory.GetFiles(payloadPath, "*", SearchOption.AllDirectories)
+            .Where(path => !ModPackageService.IsMetadataOrNonInstallableFile(path, packageRoot))
+            .Select(path => (path, Path.Combine(modLoaderFolder, Path.GetRelativePath(payloadPath, path))))
+            .ToList();
+    }
 
     /// <summary>
     /// PutInModLoader packages whose payload is a folder inside the mod folder (for example

@@ -1282,7 +1282,36 @@ public partial class MainForm : Form
             var targetDir = Path.Combine(modLoaderFolder, directModLoaderFolders?[0] ?? _selectedModName);
             var copyTargetDir = directModLoaderFolders != null ? modLoaderFolder : targetDir;
 
-            if (directModLoaderFolders != null)
+            // An Optional package is merged into the folder of its base mod (it may replace the base mod's
+            // files), so there is no "already exists / replace it" question for it.
+            var isOptionalMerge = directModLoaderFolders != null && _isInstallingOptionalPackage;
+            var directFileMap = directModLoaderFolders != null
+                ? GetDirectModLoaderFileMap(_selectedModPayloadPath, _selectedModPackageRoot, modLoaderFolder)
+                : null;
+            var optionalPackageModId = GetPackageModId(_selectedModPackageRoot);
+
+            if (isOptionalMerge)
+            {
+                // Keep the base mod's files that this optional package overwrites; deleting the optional
+                // package puts them back. The folder doubles as the "already backed up" marker (reinstall).
+                var overwriteBackupRoot = GetOptionalOverwriteBackupRoot(_selectedGamePath, optionalPackageModId);
+                if (!Directory.Exists(overwriteBackupRoot))
+                {
+                    Directory.CreateDirectory(overwriteBackupRoot);
+                    foreach (var mapped in directFileMap!)
+                    {
+                        if (!File.Exists(mapped.Destination))
+                        {
+                            continue;
+                        }
+
+                        var overwrittenBackupPath = Path.Combine(overwriteBackupRoot, Path.GetRelativePath(_selectedGamePath, mapped.Destination));
+                        Directory.CreateDirectory(Path.GetDirectoryName(overwrittenBackupPath)!);
+                        File.Copy(mapped.Destination, overwrittenBackupPath, true);
+                    }
+                }
+            }
+            else if (directModLoaderFolders != null)
             {
                 var existingFolders = directModLoaderFolders
                     .Select(folder => Path.Combine(modLoaderFolder, folder))
@@ -1331,19 +1360,15 @@ public partial class MainForm : Form
                 _step5UnknownAssetTypeCancelled,
                 _selectedModPackageRoot);
             // Only this mod's files are recorded (never everything that is inside modloader).
-            var installedModFiles = directModLoaderFolders != null
-                ? directModLoaderFolders
-                    .Select(folder => Path.Combine(modLoaderFolder, folder))
-                    .Where(Directory.Exists)
-                    .SelectMany(folder => Directory.GetFiles(folder, "*", SearchOption.AllDirectories))
-                    .ToArray()
+            var installedModFiles = directFileMap != null
+                ? directFileMap.Select(item => item.Destination).Where(File.Exists).ToArray()
                 : Directory.GetFiles(targetDir, "*", SearchOption.AllDirectories);
             ModLoaderService.RecordInstallation(_selectedModName, _selectedModPayloadPath, targetDir);
             var installRecordType = _selectedModManifest.IsSingleAssetPackage || _selectedModManifest.IsMultiAssetPackage
                 || _step5UnknownAssetTypeCancelled
                 ? "vehicleandskinandweapon"
                 : "putinmodloader";
-            var packageModId = GetPackageModId(_selectedModPackageRoot);
+            var packageModId = optionalPackageModId;
             ModLoaderService.RecordPackageInstallation(
                 installRecordType,
                 packageModId,
